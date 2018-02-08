@@ -22,7 +22,7 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="email"></param>
         /// <param name="password"></param>
-        /// <returns>Returns true or false dependig on whether or not the email and password match an account.</returns>
+        /// <returns>Returns true or false depending on whether or not the email and password match an account.</returns>
         bool ValidateLoginInfo(string email, string password);
 
         /// <summary>
