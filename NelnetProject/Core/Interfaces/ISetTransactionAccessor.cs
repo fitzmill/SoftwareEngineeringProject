@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Core.Interfaces
 {
+    /// <summary>
+    /// Accessor for setting transaction information
+    /// </summary>
     public interface ISetTransactionAccessor
     {
         /// <summary>
