@@ -17,7 +17,7 @@ namespace Core.DTOs
         /// <summary>
         /// PaymentSpring customer id
         /// </summary>
-        public int CustomerID { get; set; }
+        public string CustomerID { get; set; }
 
         /// <summary>
         /// Amount charged in cents.
