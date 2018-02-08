@@ -25,10 +25,10 @@ namespace Core.Interfaces
         List<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime);
 
         /// <summary>
-        /// Gets all uncharged transactions from the database
+        /// Gets all transactions that have not been successfully charged
         /// </summary>
-        /// <returns>List of all uncharged transactions</returns>
-        List<Transaction> GetAllUnchargedTransactions();
+        /// <returns>List of all unsettled transactions</returns>
+        List<Transaction> GetAllUnsettledTransactions();
 
         /// <summary>
         /// Gets the most recent transaction for a user from the database based on their userID
