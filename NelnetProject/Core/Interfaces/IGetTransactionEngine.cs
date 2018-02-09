@@ -4,20 +4,17 @@ using System.Text;
 
 namespace Core.Interfaces
 {
-    /// <summary>
-    /// Accessor for getting transactions
-    /// </summary>
-    public interface IGetTransactionAccessor
+    public interface IGetTransactionEngine
     {
         /// <summary>
-        /// Gets a list of all transactions from the database for a user based on their userID
+        /// Gets a list of all transactions from the accessor for a user based on their userID
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>A list of transactions for the user</returns>
         List<Transaction> GetAllTransactionsForUser(int userID);
 
         /// <summary>
-        /// Gets a list of transactions from the database for all users that were charged in a given date range
+        /// Gets a list of transactions from the accesesor for all users that were charged in a given date range
         /// </summary>
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
@@ -31,7 +28,7 @@ namespace Core.Interfaces
         List<Transaction> GetAllUnsettledTransactions();
 
         /// <summary>
-        /// Gets the most recent transaction for a user from the database based on their userID
+        /// Gets the most recent transaction for a user from the accessor based on their userID
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>Most recent transaction for user</returns>

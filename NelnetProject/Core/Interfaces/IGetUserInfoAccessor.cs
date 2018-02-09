@@ -40,6 +40,6 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>Customer's customerID</returns>
-        int GetPaymentSpringCustomerID(int userID);
+        string GetPaymentSpringCustomerID(int userID);
     }
 }
