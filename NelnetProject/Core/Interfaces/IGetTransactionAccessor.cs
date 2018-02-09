@@ -14,7 +14,7 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>A list of transactions for the user</returns>
-        List<Transaction> GetTransactionsForUser(int userID);
+        List<Transaction> GetAllTransactionsForUser(int userID);
 
         /// <summary>
         /// Gets a list of transactions from the database for all users that were charged in a given date range
@@ -35,6 +35,6 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>Most recent transaction for user</returns>
-        Transaction GetTransactionByUserID(int userID);
+        Transaction GetMostRecentTransactionForUser(int userID);
     }
 }

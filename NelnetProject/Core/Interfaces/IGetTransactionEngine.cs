@@ -32,6 +32,6 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>Most recent transaction for user</returns>
-        Transaction GetMostReccentTransactionForUser(int userID);
+        Transaction GetMostRecentTransactionForUser(int userID);
     }
 }
