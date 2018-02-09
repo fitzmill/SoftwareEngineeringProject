@@ -17,12 +17,12 @@ namespace Core.DTOs
         /// <summary>
         /// Expiration month of card given from Payment Spring.
         /// </summary>
-        public int CardExpirationMonth { get; set; }
+        public string CardExpirationMonth { get; set; }
 
         /// <summary>
         /// Expiration year of card given from Payment Spring.
         /// </summary>
-        public int CardExpirationYear { get; set; }
+        public string CardExpirationYear { get; set; }
 
         /// <summary>
         /// Gets a customer's card type from Payment Spring.
