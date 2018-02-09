@@ -15,6 +15,6 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="customerID"></param>
         /// <returns>A user's payment info provided by Payment Spring/returns>
-        CustomerPaymentInfoDTO GetPaymentInfoForCustomer(string customerID);
+        UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID);
     }
 }

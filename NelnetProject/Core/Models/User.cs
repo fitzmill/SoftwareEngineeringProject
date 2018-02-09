@@ -21,8 +21,6 @@ namespace Core
 
         public UserType UserType { get; set; }
 
-        public Address Address { get; set; }
-
         public int CustomerID { get; set; }
 
         public List<Student> Students { get; set; }
