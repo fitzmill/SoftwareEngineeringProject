@@ -40,10 +40,10 @@ namespace Core.Interfaces
         User GetUserInfoByEmail(string email);
 
         /// <summary>
-        /// Gets a user's payment info from Payment Spring with their user ID.
+        /// Gets a user's payment info from Payment Spring with their customer ID.
         /// </summary>
         /// <param name="customerID"></param>
         /// <returns>A user's payment info provided by Payment Spring/returns>
-        PaymentDTO GetPaymentInfoForUser(string customerID);
+        UserPaymentInfoDTO GetPaymentInfoForUser(string customerID);
     }
 }
