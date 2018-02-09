@@ -29,5 +29,15 @@ namespace Core.DTOs
         /// Defaults to false.
         /// </summary>
         public string CardType { get; set; }
+
+        /// <summary>
+        /// Gets a customer's first address line from Payment Spring.
+        /// </summary>
+        public string CustomerAddress1 { get; set; }
+
+        /// <summary>
+        /// Gets a customer's second address line from Payment Spring.
+        /// </summary>
+        public string CustomerAddress2 { get; set; }
     }
 }
