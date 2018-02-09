@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Core.DTOs
 {
-    public class CreateCustomerDTO
+    public class UserPaymentInfoDTO
     {
         public string Username { get; set; }
 
@@ -23,10 +23,6 @@ namespace Core.DTOs
         public string State { get; set; }
 
         public string Zip { get; set; }
-
-        public string Phone { get; set; }
-
-        public string Token { get; set; }
 
         public int CardNumber { get; set; }
 
