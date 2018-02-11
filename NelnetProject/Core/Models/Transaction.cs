@@ -14,7 +14,7 @@ namespace Core
 
         public DateTime DateDue { get; set; }
 
-        public DateTime DateCharged { get; set; }
+        public DateTime? DateCharged { get; set; }
 
         public ProcessState ProcessState { get; set; }
 
