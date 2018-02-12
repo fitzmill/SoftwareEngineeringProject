@@ -8,7 +8,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Sets payment info in Payment Spring
     /// </summary>
-    interface ISetPaymentInfoAccessor
+    public interface ISetPaymentInfoAccessor
     {
         /// <summary>
         /// Creates a new customer with paymentSpring
