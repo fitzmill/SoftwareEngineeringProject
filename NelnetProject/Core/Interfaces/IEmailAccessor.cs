@@ -8,7 +8,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Interface for the accessor to the email sending service.
     /// </summary>
-    interface IEmailAccessor
+    public interface IEmailAccessor
     {
         /// <summary>
         /// Sends an email notification.

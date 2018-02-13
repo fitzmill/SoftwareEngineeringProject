@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GetPaymentInfoAccessor.cs" />
+    <Compile Include="ChargePaymentAccessor.cs" />
+    <Compile Include="EmailAccessor.cs" />
     <Compile Include="GetTransactionAccessor.cs" />
     <Compile Include="GetUserInfoAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

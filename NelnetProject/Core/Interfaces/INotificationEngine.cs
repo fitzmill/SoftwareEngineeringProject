@@ -7,7 +7,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Interface for engine that generates and sends notifications.
     /// </summary>
-    interface INotificationEngine
+    public interface INotificationEngine
     {
         /// <summary>
         /// Generates and sends notifications based on the given transactions.
