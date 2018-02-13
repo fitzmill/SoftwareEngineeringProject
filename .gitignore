@@ -8,6 +8,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+NelnetProject/Web/connections.config
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
