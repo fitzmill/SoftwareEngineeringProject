@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Accessors
 {
-    class SetUserInfoAccessor : ISetUserInfoAccessor
+    public class SetUserInfoAccessor : ISetUserInfoAccessor
     {
         public void InsertPersonalInfo(User user)
         {

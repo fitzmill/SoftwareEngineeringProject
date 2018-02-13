@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Accessors
 {
-    class SetPaymentInfoAccessor : ISetPaymentInfoAccessor
+    public class SetPaymentInfoAccessor : ISetPaymentInfoAccessor
     {
         public string CreateCustomer(UserPaymentInfoDTO customerInfo)
         {
