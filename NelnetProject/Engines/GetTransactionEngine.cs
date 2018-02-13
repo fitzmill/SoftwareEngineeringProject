@@ -17,7 +17,7 @@ namespace Engines
         //Calls identical method in IGetTransactionAccessor
         public List<Transaction> GetAllTransactionsForUser(int userID)
         {
-            throw new NotImplementedException();
+            return getTransactionAccessor.GetAllTransactionsForUser(userID);
         }
 
         //Calls identical method in IGetTransactionAccessor
