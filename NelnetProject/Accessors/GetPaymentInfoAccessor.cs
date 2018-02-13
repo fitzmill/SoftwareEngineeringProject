@@ -8,7 +8,7 @@ using Core.Interfaces;
 
 namespace Accessors
 {
-    class GetPaymentInfoAccessor : IGetPaymentInfoAccessor
+    public class GetPaymentInfoAccessor : IGetPaymentInfoAccessor
     {
         // Gets a user's payment info from Payment Spring with their Payment Spring Customer ID.
         public UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID)

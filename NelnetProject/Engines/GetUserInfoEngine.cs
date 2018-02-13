@@ -9,7 +9,7 @@ using Core.DTOs;
 
 namespace Engines
 {
-    class GetUserInfoEngine : IGetUserInfoEngine
+    public class GetUserInfoEngine : IGetUserInfoEngine
     {
         // Checks to see if a given email matches with an email in the database.
         public bool EmailExists(string email)

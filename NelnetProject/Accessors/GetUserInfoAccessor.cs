@@ -9,7 +9,7 @@ using Core.Interfaces;
 
 namespace Accessors
 {
-    class GetUserInfoAccessor : IGetUserInfoAccessor
+    public class GetUserInfoAccessor : IGetUserInfoAccessor
     {
         // Gets a user's info from the database by a User's ID
         public User GetUserInfoByID(int userID)
