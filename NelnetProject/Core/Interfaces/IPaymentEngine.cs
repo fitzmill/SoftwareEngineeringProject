@@ -7,7 +7,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Interface for engine that charges payments to users.
     /// </summary>
-    interface IPaymentEngine
+    public interface IPaymentEngine
     {
         /// <summary>
         /// Charges a list of payments and returns the results.

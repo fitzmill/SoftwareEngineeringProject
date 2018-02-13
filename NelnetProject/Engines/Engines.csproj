@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GetTransactionEngine.cs" />
+    <Compile Include="NotificationEngine.cs" />
+    <Compile Include="PaymentEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
