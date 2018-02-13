@@ -42,7 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GetPaymentInfoAccessor.cs" />
     <Compile Include="GetTransactionAccessor.cs" />
+    <Compile Include="GetUserInfoAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetTransactionAccessor.cs" />
   </ItemGroup>
