@@ -6,6 +6,8 @@ namespace Core.DTOs
 {
     public class UserPaymentInfoDTO
     {
+        public string CustomerID { get; set; }
+
         public string Username { get; set; }
 
         public string Company { get; set; }

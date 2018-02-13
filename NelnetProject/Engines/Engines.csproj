@@ -46,6 +46,7 @@
     <Compile Include="NotificationEngine.cs" />
     <Compile Include="PaymentEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetUserInfoEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Accessors\Accessors.csproj">
