@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GetUserInfoEngine.cs" />
     <Compile Include="GetTransactionEngine.cs" />
     <Compile Include="NotificationEngine.cs" />
     <Compile Include="PaymentEngine.cs" />
