@@ -17,7 +17,7 @@ namespace Accessors
         public void SendEmail(EmailNotification emailNotification)
         {
             //Sends email notification to external email API
-            throw new NotImplementedException();
+            
         }
     }
 }
