@@ -53,7 +53,7 @@
     <Compile Include="Enums\ReasonFailed.cs" />
     <Compile Include="Enums\State.cs" />
     <Compile Include="Enums\UserType.cs" />
-    <Compile Include="Exception\EmailException.cs" />
+    <Compile Include="Exceptions\EmailException.cs" />
     <Compile Include="Interfaces\IChargePaymentAccessor.cs" />
     <Compile Include="Interfaces\IEmailAccessor.cs" />
     <Compile Include="Interfaces\IGetPaymentInfoAccessor.cs" />

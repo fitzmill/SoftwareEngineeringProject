@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Exception
+namespace Core.Exceptions
 {
+    /// <summary>
+    /// Exception to be used when there are errors with emails
+    /// </summary>
     public class EmailException : Exception
     {
         public EmailException()
