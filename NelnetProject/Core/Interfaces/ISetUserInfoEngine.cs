@@ -8,7 +8,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Handles the storage of all user information
     /// </summary>
-    interface ISetUserInfoEngine
+    public interface ISetUserInfoEngine
     {
         /// <summary>
         /// Inserts a new user record into the database with the information contained in the user model

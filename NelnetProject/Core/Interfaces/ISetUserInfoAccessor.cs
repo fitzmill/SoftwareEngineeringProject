@@ -7,7 +7,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Stores information about users in the database.
     /// </summary>
-    interface ISetUserInfoAccessor
+    public interface ISetUserInfoAccessor
     {
         /// <summary>
         /// Inserts a new user record into the database with the information contained in the user model

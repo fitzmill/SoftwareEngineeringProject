@@ -8,7 +8,7 @@ namespace Core.Interfaces
     /// <summary>
     /// Interface for charging payments to PaymentSpring.
     /// </summary>
-    interface IChargePaymentAccessor
+    public interface IChargePaymentAccessor
     {
         /// <summary>
         /// Charges a customer.
