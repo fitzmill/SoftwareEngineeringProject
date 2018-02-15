@@ -1,6 +1,10 @@
+using Accessors;
+using Core.Interfaces;
+using Engines;
 using System;
-
+using System.Configuration;
 using Unity;
+using Unity.Injection;
 
 namespace Web
 {
@@ -42,6 +46,8 @@ namespace Web
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
+            container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString));
+            container.RegisterType<IGetTransactionEngine, GetTransactionEngine>();
         }
     }
 }

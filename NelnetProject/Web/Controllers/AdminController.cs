@@ -14,9 +14,9 @@ namespace Web.Controllers
     public class AdminController : ApiController
     {
         IGetTransactionEngine getTransactionEngine;
-        public AdminController()
+        public AdminController(IGetTransactionEngine getTransactionEngine)
         {
-            this.getTransactionEngine = new GetTransactionEngine(new GetTransactionAccessor());
+            this.getTransactionEngine = getTransactionEngine;
         }
 
         // GET api/admin/GetAllTransactionsForUser/5

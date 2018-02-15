@@ -1,9 +1,7 @@
 ﻿using Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Core;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace Accessors
@@ -11,9 +9,9 @@ namespace Accessors
     public class GetTransactionAccessor : IGetTransactionAccessor
     {
         string connectionString;
-        public GetTransactionAccessor()
+        public GetTransactionAccessor(string connectionString)
         {
-            connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
+            this.connectionString = connectionString;
         }
 
         //Executes a stored procedure in the database for getting all Transactions with userID as a parameter
