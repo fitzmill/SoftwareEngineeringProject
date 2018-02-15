@@ -67,7 +67,33 @@ namespace Accessors
         //Executes a stored procedure in the database for getting the most recent transaction with userID as a parameter
         public Transaction GetMostRecentTransactionForUser(int userID)
         {
-            throw new NotImplementedException();
+            string query = "[dbo].[GetMostRecentTransactionForUser] @UserID = @passInUserID";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+                command.Parameters.AddWithValue("@passInUserID", userID);
+
+                conn.Open();
+                var reader = command.ExecuteReader();
+
+                //Only expecting one row to be returned
+                if (reader.Read())
+                {
+                    return new Transaction()
+                    {
+                        TransactionID = reader.GetInt32(0),
+                        UserID = reader.GetInt32(1),
+                        AmountCharged = reader.GetDouble(2),
+                        DateDue = reader.GetDateTime(3),
+                        DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
+                        ProcessState = (ProcessState)reader.GetByte(5),
+                        ReasonFailed = (ReasonFailed?)(reader.IsDBNull(6) ? (int?)null : reader.GetByte(6))
+                    };
+                }      
+            }
+
+            return null;
         }
 
         //Executes a stored procedure in the database for getting all Transactions with startTime and endTime as parameters

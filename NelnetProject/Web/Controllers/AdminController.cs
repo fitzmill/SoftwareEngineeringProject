@@ -27,13 +27,25 @@ namespace Web.Controllers
         [Route("GetAllTransactionsForUser/{userID}")]
         public IHttpActionResult GetAllTransactionsForUser(string userID)
         {
-            int intUserID = 0;
+            int parsedUserID = 0;
             //Tries to convert the parameter to an int
-            if (!int.TryParse(userID, out intUserID))
+            if (!int.TryParse(userID, out parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
             }
-            return Ok(getTransactionEngine.GetAllTransactionsForUser(intUserID));
+            return Ok(getTransactionEngine.GetAllTransactionsForUser(parsedUserID));
+        }
+
+        [HttpGet]
+        [Route("GetMostRecentTransactionForUser/{userID}")]
+        public IHttpActionResult GetMostRecentTransactionForUser(string userID)
+        {
+            int parsedUserID = 0;
+            if (!int.TryParse(userID, out parsedUserID))
+            {
+                return BadRequest("Could not parse userID into an integer");
+            }
+            return Ok(getTransactionEngine.GetMostRecentTransactionForUser(parsedUserID));
         }
     }
 }
