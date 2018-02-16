@@ -47,5 +47,12 @@ namespace Web.Controllers
             }
             return Ok(getTransactionEngine.GetMostRecentTransactionForUser(parsedUserID));
         }
+
+        [HttpGet]
+        [Route("GetAllUnsettledTransactions")]
+        public IHttpActionResult GetAllUnsettledTransactions()
+        {
+            return Ok(getTransactionEngine.GetAllUnsettledTransactions());
+        }
     }
 }
