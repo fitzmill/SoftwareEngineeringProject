@@ -13,14 +13,14 @@ namespace Engines
     /// </summary>
     class PaymentEngine : IPaymentEngine
     {
-        public List<Transaction> ChargePayments(List<Transaction> charges)
+        public IList<Transaction> ChargePayments(List<Transaction> charges)
         {
             //Charges payments to PaymentSpring
             //Returns results for notifications
             throw new NotImplementedException();
         }
 
-        public List<Transaction> GeneratePayments()
+        public IList<Transaction> GeneratePayments()
         {
             //Generates payments
             //Stores them in the database
