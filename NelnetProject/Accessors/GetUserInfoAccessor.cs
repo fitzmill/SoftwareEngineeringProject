@@ -9,9 +9,9 @@ namespace Accessors
     public class GetUserInfoAccessor : IGetUserInfoAccessor
     {
         string connectionString;
-        public GetUserInfoAccessor()
+        public GetUserInfoAccessor(string connectionString)
         {
-            connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
+            this.connectionString = connectionString;
         }
 
         // Gets a user's info from the database by a User's ID
