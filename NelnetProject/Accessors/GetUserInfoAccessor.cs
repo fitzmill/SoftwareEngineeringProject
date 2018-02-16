@@ -1,7 +1,6 @@
 ﻿using Core;
 using Core.DTOs;
 using Core.Interfaces;
-using System.Configuration;
 using System.Data.SqlClient;
 
 namespace Accessors
