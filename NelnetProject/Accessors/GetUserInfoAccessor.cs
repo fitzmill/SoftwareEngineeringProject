@@ -32,9 +32,9 @@ namespace Accessors
                     result.Email = reader.GetString(2);
                     result.Hashed = reader.GetString(3);
                     result.Salt = reader.GetString(4);
-                    result.PaymentPlan = (PaymentPlan)reader.GetByte(6);
-                    result.UserType = (UserType)reader.GetByte(7);
-                    result.CustomerID = reader.GetInt32(8);
+                    result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
+                    result.UserType = (UserType)reader.GetByte(6);
+                    result.CustomerID = reader.GetInt32(7);
                 }
             }
             return result;
@@ -59,9 +59,9 @@ namespace Accessors
                     result.Email = email;
                     result.Hashed = reader.GetString(3);
                     result.Salt = reader.GetString(4);
-                    result.PaymentPlan = (PaymentPlan)reader.GetByte(6);
-                    result.UserType = (UserType)reader.GetByte(7);
-                    result.CustomerID = reader.GetInt32(8);
+                    result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
+                    result.UserType = (UserType)reader.GetByte(6);
+                    result.CustomerID = reader.GetInt32(7);
                 }
             }
             return result;
