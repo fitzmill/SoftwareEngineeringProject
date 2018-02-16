@@ -9,6 +9,13 @@ namespace Core.Models
     /// </summary>
     public class EmailNotification
     {
+        public EmailNotification(string to, string subject, string body)
+        {
+            To = to;
+            Subject = subject;
+            Body = body;
+        }
+
         /// <summary>
         /// The user's email address
         /// </summary>

@@ -12,8 +12,9 @@ namespace Accessors
     public class EmailAccessor : IEmailAccessor
     {
 
-        private static string senderEmail = "efrftgty67hu8j@gmail.com";
-        private static string senderPassword = "cornflakes";
+        private static string SENDER_EMAIL = "efrftgty67hu8j@gmail.com";
+        private static string SENDER_USERNAME = "efrftgty67hu8j";
+        private static string SENDER_PASSWORD = "cornflakes";
 
         /// <summary>
         /// Sends email notification to external email API.
@@ -37,12 +38,14 @@ namespace Accessors
             MailMessage email = new MailMessage();
             SmtpClient client = new SmtpClient("smtp.gmail.com");
 
-            email.From = new MailAddress(senderEmail);
+            email.From = new MailAddress(SENDER_EMAIL);
             email.To.Add(emailNotification.To);
             email.Subject = emailNotification.Subject;
             email.Body = emailNotification.Body;
+            email.IsBodyHtml = true;
 
-            client.Credentials = new System.Net.NetworkCredential(senderEmail, senderPassword);
+            client.Port = 587;
+            client.Credentials = new System.Net.NetworkCredential(SENDER_USERNAME, SENDER_PASSWORD);
             client.EnableSsl = true;
 
             try
