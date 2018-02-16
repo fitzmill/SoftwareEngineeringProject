@@ -81,6 +81,7 @@ namespace Accessors
                 
                 if(rowsAffected != 1)
                 {
+                    //TODO: define custom exception type for this error
                     throw new Exception("Database query executed incorrectly");
                 }
             }
@@ -103,6 +104,7 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
+                    //TODO: define custom exception type for this error
                     throw new Exception("Database query executed incorrectly");
                 }
             }
@@ -153,6 +155,7 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
+                    //TODO: define custom exception type for this error
                     throw new Exception("Database query executed incorrectly");
                 }
             }
@@ -175,6 +178,7 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
+                    //TODO: define custom exception type for this error
                     throw new Exception("Database query executed incorrectly");
                 }
             }
