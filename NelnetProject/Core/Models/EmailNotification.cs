@@ -4,12 +4,31 @@ using System.Text;
 
 namespace Core.Models
 {
+    /// <summary>
+    /// Model for email notifications to be sent to users.
+    /// </summary>
     public class EmailNotification
     {
-        string To { get; set; }
+        public EmailNotification(string to, string subject, string body)
+        {
+            To = to;
+            Subject = subject;
+            Body = body;
+        }
 
-        string Subject { get; set; }
+        /// <summary>
+        /// The user's email address
+        /// </summary>
+        public string To { get; set; }
 
-        string Body { get; set; }
+        /// <summary>
+        /// Subject line of the email
+        /// </summary>
+        public string Subject { get; set; }
+
+        /// <summary>
+        /// Body of the email, represented as a single string
+        /// </summary>
+        public string Body { get; set; }
     }
 }
