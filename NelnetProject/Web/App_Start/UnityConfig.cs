@@ -47,14 +47,19 @@ namespace Web
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
 
+            var constructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
+
             /**
              * So since the accessor takes a string in the constructor instead of an interface, we need to pass that in manually.
              * The way we do that is through an InjectionConstructor, which takes the accessor's constructor's parameters as arguments.
              **/
-            container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString));
+            container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(constructor);
 
             //This is how you register a type that takes an already registered interface as an argument
             container.RegisterType<IGetTransactionEngine, GetTransactionEngine>();
+
+            container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
+
         }
     }
 }
