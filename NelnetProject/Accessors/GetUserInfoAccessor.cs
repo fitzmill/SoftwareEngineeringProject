@@ -25,7 +25,7 @@ namespace Accessors
                 command.Parameters.AddWithValue("@passedInUserID", userID);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                while (reader.Read())
+                if (reader.Read())
                 {
                     result.UserID = userID;
                     result.FirstName = reader.GetString(0);
@@ -52,7 +52,7 @@ namespace Accessors
                 command.Parameters.AddWithValue("@passedInEmail", email);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                while (reader.Read())
+                if (reader.Read())
                 {
                     result.UserID = reader.GetInt32(0);
                     result.FirstName = reader.GetString(1);
@@ -79,7 +79,7 @@ namespace Accessors
                 command.Parameters.AddWithValue("@passedInEmail", email);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                while (reader.Read())
+                if (reader.Read())
                 {
                     result.Hashed = reader.GetString(0);
                     result.Salt = reader.GetString(1);
@@ -99,12 +99,9 @@ namespace Accessors
                 command.Parameters.AddWithValue("@passedInEmail", email);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                while (reader.Read())
+                if (reader.Read())
                 {
-                    if (reader.GetString(0) != null)
-                    {
-                        result = true;
-                    }
+                    result = true;
                 }
             }
             return result;
@@ -113,7 +110,7 @@ namespace Accessors
         // Gets a user's Payment Spring customerID
         public string GetPaymentSpringCustomerID(int userID)
         {
-            string query = "[dbo].[EmailExists] @userID=@passedInUserID";
+            string query = "[dbo].[GetCustomerID] @userID=@passedInUserID";
             string result = "";
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -121,7 +118,7 @@ namespace Accessors
                 command.Parameters.AddWithValue("@passedInUserID", userID);
                 conn.Open();
                 var reader = command.ExecuteReader();
-                while (reader.Read())
+                if (reader.Read())
                 {
                     result = reader.GetString(0);
                 }
