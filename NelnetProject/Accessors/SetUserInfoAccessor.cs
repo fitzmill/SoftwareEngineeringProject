@@ -31,13 +31,13 @@ namespace Accessors
 
                 //fill in parameters
                 command.Parameters.AddWithValue("_FirstName", user.FirstName);
-                command.Parameters.AddWithValue("_LastName", user.FirstName);
-                command.Parameters.AddWithValue("_Email", user.FirstName);
-                command.Parameters.AddWithValue("_Hashed", user.FirstName);
-                command.Parameters.AddWithValue("_Salt", user.FirstName);
-                command.Parameters.AddWithValue("_PaymentPlan", user.FirstName);
-                command.Parameters.AddWithValue("_UserType", user.FirstName);
-                command.Parameters.AddWithValue("_CustomerID", user.FirstName);
+                command.Parameters.AddWithValue("_LastName", user.LastName);
+                command.Parameters.AddWithValue("_Email", user.Email);
+                command.Parameters.AddWithValue("_Hashed", user.Hashed);
+                command.Parameters.AddWithValue("_Salt", user.Salt);
+                command.Parameters.AddWithValue("_PaymentPlan", user.PaymentPlan);
+                command.Parameters.AddWithValue("_UserType", user.UserType);
+                command.Parameters.AddWithValue("_CustomerID", user.CustomerID);
 
                 //open connection
                 connection.Open();
@@ -65,13 +65,13 @@ namespace Accessors
                 //fill in parameters
                 command.Parameters.AddWithValue("_ID", user.UserID);
                 command.Parameters.AddWithValue("_FirstName", user.FirstName);
-                command.Parameters.AddWithValue("_LastName", user.FirstName);
-                command.Parameters.AddWithValue("_Email", user.FirstName);
-                command.Parameters.AddWithValue("_Hashed", user.FirstName);
-                command.Parameters.AddWithValue("_Salt", user.FirstName);
-                command.Parameters.AddWithValue("_PaymentPlan", user.FirstName);
-                command.Parameters.AddWithValue("_UserType", user.FirstName);
-                command.Parameters.AddWithValue("_CustomerID", user.FirstName);
+                command.Parameters.AddWithValue("_LastName", user.LastName);
+                command.Parameters.AddWithValue("_Email", user.Email);
+                command.Parameters.AddWithValue("_Hashed", user.Hashed);
+                command.Parameters.AddWithValue("_Salt", user.Salt);
+                command.Parameters.AddWithValue("_PaymentPlan", user.PaymentPlan);
+                command.Parameters.AddWithValue("_UserType", user.UserType);
+                command.Parameters.AddWithValue("_CustomerID", user.CustomerID);
 
                 //open connection
                 connection.Open();
