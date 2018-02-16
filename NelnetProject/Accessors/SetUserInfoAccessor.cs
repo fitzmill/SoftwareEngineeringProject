@@ -44,9 +44,12 @@ namespace Accessors
 
                 //execute command
                 var reader = command.ExecuteReader();
-
-                //read the id of the user that has just been created
-                user.UserID = reader.GetInt32(0);
+                
+                if (reader.Read())
+                {
+                    //read the id of the user that has just been created
+                    user.UserID = reader.GetInt32(0);
+                }
             }
         }
 
@@ -74,7 +77,12 @@ namespace Accessors
                 connection.Open();
 
                 //execute command
-                command.ExecuteReader();
+                int rowsAffected = command.ExecuteNonQuery();
+                
+                if(rowsAffected != 1)
+                {
+                    throw new Exception("Database query executed incorrectly");
+                }
             }
         }
 
@@ -91,7 +99,12 @@ namespace Accessors
 
                 connection.Open();
 
-                command.ExecuteReader();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected != 1)
+                {
+                    throw new Exception("Database query executed incorrectly");
+                }
             }
         }
 
@@ -99,7 +112,7 @@ namespace Accessors
         public void InsertStudentInfo(int userID, Student student)
         {
             string query = "[dbo].[InsertStudentInfo] @FirstName=_FirstName, @LastName=_LastName, @Grade=_Grade, @UserID=_UserID";
-            
+
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
@@ -113,7 +126,10 @@ namespace Accessors
 
                 var reader = command.ExecuteReader();
 
-                student.StudentID = reader.GetInt32(0);
+                if (reader.Read())
+                {
+                    student.StudentID = reader.GetInt32(0);
+                }
             }
         }
 
@@ -133,7 +149,12 @@ namespace Accessors
 
                 connection.Open();
 
-                command.ExecuteReader();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected != 1)
+                {
+                    throw new Exception("Database query executed incorrectly");
+                }
             }
         }
 
@@ -150,7 +171,12 @@ namespace Accessors
 
                 connection.Open();
 
-                command.ExecuteReader();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected != 1)
+                {
+                    throw new Exception("Database query executed incorrectly");
+                }
             }
         }
     }
