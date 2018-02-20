@@ -49,6 +49,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Accessors\GetUserInfoAccessorUnitTest.cs" />
     <Compile Include="Accessors\TestGetTransactionAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
