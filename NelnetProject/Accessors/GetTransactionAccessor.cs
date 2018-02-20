@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Core;
 using System.Data.SqlClient;
+using Core.DTOs;
 
 namespace Accessors
 {
@@ -62,15 +63,13 @@ namespace Accessors
         public IList<Transaction> GetAllUnsettledTransactions()
         {
             //Gets all transactions that have not been marked successful
-            string query = "[dbo].[GetAllTransactionsNotInProcessState] @ProcessState=@Sucessful";
+            string query = "[dbo].[GetAllUnsettledTransactions]";
 
             var result = new List<Transaction>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-
-                command.Parameters.AddWithValue("@Sucessful", ProcessState.SUCCESSFUL);
 
                 conn.Open();
 
@@ -126,9 +125,36 @@ namespace Accessors
         }
 
         //Executes a stored procedure in the database for getting all Transactions with startTime and endTime as parameters
-        public IList<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
+        public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
-            throw new NotImplementedException();
+            string query = "[dbo].[GetAllTransactionsForDateRange]";
+
+            var result = new List<TransactionWithUserInfoDTO>();
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, conn);
+
+                conn.Open();
+
+                var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    result.Add(new TransactionWithUserInfoDTO()
+                    {
+                        TransactionID = reader.GetInt32(0),
+                        FirstName = reader.GetString(1),
+                        LastName = reader.GetString(2),
+                        AmountCharged = reader.GetDouble(3),
+                        DateDue = reader.GetDateTime(4),
+                        DateCharged = reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5),
+                        ProcessState = (ProcessState)reader.GetByte(6),
+                        ReasonFailed = (ReasonFailed?)(reader.IsDBNull(7) ? (int?)null : reader.GetByte(7))
+                    });
+                }
+            }
+            return result;
         }
     }
 }

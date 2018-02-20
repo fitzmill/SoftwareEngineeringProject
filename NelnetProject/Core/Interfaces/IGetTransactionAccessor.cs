@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,7 +23,7 @@ namespace Core.Interfaces
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns>List of transactions that occurred in the date range</returns>
-        IList<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime);
+        IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime);
 
         /// <summary>
         /// Gets all transactions that have not been successfully charged
