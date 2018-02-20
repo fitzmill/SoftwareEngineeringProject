@@ -15,13 +15,13 @@ namespace Engines
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public List<Transaction> GetAllTransactionsForUser(int userID)
+        public IList<Transaction> GetAllTransactionsForUser(int userID)
         {
             return getTransactionAccessor.GetAllTransactionsForUser(userID);
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public List<Transaction> GetAllUnsettledTransactions()
+        public IList<Transaction> GetAllUnsettledTransactions()
         {
             throw new NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace Engines
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public List<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
+        public IList<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
             throw new NotImplementedException();
         }

@@ -11,7 +11,7 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="userID"></param>
         /// <returns>A list of transactions for the user</returns>
-        List<Transaction> GetAllTransactionsForUser(int userID);
+        IList<Transaction> GetAllTransactionsForUser(int userID);
 
         /// <summary>
         /// Gets a list of transactions from the accesesor for all users that were charged in a given date range
@@ -19,13 +19,13 @@ namespace Core.Interfaces
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns>List of transactions that occurred in the date range</returns>
-        List<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime);
+        IList<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime);
 
         /// <summary>
         /// Gets all transactions that have not been successfully charged
         /// </summary>
         /// <returns>List of all unsettled transactions</returns>
-        List<Transaction> GetAllUnsettledTransactions();
+        IList<Transaction> GetAllUnsettledTransactions();
 
         /// <summary>
         /// Gets the most recent transaction for a user from the accessor based on their userID

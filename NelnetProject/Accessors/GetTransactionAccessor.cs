@@ -15,7 +15,7 @@ namespace Accessors
         }
 
         //Executes a stored procedure in the database for getting all Transactions with userID as a parameter
-        public List<Transaction> GetAllTransactionsForUser(int userID)
+        public IList<Transaction> GetAllTransactionsForUser(int userID)
         {
             //this is the format for executing stored procedures in SQL
             string query = "[dbo].[GetAllTransactionsForUser] @UserID=@passedInUserID";
@@ -59,7 +59,7 @@ namespace Accessors
         }
 
         //Executes a stored procedure in the database for getting all Transactions with ProcessState as a parameter
-        public List<Transaction> GetAllUnsettledTransactions()
+        public IList<Transaction> GetAllUnsettledTransactions()
         {
             throw new NotImplementedException();
         }
@@ -97,7 +97,7 @@ namespace Accessors
         }
 
         //Executes a stored procedure in the database for getting all Transactions with startTime and endTime as parameters
-        public List<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
+        public IList<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
             throw new NotImplementedException();
         }
