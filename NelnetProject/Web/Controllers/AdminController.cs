@@ -27,9 +27,8 @@ namespace Web.Controllers
         [Route("GetAllTransactionsForUser/{userID}")]
         public IHttpActionResult GetAllTransactionsForUser(string userID)
         {
-            int parsedUserID = 0;
             //Tries to convert the parameter to an int
-            if (!int.TryParse(userID, out parsedUserID))
+            if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
             }
@@ -40,8 +39,7 @@ namespace Web.Controllers
         [Route("GetMostRecentTransactionForUser/{userID}")]
         public IHttpActionResult GetMostRecentTransactionForUser(string userID)
         {
-            int parsedUserID = 0;
-            if (!int.TryParse(userID, out parsedUserID))
+            if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
             }

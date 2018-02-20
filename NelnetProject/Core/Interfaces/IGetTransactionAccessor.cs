@@ -23,7 +23,7 @@ namespace Core.Interfaces
         /// <param name="startTime"></param>
         /// <param name="endTime"></param>
         /// <returns>List of transactions that occurred in the date range</returns>
-        IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime);
+        IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startDate, DateTime endDate);
 
         /// <summary>
         /// Gets all transactions that have not been successfully charged

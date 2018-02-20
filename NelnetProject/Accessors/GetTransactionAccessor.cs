@@ -19,7 +19,7 @@ namespace Accessors
         public IList<Transaction> GetAllTransactionsForUser(int userID)
         {
             //this is the format for executing stored procedures in SQL
-            string query = "[dbo].[GetAllTransactionsForUser] @UserID=@passedInUserID";
+            string query = "[dbo].[GetAllTransactionsForUser]";
 
             //initialize return object
             var result = new List<Transaction>();
@@ -31,7 +31,9 @@ namespace Accessors
                 SqlCommand command = new SqlCommand(query, conn);
 
                 //replaces the @passedInUserID that's in the query string with the integer userID
-                command.Parameters.AddWithValue("@passedInUserID", userID);
+                command.Parameters.Add(new SqlParameter("@UserID", userID));
+
+                command.CommandType = System.Data.CommandType.StoredProcedure;
 
                 conn.Open();
 
@@ -95,12 +97,14 @@ namespace Accessors
         //Executes a stored procedure in the database for getting the most recent transaction with userID as a parameter
         public Transaction GetMostRecentTransactionForUser(int userID)
         {
-            string query = "[dbo].[GetMostRecentTransactionForUser] @UserID = @passInUserID";
+            string query = "[dbo].[GetMostRecentTransactionForUser]";
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@passInUserID", userID);
+                command.Parameters.Add(new SqlParameter("@UserID", userID));
+
+                command.CommandType = System.Data.CommandType.StoredProcedure;
 
                 conn.Open();
                 var reader = command.ExecuteReader();
@@ -125,7 +129,7 @@ namespace Accessors
         }
 
         //Executes a stored procedure in the database for getting all Transactions with startTime and endTime as parameters
-        public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
+        public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startDate, DateTime endDate)
         {
             string query = "[dbo].[GetAllTransactionsForDateRange]";
 
@@ -134,6 +138,11 @@ namespace Accessors
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
+
+                command.Parameters.Add(new SqlParameter("@StartDate", startDate.Date));
+                command.Parameters.Add(new SqlParameter("@EndDate", endDate.Date));
+
+                command.CommandType = System.Data.CommandType.StoredProcedure;
 
                 conn.Open();
 

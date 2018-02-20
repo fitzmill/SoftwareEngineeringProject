@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Core.Interfaces;
 using NelnetProject.Tests.Engines.MockedAccessors;
 using Engines;
+using System.Collections.ObjectModel;
 
 namespace NelnetProject.Tests.Engines
 {
@@ -20,8 +21,8 @@ namespace NelnetProject.Tests.Engines
         public void TestGetAllUnsettledTransactions1()
         {
             var result = getTransactionEngine.GetAllUnsettledTransactions();
-            Assert.AreEqual(3, result.Count);
-            Assert.AreEqual(getTransactionAccessor.GetAllUnsettledTransactions(), result);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(4, result[0].TransactionID);
         }
     }
 }

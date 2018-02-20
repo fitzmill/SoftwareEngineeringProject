@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Core;
+using Core.DTOs;
 
 namespace NelnetProject.Tests.Engines.MockedAccessors
 {
@@ -68,9 +69,24 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
             return MockDB.OrderByDescending(x => x.TransactionID).FirstOrDefault(x => x.UserID == userID);
         }
 
-        public IList<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
+        public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
-            return MockDB.Where(x => x.DateDue >= startTime && x.DateDue <= endTime).ToList();
+            var result = new List<TransactionWithUserInfoDTO>();
+            foreach(Transaction t in MockDB.Where(x => x.DateDue >= startTime && x.DateDue <= endTime).ToList())
+            {
+                result.Add(new TransactionWithUserInfoDTO()
+                {
+                    TransactionID = t.TransactionID,
+                    FirstName = "Bob",
+                    LastName = "Smith",
+                    AmountCharged = t.AmountCharged,
+                    DateDue = t.DateDue,
+                    DateCharged = t.DateCharged,
+                    ProcessState = t.ProcessState,
+                    ReasonFailed = t.ReasonFailed
+                });
+            }
+            return result;
         }
     }
 }
