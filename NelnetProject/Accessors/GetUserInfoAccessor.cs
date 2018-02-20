@@ -16,12 +16,13 @@ namespace Accessors
         // Gets a user's info from the database by a User's ID
         public User GetUserInfoByID(int userID)
         {
-            string query = "[dbo].[GetUserInfoByUserID] @UserID=@passedInUserID";
+            string query = "[dbo].[GetUserInfoByUserID]";
             User result = new User();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@passedInUserID", userID);
+                command.Parameters.Add(new SqlParameter("@UserID", userID));
+                command.CommandType = System.Data.CommandType.StoredProcedure;
                 conn.Open();
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -34,7 +35,7 @@ namespace Accessors
                     result.Salt = reader.GetString(4);
                     result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
                     result.UserType = (UserType)reader.GetByte(6);
-                    result.CustomerID = reader.GetInt32(7);
+                    result.CustomerID = reader.GetString(7);
                 }
             }
             return result;
@@ -43,12 +44,13 @@ namespace Accessors
         // Gets a user's info from the database by a user's email
         public User GetUserInfoByEmail(string email)
         {
-            string query = "[dbo].[GetUserInfoByEmail] @Email=@passedInEmail";
+            string query = "[dbo].[GetUserInfoByEmail]";
             User result = new User();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@passedInEmail", email);
+                command.Parameters.Add(new SqlParameter("@Email", email));
+                command.CommandType = System.Data.CommandType.StoredProcedure;
                 conn.Open();
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -61,7 +63,7 @@ namespace Accessors
                     result.Salt = reader.GetString(4);
                     result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
                     result.UserType = (UserType)reader.GetByte(6);
-                    result.CustomerID = reader.GetInt32(7);
+                    result.CustomerID = reader.GetString(7);
                 }
             }
             return result;
@@ -70,12 +72,13 @@ namespace Accessors
         // Gets a user's password information for logging in
         public PasswordDTO GetUserPasswordInfo(string email)
         {
-            string query = "[dbo].[GetPasswordInfo] @Email=@passedInEmail";
+            string query = "[dbo].[GetPasswordInfo]";
             PasswordDTO result = new PasswordDTO();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@passedInEmail", email);
+                command.Parameters.Add(new SqlParameter("@Email", email));
+                command.CommandType = System.Data.CommandType.StoredProcedure;
                 conn.Open();
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -90,12 +93,13 @@ namespace Accessors
         // Checks if an email already exists in the database.
         public bool EmailExists(string email)
         {
-            string query = "[dbo].[EmailExists] @Email=@passedInEmail";
+            string query = "[dbo].[EmailExists]";
             bool result = false;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@passedInEmail", email);
+                command.Parameters.Add(new SqlParameter("@Email", email));
+                command.CommandType = System.Data.CommandType.StoredProcedure;
                 conn.Open();
                 var reader = command.ExecuteReader();
                 if (reader.Read())
@@ -109,12 +113,13 @@ namespace Accessors
         // Gets a user's Payment Spring customerID
         public string GetPaymentSpringCustomerID(int userID)
         {
-            string query = "[dbo].[GetCustomerID] @userID=@passedInUserID";
+            string query = "[dbo].[GetCustomerID]";
             string result = "";
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.AddWithValue("@passedInUserID", userID);
+                command.Parameters.Add(new SqlParameter("@UserID", userID));
+                command.CommandType = System.Data.CommandType.StoredProcedure;
                 conn.Open();
                 var reader = command.ExecuteReader();
                 if (reader.Read())
