@@ -49,16 +49,19 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accessors\TestSetUserInfoAccessor.cs" />
+    <Compile Include="Accessors\GetUserInfoAccessorUnitTest.cs" />
+    <Compile Include="Accessors\TestGetTransactionAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App-sample.config" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\Accessors\Accessors.csproj">
       <Project>{19A5E52F-6B77-41DA-B1EF-D180CFDA855D}</Project>
