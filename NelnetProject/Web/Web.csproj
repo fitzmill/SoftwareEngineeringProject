@@ -268,6 +268,20 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Accessors\Accessors.csproj">
+      <Project>{19a5e52f-6b77-41da-b1ef-d180cfda855d}</Project>
+      <Name>Accessors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{7b35b0f9-ca45-4cc6-b356-aceca9107b8c}</Project>
+      <Name>Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Engines\Engines.csproj">
+      <Project>{91c9b9e1-4042-4234-ae2d-ee65ce8ac19a}</Project>
+      <Name>Engines</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

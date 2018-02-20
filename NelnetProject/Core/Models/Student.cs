@@ -12,8 +12,6 @@ namespace Core
 
         public string LastName { get; set; }
 
-        public int UserID { get; set; } 
-
         //0: Kindergarten
         public int Grade { get; set; }
     }
