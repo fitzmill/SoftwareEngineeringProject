@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Core;
+using Core.DTOs;
 
 namespace Engines
 {
@@ -23,7 +24,7 @@ namespace Engines
         //Calls identical method in IGetTransactionAccessor
         public IList<Transaction> GetAllUnsettledTransactions()
         {
-            throw new NotImplementedException();
+            return getTransactionAccessor.GetAllUnsettledTransactions();
         }
 
         //Calls identical method in IGetTransactionAccessor
@@ -33,9 +34,9 @@ namespace Engines
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public IList<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
+        public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
-            throw new NotImplementedException();
+            return getTransactionAccessor.GetTransactionsForDateRange(startTime, endTime);
         }
     }
 }
