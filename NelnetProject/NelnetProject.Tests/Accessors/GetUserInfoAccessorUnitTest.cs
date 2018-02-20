@@ -19,52 +19,43 @@ namespace NelnetProject.Tests.Accessors
         }
 
         [TestMethod]
-        public void GetUserInfoByID()
+        public void GetUserInfoByIDTest()
         {
             int userID = 1;
-            string testFirstName = "Cooper";
             User responseUser = getUserInfoAccessor.GetUserInfoByID(userID);
             Assert.IsNotNull(responseUser);
-            Assert.AreEqual(testFirstName, responseUser.FirstName);
         }
 
         [TestMethod]
-        public void GetUserInfoByEmail()
+        public void GetUserInfoByEmailTest()
         {
             string email = "billy@microsoft.com";
-            string testFirstName = "Bill";
             User responseUser = getUserInfoAccessor.GetUserInfoByEmail(email);
             Assert.IsNotNull(responseUser);
-            Assert.AreEqual(testFirstName, responseUser.FirstName);
         }
 
         [TestMethod]
-        public void EmailExists()
+        public void EmailExistsTest()
         {
             string email = "sean@weebnation.com";
             Boolean response = getUserInfoAccessor.EmailExists(email);
             Assert.IsNotNull(response);
-            Assert.AreEqual(true, response);
         }
 
         [TestMethod]
-        public void GetUserPasswordInfo()
+        public void GetUserPasswordInfoTest()
         {
             string email = "cooper@cooperknaak.dating";
-            string testHashed = "notimplementedyet";
             PasswordDTO response = getUserInfoAccessor.GetUserPasswordInfo(email);
             Assert.IsNotNull(response);
-            Assert.AreEqual(testHashed, response.Hashed);
         }
 
         [TestMethod]
-        public void GetPaymentSpringCustomerID()
+        public void GetPaymentSpringCustomerIDTest()
         {
             int userID = 2;
-            string testCustomerID = "1edf63";
             string responseCustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(userID);
             Assert.IsNotNull(responseCustomerID);
-            Assert.AreEqual(testCustomerID, responseCustomerID);
         }
     }
 }
