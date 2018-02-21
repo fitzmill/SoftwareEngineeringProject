@@ -13,11 +13,24 @@ namespace Engines
     /// </summary>
     public class NotificationEngine : INotificationEngine
     {
+
+        private IEmailAccessor emailAccessor;
+
+        public NotificationEngine(IEmailAccessor emailAccessor)
+        {
+            this.emailAccessor = emailAccessor;
+        }
+
         public void SendTransactionNotifications(List<Transaction> transactions)
         {
             //Convert transactions into notifications
             //Send notifications to appropriate accessor (email for now)
             throw new NotImplementedException();
+        }
+
+        public IEmailAccessor GetEmailAccessor() //TODO: remove this once testing is done
+        {
+            return emailAccessor;
         }
     }
 }
