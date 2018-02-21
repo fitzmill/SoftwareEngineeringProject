@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using System.Data.SqlClient;
 
 namespace NelnetProject.Tests.Accessors
 {
@@ -15,33 +16,22 @@ namespace NelnetProject.Tests.Accessors
     public class TestSetUserInfoAccessor
     {
         ISetUserInfoAccessor setUserInfoAccessor;
+        string connectionString;
 
         public TestSetUserInfoAccessor()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
+            connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
             setUserInfoAccessor = new SetUserInfoAccessor(connectionString);
         }
 
         [TestMethod]
-        public void TestInsertPersonalInfo()
+        public void TestConnection()
         {
-            User user = new User()
+            using(SqlConnection connection = new SqlConnection(connectionString))
             {
-                UserID = -1,
-                FirstName = "Amanda",
-                LastName = "Garfield",
-                Email = "amanda@gmail.com",
-                Hashed = "hashthis",
-                Salt = "extrasecurity",
-                PaymentPlan = PaymentPlan.MONTHLY,
-                UserType = UserType.GENERAL,
-                CustomerID = "fakeid",
-                Students = new List<Student>()
-            };
-
-            setUserInfoAccessor.InsertPersonalInfo(user);
-
-            Assert.IsTrue(user.UserID >= 1);
+                connection.Open();
+                connection.Close();
+            }
         }
     }
 }
