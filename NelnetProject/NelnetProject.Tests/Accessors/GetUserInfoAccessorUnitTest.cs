@@ -10,16 +10,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace NelnetProject.Tests.Accessors
 {
     [TestClass]
-    public class GetUserInfoAccessorUnitTest
+    public class TestGetUserInfoAccessorUnit
     {
         private IGetUserInfoAccessor getUserInfoAccessor;
-        public GetUserInfoAccessorUnitTest()
+        public TestGetUserInfoAccessorUnit()
         {
             this.getUserInfoAccessor = new GetUserInfoAccessor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
         }
 
         [TestMethod]
-        public void GetUserInfoByIDTest()
+        public void TestGetUserInfoByID()
         {
             int userID = 1;
             User responseUser = getUserInfoAccessor.GetUserInfoByID(userID);
@@ -27,7 +27,7 @@ namespace NelnetProject.Tests.Accessors
         }
 
         [TestMethod]
-        public void GetUserInfoByEmailTest()
+        public void TestGetUserInfoByEmail()
         {
             string email = "billy@microsoft.com";
             User responseUser = getUserInfoAccessor.GetUserInfoByEmail(email);
@@ -35,7 +35,7 @@ namespace NelnetProject.Tests.Accessors
         }
 
         [TestMethod]
-        public void EmailExistsTest()
+        public void TestEmailExists()
         {
             string email = "sean@weebnation.com";
             Boolean response = getUserInfoAccessor.EmailExists(email);
@@ -43,7 +43,7 @@ namespace NelnetProject.Tests.Accessors
         }
 
         [TestMethod]
-        public void GetUserPasswordInfoTest()
+        public void TestGetUserPasswordInfo()
         {
             string email = "cooper@cooperknaak.dating";
             PasswordDTO response = getUserInfoAccessor.GetUserPasswordInfo(email);
@@ -51,7 +51,7 @@ namespace NelnetProject.Tests.Accessors
         }
 
         [TestMethod]
-        public void GetPaymentSpringCustomerIDTest()
+        public void TestGetPaymentSpringCustomerID()
         {
             int userID = 2;
             string responseCustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(userID);
