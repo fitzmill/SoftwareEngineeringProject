@@ -52,10 +52,10 @@
   <ItemGroup>
     <Compile Include="Accessors\GetUserInfoAccessorUnitTest.cs" />
     <Compile Include="Accessors\TestGetTransactionAccessor.cs" />
+    <Compile Include="Accessors\TestSetUserInfoAccessor.cs" />
     <Compile Include="Accessors\TestSetTransactionAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

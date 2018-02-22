@@ -22,7 +22,7 @@ namespace Accessors
         public void InsertPersonalInfo(User user)
         { 
             //specifies stored query and parameters
-            string query = "[dbo].[InsertPersonalInfo] @FirstName=_FirstName, @LastName=_LastName, @Email=_Email, @Hashed=_Hashed, @Salt=_Salt, @PaymentPlan=_PaymentPlan, @UserType=_UserType, @CustomerID=_CustomerID";
+            string query = "[dbo].[InsertPersonalInfo]";
 
             //add the personal record from the user to the database
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -30,14 +30,17 @@ namespace Accessors
                 SqlCommand command = new SqlCommand(query, connection);
 
                 //fill in parameters
-                command.Parameters.AddWithValue("_FirstName", user.FirstName);
-                command.Parameters.AddWithValue("_LastName", user.LastName);
-                command.Parameters.AddWithValue("_Email", user.Email);
-                command.Parameters.AddWithValue("_Hashed", user.Hashed);
-                command.Parameters.AddWithValue("_Salt", user.Salt);
-                command.Parameters.AddWithValue("_PaymentPlan", user.PaymentPlan);
-                command.Parameters.AddWithValue("_UserType", user.UserType);
-                command.Parameters.AddWithValue("_CustomerID", user.CustomerID);
+                command.Parameters.Add(new SqlParameter("@FirstName", user.FirstName));
+                command.Parameters.Add(new SqlParameter("@LastName", user.LastName));
+                command.Parameters.Add(new SqlParameter("@Email", user.Email));
+                command.Parameters.Add(new SqlParameter("@Hashed", user.Hashed));
+                command.Parameters.Add(new SqlParameter("@Salt", user.Salt));
+                command.Parameters.Add(new SqlParameter("@PaymentPlan", user.PaymentPlan));
+                command.Parameters.Add(new SqlParameter("@UserType", user.UserType));
+                command.Parameters.Add(new SqlParameter("@CustomerID", user.CustomerID));
+
+                //set the command type
+                command.CommandType = CommandType.StoredProcedure;
 
                 //open connection
                 connection.Open();
@@ -48,7 +51,7 @@ namespace Accessors
                 if (reader.Read())
                 {
                     //read the id of the user that has just been created
-                    user.UserID = reader.GetInt32(0);
+                    user.UserID = (int)reader.GetDecimal(0);
                 }
             }
         }
@@ -56,22 +59,25 @@ namespace Accessors
         //use the id from the user model to update the record asociated with the user
         public void UpdatePersonalInfo(User user)
         {
-            string query = "[dbo].[UpdatePersonalInfo] @ID=_ID, @FirstName=_FirstName, @LastName=_LastName, @Email=_Email, @Hashed=_Hashed, @Salt=_Salt, @PaymentPlan=_PaymentPlan, @UserType=_UserType, @CustomerID=_CustomerID";
+            string query = "[dbo].[UpdatePersonalInfo]";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
                 //fill in parameters
-                command.Parameters.AddWithValue("_ID", user.UserID);
-                command.Parameters.AddWithValue("_FirstName", user.FirstName);
-                command.Parameters.AddWithValue("_LastName", user.LastName);
-                command.Parameters.AddWithValue("_Email", user.Email);
-                command.Parameters.AddWithValue("_Hashed", user.Hashed);
-                command.Parameters.AddWithValue("_Salt", user.Salt);
-                command.Parameters.AddWithValue("_PaymentPlan", user.PaymentPlan);
-                command.Parameters.AddWithValue("_UserType", user.UserType);
-                command.Parameters.AddWithValue("_CustomerID", user.CustomerID);
+                command.Parameters.Add(new SqlParameter("@ID", user.UserID));
+                command.Parameters.Add(new SqlParameter("@FirstName", user.FirstName));
+                command.Parameters.Add(new SqlParameter("@LastName", user.LastName));
+                command.Parameters.Add(new SqlParameter("@Email", user.Email));
+                command.Parameters.Add(new SqlParameter("@Hashed", user.Hashed));
+                command.Parameters.Add(new SqlParameter("@Salt", user.Salt));
+                command.Parameters.Add(new SqlParameter("@PaymentPlan", user.PaymentPlan));
+                command.Parameters.Add(new SqlParameter("@UserType", user.UserType));
+                command.Parameters.Add(new SqlParameter("@CustomerID", user.CustomerID));
+
+                //set command type
+                command.CommandType = CommandType.StoredProcedure;
 
                 //open connection
                 connection.Open();
@@ -96,7 +102,9 @@ namespace Accessors
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("_ID", userID);
+                command.Parameters.Add(new SqlParameter("@ID", userID));
+
+                command.CommandType = CommandType.StoredProcedure;
 
                 connection.Open();
 
@@ -119,10 +127,12 @@ namespace Accessors
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("_FirstName", student.FirstName);
-                command.Parameters.AddWithValue("_LastName", student.LastName);
-                command.Parameters.AddWithValue("_Grade", student.Grade);
-                command.Parameters.AddWithValue("_UserID", userID);
+                command.Parameters.Add(new SqlParameter("@FirstName", student.FirstName));
+                command.Parameters.Add(new SqlParameter("@LastName", student.LastName));
+                command.Parameters.Add(new SqlParameter("@Grade", student.Grade));
+                command.Parameters.Add(new SqlParameter("@UserID", userID));
+
+                command.CommandType = CommandType.StoredProcedure;
 
                 connection.Open();
 
@@ -130,7 +140,7 @@ namespace Accessors
 
                 if (reader.Read())
                 {
-                    student.StudentID = reader.GetInt32(0);
+                    student.StudentID = (int)reader.GetDecimal(0);
                 }
             }
         }
@@ -144,10 +154,12 @@ namespace Accessors
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("_ID", student.StudentID);
-                command.Parameters.AddWithValue("_FirstName", student.FirstName);
-                command.Parameters.AddWithValue("_LastName", student.LastName);
-                command.Parameters.AddWithValue("_Grade", student.Grade);
+                command.Parameters.Add(new SqlParameter("@ID", student.StudentID));
+                command.Parameters.Add(new SqlParameter("@FirstName", student.FirstName));
+                command.Parameters.Add(new SqlParameter("@LastName", student.LastName));
+                command.Parameters.Add(new SqlParameter("@Grade", student.Grade));
+
+                command.CommandType = CommandType.StoredProcedure;
 
                 connection.Open();
 
@@ -170,7 +182,9 @@ namespace Accessors
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("_ID", studentID);
+                command.Parameters.Add(new SqlParameter("@ID", studentID));
+
+                command.CommandType = CommandType.StoredProcedure;
 
                 connection.Open();
 
