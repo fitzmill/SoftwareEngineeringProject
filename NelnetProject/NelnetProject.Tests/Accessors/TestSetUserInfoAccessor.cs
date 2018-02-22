@@ -16,17 +16,18 @@ namespace NelnetProject.Tests.Accessors
     public class TestSetUserInfoAccessor
     {
         SetUserInfoAccessor setUserInfoAccessor;
+        string connectionString;
 
         public TestSetUserInfoAccessor()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
+            connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
             setUserInfoAccessor = new SetUserInfoAccessor(connectionString);
         }
 
         [TestMethod]
         public void TestConnection()
         {
-            using(SqlConnection connection = new SqlConnection(setUserInfoAccessor.connectionString))
+            using(SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 connection.Close();

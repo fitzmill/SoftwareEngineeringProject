@@ -11,7 +11,7 @@ namespace Accessors
 {
     public class SetUserInfoAccessor : ISetUserInfoAccessor
     {
-        public string connectionString;
+        string connectionString;
 
         public SetUserInfoAccessor(string connectionString)
         {
