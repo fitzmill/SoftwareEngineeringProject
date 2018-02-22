@@ -1,33 +1,38 @@
-﻿using System;
-using Accessors;
+﻿using Core.Interfaces;
 using Core.Models;
-using System.Web.Http;
-using Core.Interfaces;
 using Engines;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 
 namespace Web.Controllers
 {
-    /// <summary>
-    /// IN PROGRESS CLASS USED FOR TESTING.
-    /// NOT TO BE USED IN FINAL APP.
-    /// </summary>
     [RoutePrefix("api/email")]
     public class EmailController : ApiController
     {
-
         private INotificationEngine notificationEngine;
 
         public EmailController(INotificationEngine notificationEngine)
         {
             this.notificationEngine = notificationEngine;
+            throw new Exception("AHHHH");
+        }
+
+        [HttpGet]
+        [Route("")]
+        public string test()
+        {
+            return "test";
         }
 
         [HttpPost]
         [Route("send")]
         public void Post([FromBody] EmailNotification email)
         {
-            ((NotificationEngine) notificationEngine).GetEmailAccessor().SendEmail(email); //todo fix this once testing is done
+            ((NotificationEngine)notificationEngine).GetEmailAccessor().SendEmail(email); //todo fix this once testing is done
         }
-
     }
 }

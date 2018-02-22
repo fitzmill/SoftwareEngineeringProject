@@ -1,9 +1,13 @@
 using Accessors;
 using Core.Interfaces;
 using Engines;
+using Microsoft.Practices.Unity.Configuration;
 using System;
 using System.Configuration;
+using System.Web.Http;
+using System.Web.Mvc;
 using Unity;
+using Unity.AspNet.WebApi;
 using Unity.Injection;
 
 namespace Web
@@ -42,7 +46,7 @@ namespace Web
         {
             // NOTE: To load from web.config uncomment the line below.
             // Make sure to add a Unity.Configuration to the using statements.
-            // container.LoadConfiguration();
+            container.LoadConfiguration();
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
@@ -59,6 +63,22 @@ namespace Web
             container.RegisterType<IGetTransactionEngine, GetTransactionEngine>();
 
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
+
+            //container.RegisterType<IEmailAccessor, EmailAccessor>(newInjectionCnew EmailAccessor(
+
+            container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor(
+                    ConfigurationManager.AppSettings["SenderEmail"],
+                    ConfigurationManager.AppSettings["SenderUsername"],
+                    ConfigurationManager.AppSettings["SenderPassword"],
+                    int.Parse(ConfigurationManager.AppSettings["Port"])));
+            container.RegisterType<INotificationEngine, NotificationEngine>();
+
+            //MVC's DependencyResolver
+            DependencyResolver.SetResolver(new UnityDependencyResolver(container));
+
+            //Web API's DependencyResolver
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+
 
         }
     }
