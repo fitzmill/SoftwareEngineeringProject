@@ -47,10 +47,12 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Accessors\GetUserInfoAccessorUnitTest.cs" />
     <Compile Include="Accessors\TestGetTransactionAccessor.cs" />
+    <Compile Include="Accessors\TestSetTransactionAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
     <Compile Include="UnitTest1.cs" />
