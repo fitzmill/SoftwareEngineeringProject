@@ -10,61 +10,52 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace NelnetProject.Tests.Accessors
 {
     [TestClass]
-    public class GetUserInfoAccessorUnitTest
+    public class TestGetUserInfoAccessorUnit
     {
         private IGetUserInfoAccessor getUserInfoAccessor;
-        public GetUserInfoAccessorUnitTest()
+        public TestGetUserInfoAccessorUnit()
         {
             this.getUserInfoAccessor = new GetUserInfoAccessor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
         }
 
         [TestMethod]
-        public void GetUserInfoByID()
+        public void TestGetUserInfoByID()
         {
             int userID = 1;
-            string testFirstName = "Cooper";
             User responseUser = getUserInfoAccessor.GetUserInfoByID(userID);
             Assert.IsNotNull(responseUser);
-            Assert.AreEqual(testFirstName, responseUser.FirstName);
         }
 
         [TestMethod]
-        public void GetUserInfoByEmail()
+        public void TestGetUserInfoByEmail()
         {
             string email = "billy@microsoft.com";
-            string testFirstName = "Bill";
             User responseUser = getUserInfoAccessor.GetUserInfoByEmail(email);
             Assert.IsNotNull(responseUser);
-            Assert.AreEqual(testFirstName, responseUser.FirstName);
         }
 
         [TestMethod]
-        public void EmailExists()
+        public void TestEmailExists()
         {
             string email = "sean@weebnation.com";
             Boolean response = getUserInfoAccessor.EmailExists(email);
             Assert.IsNotNull(response);
-            Assert.AreEqual(true, response);
         }
 
         [TestMethod]
-        public void GetUserPasswordInfo()
+        public void TestGetUserPasswordInfo()
         {
             string email = "cooper@cooperknaak.dating";
-            string testHashed = "notimplementedyet";
             PasswordDTO response = getUserInfoAccessor.GetUserPasswordInfo(email);
             Assert.IsNotNull(response);
-            Assert.AreEqual(testHashed, response.Hashed);
         }
 
         [TestMethod]
-        public void GetPaymentSpringCustomerID()
+        public void TestGetPaymentSpringCustomerID()
         {
             int userID = 2;
-            string testCustomerID = "1edf63";
             string responseCustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(userID);
             Assert.IsNotNull(responseCustomerID);
-            Assert.AreEqual(testCustomerID, responseCustomerID);
         }
     }
 }
