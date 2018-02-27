@@ -60,6 +60,9 @@ namespace Web
 
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
 
+            container.RegisterType<INotificationEngine, NotificationEngine>();
+            container.RegisterType<IEmailAccessor, EmailAccessor>();
+
         }
     }
 }
