@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="DTOs\ChargeResultDTO.cs" />
     <Compile Include="DTOs\CreateTokenDTO.cs" />
+    <Compile Include="DTOs\DateDTO.cs" />
+    <Compile Include="DTOs\DateRangeDTO.cs" />
     <Compile Include="DTOs\LoginDTO.cs" />
     <Compile Include="DTOs\PasswordDTO.cs" />
     <Compile Include="DTOs\PaymentDTO.cs" />
