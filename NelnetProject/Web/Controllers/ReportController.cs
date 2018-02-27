@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.DTOs;
+using Core.Interfaces;
 using Core.Models;
 using System;
 using System.Collections.Generic;
@@ -28,12 +29,17 @@ namespace Web.Controllers
         }
 
         //POST api/report
-        public IHttpActionResult Post(Report report)
+        public IHttpActionResult Post(DateRangeDTO dateRange)
         {
-            if (report == null)
+            if (dateRange == null || dateRange.StartDate == null || dateRange.EndDate == null)
             {
                 return BadRequest("Report object was null in request");
             }
+            var report = new Report()
+            {
+                StartDate = new DateTime(dateRange.StartDate.Year, dateRange.StartDate.Month, dateRange.StartDate.Day),
+                EndDate = new DateTime(dateRange.EndDate.Year, dateRange.EndDate.Month, dateRange.EndDate.Day)
+            };
             setReportEngine.InsertReport(report);
             return Ok();
         }
