@@ -60,6 +60,14 @@ namespace Web
 
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
 
+            container.RegisterType<IGetReportAccessor, GetReportAccessor>(constructor);
+
+            container.RegisterType<IGetReportEngine, GetReportEngine>();
+
+            container.RegisterType<ISetReportAccessor, SetReportAccessor>(constructor);
+
+            container.RegisterType<ISetReportEngine, SetReportEngine>();
+
         }
     }
 }
