@@ -62,7 +62,14 @@ namespace Web
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
 
             container.RegisterType<INotificationEngine, NotificationEngine>();
-            container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor("efrftgty67hu8j@gmail.com", "efrftgty67hu8j", "cornflakes", 587));
+
+            container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor(
+                ConfigurationManager.AppSettings["SenderEmail"],
+                ConfigurationManager.AppSettings["SenderUsername"],
+                ConfigurationManager.AppSettings["SenderPassword"],
+                int.Parse(ConfigurationManager.AppSettings["Port"])
+            ));
+
         }
     }
 }
