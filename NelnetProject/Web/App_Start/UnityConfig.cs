@@ -43,7 +43,7 @@ namespace Web
         {
             // NOTE: To load from web.config uncomment the line below.
             // Make sure to add a Unity.Configuration to the using statements.
-            //container.LoadConfiguration();
+            // container.LoadConfiguration();
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
@@ -60,6 +60,14 @@ namespace Web
             container.RegisterType<IGetTransactionEngine, GetTransactionEngine>();
 
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
+
+            container.RegisterType<IGetReportAccessor, GetReportAccessor>(constructor);
+
+            container.RegisterType<IGetReportEngine, GetReportEngine>();
+
+            container.RegisterType<ISetReportAccessor, SetReportAccessor>(constructor);
+
+            container.RegisterType<ISetReportEngine, SetReportEngine>();
 
             container.RegisterType<INotificationEngine, NotificationEngine>();
 
