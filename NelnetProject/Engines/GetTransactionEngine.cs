@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Core;
+using Core.DTOs;
 
 namespace Engines
 {
@@ -15,27 +16,27 @@ namespace Engines
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public List<Transaction> GetAllTransactionsForUser(int userID)
+        public IList<Transaction> GetAllTransactionsForUser(int userID)
         {
-            throw new NotImplementedException();
+            return getTransactionAccessor.GetAllTransactionsForUser(userID);
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public List<Transaction> GetAllUnsettledTransactions()
+        public IList<Transaction> GetAllUnsettledTransactions()
         {
-            throw new NotImplementedException();
+            return getTransactionAccessor.GetAllUnsettledTransactions();
         }
 
         //Calls identical method in IGetTransactionAccessor
         public Transaction GetMostRecentTransactionForUser(int userID)
         {
-            throw new NotImplementedException();
+            return getTransactionAccessor.GetMostRecentTransactionForUser(userID);
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public List<Transaction> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
+        public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
-            throw new NotImplementedException();
+            return getTransactionAccessor.GetTransactionsForDateRange(startTime, endTime);
         }
     }
 }

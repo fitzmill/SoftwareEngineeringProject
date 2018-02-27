@@ -47,6 +47,7 @@
     <Compile Include="DTOs\PasswordDTO.cs" />
     <Compile Include="DTOs\PaymentDTO.cs" />
     <Compile Include="DTOs\ReportDTO.cs" />
+    <Compile Include="DTOs\TransactionWithUserInfoDTO.cs" />
     <Compile Include="DTOs\UserPaymentInfoDTO.cs" />
     <Compile Include="Enums\PaymentPlan.cs" />
     <Compile Include="Enums\ProcessState.cs" />
