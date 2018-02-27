@@ -26,7 +26,7 @@ namespace Core.DTOs
 
         public string Zip { get; set; }
 
-        public int CardNumber { get; set; }
+        public long CardNumber { get; set; }
 
         public int ExpirationYear { get; set; }
 
