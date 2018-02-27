@@ -25,7 +25,7 @@ namespace Web.Controllers
         //GET api/report
         public IHttpActionResult Get()
         {
-            return Ok(getReportEngine);
+            return Ok(getReportEngine.GetAllReports());
         }
 
         //POST api/report

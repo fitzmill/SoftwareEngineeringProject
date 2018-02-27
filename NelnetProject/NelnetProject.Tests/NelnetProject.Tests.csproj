@@ -54,8 +54,14 @@
     <Compile Include="Accessors\TestGetTransactionAccessor.cs" />
     <Compile Include="Accessors\TestSetUserInfoAccessor.cs" />
     <Compile Include="Accessors\TestSetTransactionAccessor.cs" />
+    <Compile Include="Accessors\TestGetReportAccessor.cs" />
+    <Compile Include="Accessors\TestSetReportAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockGetReportAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockSetReportAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
+    <Compile Include="Engines\TestGetReportEngine.cs" />
+    <Compile Include="Engines\TestSetReportEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
