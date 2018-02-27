@@ -1,6 +1,7 @@
 using Accessors;
 using Core.Interfaces;
 using Engines;
+using Microsoft.Practices.Unity.Configuration;
 using System;
 using System.Configuration;
 using Unity;
@@ -42,7 +43,7 @@ namespace Web
         {
             // NOTE: To load from web.config uncomment the line below.
             // Make sure to add a Unity.Configuration to the using statements.
-            // container.LoadConfiguration();
+            //container.LoadConfiguration();
 
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
@@ -61,8 +62,7 @@ namespace Web
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
 
             container.RegisterType<INotificationEngine, NotificationEngine>();
-            container.RegisterType<IEmailAccessor, EmailAccessor>();
-
+            container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor("efrftgty67hu8j@gmail.com", "efrftgty67hu8j", "cornflakes", 587));
         }
     }
 }

@@ -21,12 +21,20 @@ namespace Accessors
         private string senderPassword;
         private int port;
 
-        public EmailAccessor()
+        //public EmailAccessor()
+        //{
+        //    senderEmail = "efrftgty67hu8j@gmail.com";
+        //    senderUsername = "efrftgty67hu8j";
+        //    senderPassword = "cornflakes";
+        //    port = 587;
+        //}
+
+        public EmailAccessor(string senderEmail, string senderUsername, string senderPassword, int port)
         {
-            senderEmail = "efrftgty67hu8j@gmail.com";
-            senderUsername = "efrftgty67hu8j";
-            senderPassword = "cornflakes";
-            port = 587;
+            this.senderEmail = senderEmail;
+            this.senderUsername = senderUsername;
+            this.senderPassword = senderPassword;
+            this.port = port;
         }
         
         public void SendEmail(EmailNotification emailNotification)

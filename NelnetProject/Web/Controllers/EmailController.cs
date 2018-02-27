@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.Interfaces;
 using Core.Models;
+using Engines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,9 +31,7 @@ namespace Web.Controllers
         [HttpPost]
         public IHttpActionResult Post(EmailNotification email)
         {
-            List<Transaction> transactions = new List<Transaction>();
-            transactions.Add(new Transaction());
-            notificationEngine.SendTransactionNotifications(transactions);
+            ((NotificationEngine)notificationEngine).GetEmailAccessor().SendEmail(email); //this is a hack to be used just for testing. It is not proper design.
             return Ok(email);
         }
     }

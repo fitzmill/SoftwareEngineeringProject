@@ -28,5 +28,10 @@ namespace Engines
             //Send notifications to appropriate accessor (email for now)
             Debug.WriteLine("weeeeee");
         }
+
+        public IEmailAccessor GetEmailAccessor()
+        {
+            return emailAccessor;
+        }
     }
 }
