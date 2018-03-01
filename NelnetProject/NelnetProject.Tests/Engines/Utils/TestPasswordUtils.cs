@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace NelnetProject.Tests.Engines.Utils
 {
     [TestClass]
-    class TestPasswordUtils
+    public class TestPasswordUtils
     {
         [TestMethod]
         public void TestHashPasswords()
