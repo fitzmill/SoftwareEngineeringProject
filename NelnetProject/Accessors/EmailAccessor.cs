@@ -21,14 +21,6 @@ namespace Accessors
         private string senderPassword;
         private int port;
 
-        //public EmailAccessor()
-        //{
-        //    senderEmail = "efrftgty67hu8j@gmail.com";
-        //    senderUsername = "efrftgty67hu8j";
-        //    senderPassword = "cornflakes";
-        //    port = 587;
-        //}
-
         public EmailAccessor(string senderEmail, string senderUsername, string senderPassword, int port)
         {
             this.senderEmail = senderEmail;
