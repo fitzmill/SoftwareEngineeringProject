@@ -1,0 +1,90 @@
+﻿using Core.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Core.Models;
+using Core;
+using Core.DTOs;
+
+namespace NelnetProject.Tests.Engines.MockedAccessors
+{
+    public class MockGetUserInfoAccessor : IGetUserInfoAccessor
+    {
+        public List<User> MockDB = new List<User>()
+        {
+            new User()
+            {
+                UserID = 1,
+                FirstName = "John",
+                LastName = "Smith",
+                Email = "johnsmith@gmail.com",
+                Hashed = "78b10e2cb3ec22bffea25bad2a1c02cbe4b7b587b46d0dd8d6af1c170910a3b1",
+                Salt = "l1u2c3a4s5",
+                PaymentPlan = PaymentPlan.MONTHLY,
+                UserType = UserType.GENERAL,
+                CustomerID = "fed123",
+                Students = null
+            }
+        };
+
+        public bool EmailExists(string email)
+        {
+            if (email.Equals(MockDB[0].Email))
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
+        }
+
+        public User GetUserInfoByID(int userID)
+        {
+            if (userID == MockDB[0].UserID)
+            {
+                return MockDB[0];
+            } else
+            {
+                return null;
+            }
+        }
+
+        public User GetUserInfoByEmail(string email)
+        {
+            if (email.Equals(MockDB[0].Email))
+            {
+                return MockDB[0];
+            } else
+            {
+                return null;
+            }
+        }
+
+        public PasswordDTO GetUserPasswordInfo(string email)
+        {
+            PasswordDTO result = new PasswordDTO();
+            if (email.Equals(MockDB[0].Email))
+            {
+                result.Hashed = MockDB[0].Hashed;
+                result.Salt = MockDB[0].Salt;
+                return result;
+            } else
+            {
+                return null;
+            }
+        }
+
+        public string GetPaymentSpringCustomerID(int userID)
+        {
+            if (userID == MockDB[0].UserID)
+            {
+                return MockDB[0].CustomerID;
+            } else
+            {
+                return null;
+            }
+        }
+    }
+}
