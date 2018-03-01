@@ -80,7 +80,7 @@ namespace Web
 
             container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(new InjectionConstructor(
                 ConfigurationManager.AppSettings["PaymentSpringAPIUrl"],
-                ConfigurationManager.AppSettings["Username"]
+                ConfigurationManager.AppSettings["PaymentSpringUsername"]
             ));
         }
     }
