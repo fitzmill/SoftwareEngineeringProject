@@ -17,26 +17,32 @@ namespace Engines
         private IGetUserInfoAccessor getUserInfoAccessor;
         private IGetPaymentInfoAccessor getPaymentInfoAccessor;
         private IChargePaymentAccessor chargePaymentAccessor;
+        private ISetTransactionAccessor setTransactionAccessor;
 
-        public PaymentEngine(IGetUserInfoAccessor getUserInfoAccessor, IGetPaymentInfoAccessor getPaymentInfoAccessor, IChargePaymentAccessor chargePaymentAccessor)
+        public PaymentEngine(IGetUserInfoAccessor getUserInfoAccessor, IGetPaymentInfoAccessor getPaymentInfoAccessor, 
+            IChargePaymentAccessor chargePaymentAccessor, ISetTransactionAccessor setTransactionAccessor)
         {
             this.getUserInfoAccessor = getUserInfoAccessor;
             this.getPaymentInfoAccessor = getPaymentInfoAccessor;
             this.chargePaymentAccessor = chargePaymentAccessor;
+            this.setTransactionAccessor = setTransactionAccessor;
         }
 
         public IList<Transaction> ChargePayments(List<Transaction> charges)
         {
            return charges.Select(charge =>
            {
+               //Create dto to be sent to Payment Spring
                PaymentDTO payment = new PaymentDTO
                {
                    CustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(charge.UserID),
                    Amount = charge.AmountCharged
                };
 
+               //Charge Payment Spring
                ChargeResultDTO result = chargePaymentAccessor.ChargeCustomer(payment);
 
+               //If charge fails, retry for seven days. After that, the charge is marked as failed.
                ProcessState processState = ProcessState.SUCCESSFUL;
                if (!result.WasSuccessful)
                {
@@ -44,7 +50,8 @@ namespace Engines
                    processState = (daysOverdue >= 7) ? ProcessState.FAILED : ProcessState.RETRYING;
                }
 
-               return new Transaction
+               //Generate result transaction
+               Transaction resultTransaction =  new Transaction
                {
                    TransactionID = charge.TransactionID,
                    UserID = charge.UserID,
@@ -54,6 +61,11 @@ namespace Engines
                    ProcessState = processState,
                    ReasonFailed = result.ErrorMessage
                };
+
+               //Update transaction entry in DB
+               setTransactionAccessor.UpdateTransaction(resultTransaction);
+
+               return resultTransaction;
            }).ToList();
         }
 
