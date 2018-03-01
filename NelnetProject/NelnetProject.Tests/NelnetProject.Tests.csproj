@@ -61,7 +61,9 @@
     <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
     <Compile Include="Engines\TestGetReportEngine.cs" />
+    <Compile Include="Engines\TestGetUserInfoEngine.cs" />
     <Compile Include="Engines\TestSetReportEngine.cs" />
+    <Compile Include="Engines\Utils\TestPasswordUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
