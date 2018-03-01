@@ -26,7 +26,7 @@ namespace Engines
         {
             //Convert transactions into notifications
             //Send notifications to appropriate accessor (email for now)
-            Debug.WriteLine("weeeeee");
+            throw new NotImplementedException();
         }
 
         public IEmailAccessor GetEmailAccessor()
