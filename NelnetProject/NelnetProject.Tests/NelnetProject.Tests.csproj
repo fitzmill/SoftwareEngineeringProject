@@ -56,6 +56,7 @@
     <Compile Include="Accessors\TestSetTransactionAccessor.cs" />
     <Compile Include="Accessors\TestGetReportAccessor.cs" />
     <Compile Include="Accessors\TestSetReportAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockGetPaymentInfoAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockGetReportAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockGetUserInfoAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockSetReportAccessor.cs" />
