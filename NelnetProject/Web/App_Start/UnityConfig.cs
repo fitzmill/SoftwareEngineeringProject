@@ -41,36 +41,31 @@ namespace Web
         /// </remarks>
         public static void RegisterTypes(IUnityContainer container)
         {
-            // NOTE: To load from web.config uncomment the line below.
-            // Make sure to add a Unity.Configuration to the using statements.
-            // container.LoadConfiguration();
+            //database accessors
+            var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
+            container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(connectionStringConstructor);
+            container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(connectionStringConstructor);
+            container.RegisterType<IGetReportAccessor, GetReportAccessor>(connectionStringConstructor);
+            container.RegisterType<ISetReportAccessor, SetReportAccessor>(connectionStringConstructor);
 
-            // TODO: Register your type's mappings here.
-            // container.RegisterType<IProductRepository, ProductRepository>();
+            //http client builder for payment spring accessors
+            HttpClientBuilder httpClientBuilder = new HttpClientBuilder(
+                ConfigurationManager.AppSettings["PaymentSpringPublicKey"],
+                ConfigurationManager.AppSettings["PaymentSpringPrivateKey"]
+            );
+            container.RegisterInstance<HttpClientBuilder>(httpClientBuilder);
 
-            var constructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
+            //payment spring accessors
+            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(new InjectionConstructor(
+                httpClientBuilder,
+                ConfigurationManager.AppSettings["PaymentSpringApiUrl"]
+            ));
+            container.RegisterType<ISetPaymentInfoAccessor, SetPaymentInfoAccessor>(new InjectionConstructor(
+                httpClientBuilder,
+                ConfigurationManager.AppSettings["PaymentSpringApiUrl"]
+            ));
 
-            /**
-             * So since the accessor takes a string in the constructor instead of an interface, we need to pass that in manually.
-             * The way we do that is through an InjectionConstructor, which takes the accessor's constructor's parameters as arguments.
-             **/
-            container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(constructor);
-
-            //This is how you register a type that takes an already registered interface as an argument
-            container.RegisterType<IGetTransactionEngine, GetTransactionEngine>();
-
-            container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(constructor);
-
-            container.RegisterType<IGetReportAccessor, GetReportAccessor>(constructor);
-
-            container.RegisterType<IGetReportEngine, GetReportEngine>();
-
-            container.RegisterType<ISetReportAccessor, SetReportAccessor>(constructor);
-
-            container.RegisterType<ISetReportEngine, SetReportEngine>();
-
-            container.RegisterType<INotificationEngine, NotificationEngine>();
-
+            //email accessor
             container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor(
                 ConfigurationManager.AppSettings["SenderEmail"],
                 ConfigurationManager.AppSettings["SenderUsername"],
@@ -78,6 +73,12 @@ namespace Web
                 int.Parse(ConfigurationManager.AppSettings["Port"])
             ));
 
+            //engines
+            container.RegisterType<IGetTransactionEngine, GetTransactionEngine>();
+            container.RegisterType<IGetReportEngine, GetReportEngine>();
+            container.RegisterType<ISetReportEngine, SetReportEngine>();
+            container.RegisterType<INotificationEngine, NotificationEngine>();
+            
         }
     }
 }
