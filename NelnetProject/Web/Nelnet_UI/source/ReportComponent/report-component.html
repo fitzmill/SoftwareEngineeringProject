@@ -1,0 +1,37 @@
+﻿<div>
+    <h1>Admin Dashboard</h1>
+    <button class="btn btn-primary btn-logout">Logout</button>
+
+    <div class="card">
+        <h3 class="card-header">Custom Report</h3>
+        <div class="card-body" style="position: relative">
+            <label class="text-inline-input">Period from </label>
+            <input type="date" style="float: left" />
+            <label class="text-inline-input"> to </label>
+            <input type="date" style="float: left" />
+            <button class="btn btn-success btn-panel">Generate</button>
+        </div>
+    </div>
+    <h3 style="padding-top:30px">Report History</h3>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Date Generated</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody data-bind:"foreach: reports">
+            <tr>
+                <th scope="row" data-bind:"text: DateCreated></th>
+                <td data-bind:"text: StartDate"></td>
+                <td data-bind:"text: EndDate"></td>
+                <td>
+                    <button class="btn btn-primary">View</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <label data-bind:"text: text"></label>
+</div>

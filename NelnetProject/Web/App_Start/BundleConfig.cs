@@ -24,7 +24,9 @@ namespace Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css"));
 
-
+            bundles.Add(new ScriptBundle("~/bundles/pager").Include(
+                "~/Scripts/pager.min.js").Include(
+                "~/Scripts/history.js"));
         }
     }
 }
