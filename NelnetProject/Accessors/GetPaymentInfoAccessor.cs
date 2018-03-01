@@ -12,7 +12,7 @@ namespace Accessors
     {
         private HttpClientBuilder clientBuilder;
         private string urlBase;
-        private static string customerExtention = "/customers/";
+        private readonly string customerExtention = "/customers/";
 
         public GetPaymentInfoAccessor(HttpClientBuilder clientBuilder, string urlBase)
         {

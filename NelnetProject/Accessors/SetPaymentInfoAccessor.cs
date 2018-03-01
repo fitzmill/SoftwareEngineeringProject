@@ -54,8 +54,6 @@ namespace Accessors
 
                 dynamic result = JsonConvert.DeserializeObject(responseTask.Result);
 
-                customerInfo.CustomerID = result.id;
-
                 return customerInfo.CustomerID;
             }
         }
