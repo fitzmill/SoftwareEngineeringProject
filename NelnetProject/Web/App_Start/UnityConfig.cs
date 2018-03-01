@@ -78,6 +78,10 @@ namespace Web
                 int.Parse(ConfigurationManager.AppSettings["Port"])
             ));
 
+            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(new InjectionConstructor(
+                ConfigurationManager.AppSettings["PaymentSpringAPIUrl"],
+                ConfigurationManager.AppSettings["Username"]
+            ));
         }
     }
 }
