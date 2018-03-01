@@ -15,21 +15,24 @@ namespace Accessors
 {
     public class SetPaymentInfoAccessor : ISetPaymentInfoAccessor
     {
-        
-        private string url = "https://api.paymentspring.com/api/v1/customers";
+        private HttpClientBuilder clientBuilder;
+        private string url; 
+
+        public SetPaymentInfoAccessor(HttpClientBuilder clientBuilder, string url)
+        {
+            this.clientBuilder = clientBuilder;
+            this.url = url;
+        }
 
         //create a customer through the paymentSpring API and return the generated customerID
         public string CreateCustomer(UserPaymentInfoDTO customerInfo)
         {
-            using (HttpClient client = new HttpClient())
-            {
-                string formatted = string.Format("{0}:{1}", "test_5492eef99f856a22e6c989a2d8", "");
-                string encrypted = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(formatted));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", encrypted);
+            string createCustomerUrl = this.url + "/customers";
 
+            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            {
                 var values = new Dictionary<string, string>
                 {
-                    {"username", customerInfo.Username},
                     {"first_name", customerInfo.FirstName},
                     {"company", customerInfo.Company},
                     {"last_name", customerInfo.LastName},
@@ -43,10 +46,9 @@ namespace Accessors
                     {"card_exp_year", customerInfo.ExpirationYear.ToString()}
                 };
 
-
                 FormUrlEncodedContent content = new FormUrlEncodedContent(values);
 
-                Task<HttpResponseMessage> response = client.PostAsync(url, content);
+                Task<HttpResponseMessage> response = client.PostAsync(createCustomerUrl, content);
 
                 Task<string> responseTask = response.Result.Content.ReadAsStringAsync();
 
@@ -54,14 +56,36 @@ namespace Accessors
 
                 customerInfo.CustomerID = result.id;
 
-                return customerInfo.CustomerID.ToString();
+                return customerInfo.CustomerID;
             }
         }
 
+        //update the customer information in paymentSpring
         public void UpdateCustomer(UserPaymentInfoDTO customerInfo) 
         {
-            //update the customer information in paymentSpring
-            throw new NotImplementedException();
+            string updateCustomerUrl = url + "/customers/" + customerInfo.CustomerID;
+
+            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            {
+                var values = new Dictionary<string, string>
+                {
+                    {"first_name", customerInfo.FirstName},
+                    {"company", customerInfo.Company},
+                    {"last_name", customerInfo.LastName},
+                    {"address_1", customerInfo.StreetAddress1},
+                    {"address_2", customerInfo.StreetAddress2},
+                    {"city", customerInfo.City},
+                    {"state", customerInfo.State},
+                    {"zip", customerInfo.Zip},
+                    {"card_number", customerInfo.CardNumber.ToString()},
+                    {"card_exp_month", customerInfo.ExpirationMonth.ToString()},
+                    {"card_exp_year", customerInfo.ExpirationYear.ToString()}
+                };
+
+                FormUrlEncodedContent content = new FormUrlEncodedContent(values);
+
+                Task<HttpResponseMessage> response = client.PostAsync(updateCustomerUrl, content);
+            }
         }
     }
 }

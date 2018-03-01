@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HttpClientBuilder.cs" />
     <Compile Include="GetPaymentInfoAccessor.cs" />
     <Compile Include="ChargePaymentAccessor.cs" />
     <Compile Include="EmailAccessor.cs" />

@@ -15,24 +15,25 @@ namespace Web.Controllers
         // GET api/values
         public string Get()
         {
-            SetPaymentInfoAccessor accessor = new SetPaymentInfoAccessor();
+            HttpClientBuilder clientBuilder = new HttpClientBuilder("", "test_5492eef99f856a22e6c989a2d8");
+            SetPaymentInfoAccessor accessor = new SetPaymentInfoAccessor(clientBuilder, "https://api.paymentspring.com/api/v1");
             UserPaymentInfoDTO customerInfo = new UserPaymentInfoDTO()
             {
-                //CustomerID = "fe1686",
-                Username = "test_5492eef99f856a22e6c989a2d8",
-                Company = "Microsoft",
-                FirstName = "Lucas",
+                CustomerID = "a72cbf",
+                Company = "Garmin",
+                FirstName = "Luke",
                 LastName = "Hall",
-                StreetAddress1 = "2936 W Western Rd.",
+                StreetAddress1 = "1234 Weastern Rd.",
                 StreetAddress2 = "",
-                City = "Lee's Summit",
-                State = "MO",
-                Zip = "64086",
+                City = "Olathe",
+                State = "KS",
+                Zip = "98723",
                 CardNumber = 4111111111111111,
                 ExpirationYear = 2018,
                 ExpirationMonth = 08
             };
-            return accessor.CreateCustomer(customerInfo);
+            accessor.UpdateCustomer(customerInfo);
+            return "done";
         }
 
         // GET api/values/5
