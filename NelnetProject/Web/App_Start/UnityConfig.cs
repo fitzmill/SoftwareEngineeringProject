@@ -1,6 +1,7 @@
 using Accessors;
 using Core.Interfaces;
 using Engines;
+using Microsoft.Practices.Unity.Configuration;
 using System;
 using System.Configuration;
 using Unity;
@@ -68,10 +69,15 @@ namespace Web
 
             container.RegisterType<ISetReportEngine, SetReportEngine>();
 
-            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(new InjectionConstructor(
-                ConfigurationManager.AppSettings["PaymentSpringAPIUrl"],
-                ConfigurationManager.AppSettings["Username"]
+            container.RegisterType<INotificationEngine, NotificationEngine>();
+
+            container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor(
+                ConfigurationManager.AppSettings["SenderEmail"],
+                ConfigurationManager.AppSettings["SenderUsername"],
+                ConfigurationManager.AppSettings["SenderPassword"],
+                int.Parse(ConfigurationManager.AppSettings["Port"])
             ));
+
         }
     }
 }
