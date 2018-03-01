@@ -12,7 +12,7 @@ namespace Engines
     /// <summary>
     /// Charges payments to users.
     /// </summary>
-    class PaymentEngine : IPaymentEngine
+    public class PaymentEngine : IPaymentEngine
     {
         private IGetUserInfoAccessor getUserInfoAccessor;
         private IGetPaymentInfoAccessor getPaymentInfoAccessor;
