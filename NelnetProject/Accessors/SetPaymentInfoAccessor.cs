@@ -16,18 +16,18 @@ namespace Accessors
     public class SetPaymentInfoAccessor : ISetPaymentInfoAccessor
     {
         private HttpClientBuilder clientBuilder;
-        private string url; 
+        private string urlBase; 
 
         public SetPaymentInfoAccessor(HttpClientBuilder clientBuilder, string url)
         {
             this.clientBuilder = clientBuilder;
-            this.url = url;
+            this.urlBase = url;
         }
 
         //create a customer through the paymentSpring API and return the generated customerID
         public string CreateCustomer(UserPaymentInfoDTO customerInfo)
         {
-            string createCustomerUrl = this.url + "/customers";
+            string createCustomerUrl = this.urlBase + "/customers";
 
             using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
             {
@@ -63,7 +63,7 @@ namespace Accessors
         //update the customer information in paymentSpring
         public void UpdateCustomer(UserPaymentInfoDTO customerInfo) 
         {
-            string updateCustomerUrl = url + "/customers/" + customerInfo.CustomerID;
+            string updateCustomerUrl = urlBase + "/customers/" + customerInfo.CustomerID;
 
             using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
             {

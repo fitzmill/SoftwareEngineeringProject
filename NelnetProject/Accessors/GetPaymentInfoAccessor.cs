@@ -10,25 +10,24 @@ namespace Accessors
 {
     public class GetPaymentInfoAccessor : IGetPaymentInfoAccessor
     {
-        private string paymentSpringAPIURL;
-        private string customerExtention = "/customers/";
-        private string username;
+        private HttpClientBuilder clientBuilder;
+        private string urlBase;
+        private static string customerExtention = "/customers/";
 
-        public GetPaymentInfoAccessor(string paymentSpringAPIURL, string username)
+        public GetPaymentInfoAccessor(HttpClientBuilder clientBuilder, string urlBase)
         {
-            this.paymentSpringAPIURL = paymentSpringAPIURL;
-            this.username = username;
+            this.urlBase = urlBase;
+            this.clientBuilder = clientBuilder;
         }
-    // Gets a user's payment info from Payment Spring with their Payment Spring Customer ID.
-    public UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID) {
-            using (var client = new HttpClient())
+
+        // Gets a user's payment info from Payment Spring with their Payment Spring Customer ID.
+        public UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID) {
+            using (var client = clientBuilder.BuildClientWithPrivateKey())
             {
-                string formatted = string.Format("{0}:{1}", username, "");
-                string encrypted = Convert.ToBase64String(System.Text.ASCIIEncoding.ASCII.GetBytes(formatted));
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", encrypted);
                 UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO();
-                Task<string> responseString = client.GetStringAsync(paymentSpringAPIURL + customerExtention + customerID);
+                Task<string> responseString = client.GetStringAsync(urlBase + customerExtention + customerID);
                 dynamic deserializedResponse = JsonConvert.DeserializeObject(responseString.Result);
+
                 paymentInfo.FirstName = deserializedResponse.first_name;
                 paymentInfo.LastName = deserializedResponse.last_name;
                 paymentInfo.Company = deserializedResponse.company;
@@ -42,6 +41,7 @@ namespace Accessors
                 paymentInfo.State = deserializedResponse.state;
                 paymentInfo.Zip = deserializedResponse.zip;
                 paymentInfo.CustomerID = customerID;
+
                 return paymentInfo;
             }
         }
