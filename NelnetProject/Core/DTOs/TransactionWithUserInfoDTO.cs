@@ -22,6 +22,6 @@ namespace Core.DTOs
 
         public ProcessState ProcessState { get; set; }
 
-        public ReasonFailed? ReasonFailed { get; set; }
+        public string ReasonFailed { get; set; }
     }
 }

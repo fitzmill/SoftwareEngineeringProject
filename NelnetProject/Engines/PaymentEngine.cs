@@ -14,7 +14,6 @@ namespace Engines
     /// </summary>
     class PaymentEngine : IPaymentEngine
     {
-
         private IGetUserInfoAccessor getUserInfoAccessor;
         private IGetPaymentInfoAccessor getPaymentInfoAccessor;
         private IChargePaymentAccessor chargePaymentAccessor;
@@ -52,8 +51,8 @@ namespace Engines
                    AmountCharged = charge.AmountCharged,
                    DateDue = charge.DateDue,
                    DateCharged = DateTime.Today,
-                   ProcessState = processState
-                   //TODO - Reason failed
+                   ProcessState = processState,
+                   ReasonFailed = result.ErrorMessage
                };
            }).ToList();
         }
