@@ -68,6 +68,10 @@ namespace Web
 
             container.RegisterType<ISetReportEngine, SetReportEngine>();
 
+            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(new InjectionConstructor(
+                ConfigurationManager.AppSettings["PaymentSpringAPIUrl"],
+                ConfigurationManager.AppSettings["Username"]
+            ));
         }
     }
 }
