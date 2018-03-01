@@ -10,11 +10,6 @@ namespace Core.DTOs
     public class PaymentDTO
     {
         /// <summary>
-        /// Application's private key
-        /// </summary>
-        public string Username { get; set; }
-
-        /// <summary>
         /// PaymentSpring customer id
         /// </summary>
         public string CustomerID { get; set; }
