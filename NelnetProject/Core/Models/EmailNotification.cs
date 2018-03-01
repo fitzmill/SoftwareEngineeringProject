@@ -6,10 +6,10 @@ namespace Core.Models
 {
     public class EmailNotification
     {
-        string To { get; set; }
+        public string To { get; set; }
 
-        string Subject { get; set; }
+        public string Subject { get; set; }
 
-        string Body { get; set; }
+        public string Body { get; set; }
     }
 }

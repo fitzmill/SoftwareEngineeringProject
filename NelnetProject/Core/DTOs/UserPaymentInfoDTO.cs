@@ -30,6 +30,8 @@ namespace Core.DTOs
 
         public int ExpirationMonth { get; set; }
 
+        public string CardType { get; set; }
+
 
     }
 }

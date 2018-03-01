@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="DTOs\ChargeResultDTO.cs" />
     <Compile Include="DTOs\CreateTokenDTO.cs" />
+    <Compile Include="DTOs\DateDTO.cs" />
+    <Compile Include="DTOs\DateRangeDTO.cs" />
     <Compile Include="DTOs\LoginDTO.cs" />
     <Compile Include="DTOs\PasswordDTO.cs" />
     <Compile Include="DTOs\PaymentDTO.cs" />
@@ -54,9 +56,12 @@
     <Compile Include="Enums\ReasonFailed.cs" />
     <Compile Include="Enums\State.cs" />
     <Compile Include="Enums\UserType.cs" />
+    <Compile Include="Exceptions\EmailException.cs" />
     <Compile Include="Interfaces\IChargePaymentAccessor.cs" />
     <Compile Include="Interfaces\IEmailAccessor.cs" />
     <Compile Include="Interfaces\IGetPaymentInfoAccessor.cs" />
+    <Compile Include="Interfaces\IGetReportAccessor.cs" />
+    <Compile Include="Interfaces\IGetReportEngine.cs" />
     <Compile Include="Interfaces\IGetTransactionAccessor.cs" />
     <Compile Include="Interfaces\IGetTransactionEngine.cs" />
     <Compile Include="Interfaces\IGetUserInfoAccessor.cs" />
@@ -64,10 +69,13 @@
     <Compile Include="Interfaces\INotificationEngine.cs" />
     <Compile Include="Interfaces\IPaymentEngine.cs" />
     <Compile Include="Interfaces\ISetPaymentInfoAccessor.cs" />
+    <Compile Include="Interfaces\ISetReportAccessor.cs" />
+    <Compile Include="Interfaces\ISetReportEngine.cs" />
     <Compile Include="Interfaces\ISetTransactionAccessor.cs" />
     <Compile Include="Interfaces\ISetUserInfoAccessor.cs" />
     <Compile Include="Interfaces\ISetUserInfoEngine.cs" />
     <Compile Include="Models\EmailNotification.cs" />
+    <Compile Include="Models\Report.cs" />
     <Compile Include="Models\Student.cs" />
     <Compile Include="Models\Transaction.cs" />
     <Compile Include="Models\User.cs" />

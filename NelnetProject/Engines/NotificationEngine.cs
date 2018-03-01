@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,11 +14,24 @@ namespace Engines
     /// </summary>
     public class NotificationEngine : INotificationEngine
     {
+
+        private IEmailAccessor emailAccessor;
+
+        public NotificationEngine(IEmailAccessor emailAccessor)
+        {
+            this.emailAccessor = emailAccessor;
+        }
+
         public void SendTransactionNotifications(List<Transaction> transactions)
         {
             //Convert transactions into notifications
             //Send notifications to appropriate accessor (email for now)
             throw new NotImplementedException();
+        }
+
+        public IEmailAccessor GetEmailAccessor()
+        {
+            return emailAccessor;
         }
     }
 }

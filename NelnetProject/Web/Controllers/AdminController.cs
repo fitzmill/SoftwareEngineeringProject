@@ -1,5 +1,6 @@
 ﻿using Accessors;
 using Core;
+using Core.DTOs;
 using Core.Interfaces;
 using Engines;
 using System;
@@ -51,6 +52,19 @@ namespace Web.Controllers
         public IHttpActionResult GetAllUnsettledTransactions()
         {
             return Ok(getTransactionEngine.GetAllUnsettledTransactions());
+        }
+
+        [HttpPost]
+        [Route("GetAllTransactionsForDateRange")]
+        public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
+        {
+            if (dateRangeDTO == null || dateRangeDTO.StartDate == null || dateRangeDTO.EndDate == null)
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
+            var startDate = new DateTime(dateRangeDTO.StartDate.Year, dateRangeDTO.StartDate.Month, dateRangeDTO.StartDate.Day);
+            var endDate = new DateTime(dateRangeDTO.EndDate.Year, dateRangeDTO.EndDate.Month, dateRangeDTO.EndDate.Day);
+            return Ok(getTransactionEngine.GetTransactionsForDateRange(startDate, endDate));
         }
     }
 }
