@@ -6,10 +6,10 @@
         <h3 class="card-header">Custom Report</h3>
         <div class="card-body" style="position: relative">
             <label class="text-inline-input">Period from </label>
-            <input type="date" style="float: left" />
+            <input type="date" style="float: left" data-bind="value: generateStartDate"/>
             <label class="text-inline-input"> to </label>
-            <input type="date" style="float: left" />
-            <button class="btn btn-success btn-panel">Generate</button>
+            <input type="date" style="float: left" data-bind="value: generateEndDate"/>
+            <button class="btn btn-success btn-panel" data-bind="click: generateReport">Generate</button>
         </div>
     </div>
     <h3 style="padding-top:30px">Report History</h3>
@@ -22,16 +22,16 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody data-bind:"foreach: reports">
+        <tbody data-bind="foreach: reports">
             <tr>
-                <th scope="row" data-bind:"text: DateCreated></th>
-                <td data-bind:"text: StartDate"></td>
-                <td data-bind:"text: EndDate"></td>
+                <td data-bind="text: DateCreated"></td>
+                <td data-bind="text: StartDate"></td>
+                <td data-bind="text: EndDate"></td>
                 <td>
                     <button class="btn btn-primary">View</button>
                 </td>
             </tr>
         </tbody>
     </table>
-    <label data-bind:"text: text"></label>
+    <p data-bind:"text: meme"></p>
 </div>
