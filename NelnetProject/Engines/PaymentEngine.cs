@@ -36,7 +36,7 @@ namespace Engines
                PaymentDTO payment = new PaymentDTO
                {
                    CustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(charge.UserID),
-                   Amount = charge.AmountCharged
+                   Amount = (int) charge.AmountCharged * 1000 //Charge is in cents
                };
 
                //Charge Payment Spring

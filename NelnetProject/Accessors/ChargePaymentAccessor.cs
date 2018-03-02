@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Core.DTOs;
 using Core.Interfaces;
+using Newtonsoft.Json;
 
 namespace Accessors
 {
@@ -32,14 +33,22 @@ namespace Accessors
                 var values = new Dictionary<string, string>
                 {
                     {"customer_id", payment.CustomerID },
-                    {"amount", payment.ToString() },
+                    {"amount", payment.Amount.ToString() },
                     {"send_receipt", payment.SendReceipt.ToString() }
+                };
 
-                    //todo - finish this
-                }
+                FormUrlEncodedContent content = new FormUrlEncodedContent(values);
+                Task<HttpResponseMessage> response = client.PostAsync(chargeUrl, content);
+                Task<string> responseTask = response.Result.Content.ReadAsStringAsync();
+
+                dynamic result = JsonConvert.DeserializeObject(responseTask.Result);
+
+                return new ChargeResultDTO()
+                {
+                    WasSuccessful = result.settled,
+                    ErrorMessage = result.error_message
+                };
             }
-
-            return null;
         }
     }
 }

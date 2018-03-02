@@ -7,11 +7,19 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json;
+using Core.Interfaces;
 
 namespace Web.Controllers
 {
     public class ValuesController : ApiController
     {
+        private IChargePaymentAccessor paymentAccessor;
+        
+        public ValuesController (IChargePaymentAccessor paymentAccessor)
+        {
+            this.paymentAccessor = paymentAccessor;
+        }
+
         // GET api/values
         public string Get()
         {
@@ -25,8 +33,13 @@ namespace Web.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post([FromBody]string value)
         {
+            return Ok(paymentAccessor.ChargeCustomer(new PaymentDTO()
+            {
+                CustomerID = "a72cbf",
+                Amount = 20000
+            }));
         }
 
         // PUT api/values/5
