@@ -55,7 +55,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("GetAllTransactionsForDateRange")]
+        [Route("GetTransactionsForDateRange")]
         public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
         {
             if (dateRangeDTO == null || dateRangeDTO.StartDate == null || dateRangeDTO.EndDate == null)
@@ -64,6 +64,10 @@ namespace Web.Controllers
             }
             var startDate = new DateTime(dateRangeDTO.StartDate.Year, dateRangeDTO.StartDate.Month, dateRangeDTO.StartDate.Day);
             var endDate = new DateTime(dateRangeDTO.EndDate.Year, dateRangeDTO.EndDate.Month, dateRangeDTO.EndDate.Day);
+            if (endDate < startDate)
+            {
+                return BadRequest("End date is set to before start date");
+            }
             return Ok(getTransactionEngine.GetTransactionsForDateRange(startDate, endDate));
         }
     }

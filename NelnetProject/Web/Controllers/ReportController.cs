@@ -42,14 +42,15 @@ namespace Web.Controllers
             {
                 return BadRequest("Invalid date range");
             }
-            
+
             var report = new Report()
             {
+                DateCreated = DateTime.Now,
                 StartDate = startDate,
                 EndDate = endDate
             };
             setReportEngine.InsertReport(report);
-            return Ok();
+            return Ok(report);
         }
     }
 }

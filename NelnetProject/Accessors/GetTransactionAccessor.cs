@@ -54,7 +54,7 @@ namespace Accessors
                         //one line if statements have to return the same type, so nullable simple types need to be explicitly casted
                         DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
                         ProcessState = (ProcessState)reader.GetByte(5),
-                        ReasonFailed = (ReasonFailed?)(reader.IsDBNull(6) ? (int?)null : reader.GetByte(6))
+                        ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
                     });
                 }
             }
@@ -87,7 +87,7 @@ namespace Accessors
                         DateDue = reader.GetDateTime(3),
                         DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
                         ProcessState = (ProcessState)reader.GetByte(5),
-                        ReasonFailed = (ReasonFailed?)(reader.IsDBNull(6) ? (int?)null : reader.GetByte(6))
+                        ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
                     });
                 }
             }
@@ -120,7 +120,7 @@ namespace Accessors
                         DateDue = reader.GetDateTime(3),
                         DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
                         ProcessState = (ProcessState)reader.GetByte(5),
-                        ReasonFailed = (ReasonFailed?)(reader.IsDBNull(6) ? (int?)null : reader.GetByte(6))
+                        ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
                     };
                 }      
             }
@@ -158,8 +158,8 @@ namespace Accessors
                         AmountCharged = reader.GetDouble(3),
                         DateDue = reader.GetDateTime(4),
                         DateCharged = reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5),
-                        ProcessState = (ProcessState)reader.GetByte(6),
-                        ReasonFailed = (ReasonFailed?)(reader.IsDBNull(7) ? (int?)null : reader.GetByte(7))
+                        ProcessState = ((ProcessState)reader.GetByte(6)).ToString(),
+                        ReasonFailed = reader.IsDBNull(7) ? null : reader.GetString(7)
                     });
                 }
             }
