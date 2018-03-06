@@ -78,6 +78,7 @@ namespace Web
             container.RegisterType<IGetReportEngine, GetReportEngine>();
             container.RegisterType<ISetReportEngine, SetReportEngine>();
             container.RegisterType<INotificationEngine, NotificationEngine>();
+            container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
             
         }
     }
