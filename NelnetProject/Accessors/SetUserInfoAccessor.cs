@@ -96,7 +96,7 @@ namespace Accessors
         //remove all personal data from the database associated with the userID
         public void DeletePersonalInfo(int userID)
         {
-            string query = "[dbo].[DeletePersonalInfo] @ID=_ID";
+            string query = "[dbo].[DeletePersonalInfo]";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -121,7 +121,7 @@ namespace Accessors
         //add a new student to the database associated with the userID
         public void InsertStudentInfo(int userID, Student student)
         {
-            string query = "[dbo].[InsertStudentInfo] @FirstName=_FirstName, @LastName=_LastName, @Grade=_Grade, @UserID=_UserID";
+            string query = "[dbo].[InsertStudentInfo]";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -148,7 +148,7 @@ namespace Accessors
         //update a student in the database with the information provided
         public void UpdateStudentInfo(Student student)
         {
-            string query = "[dbo].[UpdateStudentInfo] @ID=_ID, @FirstName=_FirstName, @LastName=_LastName, @Grade=_Grade";
+            string query = "[dbo].[UpdateStudentInfo]";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -174,9 +174,9 @@ namespace Accessors
         }
 
         //remove data associated with the particular studentID
-        public void DeleteStudentInfo(int studentID)
+        public void DeleteStudentInfoByStudentID(int studentID)
         {
-            string query = "[dbo].[DeleteStudentInfo] @ID=_ID";
+            string query = "[dbo].[DeleteStudentInfoByStudentID]";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -195,6 +195,25 @@ namespace Accessors
                     //TODO: define custom exception type for this error
                     throw new Exception("Database query executed incorrectly");
                 }
+            }
+        }
+
+        //delete all the students associated with a specific user id
+        public void DeleteStudentInfoByUserID(int userID)
+        {
+            string query = "[dbo].[DeleteStudentInforByUserID]";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.Add(new SqlParameter("@ID", userID));
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                connection.Open();
+
+                command.ExecuteNonQuery();
             }
         }
     }

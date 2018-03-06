@@ -78,6 +78,7 @@ namespace Web
             container.RegisterType<INotificationEngine, NotificationEngine>();
             container.RegisterType<IGetUserInfoEngine, GetUserInfoEngine>();
             container.RegisterType<IPaymentEngine, PaymentEngine>();
+            container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
             
         }
     }

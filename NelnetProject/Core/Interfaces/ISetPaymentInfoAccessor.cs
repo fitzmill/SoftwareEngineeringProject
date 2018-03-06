@@ -22,5 +22,11 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="customerInfo">The new information to be stored with the customer</param>
         void UpdateCustomer(UserPaymentInfoDTO customerInfo);
+
+        /// <summary>
+        /// Deletes a users information from paymentSpring
+        /// </summary>
+        /// <param name="customerID">The id of the customer to delete</param>
+        void DeleteCustomer(string customerID);
     }
 }
