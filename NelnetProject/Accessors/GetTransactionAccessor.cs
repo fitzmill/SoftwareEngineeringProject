@@ -158,7 +158,7 @@ namespace Accessors
                         AmountCharged = reader.GetDouble(3),
                         DateDue = reader.GetDateTime(4),
                         DateCharged = reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5),
-                        ProcessState = (ProcessState)reader.GetByte(6),
+                        ProcessState = ((ProcessState)reader.GetByte(6)).ToString(),
                         ReasonFailed = reader.IsDBNull(7) ? null : reader.GetString(7)
                     });
                 }

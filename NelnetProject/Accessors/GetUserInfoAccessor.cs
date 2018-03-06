@@ -47,12 +47,13 @@ namespace Accessors
                         user.PaymentPlan = (PaymentPlan)reader.GetByte(6);
                         user.UserType = (UserType)reader.GetByte(7);
                         user.CustomerID = reader.GetString(8);
+                        user.Students = new List<Student>();
                         firstRow = false;
                     }
                     student.StudentID = reader.GetInt32(9);
                     student.FirstName = reader.GetString(10);
                     student.LastName = reader.GetString(11);
-                    student.Grade = reader.GetInt32(12);
+                    student.Grade = reader.GetByte(12);
                     user.Students.Add(student);
                 }
             }
@@ -89,12 +90,13 @@ namespace Accessors
                         result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
                         result.UserType = (UserType)reader.GetByte(6);
                         result.CustomerID = reader.GetString(7);
+                        result.Students = new List<Student>();
                         firstRow = false;
                     }
                     student.StudentID = reader.GetInt32(8);
                     student.FirstName = reader.GetString(9);
                     student.LastName = reader.GetString(10);
-                    student.Grade = reader.GetInt32(11);
+                    student.Grade = reader.GetByte(11);
                     result.Students.Add(student);
                 }
             }
@@ -128,12 +130,13 @@ namespace Accessors
                         result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
                         result.UserType = (UserType)reader.GetByte(6);
                         result.CustomerID = reader.GetString(7);
+                        result.Students = new List<Student>();
                         firstRow = false;
                     }
                     student.StudentID = reader.GetInt32(8);
                     student.FirstName = reader.GetString(9);
                     student.LastName = reader.GetString(10);
-                    student.Grade = reader.GetInt32(11);
+                    student.Grade = reader.GetByte(11);
                     result.Students.Add(student);
                 }
             }

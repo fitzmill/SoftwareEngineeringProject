@@ -19,7 +19,8 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 AmountCharged = 99.00,
                 DateDue = new DateTime(2018, 2, 9),
                 DateCharged = new DateTime(2018, 2, 11),
-                ProcessState = ProcessState.SUCCESSFUL
+                ProcessState = ProcessState.SUCCESSFUL,
+                ReasonFailed = "Card expired"
             },
             new Transaction()
             {
@@ -79,7 +80,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                     AmountCharged = t.AmountCharged,
                     DateDue = t.DateDue,
                     DateCharged = t.DateCharged,
-                    ProcessState = t.ProcessState,
+                    ProcessState = t.ProcessState.ToString(),
                     ReasonFailed = t.ReasonFailed
                 });
             }
