@@ -26,6 +26,10 @@ namespace Engines
             return getUserInfoAccessor.EmailExists(email);
         }
 
+        public IList<User> GetallUsers()
+        {
+            return getUserInfoAccessor.GetAllUsers();
+        }
         // Validates the login of a user given an email and a password.
         public bool ValidateLoginInfo(string email, string password)
         {

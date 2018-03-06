@@ -38,6 +38,11 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
+        public void TestGetAllUsers()
+        {
+            Assert.AreEqual(2, getUserInfoEngine.GetAllUsers()[1].UserID);
+        }
+        [TestMethod]
         public void TestValidateLoginInformationFalse()
         {
             string email = "johnsmith@gmail.com";

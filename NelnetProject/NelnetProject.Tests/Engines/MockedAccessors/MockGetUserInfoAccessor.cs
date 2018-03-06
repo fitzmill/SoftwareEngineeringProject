@@ -26,12 +26,30 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 UserType = UserType.GENERAL,
                 CustomerID = "fed123",
                 Students = null
+            },
+            new User()
+            {
+                UserID = 2,
+                FirstName = "Lucas",
+                LastName = "Hall",
+                Email = "lukethehallway@hall.mail",
+                Hashed = "57855c02c995371dd1122a4b1ed2254a69d1ac3a9fe5d9c18676f9f6625bc5bb",
+                Salt = "adfasfgth",
+                PaymentPlan = PaymentPlan.SEMESTERLY,
+                UserType = UserType.GENERAL,
+                CustomerID = "123nonono",
+                Students = null
             }
         };
 
         public bool EmailExists(string email)
         {
             return MockDB.Select(x => x.Email).Contains(email);
+        }
+
+        public IList<User> GetAllUsers()
+        {
+            return MockDB;
         }
 
         public User GetUserInfoByID(int userID)
