@@ -26,7 +26,7 @@ namespace Engines
             return getUserInfoAccessor.EmailExists(email);
         }
 
-        public IList<User> GetallUsers()
+        public IList<User> GetAllUsers()
         {
             return getUserInfoAccessor.GetAllUsers();
         }
