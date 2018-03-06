@@ -103,10 +103,10 @@ function getReportDetails(startDate, endDate) {
             EndDate: endDate
         },
         success: function (data) {
-            let notYetCharged = data.filter(t => t.ProcessState !== "NOT_YET_CHARGED");
+            let charged = data.filter(t => t.ProcessState !== "NOT_YET_CHARGED");
 
             //add up values
-            let amountCharged = notYetCharged.sumProperty('AmountCharged');
+            let amountCharged = charged.sumProperty('AmountCharged');
             let amountPaid = data.filter(t => t.ProcessState === "SUCCESSFUL").sumProperty('AmountCharged');
             let amountOutstanding = amountCharged - amountPaid;
 
@@ -116,7 +116,7 @@ function getReportDetails(startDate, endDate) {
             amountOutstanding = Number(amountOutstanding).toLocaleString('en');
 
             //filter all transactions to just get unsettled ones
-            let unsettledTransactions = notYetCharged.filter(t => t.ProcessState !== "SUCCESSFUL");
+            let unsettledTransactions = charged.filter(t => t.ProcessState !== "SUCCESSFUL");
             unsettledTransactions.forEach((t, index, array) => {
                 array[index].DateDue = parseDateTimeString(t.DateDue);
                 array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
@@ -126,7 +126,8 @@ function getReportDetails(startDate, endDate) {
                 amountCharged: amountCharged,
                 amountPaid: amountPaid,
                 amountOutstanding: amountOutstanding,
-                unsettledTransactions: unsettledTransactions
+                unsettledTransactions: unsettledTransactions,
+                allTransactions: data
             };
         },
         error: function (jqXHR) {
@@ -145,9 +146,11 @@ ko.components.register('report-component', {
         reportComponentVM.generateEndDate = ko.observable();
         
         reportComponentVM.unsettledTransactions = ko.observableArray([]);
+        reportComponentVM.allTransactions = ko.observableArray([]);
         reportComponentVM.amountCharged = ko.observable();
         reportComponentVM.amountPaid = ko.observable();
         reportComponentVM.amountOutstanding = ko.observable();
+        reportComponentVM.reportRange = ko.observable();
         
         reportComponentVM.generateReport = function () {
             reportComponentVM.reports.unshift(generateReport(reportComponentVM.generateStartDate(), reportComponentVM.generateEndDate()));
@@ -169,6 +172,8 @@ ko.components.register('report-component', {
                 reportComponentVM.amountPaid(result.amountPaid);
                 reportComponentVM.amountOutstanding(result.amountOutstanding);
                 reportComponentVM.unsettledTransactions(result.unsettledTransactions);
+                reportComponentVM.allTransactions(result.allTransactions);
+                reportComponentVM.reportRange(report.StartDate + " - " + report.EndDate);
 
                 $("#headerLoadingModal").hide();
             } else {
@@ -178,9 +183,9 @@ ko.components.register('report-component', {
         };
 
         reportComponentVM.downloadReportDetails = function () {
-            let csv = reportComponentVM.unsettledTransactions().createCSVString();
+            let csv = reportComponentVM.allTransactions().createCSVString();
 
-            csv.downloadCSV("UnsettledTransactions.csv");
+            csv.downloadCSV("Transactions.csv");
         };
 
         reportComponentVM.reports = ko.observableArray(getReports());
