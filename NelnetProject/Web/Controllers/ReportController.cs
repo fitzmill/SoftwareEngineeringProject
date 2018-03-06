@@ -1,4 +1,5 @@
 ﻿using Core.DTOs;
+using Core.Exceptions;
 using Core.Interfaces;
 using Core.Models;
 using System;
@@ -40,7 +41,16 @@ namespace Web.Controllers
                 StartDate = new DateTime(dateRange.StartDate.Year, dateRange.StartDate.Month, dateRange.StartDate.Day),
                 EndDate = new DateTime(dateRange.EndDate.Year, dateRange.EndDate.Month, dateRange.EndDate.Day)
             };
-            setReportEngine.InsertReport(report);
+
+            try
+            {
+                setReportEngine.InsertReport(report);
+            }
+            catch(ReportException re)
+            {
+                return BadRequest(re.Message);
+            }
+            
             return Ok();
         }
     }

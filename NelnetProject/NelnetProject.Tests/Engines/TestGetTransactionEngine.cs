@@ -6,6 +6,7 @@ using Engines;
 using System.Collections.ObjectModel;
 using Core;
 using Core.DTOs;
+using Core.Exceptions;
 
 namespace NelnetProject.Tests.Engines
 {
@@ -99,6 +100,16 @@ namespace NelnetProject.Tests.Engines
             Assert.IsTrue(result[0].DateDue > startDate);
             Assert.IsTrue(result[0].DateDue < endDate);
             
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ReportException),
+            "Start date is later than end date.")]
+        public void TestGetTransactionsForOutOfOrderDateRange()
+        {
+            var startDate = new DateTime(2018, 3, 1);
+            var endDate = new DateTime(2018, 3, 28);
+            var result = getTransactionEngine.GetTransactionsForDateRange(endDate, startDate);
         }
     }
 }
