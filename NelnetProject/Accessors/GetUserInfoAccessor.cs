@@ -28,7 +28,7 @@ namespace Accessors
                 var reader = command.ExecuteReader();
                 bool firstRow = true;
                 int? oldId = null;
-                if (reader.Read())
+                while (reader.Read())
                 {
                     if (reader.GetInt32(0) != oldId && oldId != null)
                     {
