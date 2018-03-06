@@ -8,58 +8,81 @@ namespace Engines
 {
     public class SetUserInfoEngine : ISetUserInfoEngine
     {
+        ISetUserInfoAccessor setUserInfoAccessor;
+        ISetPaymentInfoAccessor setPaymentInfoAccessor;
+
+        public SetUserInfoEngine(ISetUserInfoAccessor setUserInfoAccessor, ISetPaymentInfoAccessor setPaymentInfoAccessor)
+        {
+            this.setUserInfoAccessor = setUserInfoAccessor;
+            this.setPaymentInfoAccessor = setPaymentInfoAccessor;
+        }
+
         //make a call to the SetPaymentInfoAccessor to add the payment info to paymentSpring and return the generated customerID
         public string InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
-            throw new NotImplementedException();
+            return setPaymentInfoAccessor.CreateCustomer(userPaymentInfo);
         }
 
         //make a call to the SetPaymentInfoAccessor to update the payment info associated with the customerID
-        public void UpdatePaymentInfo(string customerID, UserPaymentInfoDTO userPaymentInfo)
+        public void UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
-            throw new NotImplementedException();
+            setPaymentInfoAccessor.UpdateCustomer(userPaymentInfo);
         }
 
         //make a call to the SetPaymentInfoAccessor to delete the payment info associated with the customerID
         public void DeletePaymentInfo(string customerID)
         {
-            throw new NotImplementedException();
+            setPaymentInfoAccessor.DeleteCustomer(customerID);
         }
 
         //make a call to the SetUserInfoAccessor to add a new record to the database
         public void InsertPersonalInfo(User user)
-        { 
-            throw new NotImplementedException();
+        {
+            setUserInfoAccessor.InsertPersonalInfo(user);
+            InsertStudentInfo(user.UserID, user.Students);
         }
 
         //make a call to the SetUserInfoAccessor that will update the database record associated with the user
         public void UpdatePersonalInfo(User user)
         {
-            throw new NotImplementedException();
+            setUserInfoAccessor.UpdatePersonalInfo(user);
+            UpdateStudentInfo(user.Students);
         }
 
         //make a call to the SetUserInfoAccessor to delete the personal information associated with the userID
         public void DeletePersonalInfo(int userID)
         {
-            throw new NotImplementedException();
+            List<int> studentIDs = new List<int>();
+            //get student ids from the database
+            setUserInfoAccessor.DeletePersonalInfo(userID);
+
         }
 
         //make a call to the SetUserInfoAccessor to insert new students into the database to be associated with the userID
-        public void InsertStudentInfo(int userID, List<Student> students)
+        public void InsertStudentInfo(int userID, IList<Student> students)
         {
-            throw new NotImplementedException();
+            foreach (Student s in students)
+            {
+                setUserInfoAccessor.InsertStudentInfo(userID, s);
+            }
         }
 
         //make a call to the SetUserInfoAccessor to update the student records associated with the list of students
-        public void UpdateStudentInfo(List<Student> students)
+        public void UpdateStudentInfo(IList<Student> students)
         {
-            throw new NotImplementedException();
+            foreach (Student s in students)
+            {
+                setUserInfoAccessor.UpdateStudentInfo(s);
+            }
         }
 
         //make a call to the SetUserInfoAcessor to delete the student information associated with the studentIDs
-        public void DeleteStudentInfo(List<int> studentIDs)
+        public void DeleteStudentInfo(IList<int> studentIDs)
         { 
-            throw new NotImplementedException();
+            foreach (int id in studentIDs)
+            {
+                setUserInfoAccessor.DeleteStudentInfoByStudentID(id);
+            }
         }
     }
 }

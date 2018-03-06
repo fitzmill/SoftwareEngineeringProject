@@ -31,21 +31,21 @@ namespace Core.Interfaces
         /// <summary>
         /// Insert new student records into the database
         /// </summary>
-        /// <param name="userID">The id of the user that the students will be associated with</param>
+        /// <param name="userID">The user to add the student records too</param>
         /// <param name="students">The student records to be inserted</param>
-        void InsertStudentInfo(int userID, List<Student> students);
+        void InsertStudentInfo(int userID, IList<Student> students);
 
         /// <summary>
         /// Update student records in the database
         /// </summary>
         /// <param name="students">The student records to update</param>
-        void UpdateStudentInfo(List<Student> students);
+        void UpdateStudentInfo(IList<Student> students);
 
         /// <summary>
         /// Delete the student from the database
         /// </summary>
         /// <param name="studentIDs">The ids of the students to delete</param>
-        void DeleteStudentInfo(List<int> studentIDs);
+        void DeleteStudentInfo(IList<int> studentIDs);
 
         /// <summary>
         /// Insert new payment info into paymentSpring
@@ -57,9 +57,8 @@ namespace Core.Interfaces
         /// <summary>
         /// Update the payment info associated with the customerID in paymentSpring
         /// </summary>
-        /// <param name="customerID">The id of the record to update</param>
         /// <param name="userPaymentInfo">The information to update in paymentSpring</param>
-        void UpdatePaymentInfo(string customerID, UserPaymentInfoDTO userPaymentInfo);
+        void UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo);
 
         /// <summary>
         /// Delete the payment information from paymentSpring
