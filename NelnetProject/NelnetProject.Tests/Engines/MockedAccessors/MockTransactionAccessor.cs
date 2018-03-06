@@ -20,7 +20,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 DateDue = new DateTime(2018, 2, 9),
                 DateCharged = new DateTime(2018, 2, 11),
                 ProcessState = ProcessState.SUCCESSFUL,
-                ReasonFailed = "Unexpected"
+                ReasonFailed = ReasonFailed.CARD_EXPIRED
             },
             new Transaction()
             {
@@ -29,8 +29,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 AmountCharged = 64.00,
                 DateDue = new DateTime(2018, 2, 9),
                 DateCharged = new DateTime(2018, 2, 9),
-                ProcessState = ProcessState.SUCCESSFUL,
-                ReasonFailed = null
+                ProcessState = ProcessState.SUCCESSFUL
             },
             new Transaction()
             {
@@ -49,8 +48,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 AmountCharged = 108.00,
                 DateDue = new DateTime(2018, 3, 11),
                 DateCharged = null,
-                ProcessState = ProcessState.NOT_YET_CHARGED,
-                ReasonFailed = null
+                ProcessState = ProcessState.NOT_YET_CHARGED
             }
         };
 
