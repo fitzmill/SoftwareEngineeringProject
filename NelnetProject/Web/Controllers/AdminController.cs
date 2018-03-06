@@ -56,7 +56,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("GetAllTransactionsForDateRange")]
+        [Route("GetTransactionsForDateRange")]
         public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
         {
             if (dateRangeDTO == null || dateRangeDTO.StartDate == null || dateRangeDTO.EndDate == null)

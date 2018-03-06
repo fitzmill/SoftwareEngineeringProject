@@ -85,5 +85,23 @@ namespace Accessors
                 Task<HttpResponseMessage> response = client.PostAsync(updateCustomerUrl, content);
             }
         }
+
+        //delete the customer information from paymentSpring
+        public void DeleteCustomer(string customerID)
+        {
+            string deleteCustomerUrl = this.urlBase + "/customers";
+
+            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            {
+                var values = new Dictionary<string, string>
+                {
+                    {"id", customerID}
+                };
+
+                FormUrlEncodedContent content = new FormUrlEncodedContent(values);
+
+                Task<HttpResponseMessage> response = client.PostAsync(deleteCustomerUrl, content);
+            }
+        }
     }
 }

@@ -44,7 +44,13 @@ namespace Core.Interfaces
         /// Delete the student from the database
         /// </summary>
         /// <param name="studentIDs">The id of the student to delete</param>
-        void DeleteStudentInfo(int studentID);
+        void DeleteStudentInfoByStudentID(int studentID);
+
+        /// <summary>
+        /// Delete the students belonging to the particular user from the database
+        /// </summary>
+        /// <param name="userID">The id of the user whose students to delete</param>
+        void DeleteStudentInfoByUserID(int userID);
 
     }
 }

@@ -18,6 +18,12 @@ namespace Core.Interfaces
         bool EmailExists(string email);
 
         /// <summary>
+        /// Gets all of the users in the database.
+        /// </summary>
+        /// <returns>Returns a list of all users in the database.</returns>
+        IList<User> GetAllUsers();
+
+        /// <summary>
         /// Validates the login of a user given an email and a password.
         /// </summary>
         /// <param name="email"></param>
