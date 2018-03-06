@@ -1,4 +1,5 @@
 ﻿using Core.DTOs;
+using Core.Exceptions;
 using Core.Interfaces;
 using Core.Models;
 using System;
@@ -49,8 +50,17 @@ namespace Web.Controllers
                 StartDate = startDate,
                 EndDate = endDate
             };
-            setReportEngine.InsertReport(report);
-            return Ok(report);
+
+            try
+            {
+                setReportEngine.InsertReport(report);
+            }
+            catch(ReportException re)
+            {
+                return BadRequest(re.Message);
+            }
+            
+            return Ok();
         }
     }
 }

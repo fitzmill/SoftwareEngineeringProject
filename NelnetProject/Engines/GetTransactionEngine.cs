@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Core;
 using Core.DTOs;
+using Core.Exceptions;
 
 namespace Engines
 {
@@ -36,6 +37,10 @@ namespace Engines
         //Calls identical method in IGetTransactionAccessor
         public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
+            if (startTime > endTime)
+            {
+                throw new ReportException("Start date is later than end date.");
+            }
             return getTransactionAccessor.GetTransactionsForDateRange(startTime, endTime);
         }
     }

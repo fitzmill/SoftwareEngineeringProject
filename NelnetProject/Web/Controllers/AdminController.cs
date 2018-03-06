@@ -1,6 +1,7 @@
 ﻿using Accessors;
 using Core;
 using Core.DTOs;
+using Core.Exceptions;
 using Core.Interfaces;
 using Engines;
 using System;
@@ -64,11 +65,18 @@ namespace Web.Controllers
             }
             var startDate = new DateTime(dateRangeDTO.StartDate.Year, dateRangeDTO.StartDate.Month, dateRangeDTO.StartDate.Day);
             var endDate = new DateTime(dateRangeDTO.EndDate.Year, dateRangeDTO.EndDate.Month, dateRangeDTO.EndDate.Day);
-            if (endDate < startDate)
+
+            IList<TransactionWithUserInfoDTO> result = new List<TransactionWithUserInfoDTO>();
+            try
             {
-                return BadRequest("End date is set to before start date");
+                result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
             }
-            return Ok(getTransactionEngine.GetTransactionsForDateRange(startDate, endDate));
+            catch (ReportException re)
+            {
+                return BadRequest(re.Message);
+            }
+
+            return Ok(result);
         }
     }
 }
