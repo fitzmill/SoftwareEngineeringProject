@@ -25,7 +25,7 @@ CREATE PROCEDURE UpdateTransaction
 	@DateDue date,
 	@DateCharged date,
 	@ProcessState tinyint,
-	@ReasonFailed tinyint
+	@ReasonFailed varchar(255)
 AS
 BEGIN
 	SET NOCOUNT ON;
