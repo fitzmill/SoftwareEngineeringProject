@@ -32,13 +32,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID)
         {
-            if (customerID.Equals(MockPaymentSpring[0].CustomerID))
-            {
-                return MockPaymentSpring[0];
-            } else
-            {
-                return null;
-            }
+            return MockPaymentSpring.FirstOrDefault(x => x.CustomerID == customerID);
         }
     }
 }

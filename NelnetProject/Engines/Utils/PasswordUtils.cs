@@ -7,12 +7,12 @@ using System.Security.Cryptography;
 
 namespace Engines.Utils
 {
-    public class PasswordUtils
+    public static class PasswordUtils
     {
-        public string HashPasswords(string password, string salt)
+        private static readonly string pepper = "nlfk60a9rcse";
+        public static string HashPasswords(string password, string salt)
         {
             SHA256 sha256 = SHA256Managed.Create();
-            string pepper = "nlfk60a9rcse";
             string stringToBeHashed = pepper + password + salt;
             byte[] bytes = Encoding.UTF8.GetBytes(stringToBeHashed);
             byte[] hashed = sha256.ComputeHash(bytes);

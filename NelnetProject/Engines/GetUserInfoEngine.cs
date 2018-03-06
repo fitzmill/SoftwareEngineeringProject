@@ -29,9 +29,8 @@ namespace Engines
         // Validates the login of a user given an email and a password.
         public bool ValidateLoginInfo(string email, string password)
         {
-            PasswordUtils passwordUtils = new PasswordUtils();
             PasswordDTO userPasswordInfo = getUserInfoAccessor.GetUserPasswordInfo(email);
-            string hashedGivenPassword = passwordUtils.HashPasswords(password, userPasswordInfo.Salt);
+            string hashedGivenPassword = PasswordUtils.HashPasswords(password, userPasswordInfo.Salt);
             if (hashedGivenPassword.Equals(userPasswordInfo.Hashed))
             {
                 return true;

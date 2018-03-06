@@ -27,14 +27,14 @@ namespace NelnetProject.Tests.Engines
         public void TestEmailExistsTrue()
         {
             string email = "johnsmith@gmail.com";
-            Assert.AreEqual(true, getUserInfoEngine.EmailExists(email));
+            Assert.IsTrue(getUserInfoEngine.EmailExists(email));
         }
 
         [TestMethod]
         public void TestEmailExistsFalse()
         {
             string email = "thisisnotanemail@gmail.com";
-            Assert.AreEqual(false, getUserInfoEngine.EmailExists(email));
+            Assert.IsFalse(getUserInfoEngine.EmailExists(email));
         }
 
         [TestMethod]
@@ -42,7 +42,7 @@ namespace NelnetProject.Tests.Engines
         {
             string email = "johnsmith@gmail.com";
             string password = "majlehlasg";
-            Assert.AreEqual(false, getUserInfoEngine.ValidateLoginInfo(email, password));
+            Assert.IsFalse(getUserInfoEngine.ValidateLoginInfo(email, password));
         }
 
         [TestMethod]
@@ -50,7 +50,7 @@ namespace NelnetProject.Tests.Engines
         {
             string email = "johnsmith@gmail.com";
             string password = "password";
-            Assert.AreEqual(true, getUserInfoEngine.ValidateLoginInfo(email, password));
+            Assert.IsTrue(getUserInfoEngine.ValidateLoginInfo(email, password));
         }
 
         [TestMethod]

@@ -31,35 +31,17 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public bool EmailExists(string email)
         {
-            if (email.Equals(MockDB[0].Email))
-            {
-                return true;
-            } else
-            {
-                return false;
-            }
+            return MockDB.Select(x => x.Email).Contains(email);
         }
 
         public User GetUserInfoByID(int userID)
         {
-            if (userID == MockDB[0].UserID)
-            {
-                return MockDB[0];
-            } else
-            {
-                return null;
-            }
+            return MockDB.FirstOrDefault(x => x.UserID == userID);
         }
 
         public User GetUserInfoByEmail(string email)
         {
-            if (email.Equals(MockDB[0].Email))
-            {
-                return MockDB[0];
-            } else
-            {
-                return null;
-            }
+            return MockDB.FirstOrDefault(x => x.Email == email);
         }
 
         public PasswordDTO GetUserPasswordInfo(string email)
@@ -70,10 +52,8 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 result.Hashed = MockDB[0].Hashed;
                 result.Salt = MockDB[0].Salt;
                 return result;
-            } else
-            {
-                return null;
             }
+            return null;
         }
 
         public string GetPaymentSpringCustomerID(int userID)
@@ -81,10 +61,8 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
             if (userID == MockDB[0].UserID)
             {
                 return MockDB[0].CustomerID;
-            } else
-            {
-                return null;
             }
+            return null;
         }
     }
 }
