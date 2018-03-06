@@ -20,7 +20,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 DateDue = new DateTime(2018, 2, 9),
                 DateCharged = new DateTime(2018, 2, 11),
                 ProcessState = ProcessState.SUCCESSFUL,
-                ReasonFailed = ReasonFailed.CARD_EXPIRED
+                ReasonFailed = "Card expired"
             },
             new Transaction()
             {

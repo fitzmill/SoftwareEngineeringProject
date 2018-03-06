@@ -55,8 +55,8 @@ var admin = (function () {
     
     return {
         helloWorldComponent: require('./HelloWorldComponent/hello-world-component.js'),
-            reportComponent: require('./ReportComponent/report-component.js')
-    }
+        reportComponent: require('./ReportComponent/report-component.js')
+    };
 })();
 
 // extend your view-model with pager.js specific data
