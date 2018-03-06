@@ -25,8 +25,9 @@ namespace Core.Interfaces
         /// <summary>
         /// Delete a user record from the database specified by the userID in the user model
         /// </summary>
-        /// <param name="userID"></param>
-        void DeletePersonalInfo(int userID);
+        /// <param name="userID">The ID of the user in the database to delete</param>
+        /// <param name="customerID">The ID of the customer in payment spring</param>
+        void DeletePersonalInfo(int userID, string customerID);
 
         /// <summary>
         /// Insert new student records into the database

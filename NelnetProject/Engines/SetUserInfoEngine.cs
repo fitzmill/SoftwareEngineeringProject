@@ -46,16 +46,15 @@ namespace Engines
         public void UpdatePersonalInfo(User user)
         {
             setUserInfoAccessor.UpdatePersonalInfo(user);
-            UpdateStudentInfo(user.Students);
+            this.UpdateStudentInfo(user.Students);
         }
 
-        //make a call to the SetUserInfoAccessor to delete the personal information associated with the userID
-        public void DeletePersonalInfo(int userID)
+        //make a call to the SetUserInfoAccessor to delete the personal information associated with the userID including students
+        public void DeletePersonalInfo(int userID, string customerID)
         {
-            List<int> studentIDs = new List<int>();
-            //get student ids from the database
+            setUserInfoAccessor.DeleteStudentInfoByUserID(userID);
             setUserInfoAccessor.DeletePersonalInfo(userID);
-
+            setPaymentInfoAccessor.DeleteCustomer(customerID);
         }
 
         //make a call to the SetUserInfoAccessor to insert new students into the database to be associated with the userID
