@@ -35,11 +35,7 @@ namespace Web.Controllers
         // POST api/values
         public IHttpActionResult Post([FromBody]string value)
         {
-            return Ok(paymentAccessor.ChargeCustomer(new PaymentDTO()
-            {
-                CustomerID = "a72cbf",
-                Amount = 20000
-            }));
+            return Ok();
         }
 
         // PUT api/values/5
