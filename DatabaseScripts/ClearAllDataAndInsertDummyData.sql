@@ -35,7 +35,7 @@ CREATE TABLE [dbo].[Transaction](
 	[DateDue] [date] NOT NULL,
 	[DateCharged] [date] NULL,
 	[ProcessState] [tinyint] NOT NULL,
-	[ReasonFailed] [tinyint] NULL,
+	[ReasonFailed] [varchar](255) NULL,
  CONSTRAINT [PK_Transaction] PRIMARY KEY CLUSTERED 
 (
 	[TransactionID] ASC
@@ -107,11 +107,11 @@ insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Daughter
 insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('BillAdopted', 'Schmidling', 11, 3)
 
 
-insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2017, 9, 5), DATEFROMPARTS(2017, 9, 5), 2, NULL)
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2017, 9, 5), DATEFROMPARTS(2017, 9, 5), 2, 'Insufficient funds')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
-insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500 + 5000)/9, DATEFROMPARTS(2018, 1, 5), DATEFROMPARTS(2018, 1, 8), 2, 1)
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500 + 5000)/9, DATEFROMPARTS(2018, 1, 5), DATEFROMPARTS(2018, 1, 8), 2, 'Insufficient funds')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500+5000)/9, DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
-insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 2, 5), NULL, 4, 3)
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 2, 5), NULL, 4, 'Unexpected error')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
 
 insert into [dbo].[Report](DateCreated, StartDate, EndDate) values(DATEFROMPARTS(2017, 9, 1), DATEFROMPARTS(2017, 9, 1), DATEFROMPARTS(2017, 9, 30))
