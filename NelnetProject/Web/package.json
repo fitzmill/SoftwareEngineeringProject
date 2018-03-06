@@ -9,6 +9,7 @@
     "css-loader": "0.28.9",
     "es6-promise": "4.2.2",
     "file-loader": "1.1.6",
+    "history": "^4.7.2",
     "html-loader": "0.5.5",
     "node-sass": "4.7.2",
     "pagerjs": "^1.1.0",

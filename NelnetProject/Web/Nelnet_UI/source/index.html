@@ -1,7 +1,15 @@
-﻿<base href="/" />
+﻿
 
-<div class="container" style="padding-top:30px; position: relative">
+<!--<div class="container" style="padding-top:30px; position: relative">
     <div data-bind='component: "report-component"'></div>
+</div>-->
+
+<div class="container" style="padding-top: 30px;">
+    <div data-bind="page: {id: 'hello'}">
+        <hello-world-component></hello-world-component>
+    </div>
+
+    <div data-bind="page: {id: 'report'}">
+        <report-component></report-component>
+    </div>
 </div>
-
-

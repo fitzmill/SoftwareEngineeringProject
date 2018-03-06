@@ -1,9 +1,9 @@
-﻿(function () {
+﻿require('pagerjs');
+
+var admin = (function () {
     require('./index.scss');
     document.getElementById("app").insertAdjacentHTML('beforeend', require('./index.html'));
     // Require each component that needs to be loaded here
-    require('./HelloWorldComponent/hello-world-component.js');
-    require('./ReportComponent/report-component.js');
 
     //some helper functions
     Array.prototype.sumProperty = function (prop) {
@@ -52,6 +52,16 @@
         link.click();
     };
 
-
-    ko.applyBindings();
+    
+    return {
+        helloWorldComponent: require('./HelloWorldComponent/hello-world-component.js'),
+            reportComponent: require('./ReportComponent/report-component.js')
+    }
 })();
+
+// extend your view-model with pager.js specific data
+pager.extendWithPage(admin);
+// apply the view-model using KnockoutJS as normal
+ko.applyBindings(admin);
+// start pager.js
+pager.start('hello');
