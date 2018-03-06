@@ -6,6 +6,7 @@ using Core.DTOs;
 using Web;
 using Core.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace NelnetProject.Tests.Accessors
 {
@@ -16,6 +17,13 @@ namespace NelnetProject.Tests.Accessors
         public TestGetUserInfoAccessorUnit()
         {
             this.getUserInfoAccessor = new GetUserInfoAccessor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
+        }
+
+        [TestMethod]
+        public void TestGetAllUsers()
+        {
+            IList<User> users = getUserInfoAccessor.GetAllUsers();
+            Assert.IsNotNull(users[0]);
         }
 
         [TestMethod]
