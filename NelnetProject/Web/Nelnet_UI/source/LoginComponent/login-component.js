@@ -19,6 +19,7 @@ ko.components.register('login-component', {
         $(document).keypress(function (e) {
             //If the user presses enter, it will click the login button
             if (e.which == 13) {
+                $('#btn-login').focus();
                 $("#btn-login").click();
             }
         });

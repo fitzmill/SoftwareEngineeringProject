@@ -1,18 +1,18 @@
 ﻿<div>
-    <div class="card card-login">
-        <h2 class="card-header" style="text-align: center">Login</h2>
-        <div class="card-body">
-            <label id="label-invalid-info"style="color: indianred; display: none">Invalid email/password. Please try again.</label>
-            <h5>Email:</h5>
-            <input class="input-login" type="email" data-bind="value: email" />
-            <h5>Password:</h5>
-            <input class="input-login" type="password" data-bind="value: password" />
-            <button id="btn-login" class="btn btn-success btn-center" style="margin-top: 20px" data-bind="click: login">Login</button>
+    <div id="background-image" class="background"> </div>
+    <div id="background-overlay" class="background"> </div>
+    <div class="card-login">
+        <div class="card">
+            <div class="card-body">
+                <label class="label-login-header">Sign in</label>
+
+                <label id="label-invalid-info" style="color: indianred; display: none">Invalid email/password. Please try again.</label>
+                <input class="input-login" type="email" data-bind="value: email" placeholder="Email" />
+                <input class="input-login" type="password" data-bind="value: password" placeholder="Password" />
+                <button id="btn-login" class="btn btn-success btn-center" data-bind="click: login">Submit</button>
+                <button class="btn btn-primary btn-center">Create Account</button>
+            </div>
         </div>
-        <div class="card-footer">
-            <button class="btn btn-primary btn-center">Create Account</button>
-        </div>
-        
+        <label style="text-align: center; display: block; color: white">&copy; 2018 Nelnet</label>
     </div>
-    <label style="text-align: center; display: block">&copy; 2018 Nelnet</label>
 </div>
