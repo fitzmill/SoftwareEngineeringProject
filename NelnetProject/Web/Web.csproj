@@ -206,8 +206,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Nelnet_UI\source\HelloWorldComponent\hello-world-component.html" />
-    <Content Include="Nelnet_UI\source\HelloWorldComponent\hello-world-component.js" />
+    <Content Include="Nelnet_UI\source\LoginComponent\login-component.html" />
+    <Content Include="Nelnet_UI\source\LoginComponent\login-component.js" />
     <Content Include="Nelnet_UI\source\index.html" />
     <Content Include="Nelnet_UI\source\index.js" />
     <None Include="Nelnet_UI\source\ReportComponent\report-component.scss" />
@@ -290,7 +290,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Nelnet_UI\source\HelloWorldComponent\hello-world-component.scss" />
+    <Content Include="Nelnet_UI\source\LoginComponent\login-component.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Nelnet_UI\source\index.scss" />
