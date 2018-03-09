@@ -12,6 +12,30 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 {
     public class MockGetUserInfoAccessor : IGetUserInfoAccessor
     {
+        public List<Student> StudentsDB = new List<Student>()
+        {
+            new Student ()
+            {
+                StudentID = 1,
+                FirstName = "Joe",
+                LastName = "Sheepman",
+                Grade = 8
+            },
+            new Student ()
+            {
+                StudentID = 2,
+                FirstName = "Bill",
+                LastName = "Billman",
+                Grade = 11
+            },
+            new Student ()
+            {
+                StudentID = 3,
+                FirstName = "Jeff",
+                LastName = "Snaikes",
+                Grade = 2
+            }
+        };
         public List<User> MockDB = new List<User>()
         {
             new User()
@@ -25,7 +49,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "fed123",
-                Students = null
+                Students = new List<Student>()
             },
             new User()
             {
@@ -38,9 +62,16 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 Plan = PaymentPlan.SEMESTERLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "123nonono",
-                Students = null
+                Students = new List<Student>()
             }
         };
+
+        public MockGetUserInfoAccessor()
+        {
+            MockDB.ElementAt(0).Students.Add(StudentsDB.ElementAt(0));
+            MockDB.ElementAt(0).Students.Add(StudentsDB.ElementAt(1));
+            MockDB.ElementAt(1).Students.Add(StudentsDB.ElementAt(2));
+        }
 
         public bool EmailExists(string email)
         {
