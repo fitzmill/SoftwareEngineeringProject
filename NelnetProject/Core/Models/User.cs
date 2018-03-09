@@ -17,7 +17,7 @@ namespace Core
 
         public string Salt { get; set; }
 
-        public PaymentPlan PaymentPlan { get; set; }
+        public PaymentPlan Plan { get; set; }
 
         public UserType UserType { get; set; }
 

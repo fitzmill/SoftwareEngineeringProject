@@ -17,7 +17,7 @@ namespace NelnetProject.Tests.Engines
         IGetTransactionAccessor getTransactionAccessor;
         public TestGetTransactionEngine()
         {
-            getTransactionAccessor = new MockTransactionAccessor();
+            getTransactionAccessor = new MockGetTransactionAccessor();
             getTransactionEngine = new GetTransactionEngine(getTransactionAccessor);
         }
 

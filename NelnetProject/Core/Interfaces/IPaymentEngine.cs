@@ -19,8 +19,9 @@ namespace Core.Interfaces
         /// <summary>
         /// Generates all payments due during the next period and sends them to the database.
         /// </summary>
+        /// <param name="today">Today's date.</param>
         /// <returns>List of all upcoming transactions to be sent as notifications.</returns>
-        IList<Transaction> GeneratePayments();
+        IList<Transaction> GeneratePayments(DateTime today);
  
     }
 }

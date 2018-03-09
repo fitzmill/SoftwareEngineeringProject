@@ -77,18 +77,15 @@ namespace Engines
            }).ToList();
         }
 
-        public IList<Transaction> GeneratePayments() //to be run on the 1st of each month
+        public IList<Transaction> GeneratePayments(DateTime today) //to be run on the 1st of each month
         {
-            DateTime today = DateTime.Now;
-
             //Get all users
-            //IList<User> users = getUserInfoAccessor.getAllUsers(); TODO
-            IList<User> users = new List<User>();
+            IList<User> users = getUserInfoAccessor.GetAllUsers();
 
             //Generate all payments that are due this month
-            List<Transaction> transactions = users.Where(user => user.PaymentPlan == PaymentPlan.MONTHLY
-                    || (user.PaymentPlan == PaymentPlan.SEMESTERLY && (today.Month == SEMI_DUE_MONTH_1 || today.Month == SEMI_DUE_MONTH_2))
-                    || (user.PaymentPlan == PaymentPlan.YEARLY && today.Month == YEAR_DUE_MONTH))
+            List<Transaction> transactions = users.Where(user => user.Plan == PaymentPlan.MONTHLY
+                    || (user.Plan == PaymentPlan.SEMESTERLY && (today.Month == SEMI_DUE_MONTH_1 || today.Month == SEMI_DUE_MONTH_2))
+                    || (user.Plan == PaymentPlan.YEARLY && today.Month == YEAR_DUE_MONTH))
                     .Select(user => new Transaction
                     {
                         UserID = user.UserID,
@@ -104,7 +101,7 @@ namespace Engines
         }
 
         //Helper method to generate the total amount due for a user's payment
-        private double GenerateAmountDue(User user)
+        public double GenerateAmountDue(User user)
         {
             double amountDue = user.Students.Select(s => s.Grade).Aggregate(0, (total, grade) =>
             {
@@ -127,16 +124,16 @@ namespace Engines
                 return total;
             });
 
-            if (user.PaymentPlan == PaymentPlan.MONTHLY)
+            if (user.Plan == PaymentPlan.MONTHLY)
             {
                 amountDue /= 12;
             }
-            else if (user.PaymentPlan == PaymentPlan.SEMESTERLY)
+            else if (user.Plan == PaymentPlan.SEMESTERLY)
             {
                 amountDue /= 2;
             }
 
-            return amountDue;
+            return Math.Round(amountDue, 2);
         }
     }
 }
