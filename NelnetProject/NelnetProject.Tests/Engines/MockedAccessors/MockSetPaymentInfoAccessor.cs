@@ -13,7 +13,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
         private static Random random = new Random();
         private readonly string alphaNumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        public IList<UserPaymentInfoDTO> mockPaymentSpring = new List<UserPaymentInfoDTO>
+        public List<UserPaymentInfoDTO> mockPaymentSpring = new List<UserPaymentInfoDTO>
         {
             new UserPaymentInfoDTO
             {
@@ -41,18 +41,20 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
                 customerID = new string(Enumerable.Repeat(alphaNumeric, 6).Select(s => s[random.Next(s.Length)]).ToArray());
             }
             customerInfo.CustomerID = customerID;
+
             mockPaymentSpring.Add(customerInfo);
             return customerID;
         }
 
         public void DeleteCustomer(string customerID)
         {
-            throw new NotImplementedException();
+            mockPaymentSpring.RemoveAll(info => info.CustomerID.Equals(customerID));
         }
 
         public void UpdateCustomer(UserPaymentInfoDTO customerInfo)
         {
-            throw new NotImplementedException();
+            mockPaymentSpring.RemoveAll(info => info.CustomerID.Equals(customerInfo.CustomerID));
+            mockPaymentSpring.Add(customerInfo);
         }
     }
 }
