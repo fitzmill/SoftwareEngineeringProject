@@ -40,7 +40,9 @@ namespace NelnetProject.Tests.Engines
         [TestMethod]
         public void TestGetAllUsers()
         {
-            Assert.AreEqual(2, getUserInfoEngine.GetAllUsers()[1].UserID);
+            int expectedValue = 2;
+            int inputIndex = 1;
+            Assert.AreEqual(expectedValue, getUserInfoEngine.GetAllUsers()[inputIndex].UserID);
         }
         [TestMethod]
         public void TestValidateLoginInformationFalse()
