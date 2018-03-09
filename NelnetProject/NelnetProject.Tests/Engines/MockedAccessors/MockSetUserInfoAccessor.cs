@@ -70,11 +70,29 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public void InsertPersonalInfo(User user)
         {
+            try
+            {
+                int maxID = mockUserTable.Select(u => u.UserID).ToList().Max();
+                user.UserID = maxID + 1;
+            }
+            catch (InvalidOperationException)
+            {
+                user.UserID = 1;
+            }
             mockUserTable.Add(user);
         }
 
         public void InsertStudentInfo(int userID, Student student)
         {
+            try
+            {
+                int maxID = mockStudentTable.Select(s => s.StudentID).ToList().Max();
+                student.StudentID = maxID + 1;
+            }
+            catch (InvalidOperationException)
+            {
+                student.StudentID = 1;
+            }
             mockStudentTable.Add(student);
         }
 
