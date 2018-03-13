@@ -10,46 +10,13 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 {
     class MockSetUserInfoAccessor : ISetUserInfoAccessor
     {
-        public List<Student> mockStudentTable = new List<Student>()
-        {
-            new Student()
-            {
-                StudentID = 1,
-                FirstName = "Lucas",
-                LastName = "Hall",
-                Grade = 9
-            },
+        public List<User> mockUserTable;
+        public List<Student> mockStudentTable;
 
-            new Student()
-            {
-                StudentID = 2,
-                FirstName = "Joe",
-                LastName = "Cowboy",
-                Grade = 4
-            }
-        };
-
-        public List<User> mockUserTable = new List<User>()
+        public MockSetUserInfoAccessor(List<User> mockUserTable, List<Student> mockStudentTable)
         {
-            new User()
-            {
-                UserID = 1,
-                FirstName = "George",
-                LastName = "Curious",
-                Email = "curious.george@gmail.com",
-                Hashed = "asdfjkl",
-                Salt = "salt",
-                PaymentPlan = PaymentPlan.MONTHLY,
-                UserType = UserType.GENERAL,
-                CustomerID = "abc123",
-                Students = new List<Student>()
-            }
-        };
-
-        public MockSetUserInfoAccessor()
-        {
-            mockUserTable.ElementAt(0).Students.Add(mockStudentTable.ElementAt(0));
-            mockUserTable.ElementAt(0).Students.Add(mockStudentTable.ElementAt(1));
+            this.mockUserTable = mockUserTable;
+            this.mockStudentTable = mockStudentTable;
         }
 
         public void DeletePersonalInfo(int userID)

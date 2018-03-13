@@ -64,6 +64,7 @@
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
     <Compile Include="Engines\TestGetReportEngine.cs" />
     <Compile Include="Engines\TestSetReportEngine.cs" />
+    <Compile Include="Engines\TestSetUserInfoEngine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

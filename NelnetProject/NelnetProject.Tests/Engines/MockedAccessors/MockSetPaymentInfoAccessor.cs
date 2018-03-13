@@ -13,25 +13,12 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
         private static Random random = new Random();
         private readonly string alphaNumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
 
-        public List<UserPaymentInfoDTO> mockPaymentSpring = new List<UserPaymentInfoDTO>
+        public List<UserPaymentInfoDTO> mockPaymentSpring;
+
+        public MockSetPaymentInfoAccessor(List<UserPaymentInfoDTO> mockPaymentSpring)
         {
-            new UserPaymentInfoDTO
-            {
-                CustomerID = "abcdef",
-                Company = "Nelnet",
-                FirstName = "George",
-                LastName = "Curious",
-                StreetAddress1 = "601 NE Robin St",
-                StreetAddress2 = "",
-                City = "New York",
-                State = "NY",
-                Zip = "10001",
-                CardNumber = 123412341234,
-                ExpirationYear = 20,
-                ExpirationMonth = 12,
-                CardType = "Visa"
-            }
-        };
+            this.mockPaymentSpring = mockPaymentSpring;
+        }
 
         public string CreateCustomer(UserPaymentInfoDTO customerInfo)
         {
