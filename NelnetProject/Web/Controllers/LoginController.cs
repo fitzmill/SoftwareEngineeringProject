@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -28,7 +29,16 @@ namespace Web.Controllers
             }
             string email = loginDTO.Email;
             string password = loginDTO.Password;
-            return Ok(getUserInfoEngine.ValidateLoginInfo(email, password));
+            bool result;
+            try
+            {
+                result = getUserInfoEngine.ValidateLoginInfo(email, password);
+            }
+            catch (SqlException e)
+            {
+                return InternalServerError();
+            }
+            return Ok(result);
         }
     }
 }
