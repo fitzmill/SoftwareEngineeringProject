@@ -57,8 +57,9 @@ namespace Engines
         }
 
         // Gets a user's payment info from Payment Spring with their customer ID.
-        public UserPaymentInfoDTO GetPaymentInfoForUser(string customerID)
+        public UserPaymentInfoDTO GetPaymentInfoForUser(int userID)
         {
+            string customerID = getUserInfoAccessor.GetPaymentSpringCustomerID(userID);
             return getPaymentInfoAccessor.GetPaymentInfoForCustomer(customerID);
         }
     }
