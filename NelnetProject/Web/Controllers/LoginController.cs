@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.DTOs;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,17 @@ namespace Web.Controllers
         {
             this.getUserInfoEngine = getUserInfoEngine;
         }
-        [HttpGet]
-        [Route("ValidateLoginInfo/{email, password}")]
-        public IHttpActionResult ValidateLoginInfo(string email, string password)
+
+        [HttpPost]
+        [Route("ValidateLoginInfo")]
+        public IHttpActionResult ValidateLoginInfo(LoginDTO loginDTO)
         {
+            if (loginDTO == null || loginDTO.Email == null || loginDTO.Password == null)
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
+            string email = loginDTO.Email;
+            string password = loginDTO.Password;
             return Ok(getUserInfoEngine.ValidateLoginInfo(email, password));
         }
     }
