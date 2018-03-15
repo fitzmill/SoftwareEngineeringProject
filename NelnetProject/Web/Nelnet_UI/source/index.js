@@ -7,7 +7,7 @@ var index = (function () {
     require('./utility.js');
     
     return {
-        helloWorldComponent: require('./HelloWorldComponent/hello-world-component.js'),
+        loginComponent: require('./LoginComponent/login-component.js'),
         reportComponent: require('./ReportComponent/report-component.js')
     };
 })();
@@ -17,4 +17,4 @@ pager.extendWithPage(index);
 // apply the view-model using KnockoutJS as normal
 ko.applyBindings(index);
 // start pager.js
-pager.start('hello');
+pager.start();
