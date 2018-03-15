@@ -1,4 +1,5 @@
 ﻿using Core.DTOs;
+using Core.Exceptions;
 using Core.Interfaces;
 using Core.Models;
 using System;
@@ -35,12 +36,30 @@ namespace Web.Controllers
             {
                 return BadRequest("Report object was null in request");
             }
+
+            var startDate = new DateTime(dateRange.StartDate.Year, dateRange.StartDate.Month, dateRange.StartDate.Day);
+            var endDate = new DateTime(dateRange.EndDate.Year, dateRange.EndDate.Month, dateRange.EndDate.Day);
+            if (endDate < startDate)
+            {
+                return BadRequest("Invalid date range");
+            }
+
             var report = new Report()
             {
-                StartDate = new DateTime(dateRange.StartDate.Year, dateRange.StartDate.Month, dateRange.StartDate.Day),
-                EndDate = new DateTime(dateRange.EndDate.Year, dateRange.EndDate.Month, dateRange.EndDate.Day)
+                DateCreated = DateTime.Now,
+                StartDate = startDate,
+                EndDate = endDate
             };
-            setReportEngine.InsertReport(report);
+
+            try
+            {
+                setReportEngine.InsertReport(report);
+            }
+            catch(ReportException re)
+            {
+                return BadRequest(re.Message);
+            }
+            
             return Ok();
         }
     }

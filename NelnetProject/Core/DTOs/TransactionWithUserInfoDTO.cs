@@ -20,8 +20,8 @@ namespace Core.DTOs
 
         public DateTime? DateCharged { get; set; }
 
-        public ProcessState ProcessState { get; set; }
+        public string ProcessState { get; set; }
 
-        public ReasonFailed? ReasonFailed { get; set; }
+        public string ReasonFailed { get; set; }
     }
 }

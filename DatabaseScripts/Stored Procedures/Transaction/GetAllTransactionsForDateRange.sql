@@ -40,6 +40,6 @@ BEGIN
 	t.ReasonFailed
 	FROM [dbo].[Transaction] t
 	JOIN [dbo].[User] u ON t.UserID = u.UserID
-	WHERE t.DateDue > @StartDate AND t.DateDue < @EndDate
+	WHERE t.DateDue >= @StartDate AND t.DateDue <= @EndDate
 END
 GO

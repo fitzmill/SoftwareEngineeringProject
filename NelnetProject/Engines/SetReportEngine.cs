@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core.Exceptions;
+using Core.Interfaces;
 using Core.Models;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,10 @@ namespace Engines
 
         public void InsertReport(Report report)
         {
+            if (report.StartDate > report.EndDate)
+            {
+                throw new ReportException("Start date is later than the end date.");
+            }
             setReportAccessor.InsertReport(report);
         }
     }

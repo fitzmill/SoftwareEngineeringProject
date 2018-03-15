@@ -44,6 +44,8 @@ namespace Web
             //database accessors
             var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
             container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(connectionStringConstructor);
+            container.RegisterType<IGetUserInfoAccessor, GetUserInfoAccessor>(connectionStringConstructor);
+            container.RegisterType<ISetTransactionAccessor, SetTransactionAccessor>(connectionStringConstructor);
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(connectionStringConstructor);
             container.RegisterType<IGetReportAccessor, GetReportAccessor>(connectionStringConstructor);
             container.RegisterType<ISetReportAccessor, SetReportAccessor>(connectionStringConstructor);
@@ -56,14 +58,10 @@ namespace Web
             container.RegisterInstance<HttpClientBuilder>(httpClientBuilder);
 
             //payment spring accessors
-            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(new InjectionConstructor(
-                httpClientBuilder,
-                ConfigurationManager.AppSettings["PaymentSpringApiUrl"]
-            ));
-            container.RegisterType<ISetPaymentInfoAccessor, SetPaymentInfoAccessor>(new InjectionConstructor(
-                httpClientBuilder,
-                ConfigurationManager.AppSettings["PaymentSpringApiUrl"]
-            ));
+            var paymentSpringConstructor = new InjectionConstructor(httpClientBuilder, ConfigurationManager.AppSettings["PaymentSpringApiUrl"]);
+            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(paymentSpringConstructor);
+            container.RegisterType<ISetPaymentInfoAccessor, SetPaymentInfoAccessor>(paymentSpringConstructor);
+            container.RegisterType<IChargePaymentAccessor, ChargePaymentAccessor>(paymentSpringConstructor);
 
             //email accessor
             container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor(
@@ -78,6 +76,9 @@ namespace Web
             container.RegisterType<IGetReportEngine, GetReportEngine>();
             container.RegisterType<ISetReportEngine, SetReportEngine>();
             container.RegisterType<INotificationEngine, NotificationEngine>();
+            container.RegisterType<IGetUserInfoEngine, GetUserInfoEngine>();
+            container.RegisterType<IPaymentEngine, PaymentEngine>();
+            container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
             
         }
     }
