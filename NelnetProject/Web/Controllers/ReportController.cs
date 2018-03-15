@@ -60,7 +60,7 @@ namespace Web.Controllers
                 return BadRequest(re.Message);
             }
             
-            return Ok();
+            return Ok(report);
         }
     }
 }

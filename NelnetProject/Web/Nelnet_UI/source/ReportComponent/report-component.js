@@ -116,7 +116,8 @@ function getReportDetails(startDate, endDate) {
             amountOutstanding = Number(amountOutstanding).toLocaleString('en');
 
             //filter all transactions to just get unsettled ones
-            let unsettledTransactions = charged.filter(t => t.ProcessState !== "SUCCESSFUL");
+            //makes a deep copy of the array
+            let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
             unsettledTransactions.forEach((t, index, array) => {
                 array[index].DateDue = parseDateTimeString(t.DateDue);
                 array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
