@@ -33,6 +33,7 @@ BEGIN
 	t.TransactionID,
 	u.FirstName,
 	u.LastName,
+	u.Email,
 	t.AmountCharged,
 	t.DateDue,
 	t.DateCharged,
