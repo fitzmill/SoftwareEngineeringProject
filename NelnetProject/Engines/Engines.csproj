@@ -50,6 +50,7 @@
     <Compile Include="SetReportEngine.cs" />
     <Compile Include="SetUserInfoEngine.cs" />
     <Compile Include="Utils\PasswordUtils.cs" />
+    <Compile Include="Utils\TutitionUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Accessors\Accessors.csproj">

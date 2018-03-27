@@ -13,8 +13,9 @@ namespace Core.Interfaces
         /// Charges a list of payments and returns the results.
         /// </summary>
         /// <param name="charges">List of unsettled transactions to charge.</param>
+        /// <param name="today">Today's date.</param>
         /// <returns>Results of all the charges.</returns>
-        IList<Transaction> ChargePayments(List<Transaction> charges);
+        IList<Transaction> ChargePayments(List<Transaction> charges, DateTime today);
 
         /// <summary>
         /// Generates all payments due during the next period and sends them to the database.
