@@ -69,6 +69,7 @@
                             <tr>
                                 <th>First Name</th>
                                 <th>Last Name</th>
+                                <th>Email</th>
                                 <th>Date Due</th>
                                 <th>Amount Charged</th>
                                 <th>Process State</th>
@@ -79,6 +80,9 @@
                             <tr>
                                 <td data-bind="text: FirstName"></td>
                                 <td data-bind="text: LastName"></td>
+                                <td>
+                                    <a data-bind="attr: {href: 'mailto:' + Email}, text: Email"></a>
+                                </td>
                                 <td data-bind="text: DateDue"></td>
                                 <td class="enMoney" data-bind="text: AmountCharged"></td>
                                 <td data-bind="text: ProcessState"></td>
