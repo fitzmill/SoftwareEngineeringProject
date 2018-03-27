@@ -84,10 +84,10 @@ ko.components.register('report-component', {
         getReports().done(function (data) {
             data.forEach(function (report) {
                 reportComponentVM.reports.push(parseReportModel(report));
-            })
+            });
         }).fail(function (jqXHR) {
             window.alert("Could not get report history, please try refreshing the page.");
-        })
+        });
 
         return reportComponentVM;
     },
