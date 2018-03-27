@@ -208,11 +208,17 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.html" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.js" />
+    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-details-component.html" />
+    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-details-component.js" />
     <Content Include="Nelnet_UI\source\assets\images\login-background.jpg" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.html" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.js" />
     <Content Include="Nelnet_UI\source\index.html" />
     <Content Include="Nelnet_UI\source\index.js" />
+    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-details-component.scss" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.scss" />
     <None Include="Nelnet_UI\source\ReportComponent\report-component.scss" />
     <Content Include="Nelnet_UI\source\ReportComponent\report-component.html" />
     <Content Include="Nelnet_UI\source\ReportComponent\report-component.js" />
