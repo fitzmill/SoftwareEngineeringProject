@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,9 +10,8 @@ namespace Engines.Utils
     /// <summary>
     /// Utility class for calculating tuition.
     /// </summary>
-    public class TutitionUtil
+    public class TuitionUtil
     {
-
         private static Dictionary<int, int> rates = new Dictionary<int, int>()
         {
             {0, 2500},
@@ -29,15 +29,28 @@ namespace Engines.Utils
             {12, 5000}
         };
 
-        /// <summary>
-        /// Get the yearly tuition rate for a given grade.
-        /// </summary>
-        /// <param name="grade"></param>
-        /// <returns></returns>
-        public static int TuitionForGrade(int grade)
+        private static Dictionary<PaymentPlan, List<int>> monthsDue = new Dictionary<PaymentPlan, List<int>>()
         {
-            return rates[grade];
+            { PaymentPlan.MONTHLY, new List<int>() { 8, 9, 10, 11, 12, 1, 2, 3, 4, 5 } },
+            { PaymentPlan.SEMESTERLY, new List<int>() { 9, 2 } },
+            { PaymentPlan.YEARLY, new List<int>() { 9 } }
+        };
+
+        public static bool IsPaymentDue(PaymentPlan plan, DateTime today)
+        {
+            return monthsDue[plan].Contains(today.Month);
         }
 
+        public static double GenerateAmountDue(User user, int precision)
+        {
+            double yearlyAmount = user.Students.Select(s => s.Grade).Aggregate((total, grade) =>
+            {
+                total += rates[grade];
+                return total;
+            });
+
+            double periodAmount = yearlyAmount / monthsDue[user.Plan].Count();
+            return Math.Round(periodAmount, precision);
+        }
     }
 }
