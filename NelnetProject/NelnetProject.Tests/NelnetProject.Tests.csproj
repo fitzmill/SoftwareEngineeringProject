@@ -69,6 +69,7 @@
     <Compile Include="Engines\TestSetReportEngine.cs" />
     <Compile Include="Engines\TestPaymentEngine.cs" />
     <Compile Include="Engines\Utils\TestPasswordUtils.cs" />
+    <Compile Include="Engines\Utils\TestTuitionUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

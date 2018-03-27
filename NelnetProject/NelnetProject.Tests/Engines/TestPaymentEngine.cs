@@ -38,46 +38,6 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        public void TestGenerateAmountDueMonthly()
-        {
-            User user = BuildTestUser(PaymentPlan.MONTHLY);
-
-            double amountDue = paymentEngine.GenerateAmountDue(user);
-
-            Assert.AreEqual(1145.83, amountDue);
-        }
-
-        [TestMethod]
-        public void TestGenerateAmountDueSemesterly()
-        {
-            User user = BuildTestUser(PaymentPlan.SEMESTERLY);
-
-            double amountDue = paymentEngine.GenerateAmountDue(user);
-
-            Assert.AreEqual(6875, amountDue);
-        }
-
-        [TestMethod]
-        public void TestGenerateAmountDueYearly()
-        {
-            User user = BuildTestUser(PaymentPlan.YEARLY);
-
-            double amountDue = paymentEngine.GenerateAmountDue(user);
-
-            Assert.AreEqual(13750, amountDue);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentOutOfRangeException), "Grade out of bounds: 13")]
-        public void TestGenerateAmountExceptionThrown()
-        {
-            User user = BuildTestUser(PaymentPlan.MONTHLY);
-            user.Students[0].Grade = 13;
-
-            paymentEngine.GenerateAmountDue(user);
-        }
-
-        [TestMethod]
         public void TestGeneratePaymentsAllThisMonth()
         {
             DateTime genDate = new DateTime(2018, 9, 1);

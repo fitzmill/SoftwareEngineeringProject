@@ -36,18 +36,20 @@ namespace Engines.Utils
             { PaymentPlan.YEARLY, new List<int>() { 9 } }
         };
 
+        //Calculate if payment is due for the current month, given a payment plan.
         public static bool IsPaymentDue(PaymentPlan plan, DateTime today)
         {
             return monthsDue[plan].Contains(today.Month);
         }
 
+        //Generatethe aggregate amount due for the month by summing the yearly cost for each of
+        //the user's students and dividing by the number of pay periods in the payment plan.
         public static double GenerateAmountDue(User user, int precision)
         {
-            double yearlyAmount = user.Students.Select(s => s.Grade).Aggregate((total, grade) =>
-            {
-                total += rates[grade];
-                return total;
-            });
+            double yearlyAmount = 0;
+            foreach (int grade in user.Students.Select(s => s.Grade)) {
+                yearlyAmount += rates[grade];
+            }
 
             double periodAmount = yearlyAmount / monthsDue[user.Plan].Count();
             return Math.Round(periodAmount, precision);
