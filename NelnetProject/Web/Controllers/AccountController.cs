@@ -1,4 +1,6 @@
-﻿using Core.Interfaces;
+﻿using Core;
+using Core.DTOs;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +14,12 @@ namespace Web.Controllers
     public class AccountController : ApiController
     {
         IGetUserInfoEngine getUserInfoEngine;
-        public AccountController(IGetUserInfoEngine getUserInfoEngine)
+        ISetUserInfoEngine setUserInfoEngine;
+
+        public AccountController(IGetUserInfoEngine getUserInfoEngine, ISetUserInfoEngine setUserInfoEngine)
         {
             this.getUserInfoEngine = getUserInfoEngine;
+            this.setUserInfoEngine = setUserInfoEngine;
         }
         [HttpGet]
         [Route("GetUserInfoByID/{userID}")]
@@ -25,6 +30,24 @@ namespace Web.Controllers
                 return BadRequest("Could not parse userID into an integer");
             }
             return Ok(getUserInfoEngine.GetUserInfoByID(parsedUserID));
+        }
+        [HttpPost]
+        [Route("UpdatePersonalAndStudentInfo")]
+        public IHttpActionResult UpdatePersonalAndStudentInfo(User user)
+        {
+            if (user == null || user.FirstName == null || user.LastName == null || user.CustomerID == null || user.Email == null || user.Hashed == null || user.Salt == null)
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
+            foreach(Student s in user.Students)
+            {
+                if (s.FirstName == null || s.LastName == null)
+                {
+                    return BadRequest("One or more required objects was not included in the request body.");
+                }
+            }
+            setUserInfoEngine.UpdatePersonalInfo(user);
+            return Ok();
         }
         [HttpGet]
         [Route("GetUserInfoByEmail/{email}")]
@@ -41,6 +64,17 @@ namespace Web.Controllers
                 return BadRequest("Could not parse userID into an integer");
             }
             return Ok(getUserInfoEngine.GetPaymentInfoForUser(parsedUserID));
+        }
+        [HttpPost]
+        [Route("UpdatePaymentInfo")]
+        public IHttpActionResult UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo)
+        {
+            if (userPaymentInfo.FirstName == null || userPaymentInfo.LastName == null || userPaymentInfo.State == null || userPaymentInfo.StreetAddress1 == null || userPaymentInfo.StreetAddress2 == null || userPaymentInfo.Zip == null)
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
+            setUserInfoEngine.UpdatePaymentInfo(userPaymentInfo);
+            return Ok();
         }
     }
 }
