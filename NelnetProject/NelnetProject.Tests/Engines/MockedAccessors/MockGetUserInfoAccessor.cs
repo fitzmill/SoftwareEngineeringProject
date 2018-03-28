@@ -50,7 +50,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public string GetPaymentSpringCustomerID(int userID)
         {
-            return UserDB.FirstOrDefault(u => u.UserID == userID).CustomerID;
+            return UserDB.FirstOrDefault(u => u.UserID == userID)?.CustomerID;
         }
     }
 }
