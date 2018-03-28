@@ -155,11 +155,12 @@ namespace Accessors
                         TransactionID = reader.GetInt32(0),
                         FirstName = reader.GetString(1),
                         LastName = reader.GetString(2),
-                        AmountCharged = reader.GetDouble(3),
-                        DateDue = reader.GetDateTime(4),
-                        DateCharged = reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5),
-                        ProcessState = ((ProcessState)reader.GetByte(6)).ToString(),
-                        ReasonFailed = reader.IsDBNull(7) ? null : reader.GetString(7)
+                        Email = reader.GetString(3),
+                        AmountCharged = reader.GetDouble(4),
+                        DateDue = reader.GetDateTime(5),
+                        DateCharged = reader.IsDBNull(6) ? (DateTime?)null : reader.GetDateTime(6),
+                        ProcessState = ((ProcessState)reader.GetByte(7)).ToString(),
+                        ReasonFailed = reader.IsDBNull(8) ? null : reader.GetString(8)
                     });
                 }
             }
