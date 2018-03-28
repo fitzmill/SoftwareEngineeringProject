@@ -150,7 +150,7 @@ namespace NelnetProject.Tests.Engines
                     TransactionID = 1,
                     UserID = 1,
                     AmountCharged = 875,
-                    DateDue = new DateTime(2018, 9, 5),
+                    DateDue = chargeDate,
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 },
                 new Transaction
@@ -158,7 +158,7 @@ namespace NelnetProject.Tests.Engines
                     TransactionID = 2,
                     UserID = 2,
                     AmountCharged = 1250,
-                    DateDue = new DateTime(2018, 9, 5),
+                    DateDue = chargeDate,
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 }
             };
@@ -170,7 +170,8 @@ namespace NelnetProject.Tests.Engines
                     TransactionID = 1,
                     UserID = 1,
                     AmountCharged = 875,
-                    DateDue = new DateTime(2018, 9, 5),
+                    DateDue = chargeDate,
+                    DateCharged = chargeDate,
                     ProcessState = ProcessState.SUCCESSFUL
                 },
                 new Transaction
@@ -178,7 +179,8 @@ namespace NelnetProject.Tests.Engines
                     TransactionID = 2,
                     UserID = 2,
                     AmountCharged = 1250,
-                    DateDue = new DateTime(2018, 9, 5),
+                    DateDue = chargeDate,
+                    DateCharged = chargeDate,
                     ProcessState = ProcessState.RETRYING,
                     ReasonFailed = "Insufficient Funds"
                 }
@@ -196,6 +198,49 @@ namespace NelnetProject.Tests.Engines
 
             List<Transaction> resultTransaction = paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
 
+            CollectionAssert.AreEqual(expectedTransactions, resultTransaction);
+        }
+
+        [TestMethod]
+        public void TestChargePaymentsExpires()
+        {
+            DateTime chargeDate = new DateTime(2018, 9, 12);
+            List<Transaction> inputTransactions = new List<Transaction>
+            {
+                new Transaction
+                {
+                    TransactionID = 1,
+                    UserID = 1,
+                    AmountCharged = 875,
+                    DateDue = new DateTime(2018, 9, 5),
+                    DateCharged = new DateTime(2018, 9, 11),
+                    ProcessState = ProcessState.RETRYING
+                }
+            };
+
+            List<Transaction> expectedTransactions = new List<Transaction>
+            {
+                new Transaction
+                {
+                    TransactionID = 1,
+                    UserID = 1,
+                    AmountCharged = 875,
+                    DateDue = new DateTime(2018, 9, 5),
+                    DateCharged = chargeDate,
+                    ProcessState = ProcessState.FAILED,
+                    ReasonFailed = "Card Expired"
+                }
+            };
+
+            chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
+            {
+                WasSuccessful = false,
+                ErrorMessage = "Card Expired"
+            });
+
+            List<Transaction> resultTransaction = paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
+
+            CollectionAssert.AreEqual(expectedTransactions, resultTransaction);
         }
     }
 }

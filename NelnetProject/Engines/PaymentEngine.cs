@@ -59,7 +59,7 @@ namespace Engines
                    UserID = charge.UserID,
                    AmountCharged = charge.AmountCharged,
                    DateDue = charge.DateDue,
-                   DateCharged = DateTime.Today,
+                   DateCharged = today,
                    ProcessState = processState,
                    ReasonFailed = result.ErrorMessage
                };
