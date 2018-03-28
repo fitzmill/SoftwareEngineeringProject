@@ -107,11 +107,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public string GetPaymentSpringCustomerID(int userID)
         {
-            if (userID == MockDB[0].UserID)
-            {
-                return MockDB[0].CustomerID;
-            }
-            return null;
+            return MockDB.FirstOrDefault(u => u.UserID == userID).CustomerID;
         }
     }
 }

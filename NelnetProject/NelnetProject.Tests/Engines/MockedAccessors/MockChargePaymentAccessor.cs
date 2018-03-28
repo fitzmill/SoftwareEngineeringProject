@@ -6,11 +6,11 @@ namespace NelnetProject.Tests.Engines
 {
     internal class MockChargePaymentAccessor : IChargePaymentAccessor
     {
-        public Dictionary<PaymentDTO, ChargeResultDTO> MockPaymentSpring;
+        public Dictionary<string, ChargeResultDTO> MockPaymentSpring = new Dictionary<string, ChargeResultDTO>();
 
         public ChargeResultDTO ChargeCustomer(PaymentDTO payment)
         {
-            throw new System.NotImplementedException();
+            return MockPaymentSpring[payment.CustomerID];
         }
     }
 }

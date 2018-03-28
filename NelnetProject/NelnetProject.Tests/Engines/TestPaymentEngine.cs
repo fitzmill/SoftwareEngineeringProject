@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NelnetProject.Tests.Engines.MockedAccessors;
 using Engines;
 using System.Diagnostics;
+using Core.DTOs;
 
 namespace NelnetProject.Tests.Engines
 {
@@ -46,7 +47,7 @@ namespace NelnetProject.Tests.Engines
                 new Transaction
                 {
                     UserID = 1,
-                    AmountCharged = 729.17,
+                    AmountCharged = 875,
                     DateDue = new DateTime(2018, 9, 5),
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 },
@@ -75,7 +76,7 @@ namespace NelnetProject.Tests.Engines
                 {
                     TransactionID = 1,
                     UserID = 1,
-                    AmountCharged = 729.17,
+                    AmountCharged = 875,
                     DateDue = new DateTime(2018, 9, 5),
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 },
@@ -95,7 +96,7 @@ namespace NelnetProject.Tests.Engines
                 {
                     TransactionID = 1,
                     UserID = 1,
-                    AmountCharged = 729.17,
+                    AmountCharged = 875,
                     DateDue = new DateTime(2018, 9, 5),
                     ProcessState = ProcessState.SUCCESSFUL
                 },
@@ -105,14 +106,22 @@ namespace NelnetProject.Tests.Engines
                     UserID = 2,
                     AmountCharged = 1250,
                     DateDue = new DateTime(2018, 9, 5),
-                    ProcessState = ProcessState.RETRYING
+                    ProcessState = ProcessState.RETRYING,
+                    ReasonFailed = "Insufficient Funds"
                 }
             };
 
-
+            chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
+            {
+                WasSuccessful = true
+            });
+            chargePaymentAccessor.MockPaymentSpring.Add("123nonono", new ChargeResultDTO()
+            {
+                WasSuccessful = false,
+                ErrorMessage = "Insufficient Funds"
+            });
 
             List<Transaction> resultTransaction = paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
-
 
         }
     }

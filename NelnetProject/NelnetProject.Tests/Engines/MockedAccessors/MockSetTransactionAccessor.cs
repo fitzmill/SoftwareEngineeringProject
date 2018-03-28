@@ -15,7 +15,8 @@ namespace NelnetProject.Tests.Engines
 
         public void UpdateTransaction(Transaction transaction)
         {
-            throw new System.NotImplementedException();
+            Transactions.Remove(Transactions.Find(t => t.TransactionID == transaction.TransactionID));
+            Transactions.Add(transaction);
         }
     }
 }
