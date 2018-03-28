@@ -42,7 +42,7 @@ namespace Engines.Utils
             return monthsDue[plan].Contains(today.Month);
         }
 
-        //Generatethe aggregate amount due for the month by summing the yearly cost for each of
+        //Generate the aggregate amount due for the month by summing the yearly cost for each of
         //the user's students and dividing by the number of pay periods in the payment plan.
         public static double GenerateAmountDue(User user, int precision)
         {
