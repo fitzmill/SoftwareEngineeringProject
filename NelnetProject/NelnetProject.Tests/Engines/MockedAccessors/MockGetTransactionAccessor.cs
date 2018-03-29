@@ -9,7 +9,7 @@ using Core.DTOs;
 
 namespace NelnetProject.Tests.Engines.MockedAccessors
 {
-    public class MockTransactionAccessor : IGetTransactionAccessor
+    public class MockGetTransactionAccessor : IGetTransactionAccessor
     {
         private List<Transaction> MockDB = new List<Transaction>{
             new Transaction()

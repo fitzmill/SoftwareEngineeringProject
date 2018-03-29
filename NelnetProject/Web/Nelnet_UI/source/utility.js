@@ -48,3 +48,12 @@ String.prototype.downloadCSV = function (filename) {
     link.setAttribute('download', filename);
     link.click();
 };
+
+//turns c# datetime object into a more readable format
+String.prototype.parseDateTimeString = function () {
+    let dateArray = this.split('-');
+    let year = dateArray[0];
+    let month = dateArray[1];
+    let day = dateArray[2].substring(0, 2);
+    return month + "/" + day + "/" + year;
+}

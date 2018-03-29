@@ -188,7 +188,6 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\RoutingController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -210,14 +209,14 @@
     </Content>
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.html" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.js" />
-    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-details-component.html" />
-    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-details-component.js" />
+    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-dashboard-component.html" />
+    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-dashboard-component.js" />
     <Content Include="Nelnet_UI\source\assets\images\login-background.jpg" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.html" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.js" />
     <Content Include="Nelnet_UI\source\index.html" />
     <Content Include="Nelnet_UI\source\index.js" />
-    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-details-component.scss" />
+    <Content Include="Nelnet_UI\source\AccountDetailsComponent\account-dashboard-component.scss" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.scss" />
     <Content Include="Nelnet_UI\source\assets\background-image.scss" />
     <None Include="Nelnet_UI\source\ReportComponent\report-component.scss" />
