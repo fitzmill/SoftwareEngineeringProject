@@ -14,10 +14,10 @@ ko.components.register('login-component', {
 
         vm.login = function () {
             if (!vm.email().emailMeetsRequirements()) {
-                window.alert("Please enter a valid email.");
+                $("#label-invalid-info").show();
                 return;
             } else if (!vm.password().passwordMeetsRequirements()) {
-                window.alert("Password does not meet all requirements.");
+                $("#label-invalid-info").show();
                 return;
             }
 

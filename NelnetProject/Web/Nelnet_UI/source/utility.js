@@ -56,7 +56,8 @@ String.prototype.passwordMeetsRequirements = function () {
     //contains 1 number
     //contains 1 special character
     //is between 8 and 32 characters
-    return this.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,32}$/);
+    //DOES NOT contain ;'"
+    return this.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?!.*?[;'"]).{8,32}$/);
 }
 
 String.prototype.emailMeetsRequirements = function () {
