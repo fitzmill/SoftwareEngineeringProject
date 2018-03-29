@@ -34,7 +34,6 @@ namespace Accessors
                 var values = new Dictionary<string, string>
                 {
                     {"first_name", customerInfo.FirstName},
-                    {"company", customerInfo.Company},
                     {"last_name", customerInfo.LastName},
                     {"address_1", customerInfo.StreetAddress1},
                     {"address_2", customerInfo.StreetAddress2},
@@ -68,7 +67,6 @@ namespace Accessors
                 var values = new Dictionary<string, string>
                 {
                     {"first_name", customerInfo.FirstName},
-                    {"company", customerInfo.Company},
                     {"last_name", customerInfo.LastName},
                     {"address_1", customerInfo.StreetAddress1},
                     {"address_2", customerInfo.StreetAddress2},

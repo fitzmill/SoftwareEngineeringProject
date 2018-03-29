@@ -60,7 +60,6 @@ namespace NelnetProject.Tests.Engines
             new UserPaymentInfoDTO
             {
                 CustomerID = "abcdef",
-                Company = "Nelnet",
                 FirstName = "George",
                 LastName = "Curious",
                 StreetAddress1 = "601 NE Robin St",
@@ -91,7 +90,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "",
-                Company = "Garmin",
                 FirstName = "Lucas",
                 LastName = "Hall",
                 StreetAddress1 = "911 NE Emergency Ln",
@@ -117,7 +115,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "fedder",
-                Company = "Honeywell",
                 FirstName = "Bobby",
                 LastName = "Bobton",
                 StreetAddress1 = "123 NE Eastern Ln",
@@ -133,7 +130,6 @@ namespace NelnetProject.Tests.Engines
 
             setPaymentInfoAccessor.mockPaymentSpring.Add(paymentInfo);
 
-            paymentInfo.Company = "Olive Garden";
             paymentInfo.CardNumber = 222222222222;
             paymentInfo.ExpirationYear = 24;
             paymentInfo.ExpirationMonth = 10;
@@ -151,7 +147,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "hello9",
-                Company = "Black and Veach",
                 FirstName = "Hobo",
                 LastName = "Guy",
                 StreetAddress1 = "567 NW Weastern Rd",
@@ -395,7 +390,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "77777g",
-                Company = "Spreetail",
                 FirstName = "Emma",
                 LastName = "Hannah",
                 StreetAddress1 = "8732 W George Ct",

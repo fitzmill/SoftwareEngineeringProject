@@ -8,8 +8,6 @@ namespace Core.DTOs
     {
         public string CustomerID { get; set; }
 
-        public string Company { get; set; }
-
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -38,7 +36,6 @@ namespace Core.DTOs
             var dTO = obj as UserPaymentInfoDTO;
             return dTO != null &&
                    CustomerID == dTO.CustomerID &&
-                   Company == dTO.Company &&
                    FirstName == dTO.FirstName &&
                    LastName == dTO.LastName &&
                    StreetAddress1 == dTO.StreetAddress1 &&
