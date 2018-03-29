@@ -1,7 +1,98 @@
 ﻿require('./report-component.scss');
 
 const adminAPIURL = "/api/admin";
-const reportAPIURL = "/api/report";
+
+ko.components.register('report-component', {
+    viewModel: function (params) {
+        var reportComponentVM = this;
+        reportComponentVM.generateStartDate = ko.observable();
+        reportComponentVM.generateEndDate = ko.observable();
+
+        reportComponentVM.unsettledTransactions = ko.observableArray([]);
+        reportComponentVM.allTransactions = ko.observableArray([]);
+        reportComponentVM.amountCharged = ko.observable();
+        reportComponentVM.amountPaid = ko.observable();
+        reportComponentVM.amountOutstanding = ko.observable();
+        reportComponentVM.reportRange = ko.observable();
+
+        reportComponentVM.generateReport = function () {
+            generateReport(reportComponentVM.generateStartDate(), reportComponentVM.generateEndDate()).done(function (data) {
+                reportComponentVM.reports.unshift(parseReportModel(data));
+            }).fail(function (jqXHR) {
+                let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                window.alert("Could not generate report: ".concat(errorMessage));
+            });
+
+        };
+
+        reportComponentVM.viewReport = function (report) {
+            $("#modalViewReport").modal("show");
+            $("#modalViewReport").focus();
+            $("#headerLoadingModal").show();
+
+            let startDate = splitViewDate(report.StartDate);
+            let endDate = splitViewDate(report.EndDate);
+
+            getReportDetails(startDate, endDate).done(function (data) {
+                let charged = data.filter(t => t.ProcessState !== "NOT_YET_CHARGED");
+
+                //add up values
+                let amountCharged = charged.sumProperty('AmountCharged');
+                let amountPaid = data.filter(t => t.ProcessState === "SUCCESSFUL").sumProperty('AmountCharged');
+                let amountOutstanding = amountCharged - amountPaid;
+
+                //convert to currency
+                amountCharged = Number(amountCharged).toLocaleString('en');
+                amountPaid = Number(amountPaid).toLocaleString('en');
+                amountOutstanding = Number(amountOutstanding).toLocaleString('en');
+
+                //filter all transactions to just get unsettled ones
+                //makes a deep copy of the array
+                let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
+                unsettledTransactions.forEach((t, index, array) => {
+                    array[index].DateDue = parseDateTimeString(t.DateDue);
+                    array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
+                });
+
+                //assign data to components
+                reportComponentVM.amountCharged(amountCharged);
+                reportComponentVM.amountPaid(amountPaid);
+                reportComponentVM.amountOutstanding(amountOutstanding);
+                reportComponentVM.unsettledTransactions(unsettledTransactions);
+                reportComponentVM.allTransactions(data);
+                reportComponentVM.reportRange(report.StartDate + " - " + report.EndDate);
+
+                $("#headerLoadingModal").hide();
+
+            }).fail(function (jqXHR) {
+                let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                window.alert("Could not get report details: ".concat(errorMessage));
+
+                $("#modalViewReport").modal("hide");
+            });
+
+        };
+
+        reportComponentVM.downloadReportDetails = function () {
+            let csv = reportComponentVM.allTransactions().createCSVString();
+
+            csv.downloadCSV("Transactions.csv");
+        };
+
+        reportComponentVM.reports = ko.observableArray([]);
+
+        getReports().done(function (data) {
+            data.forEach(function (report) {
+                reportComponentVM.reports.push(parseReportModel(report));
+            });
+        }).fail(function (jqXHR) {
+            window.alert("Could not get report history, please try refreshing the page.");
+        });
+
+        return reportComponentVM;
+    },
+    template: require('./report-component.html')
+});
 
 //splits a date string thats in YYYY/MM/DD format into parts
 function splitGenerateDate(dateString) {
@@ -45,21 +136,9 @@ function parseReportModel(report) {
 
 //fetches all reports from the report api
 function getReports() {
-    let result = [];
-    $.ajax(reportAPIURL, {
-        method: "GET",
-        async: false,
-        success: function (data) {
-            data.forEach((report) => {
-                result.push(parseReportModel(report));
-            });
-        },
-        error: function () {
-            window.alert("Could not get report history, please try refreshing the page.");
-            result = [];
-        }
+    return $.ajax(adminAPIURL + "/GetAllReports", {
+        method: "GET"
     });
-    return result;
 }
 
 //POSTs a report object to the report api and pushes it to the reports array
@@ -71,127 +150,22 @@ function generateReport(startDate, endDate) {
     let parsedStartDate = splitGenerateDate(startDate);
     let parsedEndDate = splitGenerateDate(endDate);
 
-    let result = undefined;
-
-    $.ajax(reportAPIURL, {
+    return $.ajax(adminAPIURL + "/InsertReport", {
         method: "POST",
-        async: false,
         data: {
             StartDate: parsedStartDate,
             EndDate: parsedEndDate
-        },
-        success: function (data) {
-            result = parseReportModel(data);
-        },
-        error: function (jqXHR) {
-            let errorMessage = JSON.parse(jqXHR.responseText).Message;
-            window.alert("Could not generate report: ".concat(errorMessage));
         }
     });
-    return result;
 }
 
 //POSTs a startDate and endDate object to the admin api and computes report details
 function getReportDetails(startDate, endDate) {
-    let result = null;
-
-    $.ajax(adminAPIURL + "/GetTransactionsForDateRange", {
+    return $.ajax(adminAPIURL + "/GetTransactionsForDateRange", {
         method: "POST",
-        async: false,
         data: {
             StartDate: startDate,
             EndDate: endDate
-        },
-        success: function (data) {
-            let charged = data.filter(t => t.ProcessState !== "NOT_YET_CHARGED");
-
-            //add up values
-            let amountCharged = charged.sumProperty('AmountCharged');
-            let amountPaid = data.filter(t => t.ProcessState === "SUCCESSFUL").sumProperty('AmountCharged');
-            let amountOutstanding = amountCharged - amountPaid;
-
-            //convert to currency
-            amountCharged = Number(amountCharged).toLocaleString('en');
-            amountPaid = Number(amountPaid).toLocaleString('en');
-            amountOutstanding = Number(amountOutstanding).toLocaleString('en');
-
-            //filter all transactions to just get unsettled ones
-            //makes a deep copy of the array
-            let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
-            unsettledTransactions.forEach((t, index, array) => {
-                array[index].DateDue = parseDateTimeString(t.DateDue);
-                array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
-            });
-
-            result = {
-                amountCharged: amountCharged,
-                amountPaid: amountPaid,
-                amountOutstanding: amountOutstanding,
-                unsettledTransactions: unsettledTransactions,
-                allTransactions: data
-            };
-        },
-        error: function (jqXHR) {
-            let errorMessage = JSON.parse(jqXHR.responseText).Message;
-            window.alert("Could not get report details: ".concat(errorMessage));
         }
     });
-
-    return result;
 }
-
-ko.components.register('report-component', {
-    viewModel: function (params) {
-        var reportComponentVM = this;
-        reportComponentVM.generateStartDate = ko.observable();
-        reportComponentVM.generateEndDate = ko.observable();
-        
-        reportComponentVM.unsettledTransactions = ko.observableArray([]);
-        reportComponentVM.allTransactions = ko.observableArray([]);
-        reportComponentVM.amountCharged = ko.observable();
-        reportComponentVM.amountPaid = ko.observable();
-        reportComponentVM.amountOutstanding = ko.observable();
-        reportComponentVM.reportRange = ko.observable();
-        
-        reportComponentVM.generateReport = function () {
-            reportComponentVM.reports.unshift(generateReport(reportComponentVM.generateStartDate(), reportComponentVM.generateEndDate()));
-        };
-
-        reportComponentVM.viewReport = function (report) {
-            $("#modalViewReport").modal("show");
-            $("#modalViewReport").focus();
-            $("#headerLoadingModal").show();
-
-            let startDate = splitViewDate(report.StartDate);
-            let endDate = splitViewDate(report.EndDate);
-
-            let result = getReportDetails(startDate, endDate);
-
-            if (result) {
-                //assign to knockout components
-                reportComponentVM.amountCharged(result.amountCharged);
-                reportComponentVM.amountPaid(result.amountPaid);
-                reportComponentVM.amountOutstanding(result.amountOutstanding);
-                reportComponentVM.unsettledTransactions(result.unsettledTransactions);
-                reportComponentVM.allTransactions(result.allTransactions);
-                reportComponentVM.reportRange(report.StartDate + " - " + report.EndDate);
-
-                $("#headerLoadingModal").hide();
-            } else {
-                $("#modalViewReport").modal("hide");
-            }
-            
-        };
-
-        reportComponentVM.downloadReportDetails = function () {
-            let csv = reportComponentVM.allTransactions().createCSVString();
-
-            csv.downloadCSV("Transactions.csv");
-        };
-
-        reportComponentVM.reports = ko.observableArray(getReports());
-
-        return reportComponentVM;
-    },
-    template: require('./report-component.html')
-});
