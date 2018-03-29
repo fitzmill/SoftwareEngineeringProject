@@ -45,7 +45,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "johnsmith@gmail.com",
                 Hashed = "78b10e2cb3ec22bffea25bad2a1c02cbe4b7b587b46d0dd8d6af1c170910a3b1",
                 Salt = "l1u2c3a4s5",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "fed123",
                 Students = new List<Student>()
@@ -58,7 +58,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "lukethehallway@hall.mail",
                 Hashed = "57855c02c995371dd1122a4b1ed2254a69d1ac3a9fe5d9c18676f9f6625bc5bb",
                 Salt = "adfasfgth",
-                PaymentPlan = PaymentPlan.SEMESTERLY,
+                Plan = PaymentPlan.SEMESTERLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "123nonono",
                 Students = new List<Student>()
