@@ -1,5 +1,8 @@
 ﻿require('./login-component.scss');
 
+const loginAPIURL = "/api/login";
+const accountAPIURL = "/api/account";
+
 ko.components.register('login-component', {
     viewModel: function (params) {
         var vm = this;
@@ -7,13 +10,37 @@ ko.components.register('login-component', {
         vm.email = ko.observable();
         vm.password = ko.observable();
 
+        vm.user = ko.observable();
+
         vm.login = function () {
-            //TODO actually implement this
-            if (vm.email() === 'sfitzmill@gmail.com' && vm.password() === 'software') {
-                window.location = '#report';
-            } else {
-                $('#label-invalid-info').show();
+            if (!vm.email().emailMeetsRequirements()) {
+                window.alert("Please enter a valid email.");
+                return;
+            } else if (!vm.password().passwordMeetsRequirements()) {
+                window.alert("Password does not meet all requirements.");
+                return;
             }
+
+            validateLoginInfo(vm.email(), vm.password()).done(function (data) {
+                if (data) {
+                    getUserInfoByEmail(vm.email()).done(function (data) {
+                        if (data.UserType == 1) {
+                            vm.user(data);
+                            window.location = "#account-dashboard";
+                        } else if (data.UserType == 2) {
+                            window.location = "#admin";
+                        }
+                    }).fail(function (jqXHR) {
+                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                        window.alert(errorMessage);
+                    });
+                } else {
+                    $("#label-invalid-info").show();
+                }
+            }).fail(function (jqXHR) {
+                let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                window.alert(errorMessage);
+            });
         }
 
         $(document).keypress(function (e) {
@@ -28,3 +55,21 @@ ko.components.register('login-component', {
     },
     template: require('./login-component.html')
 });
+
+function validateLoginInfo(email, password) {
+    return $.ajax(loginAPIURL + "/ValidateLoginInfo", {
+        method: "POST",
+        data: {
+            Email: email,
+            Password: password
+        }
+    });
+}
+
+function getUserInfoByEmail(email) {
+    return $.ajax(accountAPIURL + "/GetUserInfoByEmail", {
+        method: "POST",
+        contentType: "application/JSON; charset=utf-8",
+        data: JSON.stringify(email)
+    });
+}

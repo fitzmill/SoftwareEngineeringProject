@@ -1,4 +1,4 @@
-﻿require('./report-component.scss');
+﻿require('./admin-component.scss');
 
 const adminAPIURL = "/api/admin";
 const reportAPIURL = "/api/report";
@@ -140,7 +140,7 @@ function getReportDetails(startDate, endDate) {
     return result;
 }
 
-ko.components.register('report-component', {
+ko.components.register('admin-component', {
     viewModel: function (params) {
         var reportComponentVM = this;
         reportComponentVM.generateStartDate = ko.observable();
@@ -193,5 +193,5 @@ ko.components.register('report-component', {
 
         return reportComponentVM;
     },
-    template: require('./report-component.html')
+    template: require('./admin-component.html')
 });
