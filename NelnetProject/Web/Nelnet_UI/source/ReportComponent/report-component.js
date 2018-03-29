@@ -50,7 +50,7 @@ ko.components.register('report-component', {
                 //makes a deep copy of the array
                 let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
                 unsettledTransactions.forEach((t, index, array) => {
-                    array[index].DateDue = parseDateTimeString(t.DateDue);
+                    array[index].DateDue = t.DateDue.parseDateTimeString();
                     array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
                 });
 
@@ -114,22 +114,13 @@ function splitViewDate(dateString) {
     };
 }
 
-//turns c# datetime object into a more readable format
-function parseDateTimeString(dateTime) {
-    let dateArray = dateTime.split('-');
-    let year = dateArray[0];
-    let month = dateArray[1];
-    let day = dateArray[2].substring(0, 2);
-    return month + "/" + day + "/" + year;
-}
-
 //turn report into a readable format
 function parseReportModel(report) {
     return {
         ReportID: report.ReportID,
-        DateCreated: parseDateTimeString(report.DateCreated),
-        StartDate: parseDateTimeString(report.StartDate),
-        EndDate: parseDateTimeString(report.EndDate)
+        DateCreated: report.DateCreated.parseDateTimeString(),
+        StartDate: report.StartDate.parseDateTimeString(),
+        EndDate: report.EndDate.parseDateTimeString()
     };
 }
 
