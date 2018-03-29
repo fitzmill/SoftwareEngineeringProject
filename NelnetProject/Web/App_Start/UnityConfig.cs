@@ -6,6 +6,7 @@ using System;
 using System.Configuration;
 using Unity;
 using Unity.Injection;
+using Web.Managers;
 
 namespace Web
 {
@@ -79,7 +80,9 @@ namespace Web
             container.RegisterType<IGetUserInfoEngine, GetUserInfoEngine>();
             container.RegisterType<IPaymentEngine, PaymentEngine>();
             container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
-            
+
+            //payment manager
+            container.Resolve<PaymentManager>();
         }
     }
 }
