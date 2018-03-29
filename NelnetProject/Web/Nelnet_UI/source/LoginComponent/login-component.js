@@ -3,6 +3,9 @@
 const loginAPIURL = "/api/login";
 const accountAPIURL = "/api/account";
 
+const generalUserType = 1;
+const adminUserType = 2;
+
 ko.components.register('login-component', {
     viewModel: function (params) {
         var vm = this;
@@ -24,10 +27,10 @@ ko.components.register('login-component', {
             validateLoginInfo(vm.email(), vm.password()).done(function (data) {
                 if (data) {
                     getUserInfoByEmail(vm.email()).done(function (data) {
-                        if (data.UserType == 1) {
+                        if (data.UserType == generalUserType) {
                             vm.user(data);
                             window.location = "#account-dashboard";
-                        } else if (data.UserType == 2) {
+                        } else if (data.UserType == adminUserType) {
                             window.location = "#admin";
                         }
                     }).fail(function (jqXHR) {
