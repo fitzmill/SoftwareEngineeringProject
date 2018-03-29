@@ -8,8 +8,6 @@ namespace Core.DTOs
     {
         public string CustomerID { get; set; }
 
-        public string Username { get; set; }
-
         public string Company { get; set; }
 
         public string FirstName { get; set; }
@@ -26,11 +24,13 @@ namespace Core.DTOs
 
         public string Zip { get; set; }
 
-        public int CardNumber { get; set; }
+        public long CardNumber { get; set; }
 
         public int ExpirationYear { get; set; }
 
         public int ExpirationMonth { get; set; }
+
+        public string CardType { get; set; }
 
 
     }

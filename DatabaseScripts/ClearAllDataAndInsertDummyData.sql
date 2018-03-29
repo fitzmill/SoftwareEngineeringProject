@@ -4,7 +4,7 @@ GO
 drop table if exists [dbo].[Transaction]
 drop table if exists [dbo].[Student]
 drop table if exists [dbo].[User]
-drop table if exists [dbo].[Address]
+drop table if exists [dbo].[Report]
 
 /****** Object:  Table [dbo].[Student]    Script Date: 2/7/2018 9:53:23 PM ******/
 SET ANSI_NULLS ON
@@ -35,7 +35,7 @@ CREATE TABLE [dbo].[Transaction](
 	[DateDue] [date] NOT NULL,
 	[DateCharged] [date] NULL,
 	[ProcessState] [tinyint] NOT NULL,
-	[ReasonFailed] [tinyint] NULL,
+	[ReasonFailed] [varchar](255) NULL,
  CONSTRAINT [PK_Transaction] PRIMARY KEY CLUSTERED 
 (
 	[TransactionID] ASC
@@ -75,6 +75,25 @@ ALTER TABLE [dbo].[Transaction] CHECK CONSTRAINT [FK_Transaction_User]
 GO
 
 
+/****** Object:  Table [dbo].[Report]    Script Date: 2/26/18 7:34:58 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Report](
+	[ReportID] [int] IDENTITY(1,1) NOT NULL,
+	[DateCreated] [date] NOT NULL,
+	[StartDate] [date] NOT NULL,
+	[EndDate] [date] NOT NULL,
+ CONSTRAINT [PK_Report] PRIMARY KEY CLUSTERED 
+(
+	[ReportID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Cooper', 'Knaak', 'cooper@cooperknaak.dating', 'notimplementedyet', 'yet', 1, 1, 'fe1686') --Discover Card
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Bill', 'Gates', 'billy@microsoft.com', 'whynoimplement', 'implement', 3, 1, '1edf63') --Visa Card
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Sean', 'Fitzy', 'sean@weebnation.com', 'willimplementsometime', 'sometime', 2, 1, '5b44c3') --MasterCard
@@ -88,9 +107,13 @@ insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Daughter
 insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('BillAdopted', 'Schmidling', 11, 3)
 
 
-insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2017, 9, 5), DATEFROMPARTS(2017, 9, 5), 2, NULL)
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2017, 9, 5), DATEFROMPARTS(2017, 9, 5), 2, 'Insufficient funds')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
-insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500 + 5000)/9, DATEFROMPARTS(2018, 1, 5), DATEFROMPARTS(2018, 1, 8), 2, 1)
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500 + 5000)/9, DATEFROMPARTS(2018, 1, 5), DATEFROMPARTS(2018, 1, 8), 2, 'Insufficient funds')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500+5000)/9, DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
-insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 2, 5), NULL, 4, 3)
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 2, 5), NULL, 4, 'Unexpected error')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
+
+insert into [dbo].[Report](DateCreated, StartDate, EndDate) values(DATEFROMPARTS(2017, 9, 1), DATEFROMPARTS(2017, 9, 1), DATEFROMPARTS(2017, 9, 30))
+insert into [dbo].[Report](DateCreated, StartDate, EndDate) values(DATEFROMPARTS(2018, 1, 1), DATEFROMPARTS(2018, 1, 1), DATEFROMPARTS(2018, 2, 28))
+insert into [dbo].[Report](DateCreated, StartDate, EndDate) values(DATEFROMPARTS(2018, 9, 30), DATEFROMPARTS(2018, 9, 1), DATEFROMPARTS(2018, 9, 30))

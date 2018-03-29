@@ -1,18 +1,29 @@
-﻿using System;
+﻿using Accessors;
+using Core.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Newtonsoft.Json;
+using Core.Interfaces;
 
 namespace Web.Controllers
 {
     public class ValuesController : ApiController
     {
-        // GET api/values
-        public IEnumerable<string> Get()
+        private IChargePaymentAccessor paymentAccessor;
+        
+        public ValuesController (IChargePaymentAccessor paymentAccessor)
         {
-            return new string[] { "value1", "value2" };
+            this.paymentAccessor = paymentAccessor;
+        }
+
+        // GET api/values
+        public string Get()
+        {
+            return "ok";
         }
 
         // GET api/values/5
@@ -22,8 +33,9 @@ namespace Web.Controllers
         }
 
         // POST api/values
-        public void Post([FromBody]string value)
+        public IHttpActionResult Post([FromBody]string value)
         {
+            return Ok();
         }
 
         // PUT api/values/5

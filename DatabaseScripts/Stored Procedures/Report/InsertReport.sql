@@ -14,14 +14,14 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Sean Fitzgerald
--- Create date: 2018/02/19
--- Description:	Gets all transactions that are due in between two dates.
+-- Author:		<Author,,Name>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE GetAllTransactionsForDateRange
+CREATE PROCEDURE InsertReport
 	-- Add the parameters for the stored procedure here
-	@StartDate Date,
-	@EndDate Date
+	@StartDate date,
+	@EndDate date
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -29,17 +29,8 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT 
-	t.TransactionID,
-	u.FirstName,
-	u.LastName,
-	t.AmountCharged,
-	t.DateDue,
-	t.DateCharged,
-	t.ProcessState,
-	t.ReasonFailed
-	FROM [dbo].[Transaction] t
-	JOIN [dbo].[User] u ON t.UserID = u.UserID
-	WHERE t.DateDue > @StartDate AND t.DateDue < @EndDate
+	INSERT INTO [dbo].[Report](DateCreated, StartDate, EndDate) VALUES(GETDATE(), @StartDate, @EndDate)
+
+	SELECT SCOPE_IDENTITY()
 END
 GO

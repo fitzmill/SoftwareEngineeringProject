@@ -8,6 +8,6 @@ namespace Core
     {
         MONTHLY=1,
         SEMESTERLY,
-        ONE_TIME
+        YEARLY
     }
 }
