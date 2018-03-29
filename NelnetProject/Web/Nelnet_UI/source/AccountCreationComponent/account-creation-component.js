@@ -1,10 +1,12 @@
 ﻿require('./account-creation-component.scss');
+require('../assets/background-image.scss');
 
 ko.components.register('account-creation-component', {
     viewModel: function (params) {
         let vm = this;
 
-        vm.text = ko.observable("hi");
+        vm.firstName = ko.observable();
+        vm.lastName = ko.observable();
 
         return vm;
     },

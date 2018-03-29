@@ -1,4 +1,5 @@
 ﻿require('./login-component.scss');
+require('../assets/background-image.scss');
 
 ko.components.register('login-component', {
     viewModel: function (params) {
