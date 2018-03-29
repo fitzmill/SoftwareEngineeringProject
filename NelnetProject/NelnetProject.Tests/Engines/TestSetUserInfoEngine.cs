@@ -48,7 +48,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "curious.george@gmail.com",
                 Hashed = "asdfjkl",
                 Salt = "salt",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "abc123",
                 Students = new List<Student>()
@@ -185,7 +185,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "hammerandnail@gmail.com",
                 Hashed = "qwerty",
                 Salt = "uiop",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "1j3k7r",
                 Students = new List<Student>()
@@ -216,7 +216,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "seanfitz@gmail.com",
                 Hashed = "cool",
                 Salt = "dude",
-                PaymentPlan = PaymentPlan.SEMESTERLY,
+                Plan = PaymentPlan.SEMESTERLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "34jk89",
                 Students = new List<Student>()
@@ -270,7 +270,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "andrewcrewman@gmail.com",
                 Hashed = "klsdfl",
                 Salt = "fs8e",
-                PaymentPlan = PaymentPlan.SEMESTERLY,
+                Plan = PaymentPlan.SEMESTERLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "9wy84q",
                 Students = new List<Student>()
@@ -316,7 +316,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "lichtenhausen.jake@gmail.com",
                 Hashed = "234klkj2",
                 Salt = "9dr0w",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "jdie58",
                 Students = new List<Student>()
@@ -348,7 +348,7 @@ namespace NelnetProject.Tests.Engines
             student2.Grade = 7;
             user.FirstName = "Jacob";
             user.Email = "jakey@gmail.com";
-            user.PaymentPlan = PaymentPlan.SEMESTERLY;
+            user.Plan = PaymentPlan.SEMESTERLY;
 
             setUserInfoEngine.UpdatePersonalInfo(user);
 
@@ -374,7 +374,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "emma@gmail.com",
                 Hashed = "jk65ui",
                 Salt = "ke978n",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "77777g",
                 Students = new List<Student>()
@@ -425,7 +425,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "emma@gmail.com",
                 Hashed = "jk65ui",
                 Salt = "ke978n",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "77777g",
                 Students = new List<Student>()
@@ -458,7 +458,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "jbradley@gmail.com",
                 Hashed = "jdksi39dje93",
                 Salt = "ke978n",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "129dde",
                 Students = new List<Student>()
@@ -495,7 +495,7 @@ namespace NelnetProject.Tests.Engines
                 Email = "homeboy@gmail.com",
                 Hashed = "jei3905us",
                 Salt = "j723ie",
-                PaymentPlan = PaymentPlan.MONTHLY,
+                Plan = PaymentPlan.MONTHLY,
                 UserType = UserType.GENERAL,
                 CustomerID = "5ui1a2",
                 Students = new List<Student>()

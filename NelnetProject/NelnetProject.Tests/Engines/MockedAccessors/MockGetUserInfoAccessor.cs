@@ -9,46 +9,40 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
     public class MockGetUserInfoAccessor : IGetUserInfoAccessor
     {
         public List<Student> StudentsDB;
-        public List<User> MockDB;
-        public MockGetUserInfoAccessor(List<Student> StudentsDB, List<User> MockDB)
+        public List<User> UserDB;
+        public MockGetUserInfoAccessor(List<Student> StudentsDB, List<User> UserDB)
         {
             this.StudentsDB = StudentsDB;
-            this.MockDB = MockDB;
-        }
-            public MockGetUserInfoAccessor()
-        {
-            MockDB.ElementAt(0).Students.Add(StudentsDB.ElementAt(0));
-            MockDB.ElementAt(0).Students.Add(StudentsDB.ElementAt(1));
-            MockDB.ElementAt(1).Students.Add(StudentsDB.ElementAt(2));
+            this.UserDB = UserDB;
         }
 
         public bool EmailExists(string email)
         {
-            return MockDB.Select(x => x.Email).Contains(email);
+            return UserDB.Select(x => x.Email).Contains(email);
         }
 
         public IList<User> GetAllUsers()
         {
-            return MockDB;
+            return UserDB;
         }
 
         public User GetUserInfoByID(int userID)
         {
-            return MockDB.FirstOrDefault(x => x.UserID == userID);
+            return UserDB.FirstOrDefault(x => x.UserID == userID);
         }
 
         public User GetUserInfoByEmail(string email)
         {
-            return MockDB.FirstOrDefault(x => x.Email == email);
+            return UserDB.FirstOrDefault(x => x.Email == email);
         }
 
         public PasswordDTO GetUserPasswordInfo(string email)
         {
             PasswordDTO result = new PasswordDTO();
-            if (email.Equals(MockDB[0].Email))
+            if (email.Equals(UserDB[0].Email))
             {
-                result.Hashed = MockDB[0].Hashed;
-                result.Salt = MockDB[0].Salt;
+                result.Hashed = UserDB[0].Hashed;
+                result.Salt = UserDB[0].Salt;
                 return result;
             }
             return null;
@@ -56,11 +50,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public string GetPaymentSpringCustomerID(int userID)
         {
-            if (userID == MockDB[0].UserID)
-            {
-                return MockDB[0].CustomerID;
-            }
-            return null;
+            return UserDB.FirstOrDefault(u => u.UserID == userID)?.CustomerID;
         }
     }
 }
