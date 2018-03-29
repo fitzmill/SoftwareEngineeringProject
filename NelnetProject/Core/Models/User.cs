@@ -17,7 +17,7 @@ namespace Core
 
         public string Salt { get; set; }
 
-        public PaymentPlan PaymentPlan { get; set; }
+        public PaymentPlan Plan { get; set; }
 
         public UserType UserType { get; set; }
 
@@ -35,7 +35,7 @@ namespace Core
                    Email == user.Email &&
                    Hashed == user.Hashed &&
                    Salt == user.Salt &&
-                   PaymentPlan == user.PaymentPlan &&
+                   Plan == user.Plan &&
                    UserType == user.UserType &&
                    CustomerID == user.CustomerID &&
                    EqualityComparer<List<Student>>.Default.Equals(Students, user.Students);

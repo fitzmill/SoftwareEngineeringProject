@@ -35,7 +35,7 @@ namespace Accessors
                 command.Parameters.Add(new SqlParameter("@Email", user.Email));
                 command.Parameters.Add(new SqlParameter("@Hashed", user.Hashed));
                 command.Parameters.Add(new SqlParameter("@Salt", user.Salt));
-                command.Parameters.Add(new SqlParameter("@PaymentPlan", user.PaymentPlan));
+                command.Parameters.Add(new SqlParameter("@PaymentPlan", user.Plan));
                 command.Parameters.Add(new SqlParameter("@UserType", user.UserType));
                 command.Parameters.Add(new SqlParameter("@CustomerID", user.CustomerID));
 
@@ -72,7 +72,7 @@ namespace Accessors
                 command.Parameters.Add(new SqlParameter("@Email", user.Email));
                 command.Parameters.Add(new SqlParameter("@Hashed", user.Hashed));
                 command.Parameters.Add(new SqlParameter("@Salt", user.Salt));
-                command.Parameters.Add(new SqlParameter("@PaymentPlan", user.PaymentPlan));
+                command.Parameters.Add(new SqlParameter("@PaymentPlan", user.Plan));
                 command.Parameters.Add(new SqlParameter("@UserType", user.UserType));
                 command.Parameters.Add(new SqlParameter("@CustomerID", user.CustomerID));
 
