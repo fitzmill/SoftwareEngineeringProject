@@ -1,8 +1,8 @@
 ﻿require('./account-dashboard-component.scss');
 
 const accountDashboardAPIURL = "/api/account-dashboard";
-var studentsList = [{ FirstName = "Joey", LastName = "Jimson", Grade = 1 }, { FirstName = "Jimbo", LastName = "Jimson", Grade = 5 }];
-var user = {UserID = 1, FirstName = "Jim", LastName = "Jimson", Email = "jimjimson@jimmail.jim", Students = studentsList};
+var studentsList = [{ FirstName: "Joey", LastName: "Jimson", Grade: 1 }, { FirstName: "Jimbo", LastName: "Jimson", Grade: 5 }];
+var user = {UserID: 1, FirstName: "Jim", LastName: "Jimson", Email: "jimjimson@jimmail.jim", Students: studentsList};
 
 //GETs a user's payment spring information
 function getPaymentSpringInfo(userID) {
@@ -53,6 +53,17 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.NextPaymentDate = ko.observable();
         accountDashboardVM.NextPaymentCost = ko.observable();
 
+        accountDashboardVM.setUser = function () {
+            accountDashboardVM.UserFirstName = user.FirstName;
+            accountDashboardVM.UserLastName = user.LastName;
+            accountDashboardVM.Email = user.Email
+            user.Students.forEach(function (student) {
+                accountDashboardVM.push(student);
+            });
+        };
+
+        accountDashboardVM.setUser();
+
         accountDashboardVM.updateUser = function () {
             user.FirstName = accountDashboardVM.UserFirstName;
             user.LastName = accountDashboardVM.UserLastName;
@@ -72,17 +83,17 @@ ko.components.register('account-dashboard-component', {
 
         accountDashboardVM.updatePaymentInfo = function () {
             var changedPaymentInfo = {
-                FirstName = accountDashboardVM.CardFirstName,
-                LastName = accountDashboardVM.CardLastName,
-                StreetAddress1 = accountDashboardVM.StreetAddress1,
-                StreetAddress2 = accountDashboardVM.StreetAddress2,
-                City = accountDashboardVM.City,
-                State = accountDashboardVM.State,
-                Zip = accountDashboardVM.Zip,
-                CardNumber = accountDashboardVM.CardNumber,
-                ExpirationYear = accountDashboardVM.ExpirationYear,
-                ExpirationMonth = accountDashboardVM.ExpirationMonth,
-                CardType = accountDashboardVM.CardType
+                FirstName: accountDashboardVM.CardFirstName,
+                LastName: accountDashboardVM.CardLastName,
+                StreetAddress1: accountDashboardVM.StreetAddress1,
+                StreetAddress2: accountDashboardVM.StreetAddress2,
+                City: accountDashboardVM.City,
+                State: accountDashboardVM.State,
+                Zip: accountDashboardVM.Zip,
+                CardNumber: accountDashboardVM.CardNumber,
+                ExpirationYear: accountDashboardVM.ExpirationYear,
+                ExpirationMonth: accountDashboardVM.ExpirationMonth,
+                CardType: accountDashboardVM.CardType
             };
 
             updatePaymentInfo(changedPaymentInfo).done({
