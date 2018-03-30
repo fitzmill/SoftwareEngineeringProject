@@ -78,7 +78,6 @@ namespace NelnetProject.Tests.Engines
             new UserPaymentInfoDTO()
             {
                 CustomerID = "fed123",
-                Company = "Martwall",
                 FirstName = "John",
                 LastName = "Smith",
                 StreetAddress1 = "1223 West St",

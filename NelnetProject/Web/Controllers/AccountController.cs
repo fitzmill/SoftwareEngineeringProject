@@ -17,9 +17,6 @@ namespace Web.Controllers
         IGetTransactionEngine getTransactionEngine;
         ISetUserInfoEngine setUserInfoEngine;
 
-        public AccountController(IGetUserInfoEngine getUserInfoEngine, IGetTransactionEngine getTransactionEngine)
-        
-
         public AccountController(IGetUserInfoEngine getUserInfoEngine, ISetUserInfoEngine setUserInfoEngine, IGetTransactionEngine getTransactionEngine)
         {
             this.getUserInfoEngine = getUserInfoEngine;

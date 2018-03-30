@@ -10,7 +10,7 @@ var index = (function () {
         loginComponent: require('./LoginComponent/login-component.js'),
         reportComponent: require('./ReportComponent/report-component.js'),
         accountCreationComponent: require('./AccountCreationComponent/account-creation-component.js'),
-        accountDashboardComponent: require('./AccountCreationComponent/account-dashboard-component.js')
+        accountDashboardComponent: require('./AccountDashboardComponent/account-dashboard-component.js')
     };
 })();
 
