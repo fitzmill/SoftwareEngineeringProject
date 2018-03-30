@@ -73,6 +73,7 @@
     <Compile Include="Engines\Utils\TestPasswordUtils.cs" />
     <Compile Include="Engines\Utils\TestTuitionUtil.cs" />
     <Compile Include="Engines\TestSetUserInfoEngine.cs" />
+    <Compile Include="Engines\Utils\TestEmailUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
