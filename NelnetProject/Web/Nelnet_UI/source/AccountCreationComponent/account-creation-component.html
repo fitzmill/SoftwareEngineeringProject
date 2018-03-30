@@ -1,3 +1,19 @@
-﻿<div>
-    <input class="input-account-creation" data-bind="value: firstName" placeholder="First Name" />
+﻿<head id="head"></head>
+<div>
+    <div id="background-image" class="background"></div>
+    <div id="background-overlay" class="background"></div>
+    <div class="card-base">
+        <div class="card-body card-information">
+            <input class="input-account-creation card-left-column" data-bind="value: firstName" placeholder="First Name" />
+            <input class="input-account-creation card-right-column" data-bind="value: lastName" placeholder="Last Name" />
+            <input class="input-account-creation card-full-column" data-bind="value: email" placeholder="Email" />
+            <input class="input-account-creation card-full-column" data-bind="value: reenterEmail" placeholder="Confirm Email" />
+            <input class="input-account-creation card-full-column" data-bind="value: password" placeholder="Password" />
+            <input class="input-account-creation card-full-column" data-bind="value: reenterPassword" placeholder="Confirm Password" />
+
+            <button id="btn-next" class="btn btn-success btn-right" data-bind="click: next">Next</button>
+            <button id="btn-cancel" class="btn btn-secondary btn-left" data-bind="click: cancel">Cancel</button>
+        </div>
+    </div>
+    
 </div>
