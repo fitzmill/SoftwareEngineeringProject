@@ -36,13 +36,13 @@ namespace Web.Managers
             if (today.Hour == chargingHour && today.Day == 1)
             {
                 IList<Transaction> generatedTransactions = paymentEngine.GeneratePayments(today);
-                //notificationEngine.SendTransactionNotifications(generatedTransactions.ToList()); todo
+                notificationEngine.SendTransactionNotifications(generatedTransactions.ToList());
             }
             else if (today.Hour == chargingHour && today.Day > 1 && today.Day <= 12)
             {
                 IList<Transaction> unsettledTransactions = getTransactionEngine.GetAllUnsettledTransactions();
                 IList<Transaction> transactionResults = paymentEngine.ChargePayments(unsettledTransactions.ToList(), today);
-                //notificationEngine.SendTransactionNotifications(transactionResults.ToList()); todo
+                notificationEngine.SendTransactionNotifications(transactionResults.ToList());
             }
         }
         

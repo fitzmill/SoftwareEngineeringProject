@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 namespace Engines.Utils
 {
     /// <summary>
-    /// Utility class for calculating tuition.
+    /// Utility class for calculating tuition and overdue status.
     /// </summary>
     public class TuitionUtil
     {
+        public static readonly int OVERDUE_RETRY_PERIOD = 7;
+        public static readonly int DUE_DAY = 5;
+        public static readonly double LATE_FEE = 25;
+
         private static Dictionary<int, int> rates = new Dictionary<int, int>()
         {
             {0, 2500},
@@ -53,6 +57,17 @@ namespace Engines.Utils
 
             double periodAmount = yearlyAmount / monthsDue[user.Plan].Count();
             return Math.Round(periodAmount, precision);
+        }
+
+        //Returns the number of days the transaction is overdue
+        public static int DaysOverdue(Transaction t, DateTime today)
+        {
+            return today.Subtract(t.DateDue).Days;
+        }
+
+        public static bool IsPastRetryPeriod(Transaction t, DateTime today)
+        {
+            return DaysOverdue(t, today) >= OVERDUE_RETRY_PERIOD;
         }
     }
 }

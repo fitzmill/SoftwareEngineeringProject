@@ -13,9 +13,6 @@ namespace Engines
     /// </summary>
     public class PaymentEngine : IPaymentEngine
     {
-        private static readonly int DAYS_UNTIL_OVERDUE = 7;
-        private static readonly int DUE_DAY = 5;
-
         private IGetUserInfoAccessor getUserInfoAccessor;
         private IGetPaymentInfoAccessor getPaymentInfoAccessor;
         private IChargePaymentAccessor chargePaymentAccessor;
@@ -48,8 +45,7 @@ namespace Engines
                ProcessState processState = ProcessState.SUCCESSFUL;
                if (!result.WasSuccessful)
                {
-                   int daysOverdue = today.Subtract(charge.DateDue).Days;
-                   processState = (daysOverdue >= DAYS_UNTIL_OVERDUE) ? ProcessState.FAILED : ProcessState.RETRYING;
+                   processState = TuitionUtil.IsPastRetryPeriod(charge, today) ? ProcessState.FAILED : ProcessState.RETRYING;
                }
 
                //Generate result transaction
@@ -82,7 +78,7 @@ namespace Engines
                     {
                         UserID = user.UserID,
                         AmountCharged = TuitionUtil.GenerateAmountDue(user, 2),
-                        DateDue = new DateTime(today.Year, today.Month, DUE_DAY),
+                        DateDue = new DateTime(today.Year, today.Month, TuitionUtil.DUE_DAY),
                         ProcessState = ProcessState.NOT_YET_CHARGED
                     }).ToList();
 

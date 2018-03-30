@@ -14,12 +14,13 @@ namespace Engines
     /// </summary>
     public class NotificationEngine : INotificationEngine
     {
-
         private IEmailAccessor emailAccessor;
+        private IGetUserInfoAccessor getUserInfoAccessor;
 
-        public NotificationEngine(IEmailAccessor emailAccessor)
+        public NotificationEngine(IEmailAccessor emailAccessor, IGetUserInfoAccessor getUserInfoAccessor)
         {
             this.emailAccessor = emailAccessor;
+            this.getUserInfoAccessor = getUserInfoAccessor;
         }
 
         public void SendTransactionNotifications(List<Transaction> transactions)
