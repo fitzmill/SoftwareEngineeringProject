@@ -15,12 +15,10 @@ SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
 -- Author:		Sean Fitzgerald
--- Create date: 2018/02/12
--- Description:	Gets the most recent transaction for a user based on UserID
+-- Create date: 2018/04/02
+-- Description:	Gets all transactions marked as failed
 -- =============================================
-CREATE PROCEDURE GetMostRecentTransactionForUser
-	-- Add the parameters for the stored procedure here 
-	@UserID int
+CREATE PROCEDURE GetAllFailedTransactions
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -28,8 +26,6 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT TOP 1 * FROM [dbo].[Transaction] t 
-	WHERE t.UserID = @UserID 
-	ORDER BY t.TransactionID desc
+	SELECT * FROM [dbo].[Transaction] t WHERE t.ProcessState = 4
 END
 GO

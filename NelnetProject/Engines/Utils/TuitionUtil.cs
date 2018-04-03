@@ -48,7 +48,7 @@ namespace Engines.Utils
 
         //Generate the aggregate amount due for the month by summing the yearly cost for each of
         //the user's students and dividing by the number of pay periods in the payment plan.
-        public static double GenerateAmountDue(User user, int precision)
+        public static double GenerateAmountDue(User user, int precision, double lastTransactionAmountDue = 0.0)
         {
             double yearlyAmount = 0;
             foreach (int grade in user.Students.Select(s => s.Grade)) {
@@ -56,7 +56,11 @@ namespace Engines.Utils
             }
 
             double periodAmount = yearlyAmount / monthsDue[user.Plan].Count();
-            return Math.Round(periodAmount, precision);
+            double amountDue = Math.Round(periodAmount, precision);
+
+            //add on late fee if the last transaction
+            amountDue = lastTransactionAmountDue == 0 ? amountDue : amountDue + lastTransactionAmountDue + LATE_FEE;
+            return amountDue;
         }
 
         //Returns the number of days the transaction is overdue
