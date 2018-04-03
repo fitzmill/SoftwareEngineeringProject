@@ -7,17 +7,59 @@ using System.Collections.ObjectModel;
 using Core;
 using Core.DTOs;
 using Core.Exceptions;
+using System.Collections.Generic;
 
 namespace NelnetProject.Tests.Engines
 {
     [TestClass]
     public class TestGetTransactionEngine
     {
+        private List<Transaction> MockDB = new List<Transaction>{
+            new Transaction()
+            {
+                TransactionID = 1,
+                UserID = 1,
+                AmountCharged = 99.00,
+                DateDue = new DateTime(2018, 2, 9),
+                DateCharged = new DateTime(2018, 2, 11),
+                ProcessState = ProcessState.SUCCESSFUL,
+                ReasonFailed = "Card expired"
+            },
+            new Transaction()
+            {
+                TransactionID = 2,
+                UserID = 2,
+                AmountCharged = 64.00,
+                DateDue = new DateTime(2018, 2, 9),
+                DateCharged = new DateTime(2018, 2, 9),
+                ProcessState = ProcessState.SUCCESSFUL
+            },
+            new Transaction()
+            {
+                TransactionID = 3,
+                UserID = 3,
+                AmountCharged = 55.00,
+                DateDue = new DateTime(2018, 2, 9),
+                DateCharged = null,
+                ProcessState = ProcessState.FAILED,
+                ReasonFailed = "Insufficient funds"
+            },
+            new Transaction()
+            {
+                TransactionID = 4,
+                UserID = 1,
+                AmountCharged = 108.00,
+                DateDue = new DateTime(2018, 3, 11),
+                DateCharged = null,
+                ProcessState = ProcessState.NOT_YET_CHARGED
+            }
+        };
+
         IGetTransactionEngine getTransactionEngine;
         IGetTransactionAccessor getTransactionAccessor;
         public TestGetTransactionEngine()
         {
-            getTransactionAccessor = new MockGetTransactionAccessor();
+            getTransactionAccessor = new MockGetTransactionAccessor(MockDB);
             getTransactionEngine = new GetTransactionEngine(getTransactionAccessor);
         }
 
@@ -54,22 +96,11 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        public void TestGetMostRecentTransactionForUser()
+        public void TestGetAllFailedTransactions()
         {
-            var id = 1;
-            var result = getTransactionEngine.GetMostRecentTransactionForUser(id);
+            var result = getTransactionEngine.GetAllFailedTransactions();
 
-            Assert.AreEqual(new DateTime(2018, 3, 11), result.DateDue);
-            Assert.AreEqual(id, result.UserID);
-        }
-
-        [TestMethod]
-        public void TestGetMostRecentTransactionForNonexistantUser()
-        {
-            var id = -1;
-            var result = getTransactionEngine.GetMostRecentTransactionForUser(id);
-
-            Assert.IsNull(result);
+            Assert.AreEqual(1, result.Count);
         }
 
         [TestMethod]
