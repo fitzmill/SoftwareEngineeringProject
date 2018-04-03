@@ -1,4 +1,5 @@
 ﻿require('./account-dashboard-component.scss');
+require('../assets/background-image.scss');
 
 const accountDashboardAPIURL = "/api/account-dashboard";
 var studentsList = [{ FirstName: "Joey", LastName: "Jimson", Grade: 1 }, { FirstName: "Jimbo", LastName: "Jimson", Grade: 5 }];

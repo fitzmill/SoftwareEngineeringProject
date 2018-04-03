@@ -1,2 +1,55 @@
 ﻿body {
 }
+
+.input-account-dashboard {
+    width: -webkit-fill-available;
+    text-align: center;
+    margin: 10px;
+    background-color: #F5F5F5;
+    border-style: solid;
+    border-width: thin;
+    border-color: #717171;
+}
+
+.card-base {
+    background-color: white;
+    width: 800px;
+    height: 500px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.card-information {
+    width: inherit;
+    height: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.card-left-column {
+    float: left;
+    margin-left: 6%;
+    width: 40%;
+}
+
+.card-right-column {
+    float: right;
+    margin-right: 6%;
+    width: 40%;
+}
+
+.card-full-column {
+    margin-right: 6%;
+    margin-left: 6%;
+}
+
+.btn-right {
+    width: 15%;
+    float: right;
+    margin-right: 6%;
+    margin-top: 10px;
+}

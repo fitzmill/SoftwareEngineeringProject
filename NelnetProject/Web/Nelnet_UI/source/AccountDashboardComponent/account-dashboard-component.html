@@ -1,10 +1,27 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
+﻿<head id="head">
 </head>
-<body>
+<div>
+    <div id="background-image" class="background"></div>
+    <div id="background-overlay" class="background"></div>
+    <div class="card-base">
+        <button id="btn-edit" class="btn btn-success btn-right" data-bind="click: edit">Edit</button>
+        <div class="card-body card-information">
+            <input class="input-account-dashboard card-left-column" data-bind="value: firstName" placeholder="First Name" />
+            <input class="input-account-dashboard card-right-column" data-bind="value: lastName" placeholder="Last Name" />
+            <input class="input-account-dashboard card-full-column" data-bind="value: email" placeholder="Email" />
+        </div>
+    </div>
+    <div class="card-base">
+        <button id="btn-edit" class="btn btn-success btn-right" data-bind="click: edit">Edit</button>
+        <div class="card-body card-information">
+            <input class="input-account-dashboard card-left-column" data-bind="value: firstName" placeholder="First Name" />
+            <input class="input-account-dashboard card-right-column" data-bind="value: lastName" placeholder="Last Name" />
+            <input class="input-account-dashboard card-full-column" data-bind="value: streetAddress1" placeholder="Street Address 1" />
+            <input class="input-account-dashboard card-full-column" data-bind="value: streetAddress2" placeholder="Street Address 2" />
+        </div>
+    </div>
+    <div class="card-base">
 
-</body>
-</html>
+    </div>
+
+</div>
