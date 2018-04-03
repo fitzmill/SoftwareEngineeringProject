@@ -59,7 +59,7 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.UserLastName = user.LastName;
             accountDashboardVM.Email = user.Email
             user.Students.forEach(function (student) {
-                accountDashboardVM.push(student);
+                accountDashboardVM.Students.push(student);
             });
         };
 

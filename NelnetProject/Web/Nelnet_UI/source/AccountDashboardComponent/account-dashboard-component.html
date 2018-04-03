@@ -3,25 +3,36 @@
 <div>
     <div id="background-image" class="background"></div>
     <div id="background-overlay" class="background"></div>
-    <div class="card-base">
+    <div class="card-base"> Your Information
         <button id="btn-edit" class="btn btn-success btn-right" data-bind="click: edit">Edit</button>
         <div class="card-body card-information">
-            <input class="input-account-dashboard card-left-column" data-bind="value: firstName" placeholder="First Name" />
-            <input class="input-account-dashboard card-right-column" data-bind="value: lastName" placeholder="Last Name" />
-            <input class="input-account-dashboard card-full-column" data-bind="value: email" placeholder="Email" />
+            <input class="info-account-dashboard card-left-column" data-bind="value: UserFirstName" placeholder="First Name" />
+            <input class="info-account-dashboard card-right-column" data-bind="value: UserLastName" placeholder="Last Name" />
+            <input class="info-account-dashboard card-full-column" data-bind="value: Email" placeholder="Email" />
         </div>
     </div>
-    <div class="card-base">
+    <div class="card-base"> Billing Information
         <button id="btn-edit" class="btn btn-success btn-right" data-bind="click: edit">Edit</button>
         <div class="card-body card-information">
-            <input class="input-account-dashboard card-left-column" data-bind="value: firstName" placeholder="First Name" />
-            <input class="input-account-dashboard card-right-column" data-bind="value: lastName" placeholder="Last Name" />
-            <input class="input-account-dashboard card-full-column" data-bind="value: streetAddress1" placeholder="Street Address 1" />
-            <input class="input-account-dashboard card-full-column" data-bind="value: streetAddress2" placeholder="Street Address 2" />
+            <input class="info-account-dashboard card-left-column" data-bind="value: CardFirstName" placeholder="First Name" />
+            <input class="info-account-dashboard card-right-column" data-bind="value: CardLastName" placeholder="Last Name" />
+            <input class="info-account-dashboard card-full-column" data-bind="value: StreetAddress1" placeholder="Street Address 1" />
+            <input class="info-account-dashboard card-full-column" data-bind="value: StreetAddress2" placeholder="Street Address 2" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: City" placeholder="City" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: State" placeholder="State" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: Zip" placeholder="Zip" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: CardType" placeholder="Card Type" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: CardNumber" placeholder="Card Number" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: ExpirationMonth" placeholder="Expiration Month" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: ExpirationYear" placeholder="Expiration Year" />
         </div>
     </div>
-    <div class="card-base">
-
+    <div class="card-base"> Next Payment
+        <button id="btn-edit" class="btn btn-success btn-right" data-bind="click: edit">Edit</button>
+        <div class="card-body card-information">
+            <input class="info-account-dashboard card-full-left" data-bind="value: NextPaymentCost" placeholder="Next Payment Amount" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: NextPaymentDate" placeholder="Next Payment Date" />
+        </div>
     </div>
 
 </div>
