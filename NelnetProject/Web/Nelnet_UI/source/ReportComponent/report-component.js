@@ -89,6 +89,8 @@ ko.components.register('report-component', {
             window.alert("Could not get report history, please try refreshing the page.");
         });
 
+        $('#processStateInfo').tooltip();
+
         return reportComponentVM;
     },
     template: require('./report-component.html')
