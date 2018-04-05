@@ -33,18 +33,18 @@ namespace Web.Managers
 
         public void TimerIntervalElapsed(object sender, ElapsedEventArgs e)
         {
-            DateTime today = dateProvider();
-            Debug.WriteLine(String.Format("Time Elapsed at {0:yyyy MM dd HH mm ss}", today));
+            DateTime now = dateProvider();
+            Debug.WriteLine(String.Format("Time Elapsed at {0:yyyy MM dd HH mm ss}", now));
             
-            if (today.Hour == chargingHour && today.Day == 1)
+            if (now.Hour == chargingHour && now.Day == 1)
             {
-                IList<Transaction> generatedTransactions = paymentEngine.GeneratePayments(today);
+                IList<Transaction> generatedTransactions = paymentEngine.GeneratePayments(now);
                 notificationEngine.SendTransactionNotifications(generatedTransactions.ToList());
             }
-            else if (today.Hour == chargingHour && today.Day > 1 && today.Day <= 12)
+            else if (now.Hour == chargingHour && now.Day > 1 && now.Day <= 12)
             {
                 IList<Transaction> unsettledTransactions = getTransactionEngine.GetAllUnsettledTransactions();
-                IList<Transaction> transactionResults = paymentEngine.ChargePayments(unsettledTransactions.ToList(), today);
+                IList<Transaction> transactionResults = paymentEngine.ChargePayments(unsettledTransactions.ToList(), now);
                 notificationEngine.SendTransactionNotifications(transactionResults.ToList());
             }
         }
