@@ -10,6 +10,6 @@ namespace Core
         SUCCESSFUL,
         RETRYING,
         FAILED,
-        DEFERRED //todo
+        DEFERRED
     }
 }
