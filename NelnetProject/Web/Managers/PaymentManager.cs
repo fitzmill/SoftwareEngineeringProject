@@ -1,11 +1,11 @@
 ﻿using Core;
 using Core.Interfaces;
+using Engines.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Timers;
-using System.Web;
 
 namespace Web.Managers
 {
@@ -43,7 +43,7 @@ namespace Web.Managers
                 IList<Transaction> generatedTransactions = paymentEngine.GeneratePayments(now);
                 notificationEngine.SendTransactionNotifications(generatedTransactions.ToList());
             }
-            else if (now.Hour == chargingHour && now.Day > 1 && now.Day <= 12)
+            else if (now.Hour == chargingHour && now.Day >= TuitionUtil.DUE_DAY && now.Day <= TuitionUtil.DUE_DAY + TuitionUtil.OVERDUE_RETRY_PERIOD)
             {
                 IList<Transaction> unsettledTransactions = getTransactionEngine.GetAllUnsettledTransactions();
                 IList<Transaction> transactionResults = paymentEngine.ChargePayments(unsettledTransactions.ToList(), now);
