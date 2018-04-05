@@ -69,6 +69,7 @@ namespace Engines.Utils
             return today.Subtract(t.DateDue).Days;
         }
 
+        //Returns if number of days overdue is greater or equal to grace period
         public static bool IsPastRetryPeriod(Transaction t, DateTime today)
         {
             return DaysOverdue(t, today) >= OVERDUE_RETRY_PERIOD;

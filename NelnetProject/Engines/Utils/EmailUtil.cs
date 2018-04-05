@@ -15,7 +15,7 @@ namespace Engines.Utils
         public static EmailNotification UpcomingPaymentNotification(Transaction t, User user)
         {
             string subject = "Alert from Tuition Assistant: Upcoming Payment";
-            string rawBody = string.Format("You have an upcoming payment.\nDate: {0:MMMM d yyyy}\nAmount: ${1}\nYou don't need to worry about anything. We'll charge your card automatically on this date.", t.DateDue, t.AmountCharged);
+            string rawBody = string.Format("You have an upcoming payment.\nDate: {0:MMMM d yyyy}\nAmount: ${1:f2}\nYou don't need to worry about anything. We'll charge your card automatically on this date.", t.DateDue, t.AmountCharged);
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
@@ -32,8 +32,8 @@ namespace Engines.Utils
         {
             int daysRemaining = TuitionUtil.DUE_DAY - TuitionUtil.DaysOverdue(t, today);
             string subject = string.Format("Alert from Tuition Assistant: Payment Unsuccessful ({0} DAYS REMAINING)", daysRemaining);
-            string rawBody = string.Format("There was an issue with your credit card. Your payment on {0:MMMM d yyyy} for ${1} failed for the following reason: {2}." +
-                "\nPlease resolve the issue as soon as possible.\nIf the payment remains unsuccessful after {3} more days, the amound will be deferred and a late fee of ${4} will be added.",
+            string rawBody = string.Format("There was an issue with your credit card. Your payment on {0:MMMM d yyyy} for ${1:f2} failed for the following reason: {2}." +
+                "\nPlease resolve the issue as soon as possible.\nIf the payment remains unsuccessful after {3} more days, the amount will be deferred and a late fee of ${4:f2} will be added.",
                 t.DateCharged, t.AmountCharged, t.ReasonFailed, daysRemaining, TuitionUtil.LATE_FEE);
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
@@ -42,8 +42,8 @@ namespace Engines.Utils
         public static EmailNotification PaymentFailedNotification(Transaction t, User user)
         {
             string subject = "Alert from Tuition Assistant: Payment Failed";
-            string rawBody = string.Format("Your payment of ${0} that was due on {1:MMMM d yyyy} failed for {2} days and has been deferred." +
-                "\nThe amount will be added to your next payment, along with a late fee of ${3}.", t.AmountCharged, t.DateDue, TuitionUtil.OVERDUE_RETRY_PERIOD, TuitionUtil.LATE_FEE);
+            string rawBody = string.Format("Your payment of ${0:f2} that was due on {1:MMMM d yyyy} failed for {2} days and has been deferred." +
+                "\nThe amount will be added to your next payment, along with a late fee of ${3:f2}.", t.AmountCharged, t.DateDue, TuitionUtil.OVERDUE_RETRY_PERIOD, TuitionUtil.LATE_FEE);
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 

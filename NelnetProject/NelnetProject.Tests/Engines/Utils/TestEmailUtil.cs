@@ -68,5 +68,60 @@ namespace NelnetProject.Tests.Engines.Utils
             Assert.AreEqual("Alert from Tuition Assistant: Payment Successful", email.Subject);
             Assert.AreEqual(expectedBody, email.Body);
         }
+
+        [TestMethod]
+        public void TestPaymentUnsuccessfulRetryingNotification()
+        {
+            Transaction t = new Transaction()
+            {
+                AmountCharged = 234.1,
+                DateDue = new DateTime(2018, 4, 1),
+                DateCharged = new DateTime(2018, 4, 3),
+                ProcessState = ProcessState.RETRYING,
+                ReasonFailed = "Card Expired"
+            };
+            User u = new User()
+            {
+                FirstName = "Bob",
+                Email = "bob@email.com"
+            };
+            String expectedBody = "Hi Bob,\nThere was an issue with your credit card. Your payment on April 3 2018 for $234.10 failed for the following reason: Card Expired." +
+                "\nPlease resolve the issue as soon as possible.\nIf the payment remains unsuccessful after 3 more days, the amount will be deferred and a late fee of $25.00 will be added." +
+                "\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+
+            EmailNotification email = EmailUtil.PaymentUnsuccessfulRetryingNotification(t, u, new DateTime(2018, 4, 3));
+
+            Assert.AreEqual(u.Email, email.To);
+            Assert.AreEqual("Alert from Tuition Assistant: Payment Unsuccessful (3 DAYS REMAINING)", email.Subject);
+            Assert.AreEqual(expectedBody, email.Body);
+        }
+
+        [TestMethod]
+        public void TestPaymentFailedNotification()
+        {
+            Transaction t = new Transaction()
+            {
+                AmountCharged = 234.1,
+                DateDue = new DateTime(2018, 4, 1),
+                DateCharged = new DateTime(2018, 4, 6),
+                ProcessState = ProcessState.FAILED,
+                ReasonFailed = "Card Expired"
+            };
+            User u = new User()
+            {
+                FirstName = "Bob",
+                Email = "bob@email.com"
+            };
+
+            String expectedBody = "Hi Bob,\nYour payment of $234.10 that was due on April 1 2018 failed for 7 days and has been deferred." +
+                "\nThe amount will be added to your next payment, along with a late fee of $25.00.\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+
+            EmailNotification email = EmailUtil.PaymentFailedNotification(t, u);
+
+            Assert.AreEqual(u.Email, email.To);
+            Assert.AreEqual("Alert from Tuition Assistant: Payment Failed", email.Subject);
+            Assert.AreEqual(expectedBody, email.Body);
+        }
+
     }
 }
