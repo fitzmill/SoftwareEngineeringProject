@@ -82,7 +82,7 @@ ko.components.register('account-dashboard-component', {
             });
 
             updatePersonalAndStudentInfo().done({
-                //need to do button stuff
+
             }).fail(function (jqXHR) {
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not save information: ".concat(errorMessage));
@@ -155,17 +155,17 @@ ko.components.register('account-dashboard-component', {
         }
 
         accountDashboardVM.setUIPaymentSpringInfo = function () {
-            accountDashboardVM.FirstName() = userPaymentInfo.FirstName;
-            accountDashboardVM.LastName() = userPaymentInfo.LastName;
-            accountDashboardVM.StreetAddress1() = userPaymentInfo.StreetAddress1;
-            accountDashboardVM.StreetAddress2() = userPaymentInfo.StreetAddress2;
-            accountDashboardVM.City() = userPaymentInfo.City;
-            accountDashboardVM.State() = userPaymentInfo.State;
-            accountDashboardVM.Zip() = userPaymentInfo.Zip;
-            accountDashboardVM.CardNumber() = userPaymentInfo.CardNumber;
-            accountDashboardVM.ExpirationYear() = userPaymentInfo.ExpirationYear;
-            accountDashboardVM.ExpirationMonth() = userPaymentInfo.ExpirationMonth;
-            accountDashboardVM.CardType() = userPaymentInfo.CardType;
+            accountDashboardVM.FirstName(userPaymentInfo.FirstName);
+            accountDashboardVM.LastName(userPaymentInfo.LastName);
+            accountDashboardVM.StreetAddress1(userPaymentInfo.StreetAddress1);
+            accountDashboardVM.StreetAddress2(userPaymentInfo.StreetAddress2);
+            accountDashboardVM.City(userPaymentInfo.City);
+            accountDashboardVM.State(userPaymentInfo.State);
+            accountDashboardVM.Zip(userPaymentInfo.Zip);
+            accountDashboardVM.CardNumber(userPaymentInfo.CardNumber);
+            accountDashboardVM.ExpirationYear(userPaymentInfo.ExpirationYear);
+            accountDashboardVM.ExpirationMonth(userPaymentInfo.ExpirationMonth);
+            accountDashboardVM.CardType(userPaymentInfo.CardType);
         }
 
         getPaymentSpringInfo(user.UserID).done(function (data) {
@@ -200,6 +200,8 @@ ko.components.register('account-dashboard-component', {
             let senderElementID = event.target.id;
 
             let informationSection = senderElementID.replace("btn-cancel-", "");
+            accountDashboardVM.setUser()
+            accountDashboardVM.setUIPaymentSpringInfo();
 
             $("." + informationSection + "-active").hide();
             $("." + informationSection + "-inactive").show();
@@ -207,7 +209,7 @@ ko.components.register('account-dashboard-component', {
 
         accountDashboardVM.setUser();
         getPaymentSpringInfo(user.UserID);
-        setUIPaymentSpringInfo();
+        accountDashboardVM.setUIPaymentSpringInfo();
 
         return accountDashboardVM;
     },
