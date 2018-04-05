@@ -47,6 +47,29 @@ namespace Engines.Utils
             return monthsDue[plan].Contains(today.Month);
         }
 
+        //Compute the date of the next payment for the given plan.
+        public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today)
+        {
+            int monthIndex = monthsDue[plan].FindIndex(m => m == today.Month);
+            if (today.Day > DUE_DAY)
+            {
+                monthIndex++;
+                if (monthIndex > monthsDue[plan].Count)
+                {
+                    monthIndex = 0;
+                }
+            }
+            int month = monthsDue[plan][monthIndex];
+
+            int year = today.Year;
+            if (month < today.Month)
+            {
+                year++;
+            }
+
+            return new DateTime(year, month, DUE_DAY);
+        }
+
         //Generate the aggregate amount due for the month by summing the yearly cost for each of
         //the user's students and dividing by the number of pay periods in the payment plan.
         public static double GenerateAmountDue(User user, int precision, double lastTransactionAmountDue = 0.0)

@@ -14,11 +14,15 @@ namespace Web.Controllers
     {
         IGetUserInfoEngine getUserInfoEngine;
         IGetTransactionEngine getTransactionEngine;
-        public AccountController(IGetUserInfoEngine getUserInfoEngine, IGetTransactionEngine getTransactionEngine)
+        IPaymentEngine paymentEngine;
+
+        public AccountController(IGetUserInfoEngine getUserInfoEngine, IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine)
         {
             this.getUserInfoEngine = getUserInfoEngine;
             this.getTransactionEngine = getTransactionEngine;
+            this.paymentEngine = paymentEngine;
         }
+
         [HttpGet]
         [Route("GetUserInfoByID/{userID}")]
         public IHttpActionResult GetUserInfoByID(string userID)
@@ -29,6 +33,7 @@ namespace Web.Controllers
             }
             return Ok(getUserInfoEngine.GetUserInfoByID(parsedUserID));
         }
+
         [HttpPost]
         [Route("GetUserInfoByEmail")]
         public IHttpActionResult GetUserInfoByEmail([FromBody]string email)
@@ -39,6 +44,7 @@ namespace Web.Controllers
             }
             return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
         }
+
         [HttpGet]
         [Route("GetPaymentInfoForUser/{userID}")]
         public IHttpActionResult GetPaymentInfoForUser(string userID)
@@ -72,7 +78,7 @@ namespace Web.Controllers
             {
                 return BadRequest("Could not parse userID into an integer");
             }
-            return Ok(getTransactionEngine.GetNextTransactionForUser(parsedUserID));
+            return Ok(paymentEngine.CalculateNextPaymentForUser(parsedUserID, DateTime.Now));
         }
     }
 }
