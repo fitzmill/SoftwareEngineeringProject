@@ -92,13 +92,13 @@ namespace Engines
                 double amountDue = 0;
                 if (mostRecentTransaction != null)
                 {
-                    amountDue = TuitionUtil.GenerateAmountDue(user, 2, mostRecentTransaction.AmountCharged);
+                    amountDue = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION, mostRecentTransaction.AmountCharged);
                     mostRecentTransaction.ProcessState = ProcessState.DEFERRED;
                     transactionsToUpdate.Add(mostRecentTransaction);
                 }
                 else
                 {
-                    amountDue = TuitionUtil.GenerateAmountDue(user, 2);
+                    amountDue = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
                 }
 
                 newTransactions.Add(new Transaction()
