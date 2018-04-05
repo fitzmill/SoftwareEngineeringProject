@@ -24,13 +24,13 @@ ko.components.register('login-component', {
                 return;
             }
 
-            validateLoginInfo(vm.email(), vm.password()).done(function (data) {
-                if (data) {
-                    getUserInfoByEmail(vm.email()).done(function (data) {
-                        if (data.UserType == generalUserType) {
-                            vm.user(data);
+            validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
+                if (validLogin) {
+                    getUserInfoByEmail(vm.email()).done(function (user) {
+                        if (user.UserType == generalUserType) {
+                            vm.user(user);
                             window.location = "#account-dashboard";
-                        } else if (data.UserType == adminUserType) {
+                        } else if (user.UserType == adminUserType) {
                             window.location = "#admin";
                         }
                     }).fail(function (jqXHR) {
