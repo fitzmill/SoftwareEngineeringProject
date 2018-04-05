@@ -36,8 +36,8 @@ namespace Engines.Utils
 
         private static Dictionary<PaymentPlan, List<int>> monthsDue = new Dictionary<PaymentPlan, List<int>>()
         {
-            { PaymentPlan.MONTHLY, new List<int>() { 8, 9, 10, 11, 12, 1, 2, 3, 4, 5 } },
-            { PaymentPlan.SEMESTERLY, new List<int>() { 9, 2 } },
+            { PaymentPlan.MONTHLY, new List<int>() { 1, 2, 3, 4, 5, 8, 9, 10, 11, 12 } },
+            { PaymentPlan.SEMESTERLY, new List<int>() { 2, 9 } },
             { PaymentPlan.YEARLY, new List<int>() { 9 } }
         };
 
@@ -54,15 +54,18 @@ namespace Engines.Utils
             if (today.Day > DUE_DAY)
             {
                 monthIndex++;
-                if (monthIndex > monthsDue[plan].Count)
+                if (monthIndex >= monthsDue[plan].Count)
                 {
                     monthIndex = 0;
                 }
             }
             int month = monthsDue[plan][monthIndex];
-
             int year = today.Year;
-            if (month < today.Month)
+
+            bool isAfterPeriodForYearly = (plan == PaymentPlan.YEARLY && 
+                (today.Month > month || (today.Month == month && today.Day > DUE_DAY)));
+            
+            if (month < today.Month || isAfterPeriodForYearly)
             {
                 year++;
             }
