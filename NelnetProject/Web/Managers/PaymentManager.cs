@@ -11,17 +11,19 @@ namespace Web.Managers
 {
     public class PaymentManager
     {
-        static double timerInterval = 1000; //todo move
-        static int chargingHour = 10; //todo move, change
-
         public Func<DateTime> dateProvider = () => DateTime.Now;
 
-        IGetTransactionEngine getTransactionEngine;
-        IPaymentEngine paymentEngine;
-        INotificationEngine notificationEngine;
+        private double timerInterval;
+        private int chargingHour;
 
-        public PaymentManager(IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine, INotificationEngine notificationEngine)
+        private IGetTransactionEngine getTransactionEngine;
+        private IPaymentEngine paymentEngine;
+        private INotificationEngine notificationEngine;
+
+        public PaymentManager(double timerInterval, int chargingHour, IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine, INotificationEngine notificationEngine)
         {
+            this.timerInterval = timerInterval;
+            this.chargingHour = chargingHour;
             this.getTransactionEngine = getTransactionEngine;
             this.paymentEngine = paymentEngine;
             this.notificationEngine = notificationEngine;

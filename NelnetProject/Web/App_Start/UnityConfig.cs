@@ -82,6 +82,13 @@ namespace Web
             container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
 
             //payment manager
+            container.RegisterType<PaymentManager>(new InjectionConstructor(
+                double.Parse(ConfigurationManager.AppSettings["TimerInterval"]),
+                int.Parse(ConfigurationManager.AppSettings["ChargingHour"]),
+                container.Resolve<IGetTransactionEngine>(),
+                container.Resolve<IPaymentEngine>(),
+                container.Resolve<INotificationEngine>()
+            ));
             container.Resolve<PaymentManager>();
         }
     }
