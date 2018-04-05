@@ -51,13 +51,17 @@ namespace Engines.Utils
         public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today)
         {
             int monthIndex = monthsDue[plan].FindIndex(m => m >= today.Month);
+
+            //If after last pay period of the year, it's due next year.
             if (monthIndex == -1)
             {
                 monthIndex = 0;
             }
+            //If during a pay month, but after the due date, it's due next period.
             else if (today.Month == monthsDue[plan][monthIndex] && today.Day > DUE_DAY)
             {
                 monthIndex++;
+                //If incrementing the period puts it after the end of the year, move the index.
                 if (monthIndex >= monthsDue[plan].Count)
                 {
                     monthIndex = 0;
@@ -66,9 +70,11 @@ namespace Engines.Utils
             int month = monthsDue[plan][monthIndex];
             int year = today.Year;
 
+            //If you're on the yearly period and already paid for the year
             bool isAfterPeriodForYearly = (plan == PaymentPlan.YEARLY && 
                 (today.Month > month || (today.Month == month && today.Day > DUE_DAY)));
             
+            //If pay period is next year
             if (month < today.Month || isAfterPeriodForYearly)
             {
                 year++;
