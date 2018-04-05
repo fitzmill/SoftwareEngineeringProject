@@ -185,13 +185,15 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityWebApiActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
-    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RoutingController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Managers\PaymentManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -206,13 +208,15 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Nelnet_UI\source\HelloWorldComponent\hello-world-component.html" />
-    <Content Include="Nelnet_UI\source\HelloWorldComponent\hello-world-component.js" />
+    <Content Include="Nelnet_UI\source\assets\images\login-background.jpg" />
+    <Content Include="Nelnet_UI\source\LoginComponent\login-component.html" />
+    <Content Include="Nelnet_UI\source\LoginComponent\login-component.js" />
     <Content Include="Nelnet_UI\source\index.html" />
     <Content Include="Nelnet_UI\source\index.js" />
-    <None Include="Nelnet_UI\source\ReportComponent\report-component.scss" />
-    <Content Include="Nelnet_UI\source\ReportComponent\report-component.html" />
-    <Content Include="Nelnet_UI\source\ReportComponent\report-component.js" />
+    <None Include="Nelnet_UI\source\AdminComponent\admin-component.scss" />
+    <Content Include="Nelnet_UI\source\AdminComponent\admin-component.html" />
+    <Content Include="Nelnet_UI\source\AdminComponent\admin-component.js" />
+    <Content Include="Nelnet_UI\source\utility.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -290,7 +294,7 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Nelnet_UI\source\HelloWorldComponent\hello-world-component.scss" />
+    <Content Include="Nelnet_UI\source\LoginComponent\login-component.scss" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Nelnet_UI\source\index.scss" />

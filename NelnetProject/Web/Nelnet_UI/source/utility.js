@@ -1,0 +1,66 @@
+﻿//some helper functions
+
+//Sums up one property of every object in a list
+Array.prototype.sumProperty = function (prop) {
+    let total = 0;
+    for (let i = 0; i < this.length; i++) {
+        total += this[i][prop];
+    }
+    return total;
+};
+
+//creates a csv string that contains every object in the array with the objects' properties names as the column headers
+Array.prototype.createCSVString = function () {
+    let keys = Object.keys(this[0]);
+
+    let result = keys.join(',');
+    result += "\n";
+
+    for (let i = 0; i < this.length; i++) {
+        for (let j = 0; j < keys.length; j++) {
+            //separate it from last value
+            if (j > 0) result += ",";
+
+            let val = this[i][keys[j]];
+            if (typeof val === "string") {
+                //gets rid of commas that would mess up csv
+                result += val.replace(/,/, '');
+            } else {
+                result += val;
+            }
+        }
+        result += "\n";
+    }
+    return result;
+};
+
+//downloads the string as a CSV file
+String.prototype.downloadCSV = function (filename) {
+    let csv = this;
+    if (!csv.match(/^data:text\/csv/i)) {
+        csv = 'data:text/csv;charset=utf-8,' + csv;
+    }
+
+    let data = encodeURI(csv);
+
+    let link = document.createElement('a');
+    link.setAttribute('href', data);
+    link.setAttribute('download', filename);
+    link.click();
+};
+
+String.prototype.passwordMeetsRequirements = function () {
+    //regular expression that checks for:
+    //contains 1 lowercase character
+    //contains 1 uppersace character
+    //contains 1 number
+    //contains 1 special character
+    //is between 8 and 32 characters
+    //DOES NOT contain ;'"
+    return this.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?!.*?[;'"]).{8,32}$/);
+}
+
+String.prototype.emailMeetsRequirements = function () {
+    //from emailregex.com
+    return this.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+}

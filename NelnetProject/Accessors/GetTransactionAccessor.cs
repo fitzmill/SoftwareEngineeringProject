@@ -94,25 +94,26 @@ namespace Accessors
             return result;
         }
 
-        //Executes a stored procedure in the database for getting the most recent transaction with userID as a parameter
-        public Transaction GetMostRecentTransactionForUser(int userID)
+        //Executes a stored procedure in the database for getting all failed transactions
+        public IList<Transaction> GetAllFailedTransactions()
         {
-            string query = "[dbo].[GetMostRecentTransactionForUser]";
+            string query = "[dbo].[GetAllFailedTransactions]";
+
+            var result = new List<Transaction>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.Add(new SqlParameter("@UserID", userID));
 
                 command.CommandType = System.Data.CommandType.StoredProcedure;
 
                 conn.Open();
                 var reader = command.ExecuteReader();
 
-                //Only expecting one row to be returned
-                if (reader.Read())
+                //Read for all result rows
+                while (reader.Read())
                 {
-                    return new Transaction()
+                    result.Add(new Transaction()
                     {
                         TransactionID = reader.GetInt32(0),
                         UserID = reader.GetInt32(1),
@@ -121,11 +122,11 @@ namespace Accessors
                         DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
                         ProcessState = (ProcessState)reader.GetByte(5),
                         ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
-                    };
+                    });
                 }      
             }
 
-            return null;
+            return result;
         }
 
         //Executes a stored procedure in the database for getting all Transactions with startTime and endTime as parameters
@@ -155,11 +156,12 @@ namespace Accessors
                         TransactionID = reader.GetInt32(0),
                         FirstName = reader.GetString(1),
                         LastName = reader.GetString(2),
-                        AmountCharged = reader.GetDouble(3),
-                        DateDue = reader.GetDateTime(4),
-                        DateCharged = reader.IsDBNull(5) ? (DateTime?)null : reader.GetDateTime(5),
-                        ProcessState = ((ProcessState)reader.GetByte(6)).ToString(),
-                        ReasonFailed = reader.IsDBNull(7) ? null : reader.GetString(7)
+                        Email = reader.GetString(3),
+                        AmountCharged = reader.GetDouble(4),
+                        DateDue = reader.GetDateTime(5),
+                        DateCharged = reader.IsDBNull(6) ? (DateTime?)null : reader.GetDateTime(6),
+                        ProcessState = ((ProcessState)reader.GetByte(7)).ToString(),
+                        ReasonFailed = reader.IsDBNull(8) ? null : reader.GetString(8)
                     });
                 }
             }

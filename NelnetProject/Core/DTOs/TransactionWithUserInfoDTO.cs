@@ -14,6 +14,8 @@ namespace Core.DTOs
 
         public string LastName { get; set; }
 
+        public string Email { get; set; }
+
         public double AmountCharged { get; set; }
 
         public DateTime DateDue { get; set; }

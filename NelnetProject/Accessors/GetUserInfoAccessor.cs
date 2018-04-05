@@ -44,7 +44,7 @@ namespace Accessors
                         user.Email = reader.GetString(3);
                         user.Hashed = reader.GetString(4);
                         user.Salt = reader.GetString(5);
-                        user.PaymentPlan = (PaymentPlan)reader.GetByte(6);
+                        user.Plan = (PaymentPlan)reader.GetByte(6);
                         user.UserType = (UserType)reader.GetByte(7);
                         user.CustomerID = reader.GetString(8);
                         user.Students = new List<Student>();
@@ -87,7 +87,7 @@ namespace Accessors
                         result.Email = reader.GetString(2);
                         result.Hashed = reader.GetString(3);
                         result.Salt = reader.GetString(4);
-                        result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
+                        result.Plan = (PaymentPlan)reader.GetByte(5);
                         result.UserType = (UserType)reader.GetByte(6);
                         result.CustomerID = reader.GetString(7);
                         result.Students = new List<Student>();
@@ -127,7 +127,7 @@ namespace Accessors
                         result.Email = email;
                         result.Hashed = reader.GetString(3);
                         result.Salt = reader.GetString(4);
-                        result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
+                        result.Plan = (PaymentPlan)reader.GetByte(5);
                         result.UserType = (UserType)reader.GetByte(6);
                         result.CustomerID = reader.GetString(7);
                         result.Students = new List<Student>();

@@ -4,6 +4,7 @@ using System.Linq;
 using Core;
 using Core.DTOs;
 using Core.Interfaces;
+using Engines.Utils;
 
 namespace Engines
 {
@@ -12,31 +13,23 @@ namespace Engines
     /// </summary>
     public class PaymentEngine : IPaymentEngine
     {
-        private static readonly int DAYS_UNTIL_OVERDUE = 7;
-        private static readonly int DUE_DAY = 5;
-        private static readonly int SEMI_DUE_MONTH_1 = 3;
-        private static readonly int SEMI_DUE_MONTH_2 = 9;
-        private static readonly int YEAR_DUE_MONTH = 9;
-
-        private static readonly int TUITION_K_6 = 2500;
-        private static readonly int TUITION_7_8 = 3750;
-        private static readonly int TUITION_9_12 = 5000;
-
         private IGetUserInfoAccessor getUserInfoAccessor;
         private IGetPaymentInfoAccessor getPaymentInfoAccessor;
         private IChargePaymentAccessor chargePaymentAccessor;
         private ISetTransactionAccessor setTransactionAccessor;
+        private IGetTransactionAccessor getTransactionAccessor;
 
         public PaymentEngine(IGetUserInfoAccessor getUserInfoAccessor, IGetPaymentInfoAccessor getPaymentInfoAccessor, 
-            IChargePaymentAccessor chargePaymentAccessor, ISetTransactionAccessor setTransactionAccessor)
+            IChargePaymentAccessor chargePaymentAccessor, ISetTransactionAccessor setTransactionAccessor, IGetTransactionAccessor getTransactionAccessor)
         {
             this.getUserInfoAccessor = getUserInfoAccessor;
             this.getPaymentInfoAccessor = getPaymentInfoAccessor;
             this.chargePaymentAccessor = chargePaymentAccessor;
             this.setTransactionAccessor = setTransactionAccessor;
+            this.getTransactionAccessor = getTransactionAccessor;
         }
 
-        public IList<Transaction> ChargePayments(List<Transaction> charges)
+        public IList<Transaction> ChargePayments(List<Transaction> charges, DateTime today)
         {
            return charges.Select(charge =>
            {
@@ -54,8 +47,7 @@ namespace Engines
                ProcessState processState = ProcessState.SUCCESSFUL;
                if (!result.WasSuccessful)
                {
-                   int daysOverdue = DateTime.Today.Subtract(charge.DateDue).Days;
-                   processState = (daysOverdue >= DAYS_UNTIL_OVERDUE) ? ProcessState.FAILED : ProcessState.RETRYING;
+                   processState = TuitionUtil.IsPastRetryPeriod(charge, today) ? ProcessState.FAILED : ProcessState.RETRYING;
                }
 
                //Generate result transaction
@@ -65,7 +57,7 @@ namespace Engines
                    UserID = charge.UserID,
                    AmountCharged = charge.AmountCharged,
                    DateDue = charge.DateDue,
-                   DateCharged = DateTime.Today,
+                   DateCharged = today,
                    ProcessState = processState,
                    ReasonFailed = result.ErrorMessage
                };
@@ -77,66 +69,57 @@ namespace Engines
            }).ToList();
         }
 
-        public IList<Transaction> GeneratePayments() //to be run on the 1st of each month
+        public IList<Transaction> GeneratePayments(DateTime today) //to be run on the 1st of each month
         {
-            DateTime today = DateTime.Now;
-
             //Get all users
-            //IList<User> users = getUserInfoAccessor.getAllUsers(); TODO
-            IList<User> users = new List<User>();
+            IList<User> users = getUserInfoAccessor.GetAllUsers();
+
+            IList<Transaction> failedTransactions = getTransactionAccessor.GetAllFailedTransactions();
 
             //Generate all payments that are due this month
-            List<Transaction> transactions = users.Where(user => user.PaymentPlan == PaymentPlan.MONTHLY
-                    || (user.PaymentPlan == PaymentPlan.SEMESTERLY && (today.Month == SEMI_DUE_MONTH_1 || today.Month == SEMI_DUE_MONTH_2))
-                    || (user.PaymentPlan == PaymentPlan.YEARLY && today.Month == YEAR_DUE_MONTH))
-                    .Select(user => new Transaction
-                    {
-                        UserID = user.UserID,
-                        AmountCharged = GenerateAmountDue(user),
-                        DateDue = new DateTime(today.Year, today.Month, DUE_DAY),
-                        ProcessState = ProcessState.NOT_YET_CHARGED
-                    }).ToList();
+            List<Transaction> newTransactions = new List<Transaction>();
 
-            //Store them in the database
-            transactions.ForEach(t => setTransactionAccessor.AddTransaction(t));
+            //List all failed transactions that have been deferred to this month
+            List<Transaction> transactionsToUpdate = new List<Transaction>();
 
-            return transactions;
-        }
+            IEnumerable<User> usersToCharge = users.Where(user => TuitionUtil.IsPaymentDue(user.Plan, today));
 
-        //Helper method to generate the total amount due for a user's payment
-        private double GenerateAmountDue(User user)
-        {
-            double amountDue = user.Students.Select(s => s.Grade).Aggregate(0, (total, grade) =>
+            foreach (User user in usersToCharge)
             {
-                if (grade < 0 || grade > 12)
+                //if it doesn't exist, mostRecentTransaction will be null
+                Transaction mostRecentTransaction = failedTransactions.FirstOrDefault(t => t.UserID == user.UserID);
+
+                double amountDue = 0;
+                if (mostRecentTransaction != null)
                 {
-                    throw new ArgumentOutOfRangeException("Grade out of bounds: " + grade);
-                }
-                else if (grade <= 6)
-                {
-                    total += TUITION_K_6;
-                }
-                else if (grade <= 8)
-                {
-                    total += TUITION_7_8;
+                    amountDue = TuitionUtil.GenerateAmountDue(user, 2, mostRecentTransaction.AmountCharged);
+                    mostRecentTransaction.ProcessState = ProcessState.DEFERRED;
+                    transactionsToUpdate.Add(mostRecentTransaction);
                 }
                 else
                 {
-                    total += TUITION_9_12;
+                    amountDue = TuitionUtil.GenerateAmountDue(user, 2);
                 }
-                return total;
-            });
 
-            if (user.PaymentPlan == PaymentPlan.MONTHLY)
-            {
-                amountDue /= 12;
-            }
-            else if (user.PaymentPlan == PaymentPlan.SEMESTERLY)
-            {
-                amountDue /= 2;
+                newTransactions.Add(new Transaction()
+                {
+                    UserID = user.UserID,
+                    AmountCharged = amountDue,
+                    DateDue = new DateTime(today.Year, today.Month, TuitionUtil.DUE_DAY),
+                    ProcessState = ProcessState.NOT_YET_CHARGED
+                });
+
+                
             }
 
-            return amountDue;
+            //Store them in the database
+            newTransactions.ForEach(t => setTransactionAccessor.AddTransaction(t));
+
+            //update newly deferred transactionss
+            transactionsToUpdate.ForEach(t => setTransactionAccessor.UpdateTransaction(t));
+
+            return newTransactions;
         }
+   
     }
 }
