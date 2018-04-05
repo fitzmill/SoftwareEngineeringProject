@@ -4,16 +4,58 @@
     <div id="background-overlay" class="background"></div>
     <div class="card-base">
         <div class="card-body card-information">
-            <input class="input-account-creation card-left-column" data-bind="value: firstName" placeholder="First Name" />
-            <input class="input-account-creation card-right-column" data-bind="value: lastName" placeholder="Last Name" />
-            <input class="input-account-creation card-full-column" data-bind="value: email" placeholder="Email" />
-            <input class="input-account-creation card-full-column" data-bind="value: reenterEmail" placeholder="Confirm Email" />
-            <input class="input-account-creation card-full-column" data-bind="value: password" placeholder="Password" />
-            <input class="input-account-creation card-full-column" data-bind="value: reenterPassword" placeholder="Confirm Password" />
+            <div id="progress-bar">
 
-            <button id="btn-next" class="btn btn-success btn-right" data-bind="click: next">Next</button>
-            <button id="btn-cancel" class="btn btn-secondary btn-left" data-bind="click: cancel">Cancel</button>
+            </div>
+
+            <div id="info-page-1">
+                <input class="input-account-creation card-left card-half-column" data-bind="value: firstName" placeholder="First Name" />
+                <input class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" />
+                <input class="input-account-creation card-full-column" data-bind="value: email" placeholder="Email" />
+                <input class="input-account-creation card-full-column" data-bind="value: reenterEmail" placeholder="Confirm Email" />
+                <input class="input-account-creation card-full-column" data-bind="value: password" placeholder="Password" />
+                <input class="input-account-creation card-full-column" data-bind="value: reenterPassword" placeholder="Confirm Password" />
+            </div>
+
+            <div id="info-page-2">
+                <input class="input-account-creation card-extra-large card-left" data-bind="value: cardNumber" placeholder="Credit Card Number" />
+                <input class="input-account-creation card-small card-right" data-bind="value: csc" placeholder="CSC" />
+
+                <input class="input-account-creation card-medium card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" />
+                <input class="input-account-creation card-medium card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" />
+                <input class="input-account-creation card-tiny card-right" data-bind="value: year" placeholder="YY" />
+                <input class="input-account-creation card-tiny card-right" data-bind="value: month" placeholder="MM" />
+
+                <input class="input-account-creation card-full-column" data-bind="value: address1" placeholder="Address Line 1" />
+                <input class="input-account-creation card-full-column" data-bind="value: address2" placeholder="Address Line 2 (Optional)" />
+
+                <input class="input-account-creation card-large card-left" data-bind="value: city" placeholder="City" />
+                <input class="input-account-creation card-small card-right" data-bind="value: zip" placeholder="Zip Code" />
+                <input class="input-account-creation card-small card-right" data-bind="value: state" placeholder="State" />
+            </div>
+
+            <div id="info-page-3">
+                <div data-bind="foreach: students">
+                    <input class="input-account-creation card-medium card-left" data-bind="value: studentFirstName" placeholder="Student First Name" />
+                    <input class="input-account-creation card-medium card-left" data-bind="value: studentLastName" placeholder="Student Last Name" />
+                    <input class="input-account-creation card-small card-right" data-bind="value: studentGrade" placeholder="Grade" />
+                </div>
+                <button id="btn-add-student" class="btn btn-info" data-bind="click: addStudent">Add Another Student</button>
+            </div>
+
+            <div id="info-page-4">
+                <input class="input-account-creation card-full-column" data-bind="value: paymentType" placeholder="Payment Type" />
+            </div>
+
         </div>
+
+        <div id="navigation-buttons">
+            <button id="btn-cancel" class="btn btn-secondary btn-left" onclick="window.location.href=''">Cancel</button>
+            <button id="btn-back" class="btn btn-secondary btn-left" data-bind="click: back">Back</button>
+            <button id="btn-next" class="btn btn-success btn-right" data-bind="click: next">Next</button>
+            <button id="btn-done" class="btn btn-success btn-right" data-bind="click: done">Done</button>
+        </div>
+
     </div>
     
 </div>
