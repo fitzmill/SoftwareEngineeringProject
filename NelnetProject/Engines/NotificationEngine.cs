@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Core;
 using Core.Interfaces;
+using Core.Models;
+using Engines.Utils;
 
 namespace Engines
 {
@@ -25,14 +27,31 @@ namespace Engines
 
         public void SendTransactionNotifications(List<Transaction> transactions)
         {
-            //Convert transactions into notifications
-            //Send notifications to appropriate accessor (email for now)
-            throw new NotImplementedException();
+            transactions.ForEach (t => {
+                ProcessState state = t.ProcessState;
+                User user = getUserInfoAccessor.GetUserInfoByID(t.UserID);
+
+                EmailNotification email;
+                if (state == ProcessState.NOT_YET_CHARGED)
+                {
+                    email = EmailUtil.UpcomingPaymentNotification(t, user);
+                }
+                else if (state == ProcessState.SUCCESSFUL)
+                {
+                    email = EmailUtil.PaymentChargedSuccessfullyNotification(t, user);
+                }
+                else if (state == ProcessState.RETRYING)
+                {
+                    email = EmailUtil.PaymentUnsuccessfulRetryingNotification(t, user, t.DateCharged.GetValueOrDefault(DateTime.Today));
+                }
+                else
+                {
+                    email = EmailUtil.PaymentFailedNotification(t, user);
+                }
+
+                emailAccessor.SendEmail(email);
+            });
         }
 
-        public IEmailAccessor GetEmailAccessor()
-        {
-            return emailAccessor;
-        }
     }
 }
