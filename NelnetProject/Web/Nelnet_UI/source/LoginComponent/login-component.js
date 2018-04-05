@@ -28,10 +28,10 @@ ko.components.register('login-component', {
             validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
                 if (validLogin) {
                     getUserInfoByEmail(vm.email()).done(function (user) {
-                        if (user.UserType == generalUserType) {
+                        if (user.UserType === generalUserType) {
                             vm.user(user);
                             window.location = "#account-dashboard";
-                        } else if (user.UserType == adminUserType) {
+                        } else if (user.UserType === adminUserType) {
                             window.location = "#admin";
                         }
                     }).fail(function (jqXHR) {
@@ -49,7 +49,7 @@ ko.components.register('login-component', {
 
         $(document).keypress(function (e) {
             //If the user presses enter, it will click the login button
-            if (e.which == 13) {
+            if (e.which === 13) {
                 $('#btn-login').focus();
                 $("#btn-login").click();
             }

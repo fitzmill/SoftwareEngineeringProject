@@ -70,42 +70,6 @@ namespace Web.Controllers
             setUserInfoEngine.InsertPersonalInfo(user);
             return Ok();
         }
-        [HttpPost]
-        [Route("UpdatePersonalAndStudentInfo")]
-        public IHttpActionResult UpdatePersonalAndStudentInfo(User user)
-        {
-            if (user == null || user.FirstName == null || user.LastName == null || user.CustomerID == null || user.Email == null || user.Hashed == null || user.Salt == null)
-            {
-                return BadRequest("One or more required objects was not included in the request body.");
-            }
-            foreach (Student s in user.Students)
-            {
-                if (s.FirstName == null || s.LastName == null)
-                {
-                    return BadRequest("One or more required objects was not included in the request body.");
-                }
-            }
-            setUserInfoEngine.UpdatePersonalInfo(user);
-            return Ok();
-        }
-        [HttpPost]
-        [Route("InsertPersonalInfo")]
-        public IHttpActionResult InsertPersonalInfo(User user)
-        {
-            if (user == null || user.FirstName == null || user.LastName == null || user.CustomerID == null || user.Email == null || user.Hashed == null || user.Salt == null)
-            {
-                return BadRequest("One or more required objects was not included in the request body.");
-            }
-            foreach (Student s in user.Students)
-            {
-                if (s.FirstName == null || s.LastName == null)
-                {
-                    return BadRequest("One or more required objects was not included in the request body.");
-                }
-            }
-            setUserInfoEngine.InsertPersonalInfo(user);
-            return Ok();
-        }
 
         [HttpPost]
         [Route("GetUserInfoByEmail")]
