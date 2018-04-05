@@ -1,6 +1,14 @@
 ﻿body {
 }
 
+.card-account-information-section {
+    margin-bottom: 40px;
+}
+
+.header-information-section {
+    float: left;
+}
+
 .input-account-dashboard {
     width: -webkit-fill-available;
     text-align: center;
@@ -19,45 +27,27 @@
     border: none;
 }
 
-.card-base {
-    background-color: white;
-    width: 800px;
-    height: 500px;
+.student-info {
+    display: block;
+    margin-left: 20px;
+}
+
+.btn-logout {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 10px;
+    right: 30px;
 }
 
-.card-information {
-    width: inherit;
-    height: 400px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.card-left-column {
-    float: left;
-    margin-left: 6%;
-    width: 40%;
-}
-
-.card-right-column {
-    float: right;
-    margin-right: 6%;
-    width: 40%;
-}
-
-.card-full-column {
-    margin-right: 6%;
-    margin-left: 6%;
-}
-
-.btn-right {
+.btn-edit {
     width: 15%;
     float: right;
     margin-right: 6%;
-    margin-top: 10px;
+}
+
+.enMoney::before {
+    content: "$";
+}
+
+.edit-student-active {
+    display: none;
 }

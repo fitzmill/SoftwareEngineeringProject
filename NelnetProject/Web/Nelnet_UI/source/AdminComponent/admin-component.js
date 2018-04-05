@@ -1,23 +1,23 @@
-﻿require('./report-component.scss');
+﻿require('./admin-component.scss');
 
 const adminAPIURL = "/api/admin";
 
-ko.components.register('report-component', {
+ko.components.register('admin-component', {
     viewModel: function (params) {
-        var reportComponentVM = this;
-        reportComponentVM.generateStartDate = ko.observable();
-        reportComponentVM.generateEndDate = ko.observable();
+        var vm = this;
+        vm.generateStartDate = ko.observable();
+        vm.generateEndDate = ko.observable();
 
-        reportComponentVM.unsettledTransactions = ko.observableArray([]);
-        reportComponentVM.allTransactions = ko.observableArray([]);
-        reportComponentVM.amountCharged = ko.observable();
-        reportComponentVM.amountPaid = ko.observable();
-        reportComponentVM.amountOutstanding = ko.observable();
-        reportComponentVM.reportRange = ko.observable();
+        vm.unsettledTransactions = ko.observableArray([]);
+        vm.allTransactions = ko.observableArray([]);
+        vm.amountCharged = ko.observable();
+        vm.amountPaid = ko.observable();
+        vm.amountOutstanding = ko.observable();
+        vm.reportRange = ko.observable();
 
-        reportComponentVM.generateReport = function () {
-            generateReport(reportComponentVM.generateStartDate(), reportComponentVM.generateEndDate()).done(function (data) {
-                reportComponentVM.reports.unshift(parseReportModel(data));
+        vm.generateReport = function () {
+            generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
+                vm.reports.unshift(parseReportModel(data));
             }).fail(function (jqXHR) {
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not generate report: ".concat(errorMessage));
@@ -25,7 +25,7 @@ ko.components.register('report-component', {
 
         };
 
-        reportComponentVM.viewReport = function (report) {
+        vm.viewReport = function (report) {
             $("#modalViewReport").modal("show");
             $("#modalViewReport").focus();
             $("#headerLoadingModal").show();
@@ -48,6 +48,7 @@ ko.components.register('report-component', {
 
                 //filter all transactions to just get unsettled ones
                 //makes a deep copy of the array
+                //TODO: Implement support for Joe's eventual 'DEFERRED' process state
                 let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
                 unsettledTransactions.forEach((t, index, array) => {
                     array[index].DateDue = t.DateDue.parseDateTimeString();
@@ -55,12 +56,12 @@ ko.components.register('report-component', {
                 });
 
                 //assign data to components
-                reportComponentVM.amountCharged(amountCharged);
-                reportComponentVM.amountPaid(amountPaid);
-                reportComponentVM.amountOutstanding(amountOutstanding);
-                reportComponentVM.unsettledTransactions(unsettledTransactions);
-                reportComponentVM.allTransactions(data);
-                reportComponentVM.reportRange(report.StartDate + " - " + report.EndDate);
+                vm.amountCharged(amountCharged);
+                vm.amountPaid(amountPaid);
+                vm.amountOutstanding(amountOutstanding);
+                vm.unsettledTransactions(unsettledTransactions);
+                vm.allTransactions(data);
+                vm.reportRange(report.StartDate + " - " + report.EndDate);
 
                 $("#headerLoadingModal").hide();
 
@@ -73,25 +74,25 @@ ko.components.register('report-component', {
 
         };
 
-        reportComponentVM.downloadReportDetails = function () {
-            let csv = reportComponentVM.allTransactions().createCSVString();
+        vm.downloadReportDetails = function () {
+            let csv = vm.allTransactions().createCSVString();
 
             csv.downloadCSV("Transactions.csv");
         };
 
-        reportComponentVM.reports = ko.observableArray([]);
+        vm.reports = ko.observableArray([]);
 
         getReports().done(function (data) {
             data.forEach(function (report) {
-                reportComponentVM.reports.push(parseReportModel(report));
+                vm.reports.push(parseReportModel(report));
             });
         }).fail(function (jqXHR) {
             window.alert("Could not get report history, please try refreshing the page.");
         });
 
-        return reportComponentVM;
+        return vm;
     },
-    template: require('./report-component.html')
+    template: require('./admin-component.html')
 });
 
 //splits a date string thats in YYYY/MM/DD format into parts
