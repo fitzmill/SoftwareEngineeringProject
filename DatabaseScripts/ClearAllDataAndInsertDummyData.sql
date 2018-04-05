@@ -111,8 +111,9 @@ insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, Pro
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500 + 5000)/9, DATEFROMPARTS(2018, 1, 5), DATEFROMPARTS(2018, 1, 8), 2, 'Insufficient funds')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(2, (2500+5000)/9, DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
-insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 2, 5), NULL, 4, 'Unexpected error')
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 2, 5), NULL, 5, 'Unexpected error')
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000)/2, DATEFROMPARTS(2018, 9, 5), NULL, 1, NULL)
+insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(1, (5000) + 25, DATEFROMPARTS(2018, 3, 5), NULL, 2, NULL)
 
 insert into [dbo].[Report](DateCreated, StartDate, EndDate) values(DATEFROMPARTS(2017, 9, 1), DATEFROMPARTS(2017, 9, 1), DATEFROMPARTS(2017, 9, 30))
 insert into [dbo].[Report](DateCreated, StartDate, EndDate) values(DATEFROMPARTS(2018, 1, 1), DATEFROMPARTS(2018, 1, 1), DATEFROMPARTS(2018, 2, 28))

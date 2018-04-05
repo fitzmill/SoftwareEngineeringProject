@@ -23,16 +23,15 @@ namespace Core.Interfaces
         IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime);
 
         /// <summary>
-        /// Gets all transactions that have not been successfully charged
+        /// Gets all transactions that have not been marked SUCCESSFUL, FAILED, or DEFERRED
         /// </summary>
         /// <returns>List of all unsettled transactions</returns>
         IList<Transaction> GetAllUnsettledTransactions();
 
         /// <summary>
-        /// Gets the most recent transaction for a user from the accessor based on their userID
+        /// Gets all transactions that have been marked as FAILED
         /// </summary>
-        /// <param name="userID"></param>
-        /// <returns>Most recent transaction for user</returns>
-        Transaction GetMostRecentTransactionForUser(int userID);
+        /// <returns></returns>
+        IList<Transaction> GetAllFailedTransactions();
     }
 }

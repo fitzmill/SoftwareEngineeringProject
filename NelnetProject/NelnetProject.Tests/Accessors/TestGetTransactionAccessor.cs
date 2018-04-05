@@ -28,7 +28,7 @@ namespace NelnetProject.Tests.Accessors
         [TestMethod]
         public void TestGetMostRecentTransactionForUser()
         {
-            var result = getTransactionAccessor.GetMostRecentTransactionForUser(1);
+            var result = getTransactionAccessor.GetAllFailedTransactions();
 
             Assert.IsNotNull(result);
         }
