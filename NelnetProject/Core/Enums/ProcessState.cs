@@ -9,6 +9,7 @@ namespace Core
         NOT_YET_CHARGED=1,
         SUCCESSFUL,
         RETRYING,
-        FAILED
+        FAILED,
+        DEFERRED
     }
 }
