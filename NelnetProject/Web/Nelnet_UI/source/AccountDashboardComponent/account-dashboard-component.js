@@ -53,7 +53,7 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.UserFirstName(user.FirstName);
             accountDashboardVM.UserLastName(user.LastName);
             accountDashboardVM.Email(user.Email);
-            accountDashboardVM.PaymentPlan(user.Plan.toString());
+            accountDashboardVM.PaymentPlan(JSON.stringify(user.Plan));
             accountDashboardVM.Students(user.Students.map(student => {
                 return {
                     FirstName: ko.observable(student.FirstName),
@@ -155,8 +155,8 @@ ko.components.register('account-dashboard-component', {
         }
 
         accountDashboardVM.setUIPaymentSpringInfo = function () {
-            accountDashboardVM.FirstName(userPaymentInfo.FirstName);
-            accountDashboardVM.LastName(userPaymentInfo.LastName);
+            accountDashboardVM.CardFirstName(userPaymentInfo.FirstName);
+            accountDashboardVM.CardLastName(userPaymentInfo.LastName);
             accountDashboardVM.StreetAddress1(userPaymentInfo.StreetAddress1);
             accountDashboardVM.StreetAddress2(userPaymentInfo.StreetAddress2);
             accountDashboardVM.City(userPaymentInfo.City);
