@@ -125,7 +125,7 @@ namespace NelnetProject.Tests.Engines.Utils
         public void TestNextPaymentDueDateSemesterlyThisYearAfterDay()
         {
             PaymentPlan plan = PaymentPlan.SEMESTERLY;
-            DateTime now = new DateTime(2018, 2, 13);
+            DateTime now = new DateTime(2018, 4, 13);
 
             DateTime expected = new DateTime(2018, 9, 5);
             DateTime actual = TuitionUtil.NextPaymentDueDate(plan, now);

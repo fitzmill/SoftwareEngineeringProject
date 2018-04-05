@@ -50,8 +50,12 @@ namespace Engines.Utils
         //Compute the date of the next payment for the given plan.
         public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today)
         {
-            int monthIndex = monthsDue[plan].FindIndex(m => m == today.Month);
-            if (today.Day > DUE_DAY)
+            int monthIndex = monthsDue[plan].FindIndex(m => m >= today.Month);
+            if (monthIndex == -1)
+            {
+                monthIndex = 0;
+            }
+            else if (today.Month == monthsDue[plan][monthIndex] && today.Day > DUE_DAY)
             {
                 monthIndex++;
                 if (monthIndex >= monthsDue[plan].Count)
