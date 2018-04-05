@@ -1,10 +1,111 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+﻿<div style="position: relative;">
+    <!--<div id="background-image" class="background"></div>
+    <div id="background-overlay" class="background"></div>-->
+    <!--<div class="card-base"> Personal Information
+        <button id="btn-edit-personal" class="btn btn-success btn-edit" data-bind="click: edit">Edit</button>
+        <div class="card-body card-information">
+            <input class="info-account-dashboard card-left-column" data-bind="value: UserFirstName" placeholder="First Name" />
+            <input class="info-account-dashboard card-right-column" data-bind="value: UserLastName" placeholder="Last Name" />
+            <input class="info-account-dashboard card-full-column" data-bind="value: f" placeholder="Email" />
+        </div>
+    </div>
+    <div class="card-base"> Billing Information
+        <button id="btn-edit-billing" class="btn btn-success btn-edit" data-bind="click: edit">Edit</button>
+        <div class="card-body card-information">
+            <input class="info-account-dashboard card-left-column" data-bind="value: CardFirstName" placeholder="First Name" />
+            <input class="info-account-dashboard card-right-column" data-bind="value: CardLastName" placeholder="Last Name" />
+            <input class="info-account-dashboard card-full-column" data-bind="value: StreetAddress1" placeholder="Street Address 1" />
+            <input class="info-account-dashboard card-full-column" data-bind="value: StreetAddress2" placeholder="Street Address 2" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: City" placeholder="City" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: State" placeholder="State" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: Zip" placeholder="Zip" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: CardType" placeholder="Card Type" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: CardNumber" placeholder="Card Number" />
+            <input class="info-account-dashboard card-full-left" data-bind="value: ExpirationMonth" placeholder="Expiration Month" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: ExpirationYear" placeholder="Expiration Year" />
+        </div>
+    </div>
+    <div class="card-base"> Next Payment
+        <button id="btn-edit" class="btn btn-success btn-edit" data-bind="click: edit">Edit</button>
+        <div class="card-body card-information">
+            <input class="info-account-dashboard card-full-left" data-bind="value: NextPaymentCost" placeholder="Next Payment Amount" />
+            <input class="info-account-dashboard card-full-right" data-bind="value: NextPaymentDate" placeholder="Next Payment Date" />
+        </div>
+    </div>-->
+    <h1>Account Dashboard</h1>
+    <button class="btn btn-primary btn-logout">Logout</button>
 
-</body>
-</html>
+    <div class="card card-account-information-section">
+        <div class="card-header">
+            <h3 class="header-information-section">Personal Information</h3>
+            <button id="btn-edit-personal" class="btn btn-primary btn-edit">Edit</button>
+            <button id="btn-save-personal" class="btn btn-success btn-edit" style="display: none;">Save</button>
+            <button id="btn-cancel-personal" class="btn btn-default btn-edit" style="display: none;">Cancel</button>
+        </div>
+        <div class="card-body">
+            <h4 data-bind="text: UserFirstName() + ' ' + UserLastName()"></h4>
+            <h4 data-bind="text: Email">Joe Cowman</h4>
+        </div>
+    </div>
+
+    <div class="card card-account-information-section">
+        <div class="card-header">
+            <h3 class="header-information-section">Payment Information</h3>
+            <button id="btn-edit-payment" class="btn btn-primary btn-edit">Edit</button>
+            <button id="btn-save-payment" class="btn btn-success btn-edit" style="display: none;">Save</button>
+            <button id="btn-cancel-payment" class="btn btn-default btn-edit" style="display: none;">Cancel</button>
+        </div>
+        <div class="card-body">
+            <h5 data-bind="text: 'Payment Plan: ' + PaymentPlan()"></h5>
+            <label>Next Payment Due: </label>
+            <label class="enMoney" data-bind="text: NextPaymentCost"></label>
+            <label data-bind="text: ' on ' + NextPaymentDate()"></label>
+        </div>
+        <div class="card-footer">
+            <h5 data-bind="text: CardFirstName() + ' ' + CardLastName()"></h5>
+            <h5 data-bind="text: StreetAddress1"></h5>
+            <h5 data-bind="text: StreetAddress2"></h5>
+            <h5 data-bind="text: City() + ', ' + State() + ' ' + Zip()" style="margin-bottom: 30px;"></h5>
+
+            <h5 data-bind="text: 'XXXX XXXX XXXX ' + CardNumber()"></h5>
+            <label data-bind="text: 'Exp: ' + ExpirationMonth() + '/' + ExpirationYear()"></label>
+        </div>
+    </div>
+
+    <div class="card card-account-information-section">
+        <div class="card-header">
+            <h3 class="header-information-section">Student Information</h3>
+            <button id="btn-edit-student" class="btn btn-primary btn-edit edit-student-inactive" data-bind="click: startEditing">Edit</button>
+            <button id="btn-save-student" class="btn btn-success btn-edit edit-student-active">Save</button>
+            <button id="btn-cancel-edit-student" class="btn btn-default btn-edit edit-student-active" data-bind="click: stopEditing">Cancel</button>
+        </div>
+        <div data-bind="foreach: Students">
+            <h5 class="student-info edit-student-inactive" data-bind="text: FirstName() + ' ' + LastName()" style="margin-top: 20px"></h5>
+            <h5 class="student-info edit-student-inactive" data-bind="text: 'Grade ' + Grade()"></h5>
+
+            <div class="student-info edit-student-active" style="margin-top: 10px;">
+                <input type="text" placeholder="Student First Name" data-bind="value: FirstName" />
+                <input type="text" placeholder="Student Last Name" data-bind="value: LastName" />
+            </div>
+            <input class="student-info edit-student-active" type="text" placeholder="Student Grade" data-bind="value: Grade" style="margin-top: 3px; margin-bottom: 10px;" />
+        </div>
+    </div>
+
+    <div class="card card-account-information-section">
+        <div class="card-header">
+            <h3 class="header-information-section">Transaction History</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Date Due</th>
+                        <th>Amount Charged</th>
+                        <th>Process State</th>
+                        <th>Reason Failed</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>

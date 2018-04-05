@@ -1,2 +1,53 @@
 ﻿body {
 }
+
+.card-account-information-section {
+    margin-bottom: 40px;
+}
+
+.header-information-section {
+    float: left;
+}
+
+.input-account-dashboard {
+    width: -webkit-fill-available;
+    text-align: center;
+    margin: 10px;
+    background-color: #F5F5F5;
+    border-style: solid;
+    border-width: thin;
+    border-color: #717171;
+}
+
+.info-account-dashboard {
+    width: -webkit-fill-available;
+    text-align: center;
+    margin: 10px;
+    background-color: #F5F5F5;
+    border: none;
+}
+
+.student-info {
+    display: block;
+    margin-left: 20px;
+}
+
+.btn-logout {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+}
+
+.btn-edit {
+    width: 15%;
+    float: right;
+    margin-right: 6%;
+}
+
+.enMoney::before {
+    content: "$";
+}
+
+.edit-student-active {
+    display: none;
+}

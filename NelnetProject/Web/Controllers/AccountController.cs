@@ -33,6 +33,7 @@ namespace Web.Controllers
             }
             return Ok(getUserInfoEngine.GetUserInfoByID(parsedUserID));
         }
+
         [HttpPost]
         [Route("UpdatePersonalAndStudentInfo")]
         public IHttpActionResult UpdatePersonalAndStudentInfo(User user)
@@ -41,7 +42,7 @@ namespace Web.Controllers
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
-            foreach(Student s in user.Students)
+            foreach (Student s in user.Students)
             {
                 if (s.FirstName == null || s.LastName == null)
                 {
@@ -69,12 +70,18 @@ namespace Web.Controllers
             setUserInfoEngine.InsertPersonalInfo(user);
             return Ok();
         }
-        [HttpGet]
-        [Route("GetUserInfoByEmail/{email}")]
-        public IHttpActionResult GetUserInfoByEmail(string email)
+
+        [HttpPost]
+        [Route("GetUserInfoByEmail")]
+        public IHttpActionResult GetUserInfoByEmail([FromBody]string email)
         {
+            if (String.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email was not supplied");
+            }
             return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
         }
+
         [HttpGet]
         [Route("GetPaymentInfoForUser/{userID}")]
         public IHttpActionResult GetPaymentInfoForUser(string userID)
