@@ -23,7 +23,7 @@ namespace Engines.Utils
         public static EmailNotification PaymentChargedSuccessfullyNotification(Transaction t, User user)
         {
             string subject = "Alert from Tuition Assistant: Payment Successful";
-            string rawBody = string.Format("Congratulations! Your payment was processed succesfully.\nDate: {0:MMMM d yyyy}\nAmount: ${1}", t.DateCharged, t.AmountCharged);
+            string rawBody = string.Format("Congratulations! Your payment was processed succesfully.\nDate: {0:MMMM d yyyy}\nAmount: ${1:f2}", t.DateCharged, t.AmountCharged);
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
