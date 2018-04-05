@@ -268,5 +268,23 @@ namespace NelnetProject.Tests.Engines
 
             CollectionAssert.AreEqual(expectedTransactions, resultTransaction);
         }
+
+        [TestMethod]
+        public void TestCalculatePaymentForNextUser()
+        {
+            int userId = 1;
+            DateTime today = new DateTime(2018, 4, 15);
+            Transaction expected = new Transaction()
+            {
+                UserID = 1,
+                AmountCharged = 875,
+                DateDue = new DateTime(2018, 5, 5),
+                ProcessState = ProcessState.NOT_YET_CHARGED
+            };
+
+            Transaction actual = paymentEngine.CalculateNextPaymentForUser(userId, today);
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }
