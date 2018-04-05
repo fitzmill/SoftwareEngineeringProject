@@ -14,6 +14,8 @@ namespace Web.Managers
         static double timerInterval = 1000; //todo move
         static int chargingHour = 10; //todo move, change
 
+        public Func<DateTime> dateProvider = () => DateTime.Now;
+
         IGetTransactionEngine getTransactionEngine;
         IPaymentEngine paymentEngine;
         INotificationEngine notificationEngine;
@@ -31,8 +33,9 @@ namespace Web.Managers
 
         public void TimerIntervalElapsed(object sender, ElapsedEventArgs e)
         {
-            Debug.WriteLine("time elapsed");
             DateTime today = dateProvider();
+            Debug.WriteLine(String.Format("Time Elapsed at {0:yyyy MM dd HH mm ss}", today));
+            
             if (today.Hour == chargingHour && today.Day == 1)
             {
                 IList<Transaction> generatedTransactions = paymentEngine.GeneratePayments(today);
@@ -45,10 +48,6 @@ namespace Web.Managers
                 notificationEngine.SendTransactionNotifications(transactionResults.ToList());
             }
         }
-        
-        DateTime dateProvider()
-        {
-            return DateTime.Today;
-        }
+ 
     }
 }
