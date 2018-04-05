@@ -23,6 +23,13 @@ namespace Core.Interfaces
         /// <param name="today">Today's date.</param>
         /// <returns>List of all upcoming transactions to be sent as notifications.</returns>
         IList<Transaction> GeneratePayments(DateTime today);
- 
+
+        /// <summary>
+        /// Gets the date and amount of the next payment for the user based on their userID
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        Transaction CalculateNextPaymentForUser(int userID);
+
     }
 }

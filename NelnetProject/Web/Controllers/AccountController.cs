@@ -50,7 +50,7 @@ namespace Web.Controllers
             return Ok(getUserInfoEngine.GetPaymentInfoForUser(parsedUserID));
         }
 
-        // GET api/admin/GetAllTransactionsForUser/5
+        // GET api/account/GetAllTransactionsForUser/5
         //This is a get request with the above route. The 5 at the end of the example is an example userID
         [HttpGet]
         [Route("GetAllTransactionsForUser/{userID}")]
@@ -62,6 +62,17 @@ namespace Web.Controllers
                 return BadRequest("Could not parse userID into an integer");
             }
             return Ok(getTransactionEngine.GetAllTransactionsForUser(parsedUserID));
+        }
+
+        //GET api/account/GetNextTransactionForUser/{userID}
+        [Route("GetNextTransactionForUser/{userID}")]
+        public IHttpActionResult GetNextTransactionForUser(string userID)
+        {
+            if (!int.TryParse(userID, out int parsedUserID))
+            {
+                return BadRequest("Could not parse userID into an integer");
+            }
+            return Ok(getTransactionEngine.GetNextTransactionForUser(parsedUserID));
         }
     }
 }

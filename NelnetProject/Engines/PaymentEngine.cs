@@ -91,6 +91,11 @@ namespace Engines
 
             return transactions;
         }
-   
+
+        public Transaction CalculateNextPaymentForUser(int userID)
+        {
+            User user = getUserInfoAccessor.GetUserInfoByID(userID);
+        }
+
     }
 }
