@@ -3,35 +3,11 @@ require('../assets/background-image.scss');
 
 const accountDashboardAPIURL = "/api/account-dashboard";
 var studentsList = [{ FirstName: "Joey", LastName: "Jimson", Grade: 1 }, { FirstName: "Jimbo", LastName: "Jimson", Grade: 5 }];
-var user = {UserID: 1, FirstName: "Jim", LastName: "Jimson", Email: "jimjimson@jimmail.jim", Students: studentsList};
-
-//GETs a user's payment spring information
-function getPaymentSpringInfo(userID) {
-    let userIDString = user.UserID.toString();
-    return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser/" + userIDString, {
-        method: "GET"
-    });
-}
-
-//POSTs any changes to the user
-function updatePersonalAndStudentInfo() {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePersonalAndStudentInfo", {
-        method: "POST",
-        data: user
-    });
-}
-
-//POSTs any changes to the payment info
-function updatePaymentInfo(paymentInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentInfo", {
-        method: "POST",
-        data: paymentInfo
-    });
-}
+var user = { UserID: 1, FirstName: "Jim", LastName: "Jimson", Email: "jimjimson@jimmail.jim", Students: studentsList };
 
 ko.components.register('account-dashboard-component', {
     viewModel: function (params) {
-        let accountDashboardVM = this;
+        var accountDashboardVM = this;
 
         accountDashboardVM.CardFirstName = ko.observable();
         accountDashboardVM.CardLastName = ko.observable();
@@ -55,15 +31,17 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.NextPaymentCost = ko.observable();
 
         accountDashboardVM.setUser = function () {
-            accountDashboardVM.UserFirstName = user.FirstName;
-            accountDashboardVM.UserLastName = user.LastName;
-            accountDashboardVM.Email = user.Email
-            user.Students.forEach(function (student) {
-                accountDashboardVM.Students.push(student);
-            });
+            accountDashboardVM.UserFirstName(user.FirstName);
+            accountDashboardVM.UserLastName(user.LastName);
+            accountDashboardVM.Email(user.Email);
+            accountDashboardVM.Students(user.Students.map(student => {
+                return {
+                    FirstName: ko.observable(student.FirstName),
+                    LastName: ko.observable(student.LastName),
+                    Grade: ko.observable(student.Grade)
+                }
+            }));
         };
-
-        accountDashboardVM.setUser();
 
         accountDashboardVM.updateUser = function () {
             user.FirstName = accountDashboardVM.UserFirstName;
@@ -102,7 +80,7 @@ ko.components.register('account-dashboard-component', {
             }).fail(function (jqXHR) {
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not save information: ".concat(errorMessage));
-            });
+                });
         }
 
         getPaymentSpringInfo(user.UserID).done(function (data) {
@@ -121,6 +99,28 @@ ko.components.register('account-dashboard-component', {
             window.alert("Could not get payment information, please try refreshing the page.");
         });
 
+        //hides label objects and edit buttons to show save and cancel buttons with text boxes
+        accountDashboardVM.startEditing = function (data, event) {
+            let senderElementID = event.target.id;
+
+            let informationSection = senderElementID.replace("btn-", "");
+
+            $("." + informationSection + "-active").show();
+            $("." + informationSection + "-inactive").hide();
+        }
+
+        //hides save and cancel buttons along with text boxes and shows labels and edit button
+        accountDashboardVM.stopEditing = function (data, event) {
+            let senderElementID = event.target.id;
+
+            let informationSection = senderElementID.replace("btn-cancel-", "");
+
+            $("." + informationSection + "-active").hide();
+            $("." + informationSection + "-inactive").show();
+        }
+
+        accountDashboardVM.setUser();
+
         getPaymentSpringInfo(user.UserID);
 
         return accountDashboardVM;
@@ -128,3 +128,27 @@ ko.components.register('account-dashboard-component', {
 
     template: require('./account-dashboard-component.html')
 });
+
+//GETs a user's payment spring information
+function getPaymentSpringInfo(userID) {
+    let userIDString = user.UserID.toString();
+    return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser/" + userIDString, {
+        method: "GET"
+    });
+}
+
+//POSTs any changes to the user
+function updatePersonalAndStudentInfo() {
+    return $.ajax(accountDashboardAPIURL + "/UpdatePersonalAndStudentInfo", {
+        method: "POST",
+        data: user
+    });
+}
+
+//POSTs any changes to the payment info
+function updatePaymentInfo(paymentInfo) {
+    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentInfo", {
+        method: "POST",
+        data: paymentInfo
+    });
+}
