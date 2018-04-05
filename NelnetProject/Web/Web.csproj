@@ -213,9 +213,9 @@
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.js" />
     <Content Include="Nelnet_UI\source\index.html" />
     <Content Include="Nelnet_UI\source\index.js" />
-    <None Include="Nelnet_UI\source\ReportComponent\report-component.scss" />
-    <Content Include="Nelnet_UI\source\ReportComponent\report-component.html" />
-    <Content Include="Nelnet_UI\source\ReportComponent\report-component.js" />
+    <None Include="Nelnet_UI\source\AdminComponent\admin-component.scss" />
+    <Content Include="Nelnet_UI\source\AdminComponent\admin-component.html" />
+    <Content Include="Nelnet_UI\source\AdminComponent\admin-component.js" />
     <Content Include="Nelnet_UI\source\utility.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />

@@ -1,4 +1,5 @@
-﻿using Core.Interfaces;
+﻿using Core;
+using Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,10 +29,14 @@ namespace Web.Controllers
             }
             return Ok(getUserInfoEngine.GetUserInfoByID(parsedUserID));
         }
-        [HttpGet]
-        [Route("GetUserInfoByEmail/{email}")]
-        public IHttpActionResult GetUserInfoByEmail(string email)
+        [HttpPost]
+        [Route("GetUserInfoByEmail")]
+        public IHttpActionResult GetUserInfoByEmail([FromBody]string email)
         {
+            if (String.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email was not supplied");
+            }
             return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
         }
         [HttpGet]
