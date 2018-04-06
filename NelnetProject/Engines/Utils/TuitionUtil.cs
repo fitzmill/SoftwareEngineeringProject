@@ -36,8 +36,8 @@ namespace Engines.Utils
 
         private static Dictionary<PaymentPlan, List<int>> monthsDue = new Dictionary<PaymentPlan, List<int>>()
         {
-            { PaymentPlan.MONTHLY, new List<int>() { 8, 9, 10, 11, 12, 1, 2, 3, 4, 5 } },
-            { PaymentPlan.SEMESTERLY, new List<int>() { 9, 2 } },
+            { PaymentPlan.MONTHLY, new List<int>() { 1, 2, 3, 4, 5, 8, 9, 10, 11, 12 } },
+            { PaymentPlan.SEMESTERLY, new List<int>() { 2, 9 } },
             { PaymentPlan.YEARLY, new List<int>() { 9 } }
         };
 
@@ -45,6 +45,42 @@ namespace Engines.Utils
         public static bool IsPaymentDue(PaymentPlan plan, DateTime today)
         {
             return monthsDue[plan].Contains(today.Month);
+        }
+
+        //Compute the date of the next payment for the given plan.
+        public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today)
+        {
+            int monthIndex = monthsDue[plan].FindIndex(m => m >= today.Month);
+
+            //If after last pay period of the year, it's due next year.
+            if (monthIndex == -1)
+            {
+                monthIndex = 0;
+            }
+            //If during a pay month, but after the due date, it's due next period.
+            else if (today.Month == monthsDue[plan][monthIndex] && today.Day > DUE_DAY)
+            {
+                monthIndex++;
+                //If incrementing the period puts it after the end of the year, move the index.
+                if (monthIndex >= monthsDue[plan].Count)
+                {
+                    monthIndex = 0;
+                }
+            }
+            int month = monthsDue[plan][monthIndex];
+            int year = today.Year;
+
+            //If you're on the yearly period and already paid for the year
+            bool isAfterPeriodForYearly = (plan == PaymentPlan.YEARLY && 
+                (today.Month > month || (today.Month == month && today.Day > DUE_DAY)));
+            
+            //If pay period is next year
+            if (month < today.Month || isAfterPeriodForYearly)
+            {
+                year++;
+            }
+
+            return new DateTime(year, month, DUE_DAY);
         }
 
         //Generate the aggregate amount due for the month by summing the yearly cost for each of
