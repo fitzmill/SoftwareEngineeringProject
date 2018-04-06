@@ -1,7 +1,7 @@
 ﻿require('./account-dashboard-component.scss');
 require('../assets/background-image.scss');
 
-const accountDashboardAPIURL = "/api/account-dashboard";
+const accountDashboardAPIURL = "/api/account";
 const regexSemicolonCheck = /[^;]/;
 const regexNumCheck = /[^\d]/;
 const regexZipCheck = /[^\d-]/;
@@ -196,6 +196,7 @@ ko.components.register('account-dashboard-component', {
             userPaymentInfo.ExpirationYear = data.ExpirationYear;
             userPaymentInfo.ExpirationMonth = data.ExpirationMonth;
             userPaymentInfo.CardType = data.CardType;
+            accountDashboardVM.setUIPaymentSpringInfo();
         }).fail(function (jqXHR) {
             window.alert("Could not get payment information, please try refreshing the page.");
         });
@@ -231,7 +232,6 @@ ko.components.register('account-dashboard-component', {
         });
 
         accountDashboardVM.setUser();
-        accountDashboardVM.setUIPaymentSpringInfo();
 
         return accountDashboardVM;
     },
