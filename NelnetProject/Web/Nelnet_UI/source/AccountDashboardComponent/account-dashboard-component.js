@@ -10,7 +10,7 @@ var studentsList = [{ FirstName: "Joey", LastName: "Jimson", Grade: 1 }, { First
 var user = { UserID: 1, FirstName: "Jim", LastName: "Jimson", Email: "jimjimson@jimmail.jim", Students: studentsList };
 var userPaymentInfo = {
     CustomerID: undefined,
-    FirstName: undefined,
+    FirstName: "DoesThisWork",
     LastName: undefined,
     StreetAddress1: undefined,
     StreetAddress2: undefined,
@@ -51,7 +51,8 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.NextPaymentDate = ko.observable();
         accountDashboardVM.NextPaymentCost = ko.observable();
 
-        getTransactionsForUser(user.UserID).done(function (data) {
+        //gets all transactions for a user.
+        getAllTransactionsForUser(user.UserID).done(function (data) {
             accountDashboardVM.Transactions(data);
         }).fail(function (jqXHR) {
             window.alert("Could not get transaction information, please try refreshing the page.");
@@ -94,6 +95,7 @@ ko.components.register('account-dashboard-component', {
             updatePersonalAndStudentInfo().done({
 
             }).fail(function (jqXHR) {
+                accountDashboardVM.setUser();
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not save information: ".concat(errorMessage));
             });
@@ -111,11 +113,11 @@ ko.components.register('account-dashboard-component', {
                 return;
             } else if (!accountDashboardVM.City() || !accountDashboardVM.City().match(regexSemicolonCheck)) {
                 return;
-            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck)) {
+            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length != 2) {
                 return;
             } else if (!accountDashboardVM.Zip() || !accountDashboardVM.Zip().match(regexZipCheck)) {
                 return;
-            } else if (!accountDashboardVM.CardNumber() || !accountDashboardVM.CardNumber().match(regexNumCheck) || accountDashboardVM.CardNumber().length < 15 || accountDashboardVM().CardNumber.length > 19) {
+            } else if (!accountDashboardVM.CardNumber() || !accountDashboardVM.CardNumber().match(regexNumCheck) || accountDashboardVM.CardNumber().length < 15) {
                 return;
             } else if (!accountDashboardVM.ExpirationYear() || !accountDashboardVM.ExpirationYear().match(regexNumCheck) || accountDashboardVM.ExpirationYear().length != 2) {
                 return;
@@ -152,7 +154,7 @@ ko.components.register('account-dashboard-component', {
                 userPaymentInfo.State = changedPaymentInfo.State;
                 userPaymentInfo.Zip = changedPaymentInfo.Zip;
                 userPaymentInfo.CardNumber = changedPaymentInfo.CardNumber.substr(changedPaymentInfo.CardNumber.length - 4);
-                auserPaymentInfo.ExpirationYear = changedPaymentInfo.ExpirationYear;
+                userPaymentInfo.ExpirationYear = changedPaymentInfo.ExpirationYear;
                 userPaymentInfo.ExpirationMonth = changedPaymentInfo.ExpirationMonth;
                 userPaymentInfo.CardType = changedPaymentInfo.CardType;
                 changedPaymentInfo = undefined;
@@ -220,8 +222,15 @@ ko.components.register('account-dashboard-component', {
             $("." + informationSection + "-inactive").show();
         }
 
+        //gets the next payment details for the user
+        getNextTransactionForUser(user.UserID).done(function (data) {
+            accountDashboardVM.NextPaymentDate(JSON.stringify(data.DateDue).parseDateTimeString());
+            accountDashboardVM.NextPaymentCost(data.AmountCharged);
+        }).fail(function (jqXHR) {
+            window.alert("Could not get your next transaction information, please try refreshing the page.");
+        });
+
         accountDashboardVM.setUser();
-        getPaymentSpringInfo(user.UserID);
         accountDashboardVM.setUIPaymentSpringInfo();
 
         return accountDashboardVM;
@@ -230,8 +239,16 @@ ko.components.register('account-dashboard-component', {
     template: require('./account-dashboard-component.html')
 });
 
+//Gets a user's next transaction details
+function getNextTransactionForUser(userID) {
+    let userIDString = userID.toString();
+    return $.ajax(accountDashboardAPIURL + "/GetNextTransactionForUser/" + userIDString, {
+        method: "GET"
+    });
+}
+
 //Gets a user's transaction details
-function getTransactionsForUser(userID) {
+function getAllTransactionsForUser(userID) {
     let userIDString = userID.toString();
     return $.ajax(accountDashboardAPIURL + "/GetAllTransactionsForUser/" + userIDString, {
         method: "GET"

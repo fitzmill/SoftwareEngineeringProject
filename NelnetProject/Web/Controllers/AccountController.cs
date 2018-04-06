@@ -132,6 +132,7 @@ namespace Web.Controllers
         }
 
         //GET api/account/GetNextTransactionForUser/{userID}
+        [HttpGet]
         [Route("GetNextTransactionForUser/{userID}")]
         public IHttpActionResult GetNextTransactionForUser(string userID)
         {
