@@ -10,7 +10,7 @@ var studentsList = [{ FirstName: "Joey", LastName: "Jimson", Grade: 1 }, { First
 var user = { UserID: 1, FirstName: "Jim", LastName: "Jimson", Email: "jimjimson@jimmail.jim", Students: studentsList };
 var userPaymentInfo = {
     CustomerID: undefined,
-    FirstName: "DoesThisWork",
+    FirstName: undefined,
     LastName: undefined,
     StreetAddress1: undefined,
     StreetAddress2: undefined,
