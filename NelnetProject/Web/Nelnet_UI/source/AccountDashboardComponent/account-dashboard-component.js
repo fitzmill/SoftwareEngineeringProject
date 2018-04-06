@@ -46,9 +46,18 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.PaymentPlan = ko.observable();
         accountDashboardVM.Students = ko.observableArray([]);
 
+        accountDashboardVM.Transactions = ko.observableArray([]);
+
         accountDashboardVM.NextPaymentDate = ko.observable();
         accountDashboardVM.NextPaymentCost = ko.observable();
 
+        getTransactionsForUser(user.UserID).done(function (data) {
+            accountDashboardVM.Transactions(data);
+        }).fail(function (jqXHR) {
+            window.alert("Could not get transaction information, please try refreshing the page.");
+        });
+
+        //Sets ko components from saved user.
         accountDashboardVM.setUser = function () {
             accountDashboardVM.UserFirstName(user.FirstName);
             accountDashboardVM.UserLastName(user.LastName);
@@ -63,6 +72,7 @@ ko.components.register('account-dashboard-component', {
             }));
         };
 
+        //Changes the user info in database and ui to what the user entered.
         accountDashboardVM.updateUser = function () {
             if (!accountDashboardVM.UserFirstName() || !accountDashboardVM.UserFirstName().match(regexSemicolonCheck)) {
                 return;
@@ -89,6 +99,7 @@ ko.components.register('account-dashboard-component', {
             });
         };
 
+        //Changes the payment info in payment spring and ui to what the user entered.
         accountDashboardVM.updatePaymentInfo = function () {
             if (!accountDashboardVM.CardFirstName() || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
                 return;
@@ -154,6 +165,7 @@ ko.components.register('account-dashboard-component', {
                 });
         }
 
+        //Sets the ko variables to the saved payment spring information
         accountDashboardVM.setUIPaymentSpringInfo = function () {
             accountDashboardVM.CardFirstName(userPaymentInfo.FirstName);
             accountDashboardVM.CardLastName(userPaymentInfo.LastName);
@@ -168,6 +180,7 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.CardType(userPaymentInfo.CardType);
         }
 
+        //Gets the payment spring information from the user.
         getPaymentSpringInfo(user.UserID).done(function (data) {
             userPaymentInfo.CustomerID = data.CustomerID;
             userPaymentInfo.FirstName = data.FirstName;
@@ -217,9 +230,17 @@ ko.components.register('account-dashboard-component', {
     template: require('./account-dashboard-component.html')
 });
 
+//Gets a user's transaction details
+function getTransactionsForUser(userID) {
+    let userIDString = userID.toString();
+    return $.ajax(accountDashboardAPIURL + "/GetAllTransactionsForUser/" + userIDString, {
+        method: "GET"
+    });
+}
+
 //GETs a user's payment spring information
 function getPaymentSpringInfo(userID) {
-    let userIDString = user.UserID.toString();
+    let userIDString = userID.toString();
     return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser/" + userIDString, {
         method: "GET"
     });
