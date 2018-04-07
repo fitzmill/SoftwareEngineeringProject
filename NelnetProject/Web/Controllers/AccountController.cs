@@ -16,13 +16,16 @@ namespace Web.Controllers
         IGetUserInfoEngine getUserInfoEngine;
         IGetTransactionEngine getTransactionEngine;
         ISetUserInfoEngine setUserInfoEngine;
+        IPaymentEngine paymentEngine;
 
-        public AccountController(IGetUserInfoEngine getUserInfoEngine, ISetUserInfoEngine setUserInfoEngine, IGetTransactionEngine getTransactionEngine)
+        public AccountController(IGetUserInfoEngine getUserInfoEngine, ISetUserInfoEngine setUserInfoEngine, IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine)
         {
             this.getUserInfoEngine = getUserInfoEngine;
             this.getTransactionEngine = getTransactionEngine;
+            this.paymentEngine = paymentEngine;
             this.setUserInfoEngine = setUserInfoEngine;
         }
+
         [HttpGet]
         [Route("GetUserInfoByID/{userID}")]
         public IHttpActionResult GetUserInfoByID(string userID)
@@ -115,7 +118,6 @@ namespace Web.Controllers
             return Ok();
         }
 
-        // GET api/admin/GetAllTransactionsForUser/5
         //This is a get request with the above route. The 5 at the end of the example is an example userID
         [HttpGet]
         [Route("GetAllTransactionsForUser/{userID}")]
@@ -127,6 +129,18 @@ namespace Web.Controllers
                 return BadRequest("Could not parse userID into an integer");
             }
             return Ok(getTransactionEngine.GetAllTransactionsForUser(parsedUserID));
+        }
+
+        //GET api/account/GetNextTransactionForUser/{userID}
+        [HttpGet]
+        [Route("GetNextTransactionForUser/{userID}")]
+        public IHttpActionResult GetNextTransactionForUser(string userID)
+        {
+            if (!int.TryParse(userID, out int parsedUserID))
+            {
+                return BadRequest("Could not parse userID into an integer");
+            }
+            return Ok(paymentEngine.CalculateNextPaymentForUser(parsedUserID, DateTime.Now));
         }
     }
 }

@@ -19,6 +19,7 @@ namespace NelnetProject.Tests.Engines
         MockGetPaymentInfoAccessor getPaymentInfoAccessor;
         MockChargePaymentAccessor chargePaymentAccessor;
         MockSetTransactionAccessor setTransactionAccessor;
+        MockGetTransactionAccessor getTransactionAccessor;
 
         public static List<Student> StudentsDB = new List<Student>()
         {
@@ -92,13 +93,36 @@ namespace NelnetProject.Tests.Engines
             }
         };
 
+        private List<Transaction> TransactionDB = new List<Transaction>{
+            new Transaction()
+            {
+                TransactionID = 2,
+                UserID = 2,
+                AmountCharged = 64.00,
+                DateDue = new DateTime(2018, 2, 9),
+                DateCharged = new DateTime(2018, 2, 9),
+                ProcessState = ProcessState.SUCCESSFUL
+            },
+            new Transaction()
+            {
+                TransactionID = 3,
+                UserID = 1,
+                AmountCharged = 55.00,
+                DateDue = new DateTime(2018, 2, 9),
+                DateCharged = null,
+                ProcessState = ProcessState.FAILED,
+                ReasonFailed = "Insufficient funds"
+            }
+        };
+
         public TestPaymentEngine()
         {
             getUserInfoAccessor = new MockGetUserInfoAccessor(StudentsDB, MockUsersDB);
             getPaymentInfoAccessor = new MockGetPaymentInfoAccessor(MockPaymentSpring);
             chargePaymentAccessor = new MockChargePaymentAccessor();
             setTransactionAccessor = new MockSetTransactionAccessor();
-            paymentEngine = new PaymentEngine(getUserInfoAccessor, getPaymentInfoAccessor, chargePaymentAccessor, setTransactionAccessor);
+            getTransactionAccessor = new MockGetTransactionAccessor(TransactionDB);
+            paymentEngine = new PaymentEngine(getUserInfoAccessor, getPaymentInfoAccessor, chargePaymentAccessor, setTransactionAccessor, getTransactionAccessor);
         }
 
         private User BuildTestUser(PaymentPlan paymentPlan)
@@ -119,7 +143,7 @@ namespace NelnetProject.Tests.Engines
                 new Transaction
                 {
                     UserID = 1,
-                    AmountCharged = 875,
+                    AmountCharged = 875 + 55 + 25,
                     DateDue = new DateTime(2018, 9, 5),
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 },
@@ -135,6 +159,8 @@ namespace NelnetProject.Tests.Engines
             List<Transaction> result = paymentEngine.GeneratePayments(genDate).ToList();
 
             CollectionAssert.AreEqual(expectedTransactions, result);
+
+            expectedTransactions.AddRange(TransactionDB.Where(t => t.ProcessState == ProcessState.DEFERRED));
             CollectionAssert.AreEqual(expectedTransactions, setTransactionAccessor.Transactions);
         }
 
@@ -240,6 +266,24 @@ namespace NelnetProject.Tests.Engines
             List<Transaction> resultTransaction = paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
 
             CollectionAssert.AreEqual(expectedTransactions, resultTransaction);
+        }
+
+        [TestMethod]
+        public void TestCalculatePaymentForNextUser()
+        {
+            int userId = 1;
+            DateTime today = new DateTime(2018, 4, 15);
+            Transaction expected = new Transaction()
+            {
+                UserID = 1,
+                AmountCharged = 875,
+                DateDue = new DateTime(2018, 5, 5),
+                ProcessState = ProcessState.NOT_YET_CHARGED
+            };
+
+            Transaction actual = paymentEngine.CalculateNextPaymentForUser(userId, today);
+
+            Assert.AreEqual(expected, actual);
         }
     }
 }
