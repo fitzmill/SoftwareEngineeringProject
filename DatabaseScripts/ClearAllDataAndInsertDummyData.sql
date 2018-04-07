@@ -99,12 +99,12 @@ insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, 
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Sean', 'Fitzy', 'sean@weebnation.com', '62b1f4f5be3aa3f3cd9f07bdeed452191254ad57a2b8f97ace53cf40d0d1f60e', 'sometime', 2, 2, '5b44c3') --MasterCard  Password: Sean2010!
 
 
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Caitlin', 'Fitzy', 12, 2)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Matt', 'Fitz', 6, 2)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Caitlin', 'Fitzy', 12, 3)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Matt', 'Fitz', 6, 3)
 insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Cathy', 'Knaak', 9, 1)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('SonofBill', 'Gates', 0, 3)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('DaughterofBill', 'Gates', 3, 3)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('BillAdopted', 'Schmidling', 11, 3)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('SonofBill', 'Gates', 0, 2)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('DaughterofBill', 'Gates', 3, 2)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('BillAdopted', 'Schmidling', 11, 2)
 
 
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2017, 9, 5), DATEFROMPARTS(2017, 9, 5), 2, 'Insufficient funds')

@@ -14,8 +14,6 @@ ko.components.register('login-component', {
         vm.email = ko.observable();
         vm.password = ko.observable();
 
-        vm.user = ko.observable();
-
         vm.login = function () {
             if (!vm.email().emailMeetsRequirements()) {
                 $("#label-invalid-info").show();
@@ -29,9 +27,10 @@ ko.components.register('login-component', {
                 if (validLogin) {
                     getUserInfoByEmail(vm.email()).done(function (user) {
                         if (user.UserType === generalUserType) {
-                            vm.user(user);
+                            window.localStorage.setItem("user", JSON.stringify(user));
                             window.location = "#account-dashboard";
                         } else if (user.UserType === adminUserType) {
+                            window.localStorage.setItem("user", JSON.stringify(user));
                             window.location = "#admin";
                         }
                     }).fail(function (jqXHR) {
