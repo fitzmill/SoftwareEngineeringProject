@@ -4,9 +4,6 @@ require('../assets/background-image.scss');
 const loginAPIURL = "/api/login";
 const accountAPIURL = "/api/account";
 
-const generalUserType = 1;
-const adminUserType = 2;
-
 ko.components.register('login-component', {
     viewModel: function (params) {
         var vm = this;
@@ -26,10 +23,10 @@ ko.components.register('login-component', {
             validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
                 if (validLogin) {
                     getUserInfoByEmail(vm.email()).done(function (user) {
-                        if (user.UserType === generalUserType) {
+                        if (user.UserType === "GENERAL") {
                             window.localStorage.setItem("user", JSON.stringify(user));
                             window.location = "#account-dashboard";
-                        } else if (user.UserType === adminUserType) {
+                        } else if (user.UserType === "ADMIN") {
                             window.localStorage.setItem("user", JSON.stringify(user));
                             window.location = "#admin";
                         }

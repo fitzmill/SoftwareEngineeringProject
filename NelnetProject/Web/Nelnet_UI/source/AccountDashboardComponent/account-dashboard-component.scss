@@ -9,6 +9,12 @@
     float: left;
 }
 
+.header-input-error {
+    color: white;
+    background-color: red;
+    text-align: center;
+}
+
 .input-account-dashboard {
     width: -webkit-fill-available;
     text-align: center;
@@ -48,10 +54,14 @@
     content: "$";
 }
 
-.edit-student-active {
+.edit-personal-active {
     display: none;
 }
 
 .edit-payment-active {
+    display: none;
+}
+
+.edit-student-active {
     display: none;
 }

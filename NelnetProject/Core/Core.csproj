@@ -49,6 +49,7 @@
     <Compile Include="DTOs\PaymentDTO.cs" />
     <Compile Include="DTOs\ReportDTO.cs" />
     <Compile Include="DTOs\TransactionWithUserInfoDTO.cs" />
+    <Compile Include="DTOs\UpdateStudentInfoDTO.cs" />
     <Compile Include="DTOs\UserPaymentInfoDTO.cs" />
     <Compile Include="Enums\PaymentPlan.cs" />
     <Compile Include="Enums\ProcessState.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Enums\UserType.cs" />
     <Compile Include="Exceptions\EmailException.cs" />
     <Compile Include="Exceptions\ReportException.cs" />
+    <Compile Include="Exceptions\SqlRowNotAffectedException.cs" />
     <Compile Include="Interfaces\IChargePaymentAccessor.cs" />
     <Compile Include="Interfaces\IEmailAccessor.cs" />
     <Compile Include="Interfaces\IGetPaymentInfoAccessor.cs" />

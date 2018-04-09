@@ -46,7 +46,6 @@ namespace Engines
         public void UpdatePersonalInfo(User user)
         {
             setUserInfoAccessor.UpdatePersonalInfo(user);
-            UpdateStudentInfo(user.Students);
         }
 
         //make a call to the SetUserInfoAccessor to delete the personal information associated with the userID including students

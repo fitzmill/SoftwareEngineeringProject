@@ -2,11 +2,28 @@
 
 const adminAPIURL = "/api/admin";
 
+exports.adminDashboardBeforeShow = function () {
+    let user = JSON.parse(localStorage.getItem('user'));
+    //user not logged in
+    if (!user || user.UserType !== "ADMIN") {
+        window.location = '#';
+        return;
+    }
+
+    //this will only be true when redirected to this page from login, since the component will be binded
+    if ($("admin-component").children().length > 0) {
+        vm = ko.dataFor($('admin-component').get(0).firstChild);
+        vm.loadAdminInformation();
+    }
+}
+
 ko.components.register('admin-component', {
     viewModel: function (params) {
         var vm = this;
+
         vm.generateStartDate = ko.observable();
         vm.generateEndDate = ko.observable();
+        vm.reports = ko.observableArray([]);
 
         vm.unsettledTransactions = ko.observableArray([]);
         vm.allTransactions = ko.observableArray([]);
@@ -14,6 +31,14 @@ ko.components.register('admin-component', {
         vm.amountPaid = ko.observable();
         vm.amountOutstanding = ko.observable();
         vm.reportRange = ko.observable();
+
+        vm.loadAdminInformation = function () {
+            getReports().done((data) => {
+                vm.reports(data.map((report) => parseReportModel(report)))
+            }).fail((jqXHR) => {
+                window.alert("Could not get reports, please try refreshing the page");
+            });
+        }
 
         vm.generateReport = function () {
             generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
@@ -80,15 +105,10 @@ ko.components.register('admin-component', {
             csv.downloadCSV("Transactions.csv");
         };
 
-        vm.reports = ko.observableArray([]);
-
-        getReports().done(function (data) {
-            data.forEach(function (report) {
-                vm.reports.push(parseReportModel(report));
-            });
-        }).fail(function (jqXHR) {
-            window.alert("Could not get report history, please try refreshing the page.");
-        });
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.UserType === "ADMIN") {
+            vm.loadAdminInformation();
+        }
 
         return vm;
     },

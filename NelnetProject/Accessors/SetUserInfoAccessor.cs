@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.Exceptions;
 using Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -87,8 +88,7 @@ namespace Accessors
                 
                 if(rowsAffected != 1)
                 {
-                    //TODO: define custom exception type for this error
-                    throw new Exception("Database query executed incorrectly");
+                    throw new SqlRowNotAffectedException("Could not find user recrod to update");
                 }
             }
         }
@@ -112,8 +112,7 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
-                    //TODO: define custom exception type for this error
-                    throw new Exception("Database query executed incorrectly");
+                    throw new SqlRowNotAffectedException("User record could not be found to delete");
                 }
             }
         }
@@ -167,8 +166,7 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
-                    //TODO: define custom exception type for this error
-                    throw new Exception("Database query executed incorrectly");
+                    throw new SqlRowNotAffectedException("Student row could not be found to update");
                 }
             }
         }
@@ -192,8 +190,7 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
-                    //TODO: define custom exception type for this error
-                    throw new Exception("Database query executed incorrectly");
+                    throw new SqlRowNotAffectedException("Student row could not be found to delete");
                 }
             }
         }
@@ -201,7 +198,7 @@ namespace Accessors
         //delete all the students associated with a specific user id
         public void DeleteStudentInfoByUserID(int userID)
         {
-            string query = "[dbo].[DeleteStudentInforByUserID]";
+            string query = "[dbo].[DeleteStudentInfoByUserID]";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -213,7 +210,12 @@ namespace Accessors
 
                 connection.Open();
 
-                command.ExecuteNonQuery();
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected < 0)
+                {
+                    throw new SqlRowNotAffectedException("Student row could not be found to delete");
+                }
             }
         }
     }
