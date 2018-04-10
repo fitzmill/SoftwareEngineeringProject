@@ -46,6 +46,8 @@
     <Compile Include="DTOs\DateRangeDTO.cs" />
     <Compile Include="DTOs\LoginDTO.cs" />
     <Compile Include="DTOs\PasswordDTO.cs" />
+    <Compile Include="DTOs\PaymentAddressDTO.cs" />
+    <Compile Include="DTOs\PaymentCardDTO.cs" />
     <Compile Include="DTOs\PaymentDTO.cs" />
     <Compile Include="DTOs\ReportDTO.cs" />
     <Compile Include="DTOs\TransactionWithUserInfoDTO.cs" />

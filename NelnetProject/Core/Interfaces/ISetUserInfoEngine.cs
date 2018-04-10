@@ -56,10 +56,16 @@ namespace Core.Interfaces
         string InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo);
 
         /// <summary>
-        /// Update the payment info associated with the customerID in paymentSpring
+        /// Updates a user's name and address information on paymentSpring
         /// </summary>
-        /// <param name="userPaymentInfo">The information to update in paymentSpring</param>
-        void UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo);
+        /// <param name="paymentAddressInfo">The information to update in paymentSpring</param>
+        void UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressInfo);
+
+        /// <summary>
+        /// Updates a user's card information on paymentSpring
+        /// </summary>
+        /// <param name="paymentCardInfo">The information to update in paymentSpring</param>
+        void UpdatePaymentCardInfo(PaymentCardDTO paymentCardInfo);
 
         /// <summary>
         /// Delete the payment information from paymentSpring

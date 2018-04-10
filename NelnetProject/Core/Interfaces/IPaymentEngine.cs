@@ -32,5 +32,12 @@ namespace Core.Interfaces
         /// <returns></returns>
         Transaction CalculateNextPaymentForUser(int userID, DateTime today);
 
+        /// <summary>
+        /// Calculates the numeric amount that will be due each period for the given user.
+        /// </summary>
+        /// <param name="user">A user with a payment plan and one or more students</param>
+        /// <returns>The periodic payment amount</returns>
+        Double CalculatePeriodicPayment(User user);
+
     }
 }
