@@ -112,37 +112,43 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        public void TestUpdatePaymentInfo()
+        public void TestUpdatePaymentBillingInfo()
         {
-            UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
+            PaymentAddressDTO paymentAddressInfo = new PaymentAddressDTO
             {
                 CustomerID = "fedder",
-                Company = "Honeywell",
                 FirstName = "Bobby",
                 LastName = "Bobton",
                 StreetAddress1 = "123 NE Eastern Ln",
                 StreetAddress2 = "",
                 City = "Chicago",
                 State = "IL",
-                Zip = "60007",
-                CardNumber = 111111111111,
-                ExpirationYear = 22,
-                ExpirationMonth = 6,
-                CardType = "MasterCard"
+                Zip = "60007"
             };
 
-            setPaymentInfoAccessor.mockPaymentSpring.Add(paymentInfo);
+            setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressInfo);
+            string customerID = "fedder";
 
-            paymentInfo.Company = "Olive Garden";
-            paymentInfo.CardNumber = 222222222222;
-            paymentInfo.ExpirationYear = 24;
-            paymentInfo.ExpirationMonth = 10;
-            paymentInfo.CardType = "Visa";
+            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
+            Assert.AreEqual(paymentAddressInfo.FirstName, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().FirstName);
+        }
 
-            setUserInfoEngine.UpdatePaymentInfo(paymentInfo);
+        [TestMethod]
+        public void TestUpdatePaymentCardInfo()
+        {
+            PaymentCardDTO paymentCardInfo = new PaymentCardDTO
+            {
+                CustomerID = "fedder",
+                CardNumber = 1234567891011111,
+                ExpirationMonth = 12,
+                ExpirationYear = 22
+            };
 
-            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Contains(paymentInfo));
-            Assert.AreEqual(paymentInfo, setPaymentInfoAccessor.mockPaymentSpring.Where(info => info.CustomerID == paymentInfo.CustomerID).ToList().ElementAt(0));
+            setUserInfoEngine.UpdatePaymentCardInfo(paymentCardInfo);
+            string customerID = "fedder";
+
+            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
+            Assert.AreEqual(paymentCardInfo.CardNumber, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().CardNumber);
         }
 
         [TestMethod]

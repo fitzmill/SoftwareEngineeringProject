@@ -43,5 +43,28 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
             mockPaymentSpring.RemoveAll(info => info.CustomerID.Equals(customerInfo.CustomerID));
             mockPaymentSpring.Add(customerInfo);
         }
+
+        public void UpdateCustomerBillingInformation(PaymentAddressDTO paymentAddressInfo)
+        {
+            var customer = mockPaymentSpring.Where(u => u.CustomerID == paymentAddressInfo.CustomerID).FirstOrDefault();
+            mockPaymentSpring.RemoveAll(info => info.CustomerID.Equals(paymentAddressInfo.CustomerID));
+            customer.FirstName = paymentAddressInfo.FirstName;
+            customer.LastName = paymentAddressInfo.LastName;
+            customer.State = paymentAddressInfo.State;
+            customer.StreetAddress1 = paymentAddressInfo.StreetAddress1;
+            customer.StreetAddress2 = paymentAddressInfo.StreetAddress2;
+            customer.Zip = paymentAddressInfo.Zip;
+            mockPaymentSpring.Add(customer);
+        }
+
+        public void UpdateCustomerCardInformation(PaymentCardDTO paymentCardInfo)
+        {
+            var customer = mockPaymentSpring.Where(u => u.CustomerID == paymentCardInfo.CustomerID).FirstOrDefault();
+            mockPaymentSpring.RemoveAll(info => info.CustomerID.Equals(paymentCardInfo.CustomerID));
+            customer.CardNumber = paymentCardInfo.CardNumber;
+            customer.ExpirationMonth = paymentCardInfo.ExpirationMonth;
+            customer.ExpirationYear = paymentCardInfo.ExpirationYear;
+            mockPaymentSpring.Add(customer);
+        }
     }
 }
