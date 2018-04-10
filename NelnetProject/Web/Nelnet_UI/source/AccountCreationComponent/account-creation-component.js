@@ -91,8 +91,7 @@ ko.components.register('account-creation-component', {
 
         //exit account creation
         vm.cancel = function () {
-            console.log('hello');
-            window.location = '#start';
+            window.location = '#';
         }
 
         //move to the previous page
