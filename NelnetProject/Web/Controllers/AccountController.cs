@@ -9,10 +9,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Web.Filters;
 
 namespace Web.Controllers
 {
     [RoutePrefix("api/account")]
+    [SqlRowNotAffectedFilter]
     public class AccountController : ApiController
     {
         IGetUserInfoEngine getUserInfoEngine;
@@ -48,14 +50,7 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
-            try
-            {
-                setUserInfoEngine.UpdatePersonalInfo(user);
-            }
-            catch (SqlRowNotAffectedException srnae)
-            {
-                return BadRequest(srnae.Message);
-            }
+            setUserInfoEngine.UpdatePersonalInfo(user);
             return Ok();
         }
 
@@ -69,16 +64,9 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
-            try
-            {
-                setUserInfoEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
-                setUserInfoEngine.InsertStudentInfo(updatedInfo.UserID, updatedInfo.AddedStudents);
-                setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
-            }
-            catch (SqlRowNotAffectedException srnae)
-            {
-                return BadRequest(srnae.Message);
-            }
+            setUserInfoEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
+            setUserInfoEngine.InsertStudentInfo(updatedInfo.UserID, updatedInfo.AddedStudents);
+            setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
             return Ok();
         }
 
@@ -91,14 +79,7 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body");
             }
 
-            try
-            {
-                setUserInfoEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
-            }
-            catch (SqlRowNotAffectedException srnae)
-            {
-                return BadRequest(srnae.Message);
-            }
+            setUserInfoEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
             return Ok();
         }
 
