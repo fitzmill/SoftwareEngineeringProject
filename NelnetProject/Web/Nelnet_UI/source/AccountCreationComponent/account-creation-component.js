@@ -39,15 +39,37 @@ ko.components.register('account-creation-component', {
                 studentLastName: ko.observable(),
                 studentGrade: ko.observable()
             });
-        }
+        };
 
         //fourth page
         vm.paymentType = ko.observable();
+        vm.calcYearlyRate = function () {
+            return 2640;
+        }
 
         //keep track of page state
         vm.currentPage = 1;
         vm.START_PAGE = 1;
         vm.END_PAGE = 4;
+
+        //create function to update progress bar
+        vm.updateProgressBar = function () {
+            for (let i = vm.START_PAGE; i < vm.END_PAGE; i++) {
+                if (i >= vm.currentPage) {
+                    $('#rectangle-' + i)[0].style.backgroundColor = "#afafaf";
+                } else {
+                    $('#rectangle-' + i)[0].style.backgroundColor = "#007bff";
+                }
+            }
+
+            for (let i = vm.START_PAGE; i <= vm.END_PAGE; i++) {
+                if (i > vm.currentPage) {
+                    $('#dot-page-' + i)[0].style.backgroundColor = "#afafaf";
+                } else {
+                    $('#dot-page-' + i)[0].style.backgroundColor = "#007bff";
+                }
+            }
+        }
 
         //create function to update buttons
         vm.updateButtons = function () {
@@ -79,6 +101,7 @@ ko.components.register('account-creation-component', {
             vm.currentPage--;
             $("#info-page-" + vm.currentPage).show();
             vm.updateButtons();
+            vm.updateProgressBar();
         }
 
         //move to the next page
@@ -87,6 +110,7 @@ ko.components.register('account-creation-component', {
             vm.currentPage++;
             $("#info-page-" + vm.currentPage).show();
             vm.updateButtons();
+            vm.updateProgressBar();
         }
 
         //finish and create account
@@ -103,6 +127,7 @@ ko.components.register('account-creation-component', {
             }
         }
         vm.updateButtons();
+        vm.updateProgressBar();
 
         return vm;
     },

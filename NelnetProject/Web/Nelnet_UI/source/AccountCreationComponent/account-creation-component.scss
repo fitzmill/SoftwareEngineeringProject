@@ -1,6 +1,26 @@
 ﻿body {
 }
 
+.dot {
+    height: 60px;
+    width: 10%;
+    background-color: #ffffff;
+    border-radius: 100%;
+    display: inline-block;
+    text-align: center;
+    font-size: 37.5px;
+    font-weight: bold;
+    color: white;
+}
+
+.rectangle {
+    height: 12px;
+    width: 18.8%;
+    background-color: #007bff;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
 .input-account-creation {
     width: -webkit-fill-available;
     text-align: left;
@@ -11,6 +31,12 @@
     border-style: solid;
     border-width: thin;
     border-color: #717171;
+}
+
+.output-account-creation {
+    width: -webkit-fill-available;
+    text-align: left;
+    padding-left: 10px;
 }
 
 .card-base {
@@ -69,6 +95,23 @@
     width: 6%;
 }
 
+.radio-button {
+    text-align: left;
+    padding-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 1.5%;
+    padding-bottom: 2%;
+    background-color: #F5F5F5;
+    border-style: solid;
+    border-width: thin;
+    border-color: #717171;
+}
+
+.radio-button-label {
+    display: inline;
+}
+
 .btn-right {
     width: 15%;
     float: right;
@@ -79,6 +122,14 @@
     width: 15%;
     float: left;
     margin-top: 10px;
+}
+
+#progress-bar {
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 60px;
+    width: 600px;
 }
 
 #btn-add-student {
