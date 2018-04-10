@@ -82,7 +82,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Route("DeleteUser")]
         public IHttpActionResult DeleteUser(User user)
         {
@@ -191,7 +191,7 @@ namespace Web.Controllers
                 !String.IsNullOrEmpty(user.Salt);
 
             //all students are valid
-            bool validStudents = validUser ? user.Students.All(s => IsValidStudentObject(s)) : false;
+            bool validStudents = validUser ?  user.Students != null && user.Students.All(s => IsValidStudentObject(s)) : false;
 
             return validUser && validStudents;
         }

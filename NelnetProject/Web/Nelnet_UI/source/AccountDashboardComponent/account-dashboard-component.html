@@ -10,7 +10,7 @@
             <button id="btn-cancel-edit-personal" class="btn btn-default btn-edit edit-personal-active" data-bind="click: stopEditing" style="display: none;">Cancel</button>
         </div>
         <div class="card-body">
-            <h5 id="personalInformationInputError" class="header-input-error" data-bind="text: personalInputErrorMessage"></h5>
+            <h5 id="edit-personal-input-error" class="header-input-error" data-bind="text: personalInputErrorMessage" style="display: none;"></h5>
 
             <h4 class="edit-personal-inactive" data-bind="text: UserFirstName() + ' ' + UserLastName()"></h4>
             <h4 class="edit-personal-inactive" data-bind="text: Email"></h4>
@@ -37,7 +37,7 @@
             <label data-bind="text: ' on ' + NextPaymentDate()"></label>
         </div>
         <div class="card-footer" style="background-color: white;">
-            <h5 id="paymentInformationInputError" class="header-input-error" data-bind="text: paymentInputErrorMessage"></h5>
+            <h5 id="edit-payment-input-error" class="header-input-error" data-bind="text: paymentInputErrorMessage" style="display: none;"></h5>
             <div id="payment-information" class="edit-payment-inactive">
                 <h5 data-bind="text: CardFirstName() + ' ' + CardLastName()"></h5>
                 <h5 data-bind="text: StreetAddress1"></h5>
@@ -80,7 +80,7 @@
             <button id="btn-save-edit-student" class="btn btn-success btn-edit edit-student-active" data-bind="click: updateStudents">Save</button>
             <button id="btn-cancel-edit-student" class="btn btn-default btn-edit edit-student-active" data-bind="click: stopEditing">Cancel</button>
         </div>
-        <h5 id="studentInformationInputError" class="header-input-error edit-student-active" data-bind="text: studentInputErrorMessage"></h5>
+        <h5 id="edit-student-input-error" class="header-input-error" data-bind="text: studentInputErrorMessage" style="display: none;"></h5>
         <div data-bind="foreach: Students">
             <div>
                 <h5 class="student-info edit-student-inactive" data-bind="text: FirstName() + ' ' + LastName()" style="margin-top: 20px"></h5>

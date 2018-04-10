@@ -5,7 +5,7 @@ const accountDashboardAPIURL = "/api/account";
 
 const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
 const regexNumCheck = /(?!.*[^\d]).{0,}/;
-const regexZipCheck = /(?!.*[^\d-]).{0,}/; //regexNumCheck but also allows for hyphen(-)
+const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/; //regexNumCheck but also allows for hyphen(-)
 const regexLettersOnlyCheck = /(?!.*[^a-zA-Z]).{0,}/;
 
 var studentsList = undefined;
@@ -125,14 +125,17 @@ ko.components.register('account-dashboard-component', {
 
         //Changes the user info in database and ui to what the user entered.
         accountDashboardVM.updateUser = function (data, event) {
-            if (accountDashboardVM.UserFirstName() === '' || !accountDashboardVM.UserFirstName().match(regexSemicolonCheck)) {
+            if (!accountDashboardVM.UserFirstName() || !accountDashboardVM.UserFirstName().match(regexSemicolonCheck)) {
                 accountDashboardVM.personalInputErrorMessage("Invalid first name");
+                $("#edit-personal-input-error").show();
                 return;
-            } else if (accountDashboardVM.UserLastName() === '' || !accountDashboardVM.UserLastName().match(regexSemicolonCheck)) {
+            } else if (!accountDashboardVM.UserLastName() || !accountDashboardVM.UserLastName().match(regexSemicolonCheck)) {
                 accountDashboardVM.personalInputErrorMessage("Invalid last name");
+                $("#edit-personal-input-error").show();
                 return;
-            } else if (accountDashboardVM.Email() === '' || !accountDashboardVM.Email().emailMeetsRequirements()) {
+            } else if (!accountDashboardVM.Email() || !accountDashboardVM.Email().emailMeetsRequirements()) {
                 accountDashboardVM.personalInputErrorMessage("Email does not meet requirements");
+                $("#edit-personal-input-error").show();
                 return;
             } 
 
@@ -165,6 +168,7 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.updateStudents = function (data, event) {
             if (!checkValidStudents(accountDashboardVM.Students())) {
                 accountDashboardVM.studentInputErrorMessage("Invalid student information");
+                $("#edit-student-input-error").show();
                 return;
             }
 
@@ -238,38 +242,49 @@ ko.components.register('account-dashboard-component', {
 
         //Changes the payment info in payment spring and ui to what the user entered.
         accountDashboardVM.updatePaymentInfo = function (data, event) {
-            if (accountDashboardVM.CardFirstName() === '' || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
+            if (!accountDashboardVM.CardFirstName() || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid first name on card");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.CardLastName() === '' || !accountDashboardVM.CardLastName().match(regexSemicolonCheck)) {
+            } else if (!accountDashboardVM.CardLastName() || !accountDashboardVM.CardLastName().match(regexSemicolonCheck)) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid last name on card");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.StreetAddress1() === '' || !accountDashboardVM.StreetAddress1().match(regexSemicolonCheck)) {
+            } else if (!accountDashboardVM.StreetAddress1() || !accountDashboardVM.StreetAddress1().match(regexSemicolonCheck)) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid first street address");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.StreetAddress2().match(regexSemicolonCheck)) {
+            } else if (!accountDashboardVM.StreetAddress2().match(regexSemicolonCheck)) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid second street address");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.City() === '' || !accountDashboardVM.City().match(regexSemicolonCheck)) {
+            } else if (!accountDashboardVM.City() || !accountDashboardVM.City().match(regexSemicolonCheck)) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid city name");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.State() === '' || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length === 2) {
+            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length === 2) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid state abbreviation");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.Zip() === '' || !accountDashboardVM.Zip().match(regexZipCheck)) {
+            } else if (!accountDashboardVM.Zip() || !accountDashboardVM.Zip().match(regexZipCheck)) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid zip code");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.CardNumber() === '' || accountDashboardVM.CardNumber().toString().length < 15 || accountDashboardVM.CardNumber().toString().length > 19) {
+            } else if (!accountDashboardVM.CardNumber() || accountDashboardVM.CardNumber().toString().length < 15 || accountDashboardVM.CardNumber().toString().length > 19) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card number");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.ExpirationYear() === '') {
+            } else if (!accountDashboardVM.ExpirationYear()) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card expiration year");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.ExpirationMonth() === '') {
+            } else if (!accountDashboardVM.ExpirationMonth()) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card expiration month");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (accountDashboardVM.CSC() === '' || !accountDashboardVM.CSC().match(regexNumCheck)) {
+            } else if (!accountDashboardVM.CSC() || !accountDashboardVM.CSC().match(regexNumCheck)) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid CSC on card");
+                $("#edit-payment-input-error").show();
                 return;
             }
             //disable cancel and save buttons while request loads
@@ -354,6 +369,9 @@ ko.components.register('account-dashboard-component', {
 
             $("." + informationSection + "-active").hide();
             $("." + informationSection + "-inactive").show();
+
+            //hide error message if it's shown
+            $("#" + informationSection + "-input-error").hide();
         };
 
         accountDashboardVM.openConfirmModal = function (data, message, confirmAction) {
@@ -453,13 +471,14 @@ function updatePaymentInfo(paymentInfo) {
 function checkValidStudents(students) {
     let result = true;
     students.forEach(function (student) {
-        if (student.FirstName() === '' || !student.FirstName().match(regexSemicolonCheck)) {
+        if (!student.FirstName() || !student.FirstName().match(regexSemicolonCheck)) {
             result = false;
-        } else if (student.LastName() === '' || !student.LastName().match(regexSemicolonCheck)) {
+        } else if (!student.LastName() || !student.LastName().match(regexSemicolonCheck)) {
             result = false;
-        } else if (student.Grade() === '') {
+        } else if (!student.Grade()) {
             result = false;
         }
     });
     return result;
 }
+

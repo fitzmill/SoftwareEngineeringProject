@@ -34,7 +34,7 @@ ko.components.register('admin-component', {
 
         vm.loadAdminInformation = function () {
             getReports().done((data) => {
-                vm.reports(data.map((report) => parseReportModel(report)))
+                vm.reports(data.map((report) => parseReportModel(report)));
             }).fail((jqXHR) => {
                 window.alert("Could not get reports, please try refreshing the page");
             });
@@ -144,7 +144,6 @@ function parseReportModel(report) {
         EndDate: report.EndDate.parseDateTimeString()
     };
 }
-
 
 //fetches all reports from the report api
 function getReports() {
