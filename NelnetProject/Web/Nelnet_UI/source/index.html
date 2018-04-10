@@ -7,7 +7,7 @@
         <login-component></login-component>
     </div>
 
-    <div data-bind="page: {id: 'admin'}">
+    <div data-bind="page: {id: 'admin', beforeShow: adminComponent.adminDashboardBeforeShow}">
         <admin-component></admin-component>
     </div>
 
@@ -15,7 +15,7 @@
         <account-creation-component></account-creation-component>
     </div>
 
-    <div data-bind="page: {id: 'account-dashboard', beforeShow: accountDashboardComponent.loadUserInformation}">
+    <div data-bind="page: {id: 'account-dashboard', beforeShow: accountDashboardComponent.accountDashboardBeforeShow}">
         <account-dashboard-component></account-dashboard-component>
     </div>
 </div>

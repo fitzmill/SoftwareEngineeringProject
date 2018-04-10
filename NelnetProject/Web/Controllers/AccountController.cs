@@ -1,6 +1,8 @@
 ﻿using Core;
 using Core.DTOs;
+using Core.Exceptions;
 using Core.Interfaces;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,38 +40,77 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("UpdatePersonalAndStudentInfo")]
-        public IHttpActionResult UpdatePersonalAndStudentInfo(User user)
+        [Route("UpdatePersonalInfo")]
+        public IHttpActionResult UpdatePersonalInfo(User user)
         {
-            if (user == null || user.FirstName == null || user.LastName == null || user.CustomerID == null || user.Email == null || user.Hashed == null || user.Salt == null)
+            if (!IsValidUserObject(user))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
-            foreach (Student s in user.Students)
+
+            try
             {
-                if (s.FirstName == null || s.LastName == null)
-                {
-                    return BadRequest("One or more required objects was not included in the request body.");
-                }
+                setUserInfoEngine.UpdatePersonalInfo(user);
             }
-            setUserInfoEngine.UpdatePersonalInfo(user);
+            catch (SqlRowNotAffectedException srnae)
+            {
+                return BadRequest(srnae.Message);
+            }
             return Ok();
         }
+
+        [HttpPost]
+        [Route("UpdateStudentInfo")]
+        public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
+        {
+            if (updatedInfo == null || updatedInfo.UpdatedStudents == null || updatedInfo.DeletedStudentIDs == null || updatedInfo.AddedStudents == null ||
+                updatedInfo.UpdatedStudents.Any(s => !IsValidStudentObject(s)) || updatedInfo.AddedStudents.Any(s => !IsValidStudentObject(s)))
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
+
+            try
+            {
+                setUserInfoEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
+                setUserInfoEngine.InsertStudentInfo(updatedInfo.UserID, updatedInfo.AddedStudents);
+                setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
+            }
+            catch (SqlRowNotAffectedException srnae)
+            {
+                return BadRequest(srnae.Message);
+            }
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("DeleteUser")]
+        public IHttpActionResult DeleteUser(User user)
+        {
+            if (!IsValidUserObject(user))
+            {
+                return BadRequest("One or more required objects was not included in the request body");
+            }
+
+            try
+            {
+                setUserInfoEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
+            }
+            catch (SqlRowNotAffectedException srnae)
+            {
+                return BadRequest(srnae.Message);
+            }
+            return Ok();
+        }
+
         [HttpPost]
         [Route("InsertPersonalInfo")]
         public IHttpActionResult InsertPersonalInfo(User user)
         {
-            if (user == null || user.FirstName == null || user.LastName == null || user.CustomerID == null || user.Email == null || user.Hashed == null || user.Salt == null)
+            if (!IsValidUserObject(user))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
-            foreach (Student s in user.Students)
-            {
-                if (s.FirstName == null || s.LastName == null)
-                {
-                    return BadRequest("One or more required objects was not included in the request body.");
-                }
-            }
+            
             setUserInfoEngine.InsertPersonalInfo(user);
             return Ok();
         }
@@ -99,7 +140,7 @@ namespace Web.Controllers
         [Route("UpdatePaymentInfo")]
         public IHttpActionResult UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
-            if (userPaymentInfo.FirstName == null || userPaymentInfo.LastName == null || userPaymentInfo.State == null || userPaymentInfo.StreetAddress1 == null || userPaymentInfo.StreetAddress2 == null || userPaymentInfo.Zip == null)
+            if (!IsValidPaymentInfoObject(userPaymentInfo))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
@@ -110,7 +151,7 @@ namespace Web.Controllers
         [Route("InsertPaymentInfo")]
         public IHttpActionResult InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
-            if (userPaymentInfo.FirstName == null || userPaymentInfo.LastName == null || userPaymentInfo.State == null || userPaymentInfo.StreetAddress1 == null || userPaymentInfo.StreetAddress2 == null || userPaymentInfo.Zip == null)
+            if (!IsValidPaymentInfoObject(userPaymentInfo))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
@@ -141,6 +182,30 @@ namespace Web.Controllers
                 return BadRequest("Could not parse userID into an integer");
             }
             return Ok(paymentEngine.CalculateNextPaymentForUser(parsedUserID, DateTime.Now));
+        }
+
+        private bool IsValidUserObject(User user)
+        {
+            bool validUser = user != null && !String.IsNullOrEmpty(user.FirstName) && !String.IsNullOrEmpty(user.LastName) &&
+                !String.IsNullOrEmpty(user.CustomerID) && !String.IsNullOrEmpty(user.Email) && !String.IsNullOrEmpty(user.Hashed) &&
+                !String.IsNullOrEmpty(user.Salt);
+
+            //all students are valid
+            bool validStudents = validUser ?  user.Students != null && user.Students.All(s => IsValidStudentObject(s)) : false;
+
+            return validUser && validStudents;
+        }
+
+        private bool IsValidStudentObject(Student student)
+        {
+            return !String.IsNullOrEmpty(student.FirstName) && !String.IsNullOrEmpty(student.LastName);
+        }
+
+        private bool IsValidPaymentInfoObject(UserPaymentInfoDTO paymentInfo)
+        {
+            return paymentInfo != null && !String.IsNullOrEmpty(paymentInfo.FirstName) && !String.IsNullOrEmpty(paymentInfo.LastName) &&
+                !String.IsNullOrEmpty(paymentInfo.State) && !String.IsNullOrEmpty(paymentInfo.StreetAddress1) &&
+                !String.IsNullOrEmpty(paymentInfo.StreetAddress2) && !String.IsNullOrEmpty(paymentInfo.Zip);
         }
     }
 }

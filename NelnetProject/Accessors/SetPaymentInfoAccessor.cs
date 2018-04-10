@@ -80,7 +80,7 @@ namespace Accessors
 
                 FormUrlEncodedContent content = new FormUrlEncodedContent(values);
 
-                Task<HttpResponseMessage> response = client.PostAsync(updateCustomerUrl, content);
+                HttpResponseMessage response = client.PostAsync(updateCustomerUrl, content).Result;
             }
         }
 
@@ -98,7 +98,7 @@ namespace Accessors
 
                 FormUrlEncodedContent content = new FormUrlEncodedContent(values);
 
-                Task<HttpResponseMessage> response = client.PostAsync(deleteCustomerUrl, content);
+                HttpResponseMessage response = client.PostAsync(deleteCustomerUrl, content).Result;
             }
         }
     }

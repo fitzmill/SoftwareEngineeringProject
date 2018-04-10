@@ -2,57 +2,32 @@
 require('../assets/background-image.scss');
 
 const accountDashboardAPIURL = "/api/account";
-const regexSemicolonCheck = /[^;]/;
-const regexNumCheck = /[^\d]/;
-const regexZipCheck = /[^\d-]/;
-const regexLettersOnlyCheck = /[^a-zA-Z]/;
-var studentsList = [{ FirstName: "Joey", LastName: "Jimson", Grade: 1 }, { FirstName: "Jimbo", LastName: "Jimson", Grade: 5 }];
-var user = { UserID: 1, FirstName: "Jim", LastName: "Jimson", Email: "jimjimson@jimmail.jim", Students: studentsList };
-var userPaymentInfo = {
-    CustomerID: undefined,
-    FirstName: undefined,
-    LastName: undefined,
-    StreetAddress1: undefined,
-    StreetAddress2: undefined,
-    City: undefined,
-    State: undefined,
-    Zip: undefined,
-    CardNumber: undefined,
-    ExpirationYear: undefined,
-    ExpirationMonth: undefined,
-    CardType: undefined,
-};
 
-exports.loadUserInformation = function () {
+const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
+const regexNumCheck = /(?!.*[^\d]).{0,}/;
+const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/; //regexNumCheck but also allows for hyphen(-)
+const regexLettersOnlyCheck = /(?!.*[^a-zA-Z]).{0,}/;
+
+var studentsList = undefined;
+var user = undefined;
+var userPaymentInfo = undefined;
+
+//add function to exports so index.js can see it
+exports.accountDashboardBeforeShow = function () {
     user = JSON.parse(window.localStorage.getItem("user"));
 
     //if not logged in
     if (!user) {
         window.location = "#";
+        return;
     }
 
     //this will only be true when redirected to this page from login, since the component will be binded
     if ($("account-dashboard-component").children().length > 0) {
-        ko.dataFor($('account-dashboard-component').get(0).firstChild).setUser();
+        vm = ko.dataFor($('account-dashboard-component').get(0).firstChild);
+        vm.loadUserInformation();
     }
-
-
-    //getPaymentSpringInfo(user.UserID).done(function (data) {
-    //    accountDashboardVM.CardFirstName = data.FirstName;
-    //    accountDashboardVM.CardLastName = data.LastName;
-    //    accountDashboardVM.StreetAddress1 = data.StreetAddress1;
-    //    accountDashboardVM.StreetAddress2 = data.StreetAddress2;
-    //    accountDashboardVM.City = data.City;
-    //    accountDashboardVM.State = data.State;
-    //    accountDashboardVM.Zip = data.Zip;
-    //    accountDashboardVM.CardNumber = data.CardNumber;
-    //    accountDashboardVM.ExpirationYear = data.ExpirationYear;
-    //    accountDashboardVM.ExpirationMonth = data.ExpirationMonth;
-    //    accountDashboardVM.CardType = data.CardType;
-    //}).fail(function (jqXHR) {
-    //    window.alert("Could not get payment information, please try refreshing the page.");
-    //});
-}
+};
 
 ko.components.register('account-dashboard-component', {
     viewModel: function (params) {
@@ -82,55 +57,157 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.NextPaymentDate = ko.observable();
         accountDashboardVM.NextPaymentCost = ko.observable();
 
+        accountDashboardVM.personalInputErrorMessage = ko.observable();
+        accountDashboardVM.paymentInputErrorMessage = ko.observable();
+        accountDashboardVM.studentInputErrorMessage = ko.observable();
+
         accountDashboardVM.confirmModalData = ko.observable();
 
-        //gets all transactions for a user.
-        getAllTransactionsForUser(user.UserID).done(function (data) {
-            accountDashboardVM.Transactions(data);
-        }).fail(function (jqXHR) {
-            window.alert("Could not get transaction information, please try refreshing the page.");
-        });
+        accountDashboardVM.loadUserInformation = function () {
+            //Get all needed information from database
+            getPaymentSpringInfo(user.UserID).done(function (data) {
+                userPaymentInfo = data;
+                //updates payment display info
+                accountDashboardVM.setUIPaymentSpringInfo();
+            }).fail(function (jqXHR) {
+                window.alert("Could not get payment information, please try refreshing the page.");
+            });
 
-        //Sets ko components from saved user.accountDashboardVM.setUser = function () {
+            //gets all transactions for a user.
+            getAllTransactionsForUser(user.UserID).done(function (data) {
+                //sort so most recent is at top
+                data.sort((a, b) => b.TransactionID - a.TransactionID);
+
+                containsUnresolvedTransaction = data.find((transaction) => transaction.ProcessState === "RETRYING" || transaction.ProcessState === "FAILED");
+                if (containsUnresolvedTransaction) {
+                    $("#retryingTransactionError").show();
+                }
+
+                //make it display friendly
+                accountDashboardVM.Transactions(data.map(function (transaction) {
+                    return {
+                        DateDue: transaction.DateDue.parseDateTimeString(),
+                        AmountCharged: Number(transaction.AmountCharged).toLocaleString('en'),
+                        ProcessState: transaction.ProcessState,
+                        ReasonFailed: transaction.ReasonFailed
+                    };
+                }));
+            }).fail(function (jqXHR) {
+                window.alert("Could not get transaction information, please try refreshing the page.");
+            });
+
+            //gets the next payment details for the user
+            getNextTransactionForUser(user.UserID).done(function (data) {
+                accountDashboardVM.NextPaymentDate(data.DateDue.parseDateTimeString());
+                accountDashboardVM.NextPaymentCost(Number(data.AmountCharged).toLocaleString('en'));
+            }).fail(function (jqXHR) {
+                window.alert("Could not get your next transaction information, please try refreshing the page.");
+            });
+
+            accountDashboardVM.setUser();
+        };
+
+        //Sets ko components from saved user
+        accountDashboardVM.setUser = function () {
             accountDashboardVM.UserFirstName(user.FirstName);
             accountDashboardVM.UserLastName(user.LastName);
             accountDashboardVM.Email(user.Email);
-            accountDashboardVM.PaymentPlan(JSON.stringify(user.Plan));
+            accountDashboardVM.PaymentPlan(user.Plan);
             accountDashboardVM.Students(user.Students.map(student => {
                 return {
                     StudentID: student.StudentID,
                     FirstName: ko.observable(student.FirstName),
                     LastName: ko.observable(student.LastName),
                     Grade: ko.observable(student.Grade)
-                }
+                };
             }));
         };
 
         //Changes the user info in database and ui to what the user entered.
-        accountDashboardVM.updateUser = function () {
+        accountDashboardVM.updateUser = function (data, event) {
             if (!accountDashboardVM.UserFirstName() || !accountDashboardVM.UserFirstName().match(regexSemicolonCheck)) {
+                accountDashboardVM.personalInputErrorMessage("Invalid first name");
+                $("#edit-personal-input-error").show();
                 return;
             } else if (!accountDashboardVM.UserLastName() || !accountDashboardVM.UserLastName().match(regexSemicolonCheck)) {
+                accountDashboardVM.personalInputErrorMessage("Invalid last name");
+                $("#edit-personal-input-error").show();
                 return;
             } else if (!accountDashboardVM.Email() || !accountDashboardVM.Email().emailMeetsRequirements()) {
+                accountDashboardVM.personalInputErrorMessage("Email does not meet requirements");
+                $("#edit-personal-input-error").show();
                 return;
-            } else if (!checkValidStudents(accountDashboardVM.Students())) {
-                return;
-            }
-            user.FirstName = accountDashboardVM.UserFirstName();
-            user.LastName = accountDashboardVM.UserLastName();
-            user.Email = accountDashboardVM.Email();
-            user.Students = [];
-            accountDashboardVM.Students().forEach(function (student) {
-                user.Students.push(student);
-            });
+            } 
 
-            updatePersonalAndStudentInfo().done({
+            //disable save and cancel buttons
+            $("#btn-save-edit-personal").attr("disabled", "disabled");
+            $("#btn-cancel-edit-personal").attr("disabled", "disabled");
+            
 
+            let changedUserInfo = user;
+            changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
+            changedUserInfo.LastName = accountDashboardVM.UserLastName();
+            changedUserInfo.Email = accountDashboardVM.Email();
+
+            updatePersonalInfo(changedUserInfo).done(function () {
+                //update user in local storage in the case of page reload
+                localStorage.setItem("user", JSON.stringify(changedUserInfo));
+                user = changedUserInfo;
+                accountDashboardVM.stopEditing(data, event);
             }).fail(function (jqXHR) {
-                accountDashboardVM.setUser();
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not save information: ".concat(errorMessage));
+            }).always(function () {
+                //re-enable buttons
+                $("#btn-save-edit-personal").removeAttr("disabled");
+                $("#btn-cancel-edit-personal").removeAttr("disabled");
+            });
+        };
+
+        //Changes student info in database and ui to what user entered
+        accountDashboardVM.updateStudents = function (data, event) {
+            if (!checkValidStudents(accountDashboardVM.Students())) {
+                accountDashboardVM.studentInputErrorMessage("Invalid student information");
+                $("#edit-student-input-error").show();
+                return;
+            }
+
+            //disable save and edit buttons
+            $("#btn-save-edit-student").attr("disabled", "disabled");
+            $("#btn-cancel-edit-student").attr("disabled", "disabled");
+
+            //to return to normal data instead of observables
+            let inputStudents = accountDashboardVM.Students().map(student => {
+                return {
+                    StudentID: student.StudentID,
+                    FirstName: student.FirstName(),
+                    LastName: student.LastName(),
+                    Grade: student.Grade()
+                };
+            });
+            
+            //new students will have an undefined StudentID
+            let newStudents = inputStudents.filter((s) => !s.StudentID);
+            //deleted students will be in the user object but not in inputStudents
+            let originalStudentIDs = user.Students.map((s) => s.StudentID);
+            let inputStudentIDs = inputStudents.map((s) => s.StudentID);
+
+            let deletedStudentIDs = originalStudentIDs.filter((id) => !inputStudentIDs.includes(id));
+            //filter out new students
+            let updatedStudents = inputStudents.filter((s) => s.StudentID);
+
+            updateStudentInfo(user.UserID, updatedStudents, deletedStudentIDs, newStudents).done(function () {
+                //update user in local storage in the case of page reload
+                user.Students = inputStudents;
+                localStorage.setItem("user", JSON.stringify(user));
+                accountDashboardVM.stopEditing(data, event);
+            }).fail(function (jqXHR) {
+                let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                window.alert("Could not save information: ".concat(errorMessage));
+            }).always(function () {
+                //re-enable buttons
+                $("#btn-save-edit-student").removeAttr("disabled");
+                $("#btn-cancel-edit-student").removeAttr("disabled");
             });
         };
 
@@ -145,39 +222,75 @@ ko.components.register('account-dashboard-component', {
             //by default the new student will show with labels and not text boxes
             $(".edit-student-active").show();
             $(".edit-student-inactive").hide();
-        }
+        };
 
         accountDashboardVM.deleteStudent = function (student) {
-            accountDashboardVM.Students(accountDashboardVM.Students().filter((s) => s.StudentID !== student.StudentID));
-        }
+            if (accountDashboardVM.Students().length === 1) {
+                accountDashboardVM.openConfirmModal(user, "Deleting your last student will result in deleting your account. Are you absolutely sure?", function (data) {
+                    deleteUser(data).done(function () {
+                        localStorage.removeItem("user");
+                        window.location = "#";
+                    }).fail(function (jqXHR) {
+                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                        window.alert("There was an error deleting your account: ".conat(errorMessage));
+                    });
+                });
+            } else {
+                accountDashboardVM.Students(accountDashboardVM.Students().filter((s) => s.StudentID !== student.StudentID));
+            }
+        };
 
         //Changes the payment info in payment spring and ui to what the user entered.
-        accountDashboardVM.updatePaymentInfo = function () {
+        accountDashboardVM.updatePaymentInfo = function (data, event) {
             if (!accountDashboardVM.CardFirstName() || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid first name on card");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.CardLastName() || !accountDashboardVM.CardUserLastName().match(regexSemicolonCheck)) {
+            } else if (!accountDashboardVM.CardLastName() || !accountDashboardVM.CardLastName().match(regexSemicolonCheck)) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid last name on card");
+                $("#edit-payment-input-error").show();
                 return;
             } else if (!accountDashboardVM.StreetAddress1() || !accountDashboardVM.StreetAddress1().match(regexSemicolonCheck)) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid first street address");
+                $("#edit-payment-input-error").show();
                 return;
             } else if (!accountDashboardVM.StreetAddress2().match(regexSemicolonCheck)) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid second street address");
+                $("#edit-payment-input-error").show();
                 return;
             } else if (!accountDashboardVM.City() || !accountDashboardVM.City().match(regexSemicolonCheck)) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid city name");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length != 2) {
+            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length === 2) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid state abbreviation");
+                $("#edit-payment-input-error").show();
                 return;
             } else if (!accountDashboardVM.Zip() || !accountDashboardVM.Zip().match(regexZipCheck)) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid zip code");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.CardNumber() || !accountDashboardVM.CardNumber().match(regexNumCheck) || accountDashboardVM.CardNumber().length < 15) {
+            } else if (!accountDashboardVM.CardNumber() || accountDashboardVM.CardNumber().toString().length < 15 || accountDashboardVM.CardNumber().toString().length > 19) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid card number");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.ExpirationYear() || !accountDashboardVM.ExpirationYear().match(regexNumCheck) || accountDashboardVM.ExpirationYear().length != 2) {
+            } else if (!accountDashboardVM.ExpirationYear()) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid card expiration year");
+                $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.ExpirationMonth() || !accountDashboardVM.ExpirationMonth().match(regexNumCheck) || accountDashboardVM.ExpirationMonth().length != 2) {
-                return;
-            } else if (!accountDashboardVM.CardType() || !accountDashboardVM.CardType().match(regexLettersOnlyCheck)) {
+            } else if (!accountDashboardVM.ExpirationMonth()) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid card expiration month");
+                $("#edit-payment-input-error").show();
                 return;
             } else if (!accountDashboardVM.CSC() || !accountDashboardVM.CSC().match(regexNumCheck)) {
+                accountDashboardVM.paymentInputErrorMessage("Invalid CSC on card");
+                $("#edit-payment-input-error").show();
                 return;
             }
+            //disable cancel and save buttons while request loads
+            $("btn-save-edit-payment").attr('disabled', 'disabled');
+            $("btn-cancel-edit-payment").attr('disabled', 'disabled');
+
             var changedPaymentInfo = {
                 CustomerID: userPaymentInfo.CustomerID,
                 FirstName: accountDashboardVM.CardFirstName(),
@@ -194,28 +307,26 @@ ko.components.register('account-dashboard-component', {
                 CSC: accountDashboardVM.CSC()
             };
 
-            updatePaymentInfo(changedPaymentInfo).done( function () {
-                userPaymentInfo.CustomerID = changedPaymentInfo.CustomerID;
-                userPaymentInfo.FirstName = changedPaymentInfo.FirstName;
-                userPaymentInfo.LastName = changedPaymentInfo.LastName;
-                userPaymentInfo.StreetAddress1 = changedPaymentInfo.StreetAddress1;
-                userPaymentInfo.StreetAddress2 = changedPaymentInfo.StreetAddress2;
-                userPaymentInfo.City = changedPaymentInfo.City;
-                userPaymentInfo.State = changedPaymentInfo.State;
-                userPaymentInfo.Zip = changedPaymentInfo.Zip;
-                userPaymentInfo.CardNumber = changedPaymentInfo.CardNumber.substr(changedPaymentInfo.CardNumber.length - 4);
-                userPaymentInfo.ExpirationYear = changedPaymentInfo.ExpirationYear;
-                userPaymentInfo.ExpirationMonth = changedPaymentInfo.ExpirationMonth;
-                userPaymentInfo.CardType = changedPaymentInfo.CardType;
+            updatePaymentInfo(changedPaymentInfo).done(function () {
+                userPaymentInfo = changedPaymentInfo;
+                //reset it to last few digits
+                userPaymentInfo.CardNumber = changedPaymentInfo.CardNumber.substring(12);
+
                 changedPaymentInfo = undefined;
-                accountDashboardVM.CSC(undefined);
-                accountDashboardVM.CardNumber(undefined);
+                accountDashboardVM.CSC("");
+
+                //UI will be updated here
+                accountDashboardVM.stopEditing(data, event);
             }).fail(function (jqXHR) {
                 changedPaymentInfo = undefined;
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not save information: ".concat(errorMessage));
-                });
-        } 
+            }).always(function () {
+                //re-enable buttons
+                $("btn-save-edit-payment").removeAttr('disabled');
+                $("btn-cancel-edit-payment").removeAttr('disabled');
+            });
+        };
 
         //Sets the ko variables to the saved payment spring information
         accountDashboardVM.setUIPaymentSpringInfo = function () {
@@ -230,15 +341,7 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.ExpirationYear(userPaymentInfo.ExpirationYear);
             accountDashboardVM.ExpirationMonth(userPaymentInfo.ExpirationMonth);
             accountDashboardVM.CardType(userPaymentInfo.CardType);
-        }
-
-        //gets the next payment details for the user
-        getNextTransactionForUser(user.UserID).done(function (data) {
-            accountDashboardVM.NextPaymentDate(JSON.stringify(data.DateDue).parseDateTimeString());
-            accountDashboardVM.NextPaymentCost(data.AmountCharged);
-        }).fail(function (jqXHR) {
-            window.alert("Could not get your next transaction information, please try refreshing the page.");
-        });
+        };
 
         //hides label objects and edit buttons to show save and cancel buttons with text boxes
         accountDashboardVM.startEditing = function (data, event) {
@@ -248,36 +351,49 @@ ko.components.register('account-dashboard-component', {
 
             $("." + informationSection + "-active").show();
             $("." + informationSection + "-inactive").hide();
-        }
+        };
 
         //hides save and cancel buttons along with text boxes and shows labels and edit button
         accountDashboardVM.stopEditing = function (data, event) {
             let senderElementID = event.target.id;
 
-            let informationSection = senderElementID.replace("btn-cancel-", "");
-            accountDashboardVM.setUser()
+            let informationSection = "";
+            if (senderElementID.includes("cancel")) {
+                informationSection = senderElementID.replace("btn-cancel-", "");
+            } else if (senderElementID.includes("save")) {
+                informationSection = senderElementID.replace("btn-save-", "");
+            }
+            
+            accountDashboardVM.setUser();
             accountDashboardVM.setUIPaymentSpringInfo();
 
             $("." + informationSection + "-active").hide();
             $("." + informationSection + "-inactive").show();
-        }
+
+            //hide error message if it's shown
+            $("#" + informationSection + "-input-error").hide();
+        };
 
         accountDashboardVM.openConfirmModal = function (data, message, confirmAction) {
+            $("#confirmModal").finish();
             accountDashboardVM.confirmModalData({
                 data: data,
                 warningMessage: message,
                 confirmAction: function (params) {
+                    //hiding a modal is instantaneous, while showing it has a fade
+                    $("#confirmModal").removeClass("fade");
                     $("#confirmModal").modal("hide");
+                    $("#confirmModal").addClass("fade");
                     confirmAction(params);
                 }
             });
 
             $("#confirmModal").modal("show");
-        }
+        };
 
         //make sure user has logged in properly
         if (user) {
-            accountDashboardVM.setUser();
+            accountDashboardVM.loadUserInformation();
         }
 
         return accountDashboardVM;
@@ -311,8 +427,33 @@ function getPaymentSpringInfo(userID) {
 }
 
 //POSTs any changes to the user
-function updatePersonalAndStudentInfo() {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePersonalAndStudentInfo", {
+function updatePersonalInfo(userInfo) {
+    return $.ajax(accountDashboardAPIURL + "/UpdatePersonalInfo", {
+        method: "POST",
+        data: userInfo
+    });
+}
+
+//POSTs any updates to a user's list of students
+function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStudents) {
+    //JSON is used here because empty arrays get cast to undefined if not using JSON
+    //undefined is obviously very different from an empty array, so JSON is used to avoid that
+    let jsonData = JSON.stringify({
+        UserID: userID,
+        UpdatedStudents: updatedStudents,
+        DeletedStudentIDs: deletedStudentIDs,
+        AddedStudents: newStudents
+    });
+    return $.ajax(accountDashboardAPIURL + "/UpdateStudentInfo", {
+        method: "POST",
+        contentType: "application/json; charset=utf-8",
+        data: jsonData
+    });
+}
+
+//POSTs a user to be deleted
+function deleteUser(user) {
+    return $.ajax(accountDashboardAPIURL + "/DeleteUser", {
         method: "POST",
         data: user
     });
@@ -328,14 +469,16 @@ function updatePaymentInfo(paymentInfo) {
 
 //Checks that student entries are valid
 function checkValidStudents(students) {
+    let result = true;
     students.forEach(function (student) {
-        if (!student.FirstName || !student.LastName.match(regexSemicolonCheck)) {
-            return false;
-        } else if (!student.LastName || !student.LastName.match(regexSemicolonCheck)) {
-            return false;
-        } else if (!student.Grade || student.Grade.match(regexNumCheck)) {
-            return false;
+        if (!student.FirstName() || !student.FirstName().match(regexSemicolonCheck)) {
+            result = false;
+        } else if (!student.LastName() || !student.LastName().match(regexSemicolonCheck)) {
+            result = false;
+        } else if (!student.Grade()) {
+            result = false;
         }
     });
-    return true;
+    return result;
 }
+

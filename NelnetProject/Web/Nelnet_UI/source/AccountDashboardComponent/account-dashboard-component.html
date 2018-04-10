@@ -5,21 +5,29 @@
     <div class="card card-account-information-section">
         <div class="card-header">
             <h3 class="header-information-section">Personal Information</h3>
-            <button id="btn-edit-personal" class="btn btn-primary btn-edit">Edit</button>
-            <button id="btn-save-personal" class="btn btn-success btn-edit" style="display: none;">Save</button>
-            <button id="btn-cancel-personal" class="btn btn-default btn-edit" style="display: none;">Cancel</button>
+            <button id="btn-edit-personal" class="btn btn-primary btn-edit edit-personal-inactive" data-bind="click: startEditing">Edit</button>
+            <button id="btn-save-edit-personal" class="btn btn-success btn-edit edit-personal-active" data-bind="click: updateUser" style="display: none;">Save</button>
+            <button id="btn-cancel-edit-personal" class="btn btn-default btn-edit edit-personal-active" data-bind="click: stopEditing" style="display: none;">Cancel</button>
         </div>
         <div class="card-body">
-            <h4 data-bind="text: UserFirstName() + ' ' + UserLastName()"></h4>
-            <h4 data-bind="text: Email"></h4>
+            <h5 id="edit-personal-input-error" class="header-input-error" data-bind="text: personalInputErrorMessage" style="display: none;"></h5>
+
+            <h4 class="edit-personal-inactive" data-bind="text: UserFirstName() + ' ' + UserLastName()"></h4>
+            <h4 class="edit-personal-inactive" data-bind="text: Email"></h4>
+
+            <div class="edit-personal-active" style="margin-bottom: 20px;">
+                <input type="text" placeholder="First Name" data-bind="value: UserFirstName" />
+                <input type="text" placeholder="Last Name" data-bind="value: UserLastName" />
+            </div>
+            <input class="edit-personal-active" type="email" placeholder="Email" data-bind="value: Email" />
         </div>
     </div>
-
+    <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
     <div class="card card-account-information-section">
         <div class="card-header">
             <h3 class="header-information-section">Payment Information</h3>
             <button id="btn-edit-payment" class="btn btn-primary btn-edit edit-payment-inactive" data-bind="click: startEditing">Edit</button>
-            <button id="btn-save-payment" class="btn btn-success btn-edit edit-payment-active">Save</button>
+            <button id="btn-save-edit-payment" class="btn btn-success btn-edit edit-payment-active" data-bind="click: updatePaymentInfo">Save</button>
             <button id="btn-cancel-edit-payment" class="btn btn-default btn-edit edit-payment-active" data-bind="click: stopEditing">Cancel</button>
         </div>
         <div class="card-body">
@@ -29,7 +37,7 @@
             <label data-bind="text: ' on ' + NextPaymentDate()"></label>
         </div>
         <div class="card-footer" style="background-color: white;">
-
+            <h5 id="edit-payment-input-error" class="header-input-error" data-bind="text: paymentInputErrorMessage" style="display: none;"></h5>
             <div id="payment-information" class="edit-payment-inactive">
                 <h5 data-bind="text: CardFirstName() + ' ' + CardLastName()"></h5>
                 <h5 data-bind="text: StreetAddress1"></h5>
@@ -39,23 +47,28 @@
                 <h5 data-bind="text: 'XXXX XXXX XXXX ' + CardNumber()"></h5>
                 <label data-bind="text: 'Exp: ' + ExpirationMonth() + '/' + ExpirationYear()"></label>
             </div>
-            
+
 
             <div id="edit-payment-input" class="edit-payment-active">
                 <div style="display: block;">
-                    <input type="text" placeholder="First Name" />
-                    <input type="text" placeholder="Last Name" />
+                    <input type="text" placeholder="First Name" data-bind="value: CardFirstName" />
+                    <input type="text" placeholder="Last Name" data-bind="value: CardLastName" />
                 </div>
 
-                <input type="text" placeholder="Street Address 1" />
-                <input type="text" placeholder="Street Address 2" />
-                <input type="text" placeholder="City" />
-                <input type="text" placeholder="State (e.g. 'KS')" maxlength="2" />
-                <input type="number" placeholder="Zip Code" style="margin-bottom: 30px;" />
+                <input type="text" placeholder="Street Address 1" data-bind="value: StreetAddress1" style="display: block;" />
+                <input type="text" placeholder="Street Address 2" data-bind="value: StreetAddress2" style="display: block;" />
+                <div style="display: block; margin-bottom: 30px;">
+                    <input type="text" placeholder="City" data-bind="value: City" />
+                    <input type="text" placeholder="State (e.g. 'KS')" maxlength="2" data-bind="value: State" />
+                    <input type="text" placeholder="Zip Code" data-bind="value: Zip" />
+                </div>
 
-                <input type="number" placeholder="Credit Card Number" maxlength="19" />
-                <input type="number" placeholder="Exp. Month" maxlength="2" />
-                <input type="number" placeholder="Exp. Year" maxlength="2" />
+                <div style="display: block;">
+                    <input type="number" placeholder="Credit Card Number" min="0" data-bind="value: CardNumber" />
+                    <input type="number" placeholder="CSC" min="0" data-bind="value: CSC" />
+                </div>
+                <input type="number" placeholder="MM" min="1" max="12" data-bind="value: ExpirationMonth" />
+                <input type="number" placeholder="YYYY" min="0" max="9999" data-bind="value: ExpirationYear" />
             </div>
         </div>
     </div>
@@ -64,9 +77,10 @@
         <div class="card-header">
             <h3 class="header-information-section">Student Information</h3>
             <button id="btn-edit-student" class="btn btn-primary btn-edit edit-student-inactive" data-bind="click: startEditing">Edit</button>
-            <button id="btn-save-student" class="btn btn-success btn-edit edit-student-active">Save</button>
+            <button id="btn-save-edit-student" class="btn btn-success btn-edit edit-student-active" data-bind="click: updateStudents">Save</button>
             <button id="btn-cancel-edit-student" class="btn btn-default btn-edit edit-student-active" data-bind="click: stopEditing">Cancel</button>
         </div>
+        <h5 id="edit-student-input-error" class="header-input-error" data-bind="text: studentInputErrorMessage" style="display: none;"></h5>
         <div data-bind="foreach: Students">
             <div>
                 <h5 class="student-info edit-student-inactive" data-bind="text: FirstName() + ' ' + LastName()" style="margin-top: 20px"></h5>
@@ -77,11 +91,9 @@
                     <input type="text" placeholder="Student First Name" data-bind="value: FirstName" />
                     <input type="text" placeholder="Student Last Name" data-bind="value: LastName" />
                 </div>
-                <input class="student-info edit-student-active" type="text" placeholder="Student Grade" data-bind="value: Grade" style="margin-top: 3px; margin-bottom: 10px;" />
+                <input class="student-info edit-student-active" type="number" placeholder="Student Grade" min="0" max="12" data-bind="value: Grade" style="margin-top: 3px; margin-bottom: 10px;" />
 
             </div>
-            
-
         </div>
 
         <button class="btn btn-primary edit-student-active" data-bind="click: addStudent">Add Another Student</button>
@@ -101,12 +113,20 @@
                         <th>Reason Failed</th>
                     </tr>
                 </thead>
+                <tbody data-bind="foreach: Transactions">
+                    <tr>
+                        <td data-bind="text: DateDue"></td>
+                        <td data-bind="text: AmountCharged"></td>
+                        <td data-bind="text: ProcessState"></td>
+                        <td data-bind="text: ReasonFailed"></td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
 
     <!--ConfirmModal-->
-    <div id="confirmModal" class="modal fade" role="dialog" aria-hidden="true" data-bind="with: confirmModalData">
+    <div id="confirmModal" class="modal fade" role="dialog" aria-hidden="true" data-backdrop="static" data-bind="with: confirmModalData">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
