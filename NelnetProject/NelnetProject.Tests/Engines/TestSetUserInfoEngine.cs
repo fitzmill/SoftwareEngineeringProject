@@ -114,6 +114,14 @@ namespace NelnetProject.Tests.Engines
         [TestMethod]
         public void TestUpdatePaymentBillingInfo()
         {
+            setPaymentInfoAccessor.mockPaymentSpring.Add(new UserPaymentInfoDTO()
+            {
+                CustomerID = "fedder",
+                CardNumber = 4111111111111111,
+                ExpirationMonth = 12,
+                ExpirationYear = 18
+            });
+
             PaymentAddressDTO paymentAddressInfo = new PaymentAddressDTO
             {
                 CustomerID = "fedder",
@@ -131,11 +139,24 @@ namespace NelnetProject.Tests.Engines
 
             Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
             Assert.AreEqual(paymentAddressInfo.FirstName, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().FirstName);
+            setPaymentInfoAccessor.mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
         }
 
         [TestMethod]
         public void TestUpdatePaymentCardInfo()
         {
+            setPaymentInfoAccessor.mockPaymentSpring.Add(new UserPaymentInfoDTO()
+            {
+                CustomerID = "fedder",
+                FirstName = "Bobby",
+                LastName = "Bobton",
+                StreetAddress1 = "123 NE Eastern Ln",
+                StreetAddress2 = "",
+                City = "Chicago",
+                State = "IL",
+                Zip = "60007"
+            });
+
             PaymentCardDTO paymentCardInfo = new PaymentCardDTO
             {
                 CustomerID = "fedder",
@@ -149,6 +170,7 @@ namespace NelnetProject.Tests.Engines
 
             Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
             Assert.AreEqual(paymentCardInfo.CardNumber, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().CardNumber);
+            setPaymentInfoAccessor.mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
         }
 
         [TestMethod]
