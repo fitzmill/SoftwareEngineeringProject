@@ -23,12 +23,17 @@ namespace Engines
             return setPaymentInfoAccessor.CreateCustomer(userPaymentInfo);
         }
 
-        //make a call to the SetPaymentInfoAccessor to update the payment info associated with the customerID
-        public void UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo)
+        //make a call to the SetPaymentInfoAccessor to update the payment name and address info associated with the customerID
+        public void UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressInfo)
         {
-            setPaymentInfoAccessor.UpdateCustomer(userPaymentInfo);
+            setPaymentInfoAccessor.UpdateCustomerBillingInformation(paymentAddressInfo);
         }
 
+        //make a call to the SetPaymentInfoAccessor to update the payment card info associated with the customerID
+        public void UpdatePaymentCardInfo(PaymentCardDTO paymentCardInfo)
+        {
+            setPaymentInfoAccessor.UpdateCustomerCardInformation(paymentCardInfo);
+        }
         //make a call to the SetPaymentInfoAccessor to delete the payment info associated with the customerID
         public void DeletePaymentInfo(string customerID)
         {
