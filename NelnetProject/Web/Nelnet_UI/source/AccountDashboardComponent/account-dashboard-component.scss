@@ -29,7 +29,7 @@
 
 .student-info {
     display: block;
-    margin-left: 20px;
+    margin-left: 60px;
 }
 
 .btn-logout {
@@ -49,5 +49,9 @@
 }
 
 .edit-student-active {
+    display: none;
+}
+
+.edit-payment-active {
     display: none;
 }

@@ -120,6 +120,20 @@ namespace Engines
 
             return newTransactions;
         }
-   
+
+        public Transaction CalculateNextPaymentForUser(int userID, DateTime today)
+        {
+            User user = getUserInfoAccessor.GetUserInfoByID(userID);
+            double nextAmount = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
+            DateTime dueDate = TuitionUtil.NextPaymentDueDate(user.Plan, today);
+            return new Transaction()
+            {
+                UserID = userID,
+                AmountCharged = nextAmount,
+                DateDue = dueDate,
+                ProcessState = ProcessState.NOT_YET_CHARGED
+            };
+        }
+
     }
 }

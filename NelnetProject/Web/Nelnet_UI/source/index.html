@@ -15,7 +15,7 @@
         <account-creation-component></account-creation-component>
     </div>
 
-    <div data-bind="page: {id: 'account-dashboard'}">
+    <div data-bind="page: {id: 'account-dashboard', beforeShow: accountDashboardComponent.loadUserInformation}">
         <account-dashboard-component></account-dashboard-component>
     </div>
 </div>
