@@ -23,6 +23,37 @@ var userPaymentInfo = {
     CardType: undefined,
 };
 
+exports.loadUserInformation = function () {
+    user = JSON.parse(window.localStorage.getItem("user"));
+
+    //if not logged in
+    if (!user) {
+        window.location = "#";
+    }
+
+    //this will only be true when redirected to this page from login, since the component will be binded
+    if ($("account-dashboard-component").children().length > 0) {
+        ko.dataFor($('account-dashboard-component').get(0).firstChild).setUser();
+    }
+
+
+    //getPaymentSpringInfo(user.UserID).done(function (data) {
+    //    accountDashboardVM.CardFirstName = data.FirstName;
+    //    accountDashboardVM.CardLastName = data.LastName;
+    //    accountDashboardVM.StreetAddress1 = data.StreetAddress1;
+    //    accountDashboardVM.StreetAddress2 = data.StreetAddress2;
+    //    accountDashboardVM.City = data.City;
+    //    accountDashboardVM.State = data.State;
+    //    accountDashboardVM.Zip = data.Zip;
+    //    accountDashboardVM.CardNumber = data.CardNumber;
+    //    accountDashboardVM.ExpirationYear = data.ExpirationYear;
+    //    accountDashboardVM.ExpirationMonth = data.ExpirationMonth;
+    //    accountDashboardVM.CardType = data.CardType;
+    //}).fail(function (jqXHR) {
+    //    window.alert("Could not get payment information, please try refreshing the page.");
+    //});
+}
+
 ko.components.register('account-dashboard-component', {
     viewModel: function (params) {
         var accountDashboardVM = this;
@@ -51,6 +82,8 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.NextPaymentDate = ko.observable();
         accountDashboardVM.NextPaymentCost = ko.observable();
 
+        accountDashboardVM.confirmModalData = ko.observable();
+
         //gets all transactions for a user.
         getAllTransactionsForUser(user.UserID).done(function (data) {
             accountDashboardVM.Transactions(data);
@@ -58,14 +91,14 @@ ko.components.register('account-dashboard-component', {
             window.alert("Could not get transaction information, please try refreshing the page.");
         });
 
-        //Sets ko components from saved user.
-        accountDashboardVM.setUser = function () {
+        //Sets ko components from saved user.accountDashboardVM.setUser = function () {
             accountDashboardVM.UserFirstName(user.FirstName);
             accountDashboardVM.UserLastName(user.LastName);
             accountDashboardVM.Email(user.Email);
             accountDashboardVM.PaymentPlan(JSON.stringify(user.Plan));
             accountDashboardVM.Students(user.Students.map(student => {
                 return {
+                    StudentID: student.StudentID,
                     FirstName: ko.observable(student.FirstName),
                     LastName: ko.observable(student.LastName),
                     Grade: ko.observable(student.Grade)
@@ -100,6 +133,23 @@ ko.components.register('account-dashboard-component', {
                 window.alert("Could not save information: ".concat(errorMessage));
             });
         };
+
+
+        accountDashboardVM.addStudent = function () {
+            accountDashboardVM.Students.push({
+                StudentID: undefined,
+                FirstName: ko.observable(),
+                LastName: ko.observable(),
+                Grade: ko.observable()
+            });
+            //by default the new student will show with labels and not text boxes
+            $(".edit-student-active").show();
+            $(".edit-student-inactive").hide();
+        }
+
+        accountDashboardVM.deleteStudent = function (student) {
+            accountDashboardVM.Students(accountDashboardVM.Students().filter((s) => s.StudentID !== student.StudentID));
+        }
 
         //Changes the payment info in payment spring and ui to what the user entered.
         accountDashboardVM.updatePaymentInfo = function () {
@@ -165,7 +215,7 @@ ko.components.register('account-dashboard-component', {
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not save information: ".concat(errorMessage));
                 });
-        }
+        } 
 
         //Sets the ko variables to the saved payment spring information
         accountDashboardVM.setUIPaymentSpringInfo = function () {
@@ -182,23 +232,12 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.CardType(userPaymentInfo.CardType);
         }
 
-        //Gets the payment spring information from the user.
-        getPaymentSpringInfo(user.UserID).done(function (data) {
-            userPaymentInfo.CustomerID = data.CustomerID;
-            userPaymentInfo.FirstName = data.FirstName;
-            userPaymentInfo.LastName = data.LastName;
-            userPaymentInfo.StreetAddress1 = data.StreetAddress1;
-            userPaymentInfo.StreetAddress2 = data.StreetAddress2;
-            userPaymentInfo.City = data.City;
-            userPaymentInfo.State = data.State;
-            userPaymentInfo.Zip = data.Zip;
-            userPaymentInfo.CardNumber = data.CardNumber;
-            userPaymentInfo.ExpirationYear = data.ExpirationYear;
-            userPaymentInfo.ExpirationMonth = data.ExpirationMonth;
-            userPaymentInfo.CardType = data.CardType;
-            accountDashboardVM.setUIPaymentSpringInfo();
+        //gets the next payment details for the user
+        getNextTransactionForUser(user.UserID).done(function (data) {
+            accountDashboardVM.NextPaymentDate(JSON.stringify(data.DateDue).parseDateTimeString());
+            accountDashboardVM.NextPaymentCost(data.AmountCharged);
         }).fail(function (jqXHR) {
-            window.alert("Could not get payment information, please try refreshing the page.");
+            window.alert("Could not get your next transaction information, please try refreshing the page.");
         });
 
         //hides label objects and edit buttons to show save and cancel buttons with text boxes
@@ -223,15 +262,23 @@ ko.components.register('account-dashboard-component', {
             $("." + informationSection + "-inactive").show();
         }
 
-        //gets the next payment details for the user
-        getNextTransactionForUser(user.UserID).done(function (data) {
-            accountDashboardVM.NextPaymentDate(JSON.stringify(data.DateDue).parseDateTimeString());
-            accountDashboardVM.NextPaymentCost(data.AmountCharged);
-        }).fail(function (jqXHR) {
-            window.alert("Could not get your next transaction information, please try refreshing the page.");
-        });
+        accountDashboardVM.openConfirmModal = function (data, message, confirmAction) {
+            accountDashboardVM.confirmModalData({
+                data: data,
+                warningMessage: message,
+                confirmAction: function (params) {
+                    $("#confirmModal").modal("hide");
+                    confirmAction(params);
+                }
+            });
 
-        accountDashboardVM.setUser();
+            $("#confirmModal").modal("show");
+        }
+
+        //make sure user has logged in properly
+        if (user) {
+            accountDashboardVM.setUser();
+        }
 
         return accountDashboardVM;
     },
