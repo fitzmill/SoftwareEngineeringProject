@@ -115,7 +115,7 @@ namespace Accessors
 
                 FormUrlEncodedContent content = new FormUrlEncodedContent(values);
 
-                Task<HttpResponseMessage> response = client.PostAsync(deleteCustomerUrl, content);
+                HttpResponseMessage response = client.PostAsync(deleteCustomerUrl, content).Result;
             }
         }
     }

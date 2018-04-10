@@ -60,7 +60,6 @@ namespace NelnetProject.Tests.Engines
             new UserPaymentInfoDTO
             {
                 CustomerID = "abcdef",
-                Company = "Nelnet",
                 FirstName = "George",
                 LastName = "Curious",
                 StreetAddress1 = "601 NE Robin St",
@@ -91,7 +90,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "",
-                Company = "Garmin",
                 FirstName = "Lucas",
                 LastName = "Hall",
                 StreetAddress1 = "911 NE Emergency Ln",
@@ -179,7 +177,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "hello9",
-                Company = "Black and Veach",
                 FirstName = "Hobo",
                 LastName = "Guy",
                 StreetAddress1 = "567 NW Weastern Rd",
@@ -423,7 +420,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "77777g",
-                Company = "Spreetail",
                 FirstName = "Emma",
                 LastName = "Hannah",
                 StreetAddress1 = "8732 W George Ct",

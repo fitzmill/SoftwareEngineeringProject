@@ -96,15 +96,15 @@ GO
 
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Cooper', 'Knaak', 'cooper@cooperknaak.dating', '76e31f14ed685ba7af2724a722bf168f022c14a2698e71652167724c41976e1e', 'yet', 1, 1, 'fe1686') --Discover Card Password: IWantLove2018*
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Bill', 'Gates', 'billy@microsoft.com', '3bfac41432202a791c31d1272dab77884e2bcd353d70f3cb2cc4dd9067d44e03', 'implement', 3, 1, '1edf63') --Visa Card Password: ImBill1997$
-insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Sean', 'Fitzy', 'sean@weebnation.com', '62b1f4f5be3aa3f3cd9f07bdeed452191254ad57a2b8f97ace53cf40d0d1f60e', 'sometime', 2, 1, '5b44c3') --MasterCard  Password: Sean2010!
+insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Sean', 'Fitzy', 'sean@weebnation.com', '62b1f4f5be3aa3f3cd9f07bdeed452191254ad57a2b8f97ace53cf40d0d1f60e', 'sometime', 2, 2, '5b44c3') --MasterCard  Password: Sean2010!
 
 
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Caitlin', 'Fitzy', 12, 2)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Matt', 'Fitz', 6, 2)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Caitlin', 'Fitzy', 12, 3)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Matt', 'Fitz', 6, 3)
 insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Cathy', 'Knaak', 9, 1)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('SonofBill', 'Gates', 0, 3)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('DaughterofBill', 'Gates', 3, 3)
-insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('BillAdopted', 'Schmidling', 11, 3)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('SonofBill', 'Gates', 0, 2)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('DaughterofBill', 'Gates', 3, 2)
+insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('BillAdopted', 'Schmidling', 11, 2)
 
 
 insert into [dbo].[Transaction](UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) values(3, (2500+2500+5000), DATEFROMPARTS(2017, 9, 5), DATEFROMPARTS(2017, 9, 5), 2, 'Insufficient funds')

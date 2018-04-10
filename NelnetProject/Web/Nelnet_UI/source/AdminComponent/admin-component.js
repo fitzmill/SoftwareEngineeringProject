@@ -2,11 +2,28 @@
 
 const adminAPIURL = "/api/admin";
 
+exports.adminDashboardBeforeShow = function () {
+    let user = JSON.parse(localStorage.getItem('user'));
+    //user not logged in
+    if (!user || user.UserType !== "ADMIN") {
+        window.location = '#';
+        return;
+    }
+
+    //this will only be true when redirected to this page from login, since the component will be binded
+    if ($("admin-component").children().length > 0) {
+        vm = ko.dataFor($('admin-component').get(0).firstChild);
+        vm.loadAdminInformation();
+    }
+}
+
 ko.components.register('admin-component', {
     viewModel: function (params) {
         var vm = this;
+
         vm.generateStartDate = ko.observable();
         vm.generateEndDate = ko.observable();
+        vm.reports = ko.observableArray([]);
 
         vm.unsettledTransactions = ko.observableArray([]);
         vm.allTransactions = ko.observableArray([]);
@@ -14,6 +31,14 @@ ko.components.register('admin-component', {
         vm.amountPaid = ko.observable();
         vm.amountOutstanding = ko.observable();
         vm.reportRange = ko.observable();
+
+        vm.loadAdminInformation = function () {
+            getReports().done((data) => {
+                vm.reports(data.map((report) => parseReportModel(report)));
+            }).fail((jqXHR) => {
+                window.alert("Could not get reports, please try refreshing the page");
+            });
+        }
 
         vm.generateReport = function () {
             generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
@@ -51,7 +76,7 @@ ko.components.register('admin-component', {
                 //TODO: Implement support for Joe's eventual 'DEFERRED' process state
                 let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
                 unsettledTransactions.forEach((t, index, array) => {
-                    array[index].DateDue = parseDateTimeString(t.DateDue);
+                    array[index].DateDue = t.DateDue.parseDateTimeString();
                     array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
                 });
 
@@ -80,15 +105,10 @@ ko.components.register('admin-component', {
             csv.downloadCSV("Transactions.csv");
         };
 
-        vm.reports = ko.observableArray([]);
-
-        getReports().done(function (data) {
-            data.forEach(function (report) {
-                vm.reports.push(parseReportModel(report));
-            });
-        }).fail(function (jqXHR) {
-            window.alert("Could not get report history, please try refreshing the page.");
-        });
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.UserType === "ADMIN") {
+            vm.loadAdminInformation();
+        }
 
         return vm;
     },
@@ -115,25 +135,15 @@ function splitViewDate(dateString) {
     };
 }
 
-//turns c# datetime object into a more readable format
-function parseDateTimeString(dateTime) {
-    let dateArray = dateTime.split('-');
-    let year = dateArray[0];
-    let month = dateArray[1];
-    let day = dateArray[2].substring(0, 2);
-    return month + "/" + day + "/" + year;
-}
-
 //turn report into a readable format
 function parseReportModel(report) {
     return {
         ReportID: report.ReportID,
-        DateCreated: parseDateTimeString(report.DateCreated),
-        StartDate: parseDateTimeString(report.StartDate),
-        EndDate: parseDateTimeString(report.EndDate)
+        DateCreated: report.DateCreated.parseDateTimeString(),
+        StartDate: report.StartDate.parseDateTimeString(),
+        EndDate: report.EndDate.parseDateTimeString()
     };
 }
-
 
 //fetches all reports from the report api
 function getReports() {

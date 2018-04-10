@@ -64,3 +64,11 @@ String.prototype.emailMeetsRequirements = function () {
     //from emailregex.com
     return this.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 }
+
+String.prototype.parseDateTimeString = function () {
+    let dateArray = this.split('-');
+    let year = dateArray[0];
+    let month = dateArray[1];
+    let day = dateArray[2].substring(0, 2);
+    return month + "/" + day + "/" + year;
+}

@@ -1,10 +1,8 @@
 ﻿require('./login-component.scss');
+require('../assets/background-image.scss');
 
 const loginAPIURL = "/api/login";
 const accountAPIURL = "/api/account";
-
-const generalUserType = 1;
-const adminUserType = 2;
 
 ko.components.register('login-component', {
     viewModel: function (params) {
@@ -12,8 +10,6 @@ ko.components.register('login-component', {
 
         vm.email = ko.observable();
         vm.password = ko.observable();
-
-        vm.user = ko.observable();
 
         vm.login = function () {
             if (!vm.email().emailMeetsRequirements()) {
@@ -27,10 +23,11 @@ ko.components.register('login-component', {
             validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
                 if (validLogin) {
                     getUserInfoByEmail(vm.email()).done(function (user) {
-                        if (user.UserType == generalUserType) {
-                            vm.user(user);
+                        if (user.UserType === "GENERAL") {
+                            window.localStorage.setItem("user", JSON.stringify(user));
                             window.location = "#account-dashboard";
-                        } else if (user.UserType == adminUserType) {
+                        } else if (user.UserType === "ADMIN") {
+                            window.localStorage.setItem("user", JSON.stringify(user));
                             window.location = "#admin";
                         }
                     }).fail(function (jqXHR) {
@@ -48,7 +45,7 @@ ko.components.register('login-component', {
 
         $(document).keypress(function (e) {
             //If the user presses enter, it will click the login button
-            if (e.which == 13) {
+            if (e.which === 13) {
                 $('#btn-login').focus();
                 $("#btn-login").click();
             }

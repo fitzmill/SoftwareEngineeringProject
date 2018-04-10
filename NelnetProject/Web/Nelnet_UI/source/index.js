@@ -8,7 +8,9 @@ var index = (function () {
     
     return {
         loginComponent: require('./LoginComponent/login-component.js'),
-        adminComponent: require('./AdminComponent/admin-component.js')
+        adminComponent: require('./AdminComponent/admin-component.js'),
+        accountCreationComponent: require('./AccountCreationComponent/account-creation-component.js'),
+        accountDashboardComponent: require('./AccountDashboardComponent/account-dashboard-component.js')
     };
 })();
 
