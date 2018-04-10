@@ -13,7 +13,8 @@ namespace Accessors
         {
             this.connectionString = connectionString;
         }
-        //Gets all of the user's from the database
+
+        //Gets all regular users from the database
         public IList<User> GetAllUsers()
         {
             string query = "[dbo].[GetAllUsers]";
