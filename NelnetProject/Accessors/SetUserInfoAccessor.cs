@@ -88,7 +88,7 @@ namespace Accessors
                 
                 if(rowsAffected != 1)
                 {
-                    throw new SqlRowNotAffectedException("Could not find user recrod to update");
+                    throw new SqlRowNotAffectedException("Could not find user record to update");
                 }
             }
         }
