@@ -22,7 +22,7 @@
             <input class="edit-personal-active" type="email" placeholder="Email" data-bind="value: Email" />
         </div>
     </div>
-
+    <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
     <div class="card card-account-information-section">
         <div class="card-header">
             <h3 class="header-information-section">Payment Information</h3>
@@ -47,7 +47,7 @@
                 <h5 data-bind="text: 'XXXX XXXX XXXX ' + CardNumber()"></h5>
                 <label data-bind="text: 'Exp: ' + ExpirationMonth() + '/' + ExpirationYear()"></label>
             </div>
-            
+
 
             <div id="edit-payment-input" class="edit-payment-active">
                 <div style="display: block;">
@@ -55,11 +55,11 @@
                     <input type="text" placeholder="Last Name" data-bind="value: CardLastName" />
                 </div>
 
-                <input type="text" placeholder="Street Address 1" data-bind="value: StreetAddress1" style="display: block;"/>
-                <input type="text" placeholder="Street Address 2" data-bind="value: StreetAddress2" style="display: block;"/>
+                <input type="text" placeholder="Street Address 1" data-bind="value: StreetAddress1" style="display: block;" />
+                <input type="text" placeholder="Street Address 2" data-bind="value: StreetAddress2" style="display: block;" />
                 <div style="display: block; margin-bottom: 30px;">
-                    <input type="text" placeholder="City" data-bind="value: City"/>
-                    <input type="text" placeholder="State (e.g. 'KS')" maxlength="2" data-bind="value: State"/>
+                    <input type="text" placeholder="City" data-bind="value: City" />
+                    <input type="text" placeholder="State (e.g. 'KS')" maxlength="2" data-bind="value: State" />
                     <input type="text" placeholder="Zip Code" data-bind="value: Zip" />
                 </div>
 

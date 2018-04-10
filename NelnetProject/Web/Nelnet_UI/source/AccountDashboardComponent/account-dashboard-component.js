@@ -78,6 +78,11 @@ ko.components.register('account-dashboard-component', {
                 //sort so most recent is at top
                 data.sort((a, b) => b.TransactionID - a.TransactionID);
 
+                containsUnresolvedTransaction = data.find((transaction) => transaction.ProcessState === "RETRYING" || transaction.ProcessState === "FAILED");
+                if (containsUnresolvedTransaction) {
+                    $("#retryingTransactionError").show();
+                }
+
                 //make it display friendly
                 accountDashboardVM.Transactions(data.map(function (transaction) {
                     return {
