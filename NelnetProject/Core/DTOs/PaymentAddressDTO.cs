@@ -4,11 +4,9 @@ using System.Text;
 
 namespace Core.DTOs
 {
-    public class UserPaymentInfoDTO
+    public class PaymentAddressDTO
     {
         public string CustomerID { get; set; }
-
-        public string Company { get; set; }
 
         public string FirstName { get; set; }
 
@@ -24,39 +22,25 @@ namespace Core.DTOs
 
         public string Zip { get; set; }
 
-        public long CardNumber { get; set; }
-
-        public int ExpirationYear { get; set; }
-
-        public int ExpirationMonth { get; set; }
-
-        public string CardType { get; set; }
-
-        //auto-generated overide to the .Equals and .GetHashedCode method to compare these objects
+        //auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
         public override bool Equals(object obj)
         {
-            var dTO = obj as UserPaymentInfoDTO;
+            var dTO = obj as PaymentAddressDTO;
             return dTO != null &&
                    CustomerID == dTO.CustomerID &&
-                   Company == dTO.Company &&
                    FirstName == dTO.FirstName &&
                    LastName == dTO.LastName &&
                    StreetAddress1 == dTO.StreetAddress1 &&
                    StreetAddress2 == dTO.StreetAddress2 &&
                    City == dTO.City &&
                    State == dTO.State &&
-                   Zip == dTO.Zip &&
-                   CardNumber == dTO.CardNumber &&
-                   ExpirationYear == dTO.ExpirationYear &&
-                   ExpirationMonth == dTO.ExpirationMonth &&
-                   CardType == dTO.CardType;
+                   Zip == dTO.Zip;
         }
 
         public override int GetHashCode()
         {
-            var hashCode = -185086339;
+            var hashCode = -23318427;
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(CustomerID);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Company);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FirstName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LastName);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(StreetAddress1);
@@ -64,10 +48,6 @@ namespace Core.DTOs
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(City);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(State);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Zip);
-            hashCode = hashCode * -1521134295 + CardNumber.GetHashCode();
-            hashCode = hashCode * -1521134295 + ExpirationYear.GetHashCode();
-            hashCode = hashCode * -1521134295 + ExpirationMonth.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(CardType);
             return hashCode;
         }
     }
