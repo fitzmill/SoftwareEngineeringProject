@@ -135,5 +135,9 @@ namespace Engines
             };
         }
 
+        public double CalculatePeriodicPayment(User user)
+        {
+            return TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
+        }
     }
 }
