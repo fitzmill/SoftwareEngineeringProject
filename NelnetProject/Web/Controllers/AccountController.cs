@@ -139,7 +139,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdatePaymentBillingInfo")]
-        public IHttpActionResult UpdatePaymentInfo(PaymentAddressDTO paymentAddressDTO)
+        public IHttpActionResult UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressDTO)
         {
             setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
             return Ok();
