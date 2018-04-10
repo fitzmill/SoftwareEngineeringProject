@@ -82,7 +82,7 @@ namespace Web.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Route("DeleteUser")]
         public IHttpActionResult DeleteUser(User user)
         {

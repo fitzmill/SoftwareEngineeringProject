@@ -454,7 +454,7 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
 //POSTs a user to be deleted
 function deleteUser(user) {
     return $.ajax(accountDashboardAPIURL + "/DeleteUser", {
-        method: "DELETE",
+        method: "POST",
         data: user
     });
 }
