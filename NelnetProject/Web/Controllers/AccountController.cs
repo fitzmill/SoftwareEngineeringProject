@@ -36,7 +36,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("GetUserInfoByEmail")]
-        public IHttpActionResult GetUserInfoByEmail([FromBody]string email)
+        public IHttpActionResult GetUserInfoByEmail([FromBody] string email)
         {
             if (String.IsNullOrEmpty(email))
             {
@@ -71,6 +71,7 @@ namespace Web.Controllers
         }
 
         //GET api/account/GetNextTransactionForUser/{userID}
+        [HttpGet]
         [Route("GetNextTransactionForUser/{userID}")]
         public IHttpActionResult GetNextTransactionForUser(string userID)
         {
@@ -79,6 +80,14 @@ namespace Web.Controllers
                 return BadRequest("Could not parse userID into an integer");
             }
             return Ok(paymentEngine.CalculateNextPaymentForUser(parsedUserID, DateTime.Now));
+        }
+
+        //POST api/account/CalculatePeriodicPayment
+        [HttpPost]
+        [Route("CalculatePeriodicPayment")]
+        public IHttpActionResult CalculatePeriodicPayment([FromBody] User user)
+        {
+            return Ok(paymentEngine.CalculatePeriodicPayment(user));
         }
     }
 }
