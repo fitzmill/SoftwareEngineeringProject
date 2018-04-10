@@ -83,6 +83,7 @@ namespace Web.Controllers
         }
 
         //POST api/account/CalculatePeriodicPayment
+        [HttpPost]
         [Route("CalculatePeriodicPayment")]
         public IHttpActionResult CalculatePeriodicPayment([FromBody] User user)
         {
