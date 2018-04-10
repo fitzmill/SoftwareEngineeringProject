@@ -223,6 +223,7 @@ namespace NelnetProject.Tests.Engines
             user.Students.Add(student);
 
             setUserInfoEngine.InsertPersonalInfo(user);
+            setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
             Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
             Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
@@ -277,6 +278,7 @@ namespace NelnetProject.Tests.Engines
             user.Students.Add(student3);
 
             setUserInfoEngine.InsertPersonalInfo(user);
+            setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
             Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
             Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
