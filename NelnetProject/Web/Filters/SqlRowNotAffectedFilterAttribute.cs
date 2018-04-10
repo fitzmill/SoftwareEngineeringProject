@@ -6,6 +6,9 @@ using System.Web.Http.Filters;
 
 namespace Web.Filters
 {
+    /// <summary>
+    /// Filter Attribute for handling SqlRowNotAffectedException
+    /// </summary>
     public class SqlRowNotAffectedFilterAttribute : ExceptionFilterAttribute
     {
         public override void OnException(HttpActionExecutedContext context)
