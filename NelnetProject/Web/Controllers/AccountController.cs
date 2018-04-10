@@ -136,17 +136,23 @@ namespace Web.Controllers
             }
             return Ok(getUserInfoEngine.GetPaymentInfoForUser(parsedUserID));
         }
+
         [HttpPost]
-        [Route("UpdatePaymentInfo")]
-        public IHttpActionResult UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo)
+        [Route("UpdatePaymentBillingInfo")]
+        public IHttpActionResult UpdatePaymentInfo(PaymentAddressDTO paymentAddressDTO)
         {
-            if (!IsValidPaymentInfoObject(userPaymentInfo))
-            {
-                return BadRequest("One or more required objects was not included in the request body.");
-            }
-            setUserInfoEngine.UpdatePaymentInfo(userPaymentInfo);
+            setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
             return Ok();
         }
+
+        [HttpPost]
+        [Route("UpdatePaymentCardInfo")]
+        public IHttpActionResult UpdatePaymentCardInfo(PaymentCardDTO paymentCardDTO)
+        {
+            setUserInfoEngine.UpdatePaymentCardInfo(paymentCardDTO);
+            return Ok();
+        }
+
         [HttpPost]
         [Route("InsertPaymentInfo")]
         public IHttpActionResult InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
