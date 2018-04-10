@@ -30,8 +30,6 @@ namespace Core.DTOs
 
         public string CardType { get; set; }
 
-        public int CSC { get; set; }
-
         //auto-generated overide to the .Equals method to compare these objects
         public override bool Equals(object obj)
         {
