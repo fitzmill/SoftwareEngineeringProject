@@ -209,6 +209,7 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="images\login-background_f4b7bde.jpg" />
     <Content Include="Nelnet_UI\build\index.js" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.html" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.js" />
