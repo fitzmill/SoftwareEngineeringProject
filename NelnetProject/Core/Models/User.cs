@@ -6,7 +6,7 @@ namespace Core
 {
     public class User
     {
-        [Range(1, int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int UserID { get; set; }
 
         [Required]
