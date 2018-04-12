@@ -54,15 +54,15 @@
                     <h4><b>Please select a payment plan:</b></h4>
                     <div class="radio-button">
                         <input type="radio" name="paymentType" value="monthly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Monthly at '+calcYearlyRate()+' (Sept - May)'" />
+                        <h5 class="radio-button-label" data-bind="text: 'Monthly at '+monthlyRate().formatMoney()+' (Sept - May)'" />
                     </div>
                     <div class="radio-button">
                         <input type="radio" name="paymentType" value="semesterly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Semesterly at '+calcYearlyRate()+' (Sept & Feb)'" />
+                        <h5 class="radio-button-label" data-bind="text: 'Semesterly at '+semesterlyRate().formatMoney()+' (Sept & Feb)'" />
                     </div>
                     <div class="radio-button">
                         <input id="radio-button-3" type="radio" name="paymentType" value="yearly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Yearly at '+calcYearlyRate()+' (Sept)'"/>
+                        <h5 class="radio-button-label" data-bind="text: 'Yearly at '+yearlyRate().formatMoney()+' (Sept)'"/>
                     </div>
                 </div>
             </div>
