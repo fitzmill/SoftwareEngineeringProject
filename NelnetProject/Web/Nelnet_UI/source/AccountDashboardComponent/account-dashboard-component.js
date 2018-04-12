@@ -44,7 +44,6 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.ExpirationYear = ko.observable();
         accountDashboardVM.ExpirationMonth = ko.observable();
         accountDashboardVM.CardType = ko.observable();
-        accountDashboardVM.CSC = ko.observable();
 
         accountDashboardVM.UserFirstName = ko.observable();
         accountDashboardVM.UserLastName = ko.observable();
@@ -59,6 +58,7 @@ ko.components.register('account-dashboard-component', {
 
         accountDashboardVM.personalInputErrorMessage = ko.observable();
         accountDashboardVM.paymentInputErrorMessage = ko.observable();
+        accountDashboardVM.billingInputErrorMessage = ko.observable();
         accountDashboardVM.studentInputErrorMessage = ko.observable();
 
         accountDashboardVM.confirmModalData = ko.observable();
@@ -242,35 +242,7 @@ ko.components.register('account-dashboard-component', {
 
         //Changes the payment info in payment spring and ui to what the user entered.
         accountDashboardVM.updatePaymentInfo = function (data, event) {
-            if (!accountDashboardVM.CardFirstName() || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid first name on card");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.CardLastName() || !accountDashboardVM.CardLastName().match(regexSemicolonCheck)) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid last name on card");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.StreetAddress1() || !accountDashboardVM.StreetAddress1().match(regexSemicolonCheck)) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid first street address");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.StreetAddress2().match(regexSemicolonCheck)) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid second street address");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.City() || !accountDashboardVM.City().match(regexSemicolonCheck)) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid city name");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length === 2) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid state abbreviation");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.Zip() || !accountDashboardVM.Zip().match(regexZipCheck)) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid zip code");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.CardNumber() || accountDashboardVM.CardNumber().toString().length < 15 || accountDashboardVM.CardNumber().toString().length > 19) {
+             if (!accountDashboardVM.CardNumber() || accountDashboardVM.CardNumber().toString().length < 15 || accountDashboardVM.CardNumber().toString().length > 19) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card number");
                 $("#edit-payment-input-error").show();
                 return;
@@ -282,38 +254,23 @@ ko.components.register('account-dashboard-component', {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card expiration month");
                 $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.CSC() || !accountDashboardVM.CSC().match(regexNumCheck)) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid CSC on card");
-                $("#edit-payment-input-error").show();
-                return;
             }
             //disable cancel and save buttons while request loads
             $("btn-save-edit-payment").attr('disabled', 'disabled');
             $("btn-cancel-edit-payment").attr('disabled', 'disabled');
 
-            var changedPaymentInfo = {
+            let changedCardInfo = {
                 CustomerID: userPaymentInfo.CustomerID,
-                FirstName: accountDashboardVM.CardFirstName(),
-                LastName: accountDashboardVM.CardLastName(),
-                StreetAddress1: accountDashboardVM.StreetAddress1(),
-                StreetAddress2: accountDashboardVM.StreetAddress2(),
-                City: accountDashboardVM.City(),
-                State: accountDashboardVM.State(),
-                Zip: accountDashboardVM.Zip(),
                 CardNumber: accountDashboardVM.CardNumber(),
                 ExpirationYear: accountDashboardVM.ExpirationYear(),
-                ExpirationMonth: accountDashboardVM.ExpirationMonth(),
-                CardType: accountDashboardVM.CardType(),
-                CSC: accountDashboardVM.CSC()
+                ExpirationMonth: accountDashboardVM.ExpirationMonth()
             };
 
-            updatePaymentInfo(changedPaymentInfo).done(function () {
-                userPaymentInfo = changedPaymentInfo;
+            updatePaymentCardInfo(changedCardInfo).done(function () {
                 //reset it to last few digits
-                userPaymentInfo.CardNumber = changedPaymentInfo.CardNumber.substring(12);
-
-                changedPaymentInfo = undefined;
-                accountDashboardVM.CSC("");
+                userPaymentInfo.CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
+                userPaymentInfo.ExpirationYear = changedCardInfo.ExpirationYear;
+                userPaymentInfo.ExpirationMonth = changedCardInfo.ExpirationMonth;
 
                 //UI will be updated here
                 accountDashboardVM.stopEditing(data, event);
@@ -327,6 +284,74 @@ ko.components.register('account-dashboard-component', {
                 $("btn-cancel-edit-payment").removeAttr('disabled');
             });
         };
+
+        accountDashboardVM.updateBillingInfo = function (data, event) {
+            if (!accountDashboardVM.CardFirstName() || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
+                accountDashboardVM.billingInputErrorMessage("Invalid first name");
+                $("#edit-billing-input-error").show();
+                return;
+            } else if (!accountDashboardVM.CardLastName() || !accountDashboardVM.CardLastName().match(regexSemicolonCheck)) {
+                accountDashboardVM.billingInputErrorMessage("Invalid last name");
+                $("#edit-billing-input-error").show();
+                return;
+            } else if (!accountDashboardVM.StreetAddress1() || !accountDashboardVM.StreetAddress1().match(regexSemicolonCheck)) {
+                accountDashboardVM.billingInputErrorMessage("Invalid first street address");
+                $("#edit-billing-input-error").show();
+                return;
+            } else if (!accountDashboardVM.StreetAddress2().match(regexSemicolonCheck)) {
+                accountDashboardVM.billingInputErrorMessage("Invalid second street address");
+                $("#edit-billing-input-error").show();
+                return;
+            } else if (!accountDashboardVM.City() || !accountDashboardVM.City().match(regexSemicolonCheck)) {
+                accountDashboardVM.billingInputErrorMessage("Invalid city name");
+                $("#edit-billing-input-error").show();
+                return;
+            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length !== 2) {
+                accountDashboardVM.billingInputErrorMessage("Invalid state abbreviation");
+                $("#edit-billing-input-error").show();
+                return;
+            } else if (!accountDashboardVM.Zip() || !accountDashboardVM.Zip().match(regexZipCheck)) {
+                accountDashboardVM.billingInputErrorMessage("Invalid zip code");
+                $("#edit-billing-input-error").show();
+                return;
+            }
+
+            //disable cancel and save buttons while request loads
+            $("btn-save-edit-billing").attr('disabled', 'disabled');
+            $("btn-cancel-edit-billing").attr('disabled', 'disabled');
+
+            let changedBillingInfo = {
+                CustomerID: userPaymentInfo.CustomerID,
+                FirstName: accountDashboardVM.CardFirstName(),
+                LastName: accountDashboardVM.CardLastName(),
+                StreetAddress1: accountDashboardVM.StreetAddress1(),
+                StreetAddress2: accountDashboardVM.StreetAddress2(),
+                City: accountDashboardVM.City(),
+                State: accountDashboardVM.State(),
+                Zip: accountDashboardVM.Zip()
+            };
+
+            updatePaymentBillingInfo(changedBillingInfo).done(function () {
+                userPaymentInfo.FirstName = changedBillingInfo.FirstName;
+                userPaymentInfo.LastName = changedBillingInfo.LastName;
+                userPaymentInfo.StreetAddress1 = changedBillingInfo.StreetAddress1;
+                userPaymentInfo.StreetAddress2 = changedBillingInfo.StreetAddress2;
+                userPaymentInfo.City = changedBillingInfo.City;
+                userPaymentInfo.State = changedBillingInfo.State;
+                userPaymentInfo.Zip = changedBillingInfo.Zip;
+
+                //UI will be updated here
+                accountDashboardVM.stopEditing(data, event);
+            }).fail(function (jqXHR) {
+                changedPaymentInfo = undefined;
+                let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                window.alert("Could not save information: ".concat(errorMessage));
+            }).always(function () {
+                //re-enable buttons
+                $("btn-save-edit-billing").removeAttr('disabled');
+                $("btn-cancel-edit-billing").removeAttr('disabled');
+            });
+        }
 
         //Sets the ko variables to the saved payment spring information
         accountDashboardVM.setUIPaymentSpringInfo = function () {
@@ -459,11 +484,19 @@ function deleteUser(user) {
     });
 }
 
-//POSTs any changes to the payment info
-function updatePaymentInfo(paymentInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentInfo", {
+//POSTs any changes to the credit card info
+function updatePaymentCardInfo(paymentCardInfo) {
+    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentCardInfo", {
         method: "POST",
-        data: paymentInfo
+        data: paymentCardInfo
+    });
+}
+
+//POSTs any changes to the user's billing address
+function updatePaymentBillingInfo(paymentBillingInfo) {
+    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentBillingInfo", {
+        method: "POST",
+        data: paymentBillingInfo
     });
 }
 

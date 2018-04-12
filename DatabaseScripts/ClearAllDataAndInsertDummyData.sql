@@ -57,6 +57,7 @@ CREATE TABLE [dbo].[User](
 	[PaymentPlan] [tinyint] NOT NULL,
 	[UserType] [tinyint] NOT NULL,
 	[CustomerID] [varchar](max) NOT NULL,
+	[Active] [bit] DEFAULT 1 NOT NULL,
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[UserID] ASC
@@ -97,6 +98,7 @@ GO
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Cooper', 'Knaak', 'cooper@cooperknaak.dating', '76e31f14ed685ba7af2724a722bf168f022c14a2698e71652167724c41976e1e', 'yet', 1, 1, 'fe1686') --Discover Card Password: IWantLove2018*
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Bill', 'Gates', 'billy@microsoft.com', '3bfac41432202a791c31d1272dab77884e2bcd353d70f3cb2cc4dd9067d44e03', 'implement', 3, 1, '1edf63') --Visa Card Password: ImBill1997$
 insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) values('Sean', 'Fitzy', 'sean@weebnation.com', '62b1f4f5be3aa3f3cd9f07bdeed452191254ad57a2b8f97ace53cf40d0d1f60e', 'sometime', 2, 2, '5b44c3') --MasterCard  Password: Sean2010!
+insert into [dbo].[User](FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID, Active) values('Jimmy', 'Inactive', 'outdated@aol.com', '0000', 'salt', 1, 1, '0000', 0) --Inactive user, values don't matter
 
 
 insert into [dbo].[Student](FirstName, LastName, Grade, UserID) values('Caitlin', 'Fitzy', 12, 3)
