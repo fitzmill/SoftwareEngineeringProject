@@ -17,7 +17,11 @@ module.exports = {
             { test: /\.js$/, loader: "babel-loader" },
             { test: /\.(s)?css$/, loader: "style-loader!css-loader!sass-loader" },
             { test: /\.html$/, loader: "html-loader" },
-            { test: /\.(png|jpg|jpeg|gif|svg|bmp)$/, loader: "file-loader" }
+            {
+                test: /\.(png|jpg|jpeg|gif|svg|bmp)$/, loader: "file-loader", options: {
+                    name: '/images/[name]_[hash:7].[ext]'
+                }
+            }
         ]
     },
     plugins: [
