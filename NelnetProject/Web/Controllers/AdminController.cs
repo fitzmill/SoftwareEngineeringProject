@@ -32,7 +32,7 @@ namespace Web.Controllers
         [Route("GetTransactionsForDateRange")]
         public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
         {
-            if (dateRangeDTO == null || dateRangeDTO.StartDate == null || dateRangeDTO.EndDate == null)
+            if (dateRangeDTO == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
@@ -63,7 +63,7 @@ namespace Web.Controllers
         [Route("InsertReport")]
         public IHttpActionResult InsertReport(DateRangeDTO dateRange)
         {
-            if (dateRange == null || dateRange.StartDate == null || dateRange.EndDate == null)
+            if (dateRange == null || !ModelState.IsValid)
             {
                 return BadRequest("Report object was null in request");
             }

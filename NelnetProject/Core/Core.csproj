@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,14 +50,12 @@
     <Compile Include="DTOs\PaymentAddressDTO.cs" />
     <Compile Include="DTOs\PaymentCardDTO.cs" />
     <Compile Include="DTOs\PaymentDTO.cs" />
-    <Compile Include="DTOs\ReportDTO.cs" />
     <Compile Include="DTOs\TransactionWithUserInfoDTO.cs" />
     <Compile Include="DTOs\UpdateStudentInfoDTO.cs" />
     <Compile Include="DTOs\UserPaymentInfoDTO.cs" />
     <Compile Include="Enums\PaymentPlan.cs" />
     <Compile Include="Enums\ProcessState.cs" />
     <Compile Include="Enums\ReasonFailed.cs" />
-    <Compile Include="Enums\State.cs" />
     <Compile Include="Enums\UserType.cs" />
     <Compile Include="Exceptions\EmailException.cs" />
     <Compile Include="Exceptions\ReportException.cs" />

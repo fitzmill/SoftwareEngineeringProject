@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Core.DTOs
@@ -12,11 +13,13 @@ namespace Core.DTOs
         /// <summary>
         /// PaymentSpring customer id
         /// </summary>
+        [Required]
         public string CustomerID { get; set; }
 
         /// <summary>
         /// Amount charged in cents.
         /// </summary>
+        [Range(0, int.MaxValue)]
         public int Amount { get; set; }
 
         /// <summary>

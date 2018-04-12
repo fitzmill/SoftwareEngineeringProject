@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Core.DTOs
 {
     public class PaymentCardDTO
     {
+        [Required]
         public string CustomerID { get; set; }
 
+        [Range(0, long.MaxValue)]
         public long CardNumber { get; set; }
 
         public int ExpirationYear { get; set; }
@@ -17,8 +20,7 @@ namespace Core.DTOs
         //auto-generated overide to the .Equals and .GetHashCode method to compare these objects
         public override bool Equals(object obj)
         {
-            var dTO = obj as PaymentCardDTO;
-            return dTO != null &&
+            return obj is PaymentCardDTO dTO &&
                    CustomerID == dTO.CustomerID &&
                    CardNumber == dTO.CardNumber &&
                    ExpirationYear == dTO.ExpirationYear &&

@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Core
 {
     public class Transaction
     {
+        [Range(1, int.MaxValue)]
         public int TransactionID { get; set; }
 
+        [Range(1, int.MaxValue)]
         public int UserID { get; set; }
 
+        [Range(0.0, double.MaxValue)]
         public double AmountCharged { get; set; }
 
         public DateTime DateDue { get; set; }
