@@ -9,7 +9,7 @@ using System.Timers;
 
 namespace Web.Managers
 {
-    public class PaymentManager
+    public class ScheduledEventManager
     {
         public Func<DateTime> dateProvider = () => DateTime.Now;
 
@@ -20,7 +20,7 @@ namespace Web.Managers
         private IPaymentEngine paymentEngine;
         private INotificationEngine notificationEngine;
 
-        public PaymentManager(double timerInterval, int chargingHour, IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine, INotificationEngine notificationEngine)
+        public ScheduledEventManager(double timerInterval, int chargingHour, IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine, INotificationEngine notificationEngine)
         {
             this.timerInterval = timerInterval;
             this.chargingHour = chargingHour;
