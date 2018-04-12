@@ -508,7 +508,7 @@ function checkValidStudents(students) {
             result = false;
         } else if (!student.LastName() || !student.LastName().match(regexSemicolonCheck)) {
             result = false;
-        } else if (student.Grade() !== undefined || student.Grade() < 0 || student.Grade() > 12) {
+        } else if (student.Grade() === undefined || student.Grade() < 0 || student.Grade() > 12) {
             result = false;
         }
     });
