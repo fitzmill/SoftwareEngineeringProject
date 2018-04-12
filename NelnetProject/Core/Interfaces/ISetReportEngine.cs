@@ -13,9 +13,11 @@ namespace Core.Interfaces
     public interface ISetReportEngine
     {
         /// <summary>
-        /// Inserts a report into the database by calling the same method in the ISetReportAccessor
+        /// Creates a report from the given start and end date and inserts it into the database.
         /// </summary>
-        /// <param name="report">Report to be inserted</param>
-        void InsertReport(Report report);
+        /// <param name="startDate">the start date</param>
+        /// <param name="endDate">the end date</param>
+        /// <returns>The report that was generated</returns>
+        Report InsertReport(DateTime startDate, DateTime endDate);
     }
 }

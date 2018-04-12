@@ -20,6 +20,7 @@ namespace Web.Controllers
         IGetTransactionEngine getTransactionEngine;
         IGetReportEngine getReportEngine;
         ISetReportEngine setReportEngine;
+
         //this object gets injected as a dependency by Unity
         public AdminController(IGetTransactionEngine getTransactionEngine, IGetReportEngine getReportEngine, ISetReportEngine setReportEngine)
         {
@@ -39,15 +40,7 @@ namespace Web.Controllers
             var startDate = new DateTime(dateRangeDTO.StartDate.Year, dateRangeDTO.StartDate.Month, dateRangeDTO.StartDate.Day);
             var endDate = new DateTime(dateRangeDTO.EndDate.Year, dateRangeDTO.EndDate.Month, dateRangeDTO.EndDate.Day);
 
-            IList<TransactionWithUserInfoDTO> result = new List<TransactionWithUserInfoDTO>();
-            try
-            {
-                result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
-            }
-            catch (ReportException re)
-            {
-                return BadRequest(re.Message);
-            }
+            var result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
 
             return Ok(result);
         }
@@ -70,26 +63,8 @@ namespace Web.Controllers
 
             var startDate = new DateTime(dateRange.StartDate.Year, dateRange.StartDate.Month, dateRange.StartDate.Day);
             var endDate = new DateTime(dateRange.EndDate.Year, dateRange.EndDate.Month, dateRange.EndDate.Day);
-            if (endDate < startDate)
-            {
-                return BadRequest("Invalid date range");
-            }
 
-            var report = new Report()
-            {
-                DateCreated = DateTime.Now,
-                StartDate = startDate,
-                EndDate = endDate
-            };
-
-            try
-            {
-                setReportEngine.InsertReport(report);
-            }
-            catch (ReportException re)
-            {
-                return BadRequest(re.Message);
-            }
+            var report = setReportEngine.InsertReport(startDate, endDate);
 
             return Ok(report);
         }
