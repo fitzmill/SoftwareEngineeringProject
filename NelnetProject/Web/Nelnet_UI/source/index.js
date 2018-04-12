@@ -7,11 +7,11 @@ var index = (function () {
     require('./utility.js');
     
     return {
+        dropdownOptions: require('./dropdownOptions.js'),
         loginComponent: require('./LoginComponent/login-component.js'),
         adminComponent: require('./AdminComponent/admin-component.js'),
         accountCreationComponent: require('./AccountCreationComponent/account-creation-component.js'),
         accountDashboardComponent: require('./AccountDashboardComponent/account-dashboard-component.js'),
-        dropdownOptions: require('./dropdownOptions.js'),
         logout: function () {
             window.localStorage.removeItem("user");
             window.location = "#";

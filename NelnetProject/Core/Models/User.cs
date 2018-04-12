@@ -39,15 +39,13 @@ namespace Core
         /// <summary>
         /// User's Hash Password With Salt And Pepper
         /// </summary>
-        [Required]
-        [StringLength(int.MaxValue, MinimumLength = 1)]
+        [StringLength(int.MaxValue, MinimumLength = 0)]
         public string Hashed { get; set; }
 
         /// <summary>
         /// Salt Used When Hashing User's Password
         /// </summary>
-        [Required]
-        [StringLength(int.MaxValue, MinimumLength = 1)]
+        [StringLength(int.MaxValue, MinimumLength = 0)]
         public string Salt { get; set; }
 
         /// <summary>
@@ -63,8 +61,7 @@ namespace Core
         /// <summary>
         /// User's PaymentSpring Customer ID
         /// </summary>
-        [Required]
-        [StringLength(int.MaxValue, MinimumLength = 1)]
+        [StringLength(int.MaxValue, MinimumLength = 0)]
         public string CustomerID { get; set; }
 
         /// <summary>
