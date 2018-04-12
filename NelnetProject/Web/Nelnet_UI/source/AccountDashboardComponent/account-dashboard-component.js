@@ -4,8 +4,7 @@ require('../assets/background-image.scss');
 const accountDashboardAPIURL = "/api/account";
 
 const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
-const regexNumCheck = /(?!.*[^\d]).{0,}/;
-const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/; //regexNumCheck but also allows for hyphen(-)
+const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/;
 const regexLettersOnlyCheck = /(?!.*[^a-zA-Z]).{0,}/;
 
 var studentsList = undefined;
