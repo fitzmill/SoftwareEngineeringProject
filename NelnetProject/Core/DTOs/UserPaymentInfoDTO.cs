@@ -1,31 +1,41 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Core.DTOs
 {
     public class UserPaymentInfoDTO
     {
+        [Required]
         public string CustomerID { get; set; }
 
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string LastName { get; set; }
 
+        [Required]
         public string StreetAddress1 { get; set; }
 
         public string StreetAddress2 { get; set; }
 
+        [Required]
         public string City { get; set; }
 
+        [Required]
         public string State { get; set; }
 
+        [Required]
         public string Zip { get; set; }
 
+        [Range(0, long.MaxValue)]
         public long CardNumber { get; set; }
 
         public int ExpirationYear { get; set; }
 
+        [Range(1, 12)]
         public int ExpirationMonth { get; set; }
 
         public string CardType { get; set; }
@@ -33,8 +43,7 @@ namespace Core.DTOs
         //auto-generated overide to the .Equals method to compare these objects
         public override bool Equals(object obj)
         {
-            var dTO = obj as UserPaymentInfoDTO;
-            return dTO != null &&
+            return obj is UserPaymentInfoDTO dTO &&
                    CustomerID == dTO.CustomerID &&
                    FirstName == dTO.FirstName &&
                    LastName == dTO.LastName &&
