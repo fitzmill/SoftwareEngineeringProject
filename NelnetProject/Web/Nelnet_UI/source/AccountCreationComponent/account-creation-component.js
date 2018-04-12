@@ -175,26 +175,27 @@ ko.components.register('account-creation-component', {
                     vm.personalInputErrorMessage("Invalid last name");
                 } else if (!vm.email() || !vm.email().emailMeetsRequirements()) {
                     vm.personalInputErrorMessage("Invalid email");
-                } else if (vm.reenterEmail() !== vm.email()) {
+                } else if (vm.reenterEmail() !== vm.email() || !vm.email().emailMeetsRequirements()) {
                     vm.personalInputErrorMessage("Emails don't match");
                 } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
                     vm.personalInputErrorMessage("Passwords don't match");
+                } else {
+                    emailExists(vm.email()).done(function (data) {
+                       emailInUse = data;
+                       if (emailInUse) {
+                           vm.personalInputErrorMessage("Email is already used by another user");
+                       } else {
+                           $("#info-page-" + vm.currentPage).hide();
+                           vm.currentPage++;
+                           $("#info-page-" + vm.currentPage).show();
+                           vm.updateButtons();
+                           vm.updateProgressBar();
+                       }
+                    }).fail(function (jqXHR) {
+                       let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                       window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                    });
                 }
-                emailExists(vm.email()).done(function (data) {
-                    emailInUse = data;
-                    if (emailInUse) {
-                        vm.personalInputErrorMessage("Email is already used by another user");
-                    } else {
-                        $("#info-page-" + vm.currentPage).hide();
-                        vm.currentPage++;
-                        $("#info-page-" + vm.currentPage).show();
-                        vm.updateButtons();
-                        vm.updateProgressBar();
-                    }
-                }).fail(function (jqXHR) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Couldn't check if email has been used: ".concat(errorMessage));
-                });
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
                 if (!vm.cardNumber() || vm.cardNumber().toString().length < 15 || vm.cardNumber().toString().length > 19) {
                     vm.paymentInputErrorMessage("Invalid Card Number");
