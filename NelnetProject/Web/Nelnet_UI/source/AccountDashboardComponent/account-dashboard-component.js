@@ -420,6 +420,8 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.loadUserInformation();
         }
 
+        $("#processStateInformation").tooltip();
+
         return accountDashboardVM;
     },
 

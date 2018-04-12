@@ -110,6 +110,8 @@ ko.components.register('admin-component', {
             vm.loadAdminInformation();
         }
 
+        $("#processStateInfo").tooltip();
+
         return vm;
     },
     template: require('./admin-component.html')
