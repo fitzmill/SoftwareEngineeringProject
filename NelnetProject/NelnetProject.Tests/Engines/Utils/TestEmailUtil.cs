@@ -88,9 +88,9 @@ namespace NelnetProject.Tests.Engines.Utils
                 FirstName = "Bob",
                 Email = "bob@email.com"
             };
-            String expectedBody = "Hi Bob,\nThere was an issue with your credit card. Your payment on April 3 2018 for $234.10 failed for the following reason: Card Expired." +
-                "\nPlease resolve the issue as soon as possible.\nIf the payment remains unsuccessful after 3 more days, the amount will be deferred and a late fee of $25.00 will be added." +
-                "\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+            String expectedBody = "Hi Bob,<br><br>There was an issue with your credit card. Your payment on April 3 2018 for $234.10 failed for the following reason: Card Expired<br><br>" +
+                "Please resolve the issue as soon as possible.<br><br>If the payment remains unsuccessful after 5 more days, the amount will be deferred and a late fee of $25.75 will be added.<br>" +
+                "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>";
 
             EmailNotification email = EmailUtil.PaymentUnsuccessfulRetryingNotification(t, u, new DateTime(2018, 4, 3));
 
@@ -117,7 +117,8 @@ namespace NelnetProject.Tests.Engines.Utils
             };
 
             String expectedBody = "Hi Bob,<br><br>Your payment of $234.10 that was due on April 1 2018 failed for 7 days and has been deferred.<br><br>" +
-                "The amount will be added to your next payment, along with a late fee of $25.75.<br>Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>";
+                "The amount will be added to your next payment, along with a late fee of $25.75.<br>Please contact us if you have any questions." +
+                "<br><br><br>Powered by Tuition Assistant<br>";
 
             EmailNotification email = EmailUtil.PaymentFailedNotification(t, u);
 
