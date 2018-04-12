@@ -81,13 +81,15 @@ namespace Web
             container.RegisterType<IPaymentEngine, PaymentEngine>();
             container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
 
-            //payment manager
+            //scheduled event manager
             container.RegisterType<ScheduledEventManager>(new InjectionConstructor(
                 double.Parse(ConfigurationManager.AppSettings["TimerInterval"]),
                 int.Parse(ConfigurationManager.AppSettings["ChargingHour"]),
+                int.Parse(ConfigurationManager.AppSettings["ReportGenerationHour"]),
                 container.Resolve<IGetTransactionEngine>(),
                 container.Resolve<IPaymentEngine>(),
-                container.Resolve<INotificationEngine>()
+                container.Resolve<INotificationEngine>(),
+                container.Resolve<ISetReportEngine>()
             ));
             container.Resolve<ScheduledEventManager>();
         }

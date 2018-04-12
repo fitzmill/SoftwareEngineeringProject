@@ -18,7 +18,7 @@ namespace Engines
             this.setReportAccessor = setReportAccessor;
         }
 
-        public void InsertReport(DateTime startDate, DateTime endDate)
+        public Report InsertReport(DateTime startDate, DateTime endDate)
         {
             if (startDate > endDate)
             {
@@ -33,6 +33,9 @@ namespace Engines
             };
 
             setReportAccessor.InsertReport(report);
+
+            return report;
         }
+
     }
 }
