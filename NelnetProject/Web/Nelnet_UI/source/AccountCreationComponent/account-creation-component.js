@@ -3,7 +3,15 @@ require('../assets/background-image.scss');
 
 //paging constants
 const START_PAGE = 1;
+const PERSONAL_INFORMATION_PAGE = 1;
+const PAYMENT_INFORMATION_PAGE = 2;
+const STUDENT_INFORMATION_PAGE = 3;
 const END_PAGE = 4;
+
+//information validation through regex
+const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
+const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/; //regexNumCheck but also allows for hyphen(-)
+const regexLettersOnlyCheck = /(?!.*[^a-zA-Z]).{0,}/;
 
 //api url constants
 const accountCreationAPIURL = "/api/account";
@@ -69,6 +77,11 @@ ko.components.register('account-creation-component', {
         vm.monthlyRate = ko.observable(0);
         vm.semesterlyRate = ko.observable(0);
 
+        //errors
+        vm.personalInputErrorMessage = ko.observable();
+        vm.paymentInputErrorMessage = ko.observable();
+        vm.studentInputErrorMessage = ko.observable();
+
         //keep track of page state
         vm.currentPage = START_PAGE;
 
@@ -131,6 +144,59 @@ ko.components.register('account-creation-component', {
 
         //move to the next page
         vm.next = function () {
+            if (vm.currentPage == PERSONAL_INFORMATION_PAGE) {
+                if (!vm.firstName() || !vm.firstName().match(regexSemicolonCheck)) {
+                    vm.personalInputErrorMessage("Invalid first name");
+                    return;
+                } else if (!vm.lastName() || !vm.lastName().match(regexSemicolonCheck)) {
+                    vm.personalInputErrorMessage("Invalid last name");
+                    return;
+                } else if (!vm.email() || !vm.email().emailMeetsRequirements()) {
+                    vm.personalInputErrorMessage("Invalid email");
+                    return;
+                } else if (vm.reenterEmail() != vm.email()) {
+                    vm.personalInputErrorMessage("Emails don't match");
+                    return;
+                } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
+                    vm.personalInputErrorMessage("Passwords don't match");
+                    return;
+                }
+            } else if (vm.currentPage == PAYMENT_INFORMATION_PAGE) {
+                if (!vm.cardNumber() || vm.cardNumber().toString().length < 15 || vm.cardNumber().toString().length > 19) {
+                    vm.paymentInputErrorMessage("Invalid Card Number");
+                    return;
+                } else if (!vm.cardFirstName() || !vm.cardFirstName().match(regexSemicolonCheck)) {
+                    vm.paymentInputErrorMessage("Invalid Card First Name");
+                    return;
+                } else if (!vm.cardLastName() || !vm.cardLastName().match(regexSemicolonCheck)) {
+                    vm.paymentInputErrorMessage("Invalid Card Last Name");
+                    return;
+                } else if (!vm.month() || vm.month() < 0 || vm.month() > 12) {
+                    vm.paymentInputErrorMessage("Invalid Month");
+                    return;
+                } else if (!vm.year() || vm.year() < 2017) {
+                    vm.paymentInputErrorMessage("Invalid Year");
+                    return;
+                } else if (!vm.address1() || !vm.address1().match(regexSemicolonCheck)) {
+                    vm.paymentInputErrorMessage("Invalid Street Address 1");
+                    return;
+                } else if (vm.address2() && !vm.address2().match(regexSemicolonCheck)) {
+                    vm.paymentInputErrorMessage("Invalid Street Address 2");
+                    return;
+                } else if (!vm.city() || !vm.city().match(regexSemicolonCheck)) {
+                    vm.paymentInputErrorMessage("Invalid City");
+                    return;
+                } else if (!vm.state() || !vm.state().match(regexLettersOnlyCheck) || !vm.state().length === 2) {
+                    vm.paymentInputErrorMessage("Invalid State");
+                    return;
+                } else if (!vm.zip() || !vm.zip().match(regexZipCheck)) {
+                    vm.paymentInputErrorMessage("Invalid Zip Code")
+                    return;
+                }
+            } else if (vm.currentPage == STUDENT_INFORMATION_PAGE  && !checkValidStudents(vm.students())) {
+                vm.studentInputErrorMessage("Invalid student information");
+                return;
+            }
             $("#info-page-" + vm.currentPage).hide();
             vm.currentPage++;
             $("#info-page-" + vm.currentPage).show();
@@ -171,6 +237,21 @@ function calculatePeriodicPayment(userPaymentPlan, students) {
         contentType: "application/json; charset=utf-8",
         data: user
     });
+}
+
+//Checks that student entries are valid
+function checkValidStudents(students) {
+    let result = true;
+    students.forEach(function (student) {
+        if (!student.studentFirstName() || !student.studentFirstName().match(regexSemicolonCheck)) {
+            result = false;
+        } else if (!student.studentLastName() || !student.studentLastName().match(regexSemicolonCheck)) {
+            result = false;
+        } else if (!student.studentGrade()) {
+            result = false;
+        }
+    });
+    return result;
 }
 
 Number.prototype.formatMoney = function (decimals) {

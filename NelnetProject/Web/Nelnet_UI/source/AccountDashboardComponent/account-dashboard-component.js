@@ -481,4 +481,3 @@ function checkValidStudents(students) {
     });
     return result;
 }
-
