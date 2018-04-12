@@ -60,7 +60,6 @@ namespace NelnetProject.Tests.Engines
             new UserPaymentInfoDTO
             {
                 CustomerID = "abcdef",
-                Company = "Nelnet",
                 FirstName = "George",
                 LastName = "Curious",
                 StreetAddress1 = "601 NE Robin St",
@@ -91,7 +90,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "",
-                Company = "Garmin",
                 FirstName = "Lucas",
                 LastName = "Hall",
                 StreetAddress1 = "911 NE Emergency Ln",
@@ -112,37 +110,65 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        public void TestUpdatePaymentInfo()
+        public void TestUpdatePaymentBillingInfo()
         {
-            UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
+            setPaymentInfoAccessor.mockPaymentSpring.Add(new UserPaymentInfoDTO()
             {
                 CustomerID = "fedder",
-                Company = "Honeywell",
+                CardNumber = 4111111111111111,
+                ExpirationMonth = 12,
+                ExpirationYear = 18
+            });
+
+            PaymentAddressDTO paymentAddressInfo = new PaymentAddressDTO
+            {
+                CustomerID = "fedder",
                 FirstName = "Bobby",
                 LastName = "Bobton",
                 StreetAddress1 = "123 NE Eastern Ln",
                 StreetAddress2 = "",
                 City = "Chicago",
                 State = "IL",
-                Zip = "60007",
-                CardNumber = 111111111111,
-                ExpirationYear = 22,
-                ExpirationMonth = 6,
-                CardType = "MasterCard"
+                Zip = "60007"
             };
 
-            setPaymentInfoAccessor.mockPaymentSpring.Add(paymentInfo);
+            setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressInfo);
+            string customerID = "fedder";
 
-            paymentInfo.Company = "Olive Garden";
-            paymentInfo.CardNumber = 222222222222;
-            paymentInfo.ExpirationYear = 24;
-            paymentInfo.ExpirationMonth = 10;
-            paymentInfo.CardType = "Visa";
+            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
+            Assert.AreEqual(paymentAddressInfo.FirstName, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().FirstName);
+            setPaymentInfoAccessor.mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
+        }
 
-            setUserInfoEngine.UpdatePaymentInfo(paymentInfo);
+        [TestMethod]
+        public void TestUpdatePaymentCardInfo()
+        {
+            setPaymentInfoAccessor.mockPaymentSpring.Add(new UserPaymentInfoDTO()
+            {
+                CustomerID = "fedder",
+                FirstName = "Bobby",
+                LastName = "Bobton",
+                StreetAddress1 = "123 NE Eastern Ln",
+                StreetAddress2 = "",
+                City = "Chicago",
+                State = "IL",
+                Zip = "60007"
+            });
 
-            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Contains(paymentInfo));
-            Assert.AreEqual(paymentInfo, setPaymentInfoAccessor.mockPaymentSpring.Where(info => info.CustomerID == paymentInfo.CustomerID).ToList().ElementAt(0));
+            PaymentCardDTO paymentCardInfo = new PaymentCardDTO
+            {
+                CustomerID = "fedder",
+                CardNumber = 1234567891011111,
+                ExpirationMonth = 12,
+                ExpirationYear = 22
+            };
+
+            setUserInfoEngine.UpdatePaymentCardInfo(paymentCardInfo);
+            string customerID = "fedder";
+
+            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
+            Assert.AreEqual(paymentCardInfo.CardNumber, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().CardNumber);
+            setPaymentInfoAccessor.mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
         }
 
         [TestMethod]
@@ -151,7 +177,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "hello9",
-                Company = "Black and Veach",
                 FirstName = "Hobo",
                 LastName = "Guy",
                 StreetAddress1 = "567 NW Weastern Rd",
@@ -198,6 +223,7 @@ namespace NelnetProject.Tests.Engines
             user.Students.Add(student);
 
             setUserInfoEngine.InsertPersonalInfo(user);
+            setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
             Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
             Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
@@ -252,6 +278,7 @@ namespace NelnetProject.Tests.Engines
             user.Students.Add(student3);
 
             setUserInfoEngine.InsertPersonalInfo(user);
+            setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
             Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
             Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
@@ -395,7 +422,6 @@ namespace NelnetProject.Tests.Engines
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
             {
                 CustomerID = "77777g",
-                Company = "Spreetail",
                 FirstName = "Emma",
                 LastName = "Hannah",
                 StreetAddress1 = "8732 W George Ct",

@@ -13,21 +13,20 @@ namespace Engines
     /// </summary>
     public class PaymentEngine : IPaymentEngine
     {
-        private static readonly int DAYS_UNTIL_OVERDUE = 7;
-        private static readonly int DUE_DAY = 5;
-
         private IGetUserInfoAccessor getUserInfoAccessor;
         private IGetPaymentInfoAccessor getPaymentInfoAccessor;
         private IChargePaymentAccessor chargePaymentAccessor;
         private ISetTransactionAccessor setTransactionAccessor;
+        private IGetTransactionAccessor getTransactionAccessor;
 
         public PaymentEngine(IGetUserInfoAccessor getUserInfoAccessor, IGetPaymentInfoAccessor getPaymentInfoAccessor, 
-            IChargePaymentAccessor chargePaymentAccessor, ISetTransactionAccessor setTransactionAccessor)
+            IChargePaymentAccessor chargePaymentAccessor, ISetTransactionAccessor setTransactionAccessor, IGetTransactionAccessor getTransactionAccessor)
         {
             this.getUserInfoAccessor = getUserInfoAccessor;
             this.getPaymentInfoAccessor = getPaymentInfoAccessor;
             this.chargePaymentAccessor = chargePaymentAccessor;
             this.setTransactionAccessor = setTransactionAccessor;
+            this.getTransactionAccessor = getTransactionAccessor;
         }
 
         public IList<Transaction> ChargePayments(List<Transaction> charges, DateTime today)
@@ -48,8 +47,7 @@ namespace Engines
                ProcessState processState = ProcessState.SUCCESSFUL;
                if (!result.WasSuccessful)
                {
-                   int daysOverdue = today.Subtract(charge.DateDue).Days;
-                   processState = (daysOverdue >= DAYS_UNTIL_OVERDUE) ? ProcessState.FAILED : ProcessState.RETRYING;
+                   processState = TuitionUtil.IsPastRetryPeriod(charge, today) ? ProcessState.FAILED : ProcessState.RETRYING;
                }
 
                //Generate result transaction
@@ -74,23 +72,72 @@ namespace Engines
         public IList<Transaction> GeneratePayments(DateTime today) //to be run on the 1st of each month
         {
             //Get all users
-            IList<User> users = getUserInfoAccessor.GetAllUsers();
+            IList<User> users = getUserInfoAccessor.GetAllActiveUsers();
+
+            IList<Transaction> failedTransactions = getTransactionAccessor.GetAllFailedTransactions();
 
             //Generate all payments that are due this month
-            List<Transaction> transactions = users.Where(user => TuitionUtil.IsPaymentDue(user.Plan, today))
-                    .Select(user => new Transaction
-                    {
-                        UserID = user.UserID,
-                        AmountCharged = TuitionUtil.GenerateAmountDue(user, 2),
-                        DateDue = new DateTime(today.Year, today.Month, DUE_DAY),
-                        ProcessState = ProcessState.NOT_YET_CHARGED
-                    }).ToList();
+            List<Transaction> newTransactions = new List<Transaction>();
+
+            //List all failed transactions that have been deferred to this month
+            List<Transaction> transactionsToUpdate = new List<Transaction>();
+
+            IEnumerable<User> usersToCharge = users.Where(user => TuitionUtil.IsPaymentDue(user.Plan, today));
+
+            foreach (User user in usersToCharge)
+            {
+                //if it doesn't exist, mostRecentTransaction will be null
+                Transaction mostRecentTransaction = failedTransactions.FirstOrDefault(t => t.UserID == user.UserID);
+
+                double amountDue = 0;
+                if (mostRecentTransaction != null)
+                {
+                    amountDue = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION, mostRecentTransaction.AmountCharged);
+                    mostRecentTransaction.ProcessState = ProcessState.DEFERRED;
+                    transactionsToUpdate.Add(mostRecentTransaction);
+                }
+                else
+                {
+                    amountDue = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
+                }
+
+                newTransactions.Add(new Transaction()
+                {
+                    UserID = user.UserID,
+                    AmountCharged = amountDue,
+                    DateDue = new DateTime(today.Year, today.Month, TuitionUtil.DUE_DAY),
+                    ProcessState = ProcessState.NOT_YET_CHARGED
+                });
+
+                
+            }
 
             //Store them in the database
-            transactions.ForEach(t => setTransactionAccessor.AddTransaction(t));
+            newTransactions.ForEach(t => setTransactionAccessor.AddTransaction(t));
 
-            return transactions;
+            //update newly deferred transactionss
+            transactionsToUpdate.ForEach(t => setTransactionAccessor.UpdateTransaction(t));
+
+            return newTransactions;
         }
-   
+
+        public Transaction CalculateNextPaymentForUser(int userID, DateTime today)
+        {
+            User user = getUserInfoAccessor.GetUserInfoByID(userID);
+            double nextAmount = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
+            DateTime dueDate = TuitionUtil.NextPaymentDueDate(user.Plan, today);
+            return new Transaction()
+            {
+                UserID = userID,
+                AmountCharged = nextAmount,
+                DateDue = dueDate,
+                ProcessState = ProcessState.NOT_YET_CHARGED
+            };
+        }
+
+        public double CalculatePeriodicPayment(User user)
+        {
+            return TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
+        }
     }
 }

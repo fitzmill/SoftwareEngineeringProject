@@ -48,3 +48,27 @@ String.prototype.downloadCSV = function (filename) {
     link.setAttribute('download', filename);
     link.click();
 };
+
+String.prototype.passwordMeetsRequirements = function () {
+    //regular expression that checks for:
+    //contains 1 lowercase character
+    //contains 1 uppersace character
+    //contains 1 number
+    //contains 1 special character
+    //is between 8 and 32 characters
+    //DOES NOT contain ;'"
+    return this.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?!.*?[;'"]).{8,32}$/);
+}
+
+String.prototype.emailMeetsRequirements = function () {
+    //from emailregex.com
+    return this.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+}
+
+String.prototype.parseDateTimeString = function () {
+    let dateArray = this.split('-');
+    let year = dateArray[0];
+    let month = dateArray[1];
+    let day = dateArray[2].substring(0, 2);
+    return month + "/" + day + "/" + year;
+}

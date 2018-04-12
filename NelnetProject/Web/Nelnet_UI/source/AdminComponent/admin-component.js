@@ -1,23 +1,48 @@
-﻿require('./report-component.scss');
+﻿require('./admin-component.scss');
 
 const adminAPIURL = "/api/admin";
 
-ko.components.register('report-component', {
+exports.adminDashboardBeforeShow = function () {
+    let user = JSON.parse(localStorage.getItem('user'));
+    //user not logged in
+    if (!user || user.UserType !== "ADMIN") {
+        window.location = '#';
+        return;
+    }
+
+    //this will only be true when redirected to this page from login, since the component will be binded
+    if ($("admin-component").children().length > 0) {
+        vm = ko.dataFor($('admin-component').get(0).firstChild);
+        vm.loadAdminInformation();
+    }
+}
+
+ko.components.register('admin-component', {
     viewModel: function (params) {
-        var reportComponentVM = this;
-        reportComponentVM.generateStartDate = ko.observable();
-        reportComponentVM.generateEndDate = ko.observable();
+        var vm = this;
 
-        reportComponentVM.unsettledTransactions = ko.observableArray([]);
-        reportComponentVM.allTransactions = ko.observableArray([]);
-        reportComponentVM.amountCharged = ko.observable();
-        reportComponentVM.amountPaid = ko.observable();
-        reportComponentVM.amountOutstanding = ko.observable();
-        reportComponentVM.reportRange = ko.observable();
+        vm.generateStartDate = ko.observable();
+        vm.generateEndDate = ko.observable();
+        vm.reports = ko.observableArray([]);
 
-        reportComponentVM.generateReport = function () {
-            generateReport(reportComponentVM.generateStartDate(), reportComponentVM.generateEndDate()).done(function (data) {
-                reportComponentVM.reports.unshift(parseReportModel(data));
+        vm.unsettledTransactions = ko.observableArray([]);
+        vm.allTransactions = ko.observableArray([]);
+        vm.amountCharged = ko.observable();
+        vm.amountPaid = ko.observable();
+        vm.amountOutstanding = ko.observable();
+        vm.reportRange = ko.observable();
+
+        vm.loadAdminInformation = function () {
+            getReports().done((data) => {
+                vm.reports(data.map((report) => parseReportModel(report)));
+            }).fail((jqXHR) => {
+                window.alert("Could not get reports, please try refreshing the page");
+            });
+        }
+
+        vm.generateReport = function () {
+            generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
+                vm.reports.unshift(parseReportModel(data));
             }).fail(function (jqXHR) {
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                 window.alert("Could not generate report: ".concat(errorMessage));
@@ -25,7 +50,7 @@ ko.components.register('report-component', {
 
         };
 
-        reportComponentVM.viewReport = function (report) {
+        vm.viewReport = function (report) {
             $("#modalViewReport").modal("show");
             $("#modalViewReport").focus();
             $("#headerLoadingModal").show();
@@ -48,19 +73,20 @@ ko.components.register('report-component', {
 
                 //filter all transactions to just get unsettled ones
                 //makes a deep copy of the array
+                //TODO: Implement support for Joe's eventual 'DEFERRED' process state
                 let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
                 unsettledTransactions.forEach((t, index, array) => {
-                    array[index].DateDue = parseDateTimeString(t.DateDue);
+                    array[index].DateDue = t.DateDue.parseDateTimeString();
                     array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
                 });
 
                 //assign data to components
-                reportComponentVM.amountCharged(amountCharged);
-                reportComponentVM.amountPaid(amountPaid);
-                reportComponentVM.amountOutstanding(amountOutstanding);
-                reportComponentVM.unsettledTransactions(unsettledTransactions);
-                reportComponentVM.allTransactions(data);
-                reportComponentVM.reportRange(report.StartDate + " - " + report.EndDate);
+                vm.amountCharged(amountCharged);
+                vm.amountPaid(amountPaid);
+                vm.amountOutstanding(amountOutstanding);
+                vm.unsettledTransactions(unsettledTransactions);
+                vm.allTransactions(data);
+                vm.reportRange(report.StartDate + " - " + report.EndDate);
 
                 $("#headerLoadingModal").hide();
 
@@ -73,27 +99,20 @@ ko.components.register('report-component', {
 
         };
 
-        reportComponentVM.downloadReportDetails = function () {
-            let csv = reportComponentVM.allTransactions().createCSVString();
+        vm.downloadReportDetails = function () {
+            let csv = vm.allTransactions().createCSVString();
 
             csv.downloadCSV("Transactions.csv");
         };
 
-        reportComponentVM.reports = ko.observableArray([]);
+        let user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.UserType === "ADMIN") {
+            vm.loadAdminInformation();
+        }
 
-        getReports().done(function (data) {
-            data.forEach(function (report) {
-                reportComponentVM.reports.push(parseReportModel(report));
-            });
-        }).fail(function (jqXHR) {
-            window.alert("Could not get report history, please try refreshing the page.");
-        });
-
-        $('#processStateInfo').tooltip();
-
-        return reportComponentVM;
+        return vm;
     },
-    template: require('./report-component.html')
+    template: require('./admin-component.html')
 });
 
 //splits a date string thats in YYYY/MM/DD format into parts
@@ -116,25 +135,15 @@ function splitViewDate(dateString) {
     };
 }
 
-//turns c# datetime object into a more readable format
-function parseDateTimeString(dateTime) {
-    let dateArray = dateTime.split('-');
-    let year = dateArray[0];
-    let month = dateArray[1];
-    let day = dateArray[2].substring(0, 2);
-    return month + "/" + day + "/" + year;
-}
-
 //turn report into a readable format
 function parseReportModel(report) {
     return {
         ReportID: report.ReportID,
-        DateCreated: parseDateTimeString(report.DateCreated),
-        StartDate: parseDateTimeString(report.StartDate),
-        EndDate: parseDateTimeString(report.EndDate)
+        DateCreated: report.DateCreated.parseDateTimeString(),
+        StartDate: report.StartDate.parseDateTimeString(),
+        EndDate: report.EndDate.parseDateTimeString()
     };
 }
-
 
 //fetches all reports from the report api
 function getReports() {

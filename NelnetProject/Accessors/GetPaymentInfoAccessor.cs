@@ -30,7 +30,6 @@ namespace Accessors
 
                 paymentInfo.FirstName = deserializedResponse.first_name;
                 paymentInfo.LastName = deserializedResponse.last_name;
-                paymentInfo.Company = deserializedResponse.company;
                 paymentInfo.CardNumber = deserializedResponse.last_4;
                 paymentInfo.CardType = deserializedResponse.card_type;
                 paymentInfo.ExpirationMonth = deserializedResponse.card_exp_month;

@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetReportEngine.cs" />
     <Compile Include="SetUserInfoEngine.cs" />
+    <Compile Include="Utils\EmailUtil.cs" />
     <Compile Include="Utils\PasswordUtils.cs" />
     <Compile Include="Utils\TuitionUtil.cs" />
   </ItemGroup>

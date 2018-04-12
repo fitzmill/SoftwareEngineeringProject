@@ -18,10 +18,16 @@ namespace Core.Interfaces
         string CreateCustomer(UserPaymentInfoDTO customerInfo);
 
         /// <summary>
-        /// Updates a users information on paymentSpring
+        /// Updates a user's name and address information on paymentSpring
         /// </summary>
-        /// <param name="customerInfo">The new information to be stored with the customer</param>
-        void UpdateCustomer(UserPaymentInfoDTO customerInfo);
+        /// <param name="paymentAddressInfo">The new information to be stored with the customer</param>
+        void UpdateCustomerBillingInformation(PaymentAddressDTO paymentAddressInfo);
+
+        /// <summary>
+        /// Updates a user's card information on paymentSpring
+        /// </summary>
+        /// <param name="paymentCardInfo">The new information to be stored with the customer</param>
+        void UpdateCustomerCardInformation(PaymentCardDTO paymentCardInfo);
 
         /// <summary>
         /// Deletes a users information from paymentSpring

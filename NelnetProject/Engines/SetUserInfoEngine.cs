@@ -3,6 +3,7 @@ using Core.DTOs;
 using Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Web.ModelBinding;
 
 namespace Engines
 {
@@ -23,12 +24,17 @@ namespace Engines
             return setPaymentInfoAccessor.CreateCustomer(userPaymentInfo);
         }
 
-        //make a call to the SetPaymentInfoAccessor to update the payment info associated with the customerID
-        public void UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo)
+        //make a call to the SetPaymentInfoAccessor to update the payment name and address info associated with the customerID
+        public void UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressInfo)
         {
-            setPaymentInfoAccessor.UpdateCustomer(userPaymentInfo);
+            setPaymentInfoAccessor.UpdateCustomerBillingInformation(paymentAddressInfo);
         }
 
+        //make a call to the SetPaymentInfoAccessor to update the payment card info associated with the customerID
+        public void UpdatePaymentCardInfo(PaymentCardDTO paymentCardInfo)
+        {
+            setPaymentInfoAccessor.UpdateCustomerCardInformation(paymentCardInfo);
+        }
         //make a call to the SetPaymentInfoAccessor to delete the payment info associated with the customerID
         public void DeletePaymentInfo(string customerID)
         {
@@ -39,14 +45,12 @@ namespace Engines
         public void InsertPersonalInfo(User user)
         {
             setUserInfoAccessor.InsertPersonalInfo(user);
-            InsertStudentInfo(user.UserID, user.Students);
         }
 
         //make a call to the SetUserInfoAccessor that will update the database record associated with the user
         public void UpdatePersonalInfo(User user)
         {
             setUserInfoAccessor.UpdatePersonalInfo(user);
-            UpdateStudentInfo(user.Students);
         }
 
         //make a call to the SetUserInfoAccessor to delete the personal information associated with the userID including students

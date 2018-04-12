@@ -94,25 +94,26 @@ namespace Accessors
             return result;
         }
 
-        //Executes a stored procedure in the database for getting the most recent transaction with userID as a parameter
-        public Transaction GetMostRecentTransactionForUser(int userID)
+        //Executes a stored procedure in the database for getting all failed transactions
+        public IList<Transaction> GetAllFailedTransactions()
         {
-            string query = "[dbo].[GetMostRecentTransactionForUser]";
+            string query = "[dbo].[GetAllFailedTransactions]";
+
+            var result = new List<Transaction>();
 
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.Add(new SqlParameter("@UserID", userID));
 
                 command.CommandType = System.Data.CommandType.StoredProcedure;
 
                 conn.Open();
                 var reader = command.ExecuteReader();
 
-                //Only expecting one row to be returned
-                if (reader.Read())
+                //Read for all result rows
+                while (reader.Read())
                 {
-                    return new Transaction()
+                    result.Add(new Transaction()
                     {
                         TransactionID = reader.GetInt32(0),
                         UserID = reader.GetInt32(1),
@@ -121,11 +122,11 @@ namespace Accessors
                         DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
                         ProcessState = (ProcessState)reader.GetByte(5),
                         ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
-                    };
+                    });
                 }      
             }
 
-            return null;
+            return result;
         }
 
         //Executes a stored procedure in the database for getting all Transactions with startTime and endTime as parameters

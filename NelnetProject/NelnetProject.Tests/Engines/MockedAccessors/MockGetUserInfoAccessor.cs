@@ -21,7 +21,7 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
             return UserDB.Select(x => x.Email).Contains(email);
         }
 
-        public IList<User> GetAllUsers()
+        public IList<User> GetAllActiveUsers()
         {
             return UserDB;
         }

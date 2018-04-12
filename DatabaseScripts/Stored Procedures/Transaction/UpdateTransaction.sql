@@ -23,12 +23,11 @@ CREATE PROCEDURE UpdateTransaction
 	@UserID int,
 	@AmountCharged float,
 	@DateDue date,
-	@DateCharged date,
+	@DateCharged date = NULL,
 	@ProcessState tinyint,
-	@ReasonFailed varchar(255)
+	@ReasonFailed varchar(255) = NULL
 AS
 BEGIN
-	SET NOCOUNT ON;
 	UPDATE [dbo].[Transaction] SET 
 		UserId = @UserID, AmountCharged = @AmountCharged, DateDue = @DateDue, DateCharged = @DateCharged, ProcessState = @ProcessState, ReasonFailed = @ReasonFailed
 		WHERE TransactionID = @TransactionID

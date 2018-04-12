@@ -190,9 +190,11 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\RoutingController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Filters\SqlRowNotAffectedFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Managers\PaymentManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -207,15 +209,23 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Nelnet_UI\source\assets\images\information_icon.png" />
+    <Content Include="images\login-background_f4b7bde.jpg" />
+    <Content Include="Nelnet_UI\build\index.js" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.html" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.js" />
+    <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.html" />
+    <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.js" />
     <Content Include="Nelnet_UI\source\assets\images\login-background.jpg" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.html" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.js" />
     <Content Include="Nelnet_UI\source\index.html" />
     <Content Include="Nelnet_UI\source\index.js" />
-    <None Include="Nelnet_UI\source\ReportComponent\report-component.scss" />
-    <Content Include="Nelnet_UI\source\ReportComponent\report-component.html" />
-    <Content Include="Nelnet_UI\source\ReportComponent\report-component.js" />
+    <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.scss" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.scss" />
+    <Content Include="Nelnet_UI\source\assets\background-image.scss" />
+    <None Include="Nelnet_UI\source\AdminComponent\admin-component.scss" />
+    <Content Include="Nelnet_UI\source\AdminComponent\admin-component.html" />
+    <Content Include="Nelnet_UI\source\AdminComponent\admin-component.js" />
     <Content Include="Nelnet_UI\source\utility.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -239,8 +249,6 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="connections-sample.config" />
-    <Content Include="connections.config" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\history.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
