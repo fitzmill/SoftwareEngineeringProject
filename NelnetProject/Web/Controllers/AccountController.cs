@@ -111,8 +111,6 @@ namespace Web.Controllers
 
             //check if payment info is valid, if not return error
 
-            //verify email 
-
             User user = new User
             {
                 UserID = 0,
@@ -129,7 +127,7 @@ namespace Web.Controllers
             
             setUserInfoEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
-            return Ok();
+            return Ok(user);
         }
 
         [HttpPost]

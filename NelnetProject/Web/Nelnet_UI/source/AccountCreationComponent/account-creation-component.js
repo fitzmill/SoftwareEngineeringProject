@@ -66,23 +66,39 @@ ko.components.register('account-creation-component', {
         vm.calcRates = function () {
             let students = vm.students().map(s => {
                 return {
+                    StudentID: 0, 
+                    FirstName: s.studentFirstName(),
+                    LastName: s.studentLastName(),
                     Grade: s.studentGrade()
                 };
             });
 
-            calculatePeriodicPayment("YEARLY", students).done(function (data) {
+            let user = {
+                UserID: 0,
+                FirstName: vm.firstName(),
+                LastName: vm.lastName(),
+                Email: vm.email(),
+                Plan: 0,
+                UserType: GENERAL_USER,
+                Students: students
+            };
+
+            user.Plan = vm.PLAN_TYPE_VALUES["YEARLY"];
+            calculatePeriodicPayment(user).done(function (data) {
                 vm.yearlyRate(Number(data).toLocaleString('en'));
             }).fail(function (jqXHR) {
                 window.alert("Could not calculate yearly rate.");
             });
 
-            calculatePeriodicPayment("SEMESTERLY", students).done(function (data) {
+            user.Plan = vm.PLAN_TYPE_VALUES["SEMESTERLY"];
+            calculatePeriodicPayment(user).done(function (data) {
                 vm.semesterlyRate(Number(data).toLocaleString('en'));
             }).fail(function (jqXHR) {
                 window.alert("Could not calculate semesterly rate.");
             });
 
-            calculatePeriodicPayment("MONTHLY", students).done(function (data) {
+            user.Plan = vm.PLAN_TYPE_VALUES["MONTHLY"];
+            calculatePeriodicPayment(user).done(function (data) {
                 vm.monthlyRate(Number(data).toLocaleString('en'));
             }).fail(function (jqXHR) {
                 window.alert("Could not calculate monthly rate.");
@@ -263,7 +279,8 @@ ko.components.register('account-creation-component', {
             console.log(accountCreationInformation);
 
             createUser(accountCreationInformation).done(function (data) {
-                //TODO: move on to their dashboard
+                window.localStorage.setItem("user", JSON.stringify(data));
+                window.location = "#account-dashboard";
             }).fail(function (jqXHR) {
                 window.alert("Could not create account, please try again later.");
             });
@@ -287,11 +304,8 @@ ko.components.register('account-creation-component', {
 });
 
 //calculate the user's payment info
-function calculatePeriodicPayment(userPaymentPlan, students) {
-    let userData = JSON.stringify({
-        Plan: userPaymentPlan,
-        Students: students
-    });
+function calculatePeriodicPayment(user) {
+    let userData = JSON.stringify(user);
     return $.ajax(accountCreationAPIURL + "/CalculatePeriodicPayment", {
         method: "POST",
         contentType: "application/json; charset=utf-8",
