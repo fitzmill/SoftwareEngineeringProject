@@ -91,8 +91,8 @@ namespace Web.Controllers
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
-            
             setUserInfoEngine.InsertPersonalInfo(user);
+            setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
             return Ok();
         }
 

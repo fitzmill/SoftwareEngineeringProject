@@ -44,7 +44,6 @@ namespace Engines
         public void InsertPersonalInfo(User user)
         {
             setUserInfoAccessor.InsertPersonalInfo(user);
-            InsertStudentInfo(user.UserID, user.Students);
         }
 
         //make a call to the SetUserInfoAccessor that will update the database record associated with the user
