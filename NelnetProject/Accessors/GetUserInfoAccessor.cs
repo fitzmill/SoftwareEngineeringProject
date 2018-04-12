@@ -13,13 +13,12 @@ namespace Accessors
         {
             this.connectionString = connectionString;
         }
-        //Gets all of the user's from the database
-        public IList<User> GetAllUsers()
+
+        //Gets all regular active users from the database
+        public IList<User> GetAllActiveUsers()
         {
             string query = "[dbo].[GetAllUsers]";
             IList<User> result = new List<User>();
-            User user = new User();
-            Student student = new Student();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
@@ -32,34 +31,36 @@ namespace Accessors
                 {
                     if (reader.GetInt32(0) != oldId && oldId != null)
                     {
-                        result.Add(user);
                         firstRow = true;
                     }
                     if (firstRow)
                     {
                         oldId = reader.GetInt32(0);
-                        user.UserID = reader.GetInt32(0);
-                        user.FirstName = reader.GetString(1);
-                        user.LastName = reader.GetString(2);
-                        user.Email = reader.GetString(3);
-                        user.Hashed = reader.GetString(4);
-                        user.Salt = reader.GetString(5);
-                        user.PaymentPlan = (PaymentPlan)reader.GetByte(6);
-                        user.UserType = (UserType)reader.GetByte(7);
-                        user.CustomerID = reader.GetString(8);
-                        user.Students = new List<Student>();
+                        result.Add(new User()
+                        {
+                            UserID = reader.GetInt32(0),
+                            FirstName = reader.GetString(1),
+                            LastName = reader.GetString(2),
+                            Email = reader.GetString(3),
+                            Hashed = reader.GetString(4),
+                            Salt = reader.GetString(5),
+                            Plan = (PaymentPlan)reader.GetByte(6),
+                            UserType = (UserType)reader.GetByte(7),
+                            CustomerID = reader.GetString(8),
+                            Students = new List<Student>(),
+                        });
+                        
                         firstRow = false;
                     }
-                    student.StudentID = reader.GetInt32(9);
-                    student.FirstName = reader.GetString(10);
-                    student.LastName = reader.GetString(11);
-                    student.Grade = reader.GetByte(12);
-                    user.Students.Add(student);
+                    
+                    result[result.Count - 1].Students.Add(new Student()
+                    {
+                        StudentID = reader.GetInt32(9),
+                        FirstName = reader.GetString(10),
+                        LastName = reader.GetString(11),
+                        Grade = reader.GetByte(12),
+                });
                 }
-            }
-            if (result.Contains(user) == false && user != null)
-            {
-                result.Add(user);
             }
             return result;
         }
@@ -68,7 +69,6 @@ namespace Accessors
         {
             string query = "[dbo].[GetUserInfoByUserID]";
             User result = new User();
-            Student student = new Student();
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
@@ -87,17 +87,19 @@ namespace Accessors
                         result.Email = reader.GetString(2);
                         result.Hashed = reader.GetString(3);
                         result.Salt = reader.GetString(4);
-                        result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
+                        result.Plan = (PaymentPlan)reader.GetByte(5);
                         result.UserType = (UserType)reader.GetByte(6);
                         result.CustomerID = reader.GetString(7);
                         result.Students = new List<Student>();
                         firstRow = false;
                     }
-                    student.StudentID = reader.GetInt32(8);
-                    student.FirstName = reader.GetString(9);
-                    student.LastName = reader.GetString(10);
-                    student.Grade = reader.GetByte(11);
-                    result.Students.Add(student);
+                    result.Students.Add(new Student()
+                    {
+                        StudentID = reader.GetInt32(8),
+                        FirstName = reader.GetString(9),
+                        LastName = reader.GetString(10),
+                        Grade = reader.GetByte(11)
+                    });
                 }
             }
             return result;
@@ -127,17 +129,19 @@ namespace Accessors
                         result.Email = email;
                         result.Hashed = reader.GetString(3);
                         result.Salt = reader.GetString(4);
-                        result.PaymentPlan = (PaymentPlan)reader.GetByte(5);
+                        result.Plan = (PaymentPlan)reader.GetByte(5);
                         result.UserType = (UserType)reader.GetByte(6);
                         result.CustomerID = reader.GetString(7);
                         result.Students = new List<Student>();
                         firstRow = false;
                     }
-                    student.StudentID = reader.GetInt32(8);
-                    student.FirstName = reader.GetString(9);
-                    student.LastName = reader.GetString(10);
-                    student.Grade = reader.GetByte(11);
-                    result.Students.Add(student);
+                    result.Students.Add(new Student()
+                    {
+                        StudentID = reader.GetInt32(8),
+                        FirstName = reader.GetString(9),
+                        LastName = reader.GetString(10),
+                        Grade = reader.GetByte(11)
+                    });
                 }
             }
             return result;

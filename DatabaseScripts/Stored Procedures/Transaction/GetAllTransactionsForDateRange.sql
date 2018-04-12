@@ -1,3 +1,5 @@
+USE [NelnetPaymentProcessing]
+GO
 -- ================================================
 -- Template generated from Template Explorer using:
 -- Create Procedure (New Menu).SQL
@@ -33,6 +35,7 @@ BEGIN
 	t.TransactionID,
 	u.FirstName,
 	u.LastName,
+	u.Email,
 	t.AmountCharged,
 	t.DateDue,
 	t.DateCharged,

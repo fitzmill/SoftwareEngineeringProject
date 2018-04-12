@@ -22,7 +22,7 @@ namespace NelnetProject.Tests.Accessors
         [TestMethod]
         public void TestGetAllUsers()
         {
-            IList<User> users = getUserInfoAccessor.GetAllUsers();
+            IList<User> users = getUserInfoAccessor.GetAllActiveUsers();
             Assert.IsNotNull(users[0]);
         }
 

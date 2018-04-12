@@ -29,9 +29,9 @@ namespace Engines
         }
 
         //Calls identical method in IGetTransactionAccessor
-        public Transaction GetMostRecentTransactionForUser(int userID)
+        public IList<Transaction> GetAllFailedTransactions()
         {
-            return getTransactionAccessor.GetMostRecentTransactionForUser(userID);
+            return getTransactionAccessor.GetAllFailedTransactions();
         }
 
         //Calls identical method in IGetTransactionAccessor
