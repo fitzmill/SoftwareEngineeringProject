@@ -72,7 +72,7 @@ namespace Engines
         public IList<Transaction> GeneratePayments(DateTime today) //to be run on the 1st of each month
         {
             //Get all users
-            IList<User> users = getUserInfoAccessor.GetAllUsers();
+            IList<User> users = getUserInfoAccessor.GetAllActiveUsers();
 
             IList<Transaction> failedTransactions = getTransactionAccessor.GetAllFailedTransactions();
 

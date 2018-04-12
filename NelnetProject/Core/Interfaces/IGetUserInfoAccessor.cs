@@ -8,10 +8,10 @@ namespace Core.Interfaces
     public interface IGetUserInfoAccessor
     {
         /// <summary>
-        /// Gets all regular users from the database
+        /// Gets all regular active users from the database
         /// </summary>
-        /// <returns>A list of all regular users</returns>
-        IList<User> GetAllUsers();
+        /// <returns>A list of all regular active users</returns>
+        IList<User> GetAllActiveUsers();
         /// <summary>
         /// Gets a user's info from the database by a User's ID
         /// </summary>
