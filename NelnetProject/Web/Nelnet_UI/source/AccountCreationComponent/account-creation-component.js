@@ -60,17 +60,29 @@ ko.components.register('account-creation-component', {
 
         //fourth page
         vm.paymentType = ko.observable();
-        vm.calcRate = function (planType) {
+        vm.calcRates = function () {
             let students = vm.students().map(s => {
                 return {
                     Grade: s.studentGrade()
                 };
             });
-            calculatePeriodicPayment(planType, students).done(function (data) {
-                console.log(data);
-                return data;
+
+            calculatePeriodicPayment("YEARLY", students).done(function (data) {
+                vm.yearlyRate(Number(data).toLocaleString('en'));
             }).fail(function (jqXHR) {
-                window.alert("Could not calculate rate.");
+                window.alert("Could not calculate yearly rate.");
+            });
+
+            calculatePeriodicPayment("SEMESTERLY", students).done(function (data) {
+                vm.semesterlyRate(Number(data).toLocaleString('en'));
+            }).fail(function (jqXHR) {
+                window.alert("Could not calculate semesterly rate.");
+            });
+
+            calculatePeriodicPayment("MONTHLY", students).done(function (data) {
+                vm.monthlyRate(Number(data).toLocaleString('en'));
+            }).fail(function (jqXHR) {
+                window.alert("Could not calculate monthly rate.");
             });
         };
         vm.yearlyRate = ko.observable(0);
@@ -122,9 +134,7 @@ ko.components.register('account-creation-component', {
             }
             //radio buttons
             if (vm.currentPage == END_PAGE) {
-                vm.yearlyRate = vm.calcRate("YEARLY");
-                vm.semesterlyRate = vm.calcRate("SEMESTERLY");
-                vm.monthlyRate = vm.calcRate("MONTHLY");
+                vm.calcRates();
             }
         };
 

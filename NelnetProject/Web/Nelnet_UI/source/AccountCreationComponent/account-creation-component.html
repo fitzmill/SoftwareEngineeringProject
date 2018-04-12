@@ -29,8 +29,8 @@
 
                 <input class="input-account-creation card-medium card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" />
                 <input class="input-account-creation card-medium card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" />
-                <input class="input-account-creation card-tiny card-right" data-bind="value: year" placeholder="YYYY" type="number" min="0" max="9999"/>
-                <input class="input-account-creation card-tiny card-right" data-bind="value: month" placeholder="MM" type="number" min="1" max="12"/>
+                <input class="input-account-creation card-tiny card-right" id="expireYear" data-bind="value: year" placeholder="YYYY" type="number"/>
+                <input class="input-account-creation card-tiny card-right" data-bind="value: month" placeholder="MM" type="number"/>
 
                 <input class="input-account-creation card-full-column" data-bind="value: address1" placeholder="Address Line 1" />
                 <input class="input-account-creation card-full-column" data-bind="value: address2" placeholder="Address Line 2 (Optional)" />
@@ -54,15 +54,15 @@
                     <h4><b>Please select a payment plan:</b></h4>
                     <div class="radio-button">
                         <input type="radio" name="paymentType" value="monthly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Monthly at '+monthlyRate().formatMoney()+' (Sept - May)'" />
+                        <h5 class="radio-button-label" data-bind="text: 'Monthly at $'+monthlyRate()+' (Sept - May)'" />
                     </div>
                     <div class="radio-button">
                         <input type="radio" name="paymentType" value="semesterly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Semesterly at '+semesterlyRate().formatMoney()+' (Sept & Feb)'" />
+                        <h5 class="radio-button-label" data-bind="text: 'Semesterly at $'+semesterlyRate()+' (Sept & Feb)'" />
                     </div>
                     <div class="radio-button">
                         <input id="radio-button-3" type="radio" name="paymentType" value="yearly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Yearly at '+yearlyRate().formatMoney()+' (Sept)'"/>
+                        <h5 class="radio-button-label" data-bind="text: 'Yearly at $'+yearlyRate()+' (Sept)'"/>
                     </div>
                 </div>
             </div>
