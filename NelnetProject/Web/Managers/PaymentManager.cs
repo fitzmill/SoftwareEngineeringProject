@@ -31,6 +31,8 @@ namespace Web.Managers
             Timer timer = new Timer(timerInterval);
             timer.Elapsed += new ElapsedEventHandler(TimerIntervalElapsed);
             timer.Enabled = true;
+
+            TimerIntervalElapsed(null, null); //Initiate the event once on startup
         }
 
         public void TimerIntervalElapsed(object sender, ElapsedEventArgs e)

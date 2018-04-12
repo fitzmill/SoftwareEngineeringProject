@@ -45,7 +45,7 @@ namespace Web.Controllers
         [Route("UpdatePersonalInfo")]
         public IHttpActionResult UpdatePersonalInfo(User user)
         {
-            if (!IsValidUserObject(user))
+            if (user == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
@@ -58,8 +58,7 @@ namespace Web.Controllers
         [Route("UpdateStudentInfo")]
         public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
         {
-            if (updatedInfo == null || updatedInfo.UpdatedStudents == null || updatedInfo.DeletedStudentIDs == null || updatedInfo.AddedStudents == null ||
-                updatedInfo.UpdatedStudents.Any(s => !IsValidStudentObject(s)) || updatedInfo.AddedStudents.Any(s => !IsValidStudentObject(s)))
+            if (updatedInfo == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
@@ -74,7 +73,7 @@ namespace Web.Controllers
         [Route("DeleteUser")]
         public IHttpActionResult DeleteUser(User user)
         {
-            if (!IsValidUserObject(user))
+            if (user == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body");
             }
@@ -87,9 +86,9 @@ namespace Web.Controllers
         [Route("InsertUser")]
         public IHttpActionResult InsertUser([FromBody] AccountCreationDTO accountCreationInfo)
         {
-            if (accountCreationInfo == null)
+            if (accountCreationInfo == null || !ModelState.IsValid)
             {
-                throw new ArgumentNullException(nameof(accountCreationInfo));
+                return BadRequest("One or more required objects was not included in the request body.");
             }
 
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
@@ -159,6 +158,10 @@ namespace Web.Controllers
         [Route("UpdatePaymentBillingInfo")]
         public IHttpActionResult UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressDTO)
         {
+            if (paymentAddressDTO == null || !ModelState.IsValid)
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
             setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
             return Ok();
         }
@@ -167,6 +170,10 @@ namespace Web.Controllers
         [Route("UpdatePaymentCardInfo")]
         public IHttpActionResult UpdatePaymentCardInfo(PaymentCardDTO paymentCardDTO)
         {
+            if (paymentCardDTO == null || !ModelState.IsValid)
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
             setUserInfoEngine.UpdatePaymentCardInfo(paymentCardDTO);
             return Ok();
         }
@@ -175,7 +182,7 @@ namespace Web.Controllers
         [Route("InsertPaymentInfo")]
         public IHttpActionResult InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
-            if (!IsValidPaymentInfoObject(userPaymentInfo))
+            if (userPaymentInfo == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
@@ -211,33 +218,13 @@ namespace Web.Controllers
         //POST api/account/CalculatePeriodicPayment
         [HttpPost]
         [Route("CalculatePeriodicPayment")]
-        public IHttpActionResult CalculatePeriodicPayment([FromBody] User user)
+        public IHttpActionResult CalculatePeriodicPayment(User user)
         {
+            if (user == null || !ModelState.IsValid)
+            {
+                return BadRequest("One or more required objects was not included in the request body.");
+            }
             return Ok(paymentEngine.CalculatePeriodicPayment(user));
-        }
-
-        private bool IsValidUserObject(User user)
-        {
-            bool validUser = user != null && !String.IsNullOrEmpty(user.FirstName) && !String.IsNullOrEmpty(user.LastName) &&
-                !String.IsNullOrEmpty(user.CustomerID) && !String.IsNullOrEmpty(user.Email) && !String.IsNullOrEmpty(user.Hashed) &&
-                !String.IsNullOrEmpty(user.Salt);
-
-            //all students are valid
-            bool validStudents = validUser ?  user.Students != null && user.Students.All(s => IsValidStudentObject(s)) : false;
-
-            return validUser && validStudents;
-        }
-
-        private bool IsValidStudentObject(Student student)
-        {
-            return !String.IsNullOrEmpty(student.FirstName) && !String.IsNullOrEmpty(student.LastName);
-        }
-
-        private bool IsValidPaymentInfoObject(UserPaymentInfoDTO paymentInfo)
-        {
-            return paymentInfo != null && !String.IsNullOrEmpty(paymentInfo.FirstName) && !String.IsNullOrEmpty(paymentInfo.LastName) &&
-                !String.IsNullOrEmpty(paymentInfo.State) && !String.IsNullOrEmpty(paymentInfo.StreetAddress1) &&
-                !String.IsNullOrEmpty(paymentInfo.StreetAddress2) && !String.IsNullOrEmpty(paymentInfo.Zip);
         }
     }
 }

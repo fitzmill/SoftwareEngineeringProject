@@ -24,8 +24,9 @@ CREATE PROCEDURE DeletePersonalInfo
 AS
 BEGIN
 
-    -- Insert statements for procedure here
-	DELETE FROM [dbo].[User]
+	UPDATE [dbo].[User]
+	SET Active=0
 	WHERE UserID=@ID;
+
 END
 GO

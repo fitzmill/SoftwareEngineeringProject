@@ -1,24 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Core.DTOs
 {
+    /// <summary>
+    /// DTO used to hold credit card information for PaymentSpring
+    /// </summary>
     public class PaymentCardDTO
     {
+        /// <summary>
+        /// User's Customer ID
+        /// </summary>
+        [Required]
         public string CustomerID { get; set; }
 
+        /// <summary>
+        /// Cardholder's Credit Card
+        /// </summary>
+        [Range(0, long.MaxValue)]
         public long CardNumber { get; set; }
 
+        /// <summary>
+        /// Cardholder's Credit Card Expiration Year
+        /// </summary>
         public int ExpirationYear { get; set; }
 
+        /// <summary>
+        /// Cardholder's Credit Card Expiration Month
+        /// </summary>
         public int ExpirationMonth { get; set; }
 
-        //auto-generated overide to the .Equals and .GetHashCode method to compare these objects
+        /// <summary>
+        /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
+        /// </summary>
         public override bool Equals(object obj)
         {
-            var dTO = obj as PaymentCardDTO;
-            return dTO != null &&
+            return obj is PaymentCardDTO dTO &&
                    CustomerID == dTO.CustomerID &&
                    CardNumber == dTO.CardNumber &&
                    ExpirationYear == dTO.ExpirationYear &&

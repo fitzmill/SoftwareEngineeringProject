@@ -23,6 +23,8 @@ ko.components.register('login-component', {
             validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
                 if (validLogin) {
                     getUserInfoByEmail(vm.email()).done(function (user) {
+                        vm.email("");
+                        vm.password("");
                         if (user.UserType === "GENERAL") {
                             window.localStorage.setItem("user", JSON.stringify(user));
                             window.location = "#account-dashboard";
@@ -43,7 +45,7 @@ ko.components.register('login-component', {
             });
         }
 
-        $(document).keypress(function (e) {
+        $("#card-login").keypress(function (e) {
             //If the user presses enter, it will click the login button
             if (e.which === 13) {
                 $('#btn-login').focus();
