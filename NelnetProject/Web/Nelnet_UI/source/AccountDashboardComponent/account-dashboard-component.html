@@ -46,8 +46,8 @@
 
             <div id="edit-payment-input" class="edit-payment-active">
                 <input class="input-information" type="number" placeholder="Credit Card Number" min="0" data-bind="value: CardNumber" style="display: block;" />
-                <input class="input-information" type="number" placeholder="MM" min="1" max="12" data-bind="value: ExpirationMonth" />
-                <input class="input-information" type="number" placeholder="YYYY" min="0" max="9999" data-bind="value: ExpirationYear" />
+                <select class="select-inline-info" data-bind="options: $parent.dropdownOptions.Months, value: ExpirationMonth, optionsCaption: 'MM'"></select>
+                <select class="select-inline-info" data-bind="options: $parent.dropdownOptions.Years, value: ExpirationYear, optionsCaption: 'YYYY'"></select>
             </div>
         </div>
     </div>
@@ -79,7 +79,7 @@
                 <input class="input-street-address input-information" type="text" placeholder="Street Address 2" data-bind="value: StreetAddress2" />
                 <div style="display: block; margin-bottom: 30px;">
                     <input class="input-information" type="text" placeholder="City" data-bind="value: City" />
-                    <input class="input-information" type="text" placeholder="State (e.g. 'KS')" maxlength="2" data-bind="value: State" />
+                    <select class="select-inline-info" data-bind="options: $parent.dropdownOptions.States, value: State, optionsCaption: 'State'"></select>
                     <input class="input-information" type="text" placeholder="Zip Code" data-bind="value: Zip" />
                 </div>
             </div>
@@ -97,14 +97,14 @@
         <div data-bind="foreach: Students">
             <div>
                 <h5 class="student-info edit-student-inactive" data-bind="text: FirstName() + ' ' + LastName()" style="margin-top: 20px"></h5>
-                <h5 class="student-info edit-student-inactive" data-bind="text: 'Grade ' + Grade()"></h5>
+                <h5 class="student-info edit-student-inactive" data-bind="text: $root.dropdownOptions.Grades.find((obj) => obj.num == Grade()).text"></h5>
 
                 <button id="btn-delete-student" class="btn btn-danger edit-student-active" data-bind="click: function(student) { $parent.openConfirmModal(student, 'You are about to delete a student, are you sure?', $parent.deleteStudent) }">Delete Student</button>
                 <div class="student-info edit-student-active">
                     <input class="input-information" type="text" placeholder="Student First Name" data-bind="value: FirstName" />
                     <input class="input-information" type="text" placeholder="Student Last Name" data-bind="value: LastName" />
                 </div>
-                <input class="student-info edit-student-active input-information" type="number" placeholder="Student Grade" min="0" max="12" data-bind="value: Grade" style="margin-bottom: 10px;" />
+                <select class="select-inline-info edit-student-active student-info" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: Grade, optionsCaption: 'Grade'" style="margin-bottom: 10px"></select>
 
             </div>
         </div>

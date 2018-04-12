@@ -216,6 +216,7 @@
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.html" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.js" />
     <Content Include="Nelnet_UI\source\assets\images\login-background.jpg" />
+    <Content Include="Nelnet_UI\source\dropdownOptions.js" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.html" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.js" />
     <Content Include="Nelnet_UI\source\index.html" />

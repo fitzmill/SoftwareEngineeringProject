@@ -13,7 +13,7 @@ namespace Core
         /// <summary>
         /// Transaction's ID
         /// </summary>
-        [Range(1, int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int TransactionID { get; set; }
 
         /// <summary>

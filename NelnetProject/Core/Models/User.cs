@@ -12,7 +12,7 @@ namespace Core
         /// <summary>
         /// User's ID
         /// </summary>
-        [Range(1, int.MaxValue)]
+        [Range(0, int.MaxValue)]
         public int UserID { get; set; }
 
         /// <summary>
