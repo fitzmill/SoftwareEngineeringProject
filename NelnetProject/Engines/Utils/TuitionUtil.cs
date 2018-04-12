@@ -14,7 +14,7 @@ namespace Engines.Utils
     {
         public static readonly int OVERDUE_RETRY_PERIOD = 7;
         public static readonly int DUE_DAY = 5;
-        public static readonly double LATE_FEE = 25;
+        public static readonly double LATE_FEE = 25 * 1.03;
         public static readonly int DEFAULT_PRECISION = 2;
 
         private static Dictionary<int, int> rates = new Dictionary<int, int>()

@@ -15,7 +15,7 @@ namespace Web.Managers
         public Func<DateTime> dateProvider = () =>
         {
             DateTime now = DateTime.Now;
-            return new DateTime(2018, 9, 1, 10, now.Minute, now.Second);
+            return new DateTime(2018, 10, 1, 10, now.Minute, now.Second);
         };
 
         private double timerInterval;

@@ -23,9 +23,9 @@ CREATE PROCEDURE UpdateTransaction
 	@UserID int,
 	@AmountCharged float,
 	@DateDue date,
-	@DateCharged date,
+	@DateCharged date = NULL,
 	@ProcessState tinyint,
-	@ReasonFailed varchar(255)
+	@ReasonFailed varchar(255) = NULL
 AS
 BEGIN
 	UPDATE [dbo].[Transaction] SET 

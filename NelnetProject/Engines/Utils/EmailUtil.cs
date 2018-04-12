@@ -57,11 +57,11 @@ namespace Engines.Utils
                 throw new ArgumentNullException("User cannot be null.");
             }
 
-            int daysRemaining = TuitionUtil.DUE_DAY - TuitionUtil.DaysOverdue(t, today);
-            string subject = string.Format("Alert from Tuition Assistant: Payment Unsuccessful ({0} DAYS REMAINING)", daysRemaining);
-            string rawBody = string.Format("There was an issue with your credit card. Your payment on {0:MMMM d yyyy} for ${1:f2} failed for the following reason: {2}." +
-                "<br><br>Please resolve the issue as soon as possible.<br><br>If the payment remains unsuccessful after {3} more days, the amount will be deferred and a late fee of ${4:f2} will be added.",
-                t.DateCharged, t.AmountCharged, t.ReasonFailed, daysRemaining, TuitionUtil.LATE_FEE);
+            int daysRemaining = TuitionUtil.OVERDUE_RETRY_PERIOD - TuitionUtil.DaysOverdue(t, today);
+            string subject = string.Format("Alert from Tuition Assistant: Payment Unsuccessful ({0} DAY{1} REMAINING)", daysRemaining, daysRemaining == 1 ? "" : "S");
+            string rawBody = string.Format("There was an issue with your credit card. Your payment on {0:MMMM d yyyy} for ${1:f2} failed for the following reason: {2}" +
+                "<br><br>Please resolve the issue as soon as possible.<br><br>If the payment remains unsuccessful after {3} more day{4}, the amount will be deferred and a late fee of ${5:f2} will be added.",
+                t.DateCharged, t.AmountCharged, t.ReasonFailed, daysRemaining, daysRemaining == 1 ? "" : "s", TuitionUtil.LATE_FEE);
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
