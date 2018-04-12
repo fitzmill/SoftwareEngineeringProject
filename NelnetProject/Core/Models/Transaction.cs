@@ -5,25 +5,52 @@ using System.Text;
 
 namespace Core
 {
+    /// <summary>
+    /// Model for transactions
+    /// </summary>
     public class Transaction
     {
+        /// <summary>
+        /// Transaction's ID
+        /// </summary>
         [Range(0, int.MaxValue)]
         public int TransactionID { get; set; }
 
+        /// <summary>
+        /// User ID Associated With The Transaction
+        /// </summary>
         [Range(1, int.MaxValue)]
         public int UserID { get; set; }
 
+        /// <summary>
+        /// Amount Charged In The Transaction
+        /// </summary>
         [Range(0.0, double.MaxValue)]
         public double AmountCharged { get; set; }
 
+        /// <summary>
+        /// Due Date Of Transaction
+        /// </summary>
         public DateTime DateDue { get; set; }
 
+        /// <summary>
+        /// Date The Transaction Is Charged
+        /// </summary>
         public DateTime? DateCharged { get; set; }
 
+        /// <summary>
+        /// State That The Transaction Is In (NOT_YET_CHARGED, SUCCESSFUL, RETRYING, FAILED, DEFERRED)
+        /// </summary>
         public ProcessState ProcessState { get; set; }
 
+        /// <summary>
+        /// States That A Transaction Failed Given By PaymentSpring
+        /// </summary>
         public string ReasonFailed { get; set; }
 
+        /// <summary>
+        /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
+        /// </summary>
         public override bool Equals(object obj)
         {
             var transaction = obj as Transaction;

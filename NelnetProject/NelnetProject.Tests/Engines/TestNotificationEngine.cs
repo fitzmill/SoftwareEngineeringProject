@@ -51,16 +51,16 @@ namespace NelnetProject.Tests.Engines
                 {
                     To = "bob@email.com",
                     Subject = "Alert from Tuition Assistant: Upcoming Payment",
-                    Body = "Hi Bob,\nYou have an upcoming payment.\nDate: May 5 2018\nAmount: $37.34\nYou don't need to worry about anything. " +
-                    "We'll charge your card automatically on this date.\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n"
+                    Body = "Hi Bob,<br><br>You have an upcoming payment.<br><br>Date: May 5 2018<br>Amount: $37.34<br><br>You don't need to worry about anything. " +
+                    "We'll charge your card automatically on this date.<br>Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
                 },
                 new EmailNotification()
                 {
                     To = "jimmmmmms@eh.jim",
                     Subject = "Alert from Tuition Assistant: Payment Failed",
-                    Body = "Hi Jimmeh,\nYour payment of $234.12 that was due on May 5 2018 failed for 7 days and has been deferred." +
-                    "\nThe amount will be added to your next payment, along with a late fee of $25.00.\nPlease contact us if you have any questions." +
-                    "\nPowered by Tuition Assistant\n"
+                    Body = "Hi Jimmeh,<br><br>Your payment of $234.12 that was due on May 5 2018 failed for 7 days and has been deferred." +
+                    "<br><br>The amount will be added to your next payment, along with a late fee of $25.75.<br>Please contact us if you have any questions." +
+                    "<br><br><br>Powered by Tuition Assistant<br>"
                 }
             };
 

@@ -55,7 +55,6 @@
     <Compile Include="DTOs\UserPaymentInfoDTO.cs" />
     <Compile Include="Enums\PaymentPlan.cs" />
     <Compile Include="Enums\ProcessState.cs" />
-    <Compile Include="Enums\ReasonFailed.cs" />
     <Compile Include="Enums\UserType.cs" />
     <Compile Include="Exceptions\EmailException.cs" />
     <Compile Include="Exceptions\ReportException.cs" />

@@ -16,7 +16,7 @@ namespace NelnetProject.Tests.Engines.Utils
             String subject = "subject";
             String rawBody = "This is a test line.";
             String userFirstName = "Bob";
-            String expectedBody = "Hi Bob,\nThis is a test line.\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+            String expectedBody = "Hi Bob,<br><br>This is a test line.<br>Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>";
 
             EmailNotification email = EmailUtil.GenerateEmail(to, subject, rawBody, userFirstName);
 
@@ -36,7 +36,9 @@ namespace NelnetProject.Tests.Engines.Utils
                 FirstName = "Bob",
                 Email = "bob@email.com"
             };
-            String expectedBody = "Hi Bob,\nYou have an upcoming payment.\nDate: March 30 2018\nAmount: $37.34\nYou don't need to worry about anything. We'll charge your card automatically on this date.\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+            String expectedBody = "Hi Bob,<br><br>You have an upcoming payment.<br><br>Date: March 30 2018<br>Amount: $37.34" +
+                "<br><br>You don't need to worry about anything. We'll charge your card automatically on this date.<br>" +
+                "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>";
 
             EmailNotification email = EmailUtil.UpcomingPaymentNotification(t, u);
 
@@ -60,7 +62,8 @@ namespace NelnetProject.Tests.Engines.Utils
                 FirstName = "Bob",
                 Email = "bob@email.com"
             };
-            String expectedBody = "Hi Bob,\nCongratulations! Your payment was processed succesfully.\nDate: March 3 2018\nAmount: $37.00\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+            String expectedBody = "Hi Bob,<br><br>Congratulations! Your payment was processed succesfully.<br><br>Date: March 3 2018" +
+                "<br><br>Amount: $37.00<br>Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>";
 
             EmailNotification email = EmailUtil.PaymentChargedSuccessfullyNotification(t, u);
 
@@ -85,14 +88,14 @@ namespace NelnetProject.Tests.Engines.Utils
                 FirstName = "Bob",
                 Email = "bob@email.com"
             };
-            String expectedBody = "Hi Bob,\nThere was an issue with your credit card. Your payment on April 3 2018 for $234.10 failed for the following reason: Card Expired." +
-                "\nPlease resolve the issue as soon as possible.\nIf the payment remains unsuccessful after 3 more days, the amount will be deferred and a late fee of $25.00 will be added." +
-                "\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+            String expectedBody = "Hi Bob,<br><br>There was an issue with your credit card. Your payment on April 3 2018 for $234.10 failed for the following reason: Card Expired<br><br>" +
+                "Please resolve the issue as soon as possible.<br><br>If the payment remains unsuccessful after 5 more days, the amount will be deferred and a late fee of $25.75 will be added.<br>" +
+                "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>";
 
             EmailNotification email = EmailUtil.PaymentUnsuccessfulRetryingNotification(t, u, new DateTime(2018, 4, 3));
 
             Assert.AreEqual(u.Email, email.To);
-            Assert.AreEqual("Alert from Tuition Assistant: Payment Unsuccessful (3 DAYS REMAINING)", email.Subject);
+            Assert.AreEqual("Alert from Tuition Assistant: Payment Unsuccessful (5 DAYS REMAINING)", email.Subject);
             Assert.AreEqual(expectedBody, email.Body);
         }
 
@@ -113,8 +116,9 @@ namespace NelnetProject.Tests.Engines.Utils
                 Email = "bob@email.com"
             };
 
-            String expectedBody = "Hi Bob,\nYour payment of $234.10 that was due on April 1 2018 failed for 7 days and has been deferred." +
-                "\nThe amount will be added to your next payment, along with a late fee of $25.00.\nPlease contact us if you have any questions.\nPowered by Tuition Assistant\n";
+            String expectedBody = "Hi Bob,<br><br>Your payment of $234.10 that was due on April 1 2018 failed for 7 days and has been deferred.<br><br>" +
+                "The amount will be added to your next payment, along with a late fee of $25.75.<br>Please contact us if you have any questions." +
+                "<br><br><br>Powered by Tuition Assistant<br>";
 
             EmailNotification email = EmailUtil.PaymentFailedNotification(t, u);
 
