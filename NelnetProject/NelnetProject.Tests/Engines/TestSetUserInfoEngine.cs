@@ -222,7 +222,7 @@ namespace NelnetProject.Tests.Engines
             };
             user.Students.Add(student);
 
-            setUserInfoEngine.InsertPersonalInfo(user);
+            setUserInfoEngine.InsertPersonalInfo(user, "Cornflakes*7");
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
             Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
@@ -277,7 +277,7 @@ namespace NelnetProject.Tests.Engines
             user.Students.Add(student2);
             user.Students.Add(student3);
 
-            setUserInfoEngine.InsertPersonalInfo(user);
+            setUserInfoEngine.InsertPersonalInfo(user, "Software6!");
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
             Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));

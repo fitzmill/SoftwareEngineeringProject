@@ -46,8 +46,8 @@
 
             <div id="edit-payment-input" class="edit-payment-active">
                 <input class="input-information" type="number" placeholder="Credit Card Number" min="0" data-bind="value: CardNumber" style="display: block;" />
-                <select class="select-inline-info" data-bind="options: $parent.dropdownOptions.Months, value: ExpirationMonth, optionsCaption: 'MM'"></select>
-                <select class="select-inline-info" data-bind="options: $parent.dropdownOptions.Years, value: ExpirationYear, optionsCaption: 'YYYY'"></select>
+                <select class="select-inline-info" data-bind="options: $root.dropdownOptions.Months, value: ExpirationMonth, optionsCaption: 'MM'"></select>
+                <select class="select-inline-info" data-bind="options: $root.dropdownOptions.Years, value: ExpirationYear, optionsCaption: 'YYYY'"></select>
             </div>
         </div>
     </div>

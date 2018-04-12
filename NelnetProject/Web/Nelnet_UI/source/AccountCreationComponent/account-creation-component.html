@@ -19,25 +19,24 @@
                 <input class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" />
                 <input class="input-account-creation card-full-column" data-bind="value: email" placeholder="Email" />
                 <input class="input-account-creation card-full-column" data-bind="value: reenterEmail" placeholder="Confirm Email" />
-                <input class="input-account-creation card-full-column" data-bind="value: password" placeholder="Password" />
-                <input class="input-account-creation card-full-column" data-bind="value: reenterPassword" placeholder="Confirm Password" />
+                <input class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password" />
+                <input class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" />
             </div>
 
             <div id="info-page-2">
-                <input class="input-account-creation card-extra-large card-left" data-bind="value: cardNumber" placeholder="Credit Card Number" />
-                <input class="input-account-creation card-small card-right" data-bind="value: csc" placeholder="CSC" />
+                <input class="input-account-creation card-half-column card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" />
+                <input class="input-account-creation card-half-column card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" />
 
-                <input class="input-account-creation card-medium card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" />
-                <input class="input-account-creation card-medium card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" />
-                <input class="input-account-creation card-tiny card-right" data-bind="value: year" placeholder="YY" />
-                <input class="input-account-creation card-tiny card-right" data-bind="value: month" placeholder="MM" />
+                <input class="input-account-creation card-extra-large card-left" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number"/>
+                <input class="input-account-creation card-tiny card-left" data-bind="value: month" placeholder="MM" />
+                <input class="input-account-creation card-tiny card-left" id="expireYear" data-bind="value: year" placeholder="YYYY" />
 
                 <input class="input-account-creation card-full-column" data-bind="value: address1" placeholder="Address Line 1" />
                 <input class="input-account-creation card-full-column" data-bind="value: address2" placeholder="Address Line 2 (Optional)" />
 
                 <input class="input-account-creation card-large card-left" data-bind="value: city" placeholder="City" />
-                <input class="input-account-creation card-small card-right" data-bind="value: zip" placeholder="Zip Code" />
-                <input class="input-account-creation card-small card-right" data-bind="value: state" placeholder="State" />
+                <input class="input-account-creation card-small card-left" data-bind="value: zip" placeholder="Zip Code" />
+                <input class="input-account-creation card-small card-left" data-bind="value: state" placeholder="State" />
             </div>
 
             <div id="info-page-3">
@@ -53,16 +52,16 @@
                 <div class="output-account-creation">
                     <h4><b>Please select a payment plan:</b></h4>
                     <div class="radio-button">
-                        <input type="radio" name="paymentType" value="monthly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Monthly at '+calcYearlyRate()+' (Sept - May)'" />
+                        <input type="radio" name="paymentType" value="MONTHLY" data-bind="checked: paymentType" />
+                        <h5 class="radio-button-label" data-bind="text: 'Monthly at $'+monthlyRate()+' (Sept - May)'" />
                     </div>
                     <div class="radio-button">
-                        <input type="radio" name="paymentType" value="semesterly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Semesterly at '+calcYearlyRate()+' (Sept & Feb)'" />
+                        <input type="radio" name="paymentType" value="SEMESTERLY" data-bind="checked: paymentType" />
+                        <h5 class="radio-button-label" data-bind="text: 'Semesterly at $'+semesterlyRate()+' (Sept & Feb)'" />
                     </div>
                     <div class="radio-button">
-                        <input id="radio-button-3" type="radio" name="paymentType" value="yearly" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Yearly at '+calcYearlyRate()+' (Sept)'"/>
+                        <input id="radio-button-3" type="radio" name="paymentType" value="YEARLY" data-bind="checked: paymentType" />
+                        <h5 class="radio-button-label" data-bind="text: 'Yearly at $'+yearlyRate()+' (Sept)'"/>
                     </div>
                 </div>
             </div>
