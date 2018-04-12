@@ -1,4 +1,10 @@
-﻿.card-account-information-section {
+﻿#btn-delete-student {
+    float: right;
+    margin-right: 10%;
+    margin-top: 10px;
+}
+
+.card-account-information-section {
     margin-bottom: 40px;
 }
 
@@ -13,14 +19,14 @@
     padding: 1px;
 }
 
-.input-account-dashboard {
-    width: -webkit-fill-available;
-    text-align: center;
-    margin: 10px;
-    background-color: #F5F5F5;
-    border-style: solid;
-    border-width: thin;
-    border-color: #717171;
+.input-street-address {
+    display: block;
+    width: 329px;
+}
+
+.input-information {
+    margin-top: 7px;
+    margin-right: 5px;
 }
 
 .info-account-dashboard {
@@ -57,6 +63,10 @@
 }
 
 .edit-payment-active {
+    display: none;
+}
+
+.edit-billing-active {
     display: none;
 }
 

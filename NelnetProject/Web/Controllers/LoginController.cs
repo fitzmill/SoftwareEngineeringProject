@@ -2,6 +2,7 @@
 using Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
@@ -21,9 +22,9 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("ValidateLoginInfo")]
-        public IHttpActionResult ValidateLoginInfo(LoginDTO loginDTO)
+        public IHttpActionResult ValidateLoginInfo([Required] LoginDTO loginDTO)
         {
-            if (loginDTO == null || loginDTO.Email == null || loginDTO.Password == null)
+            if (loginDTO == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
@@ -34,7 +35,7 @@ namespace Web.Controllers
             {
                 result = getUserInfoEngine.ValidateLoginInfo(email, password);
             }
-            catch (SqlException e)
+            catch (SqlException)
             {
                 return InternalServerError();
             }

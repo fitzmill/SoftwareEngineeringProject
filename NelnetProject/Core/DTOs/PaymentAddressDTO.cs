@@ -1,32 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Core.DTOs
 {
     public class PaymentAddressDTO
     {
+        [Required]
         public string CustomerID { get; set; }
 
+        [Required]
         public string FirstName { get; set; }
 
+        [Required]
         public string LastName { get; set; }
 
+        [Required]
         public string StreetAddress1 { get; set; }
 
         public string StreetAddress2 { get; set; }
 
+        [Required]
         public string City { get; set; }
 
+        [Required]
         public string State { get; set; }
 
+        [Required]
         public string Zip { get; set; }
 
         //auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
         public override bool Equals(object obj)
         {
-            var dTO = obj as PaymentAddressDTO;
-            return dTO != null &&
+            return obj is PaymentAddressDTO dTO &&
                    CustomerID == dTO.CustomerID &&
                    FirstName == dTO.FirstName &&
                    LastName == dTO.LastName &&
