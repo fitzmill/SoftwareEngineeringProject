@@ -187,19 +187,28 @@ ko.components.register('account-creation-component', {
                 let emailInUse = false;
                 if (!vm.firstName() || !vm.firstName().match(regexSemicolonCheck)) {
                     vm.personalInputErrorMessage("Invalid first name");
+                    window.alert("Invalid first name");
                 } else if (!vm.lastName() || !vm.lastName().match(regexSemicolonCheck)) {
                     vm.personalInputErrorMessage("Invalid last name");
+                    window.alert("Invalid last name");
                 } else if (!vm.email() || !vm.email().emailMeetsRequirements()) {
                     vm.personalInputErrorMessage("Invalid email");
-                } else if (vm.reenterEmail() !== vm.email() || !vm.email().emailMeetsRequirements()) {
+                    window.alert("Invalid email");
+                } else if (vm.reenterEmail() !== vm.email()) {
                     vm.personalInputErrorMessage("Emails don't match");
+                    window.alert("Emails dont't match")
                 } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
+                    vm.personalInputErrorMessage("Password is not valid");
+                    window.alert("Password is not valid");
+                } else if (vm.password() !== vm.reenterPassword()) {
                     vm.personalInputErrorMessage("Passwords don't match");
+                    window.alert("Passwords don't match");
                 } else {
                     emailExists(vm.email()).done(function (data) {
                        emailInUse = data;
                        if (emailInUse) {
-                           vm.personalInputErrorMessage("Email is already used by another user");
+                           vm.personalInputErrorMessage("Email is already in use");
+                           window.alert("Email is already in use");
                        } else {
                            $("#info-page-" + vm.currentPage).hide();
                            vm.currentPage++;
@@ -215,24 +224,34 @@ ko.components.register('account-creation-component', {
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
                 if (!vm.cardNumber() || vm.cardNumber().toString().length < 15 || vm.cardNumber().toString().length > 19) {
                     vm.paymentInputErrorMessage("Invalid Card Number");
+                    window.alert("Invalid Card Number");
                 } else if (!vm.cardFirstName() || !vm.cardFirstName().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Card First Name");
+                    window.alert("Invalid Card First Name");
                 } else if (!vm.cardLastName() || !vm.cardLastName().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Card Last Name");
+                    window.alert("Invalid Card Last Name");
                 } else if (!vm.month() || vm.month() < 1 || vm.month() > 12) {
                     vm.paymentInputErrorMessage("Invalid Month");
+                    window.alert("Invalid Month");
                 } else if (!vm.year() || vm.year() < 2018) {
                     vm.paymentInputErrorMessage("Invalid Year");
+                    window.alert("Invalid Year");
                 } else if (!vm.address1() || !vm.address1().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Street Address 1");
+                    window.alert("Invalid Street Address 1");
                 } else if (vm.address2() && !vm.address2().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Street Address 2");
+                    window.alert("Invalide Street Address 2");
                 } else if (!vm.city() || !vm.city().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid City");
+                    window.alert("Invalid City");
                 } else if (!vm.state() || !vm.state().match(regexLettersOnlyCheck) || !vm.state().length === 2) {
                     vm.paymentInputErrorMessage("Invalid State");
+                    window.alert("Invalid State");
                 } else if (!vm.zip() || !vm.zip().match(regexZipCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Zip Code")
+                    vm.paymentInputErrorMessage("Invalid Zip Code");
+                    window.alert("Invalid Zip Code");
                 } else {
                     $("#info-page-" + vm.currentPage).hide();
                     vm.currentPage++;
@@ -241,7 +260,8 @@ ko.components.register('account-creation-component', {
                     vm.updateProgressBar();
                 }
             } else if (vm.currentPage === STUDENT_INFORMATION_PAGE && !checkValidStudents(vm.students())) {
-                vm.studentInputErrorMessage("Invalid student information");
+                vm.studentInputErrorMessage("Invalid Student Information");
+                console.alert("Invalid Student Information");
             } else if (vm.currentPage === STUDENT_INFORMATION_PAGE) {
                 $("#info-page-" + vm.currentPage).hide();
                 vm.currentPage++;
@@ -354,12 +374,3 @@ function emailExists(email) {
         data: JSON.stringify(email)
     });
 }
-
-Number.prototype.formatMoney = function (decimals) {
-    let number = this;
-    sign = number < 0 ? "-" : "";
-    number = Math.abs(Number(number) || 0).toFixed(decimals);
-    i = String(parseInt(number));
-    j = (j = i.length) > 3 ? j % 3 : 0;
-    return sign + (j ? i.substr(0, j) + "," : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + ",") + (decimals ? "." + Math.abs(n - i).toFixed(decimals).slice(2) : "");
-};
