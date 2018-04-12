@@ -143,7 +143,7 @@ namespace NelnetProject.Tests.Engines
                 new Transaction
                 {
                     UserID = 1,
-                    AmountCharged = 875 + 55 + 25,
+                    AmountCharged = 875 + 55 + 25 + .75,
                     DateDue = new DateTime(2018, 9, 5),
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 },
