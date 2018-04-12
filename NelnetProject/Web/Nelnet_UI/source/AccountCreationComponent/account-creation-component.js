@@ -181,10 +181,10 @@ ko.components.register('account-creation-component', {
                 } else if (!vm.cardLastName() || !vm.cardLastName().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Card Last Name");
                     return;
-                } else if (!vm.month() || vm.month() < 0 || vm.month() > 12) {
+                } else if (!vm.month() || vm.month() < 1 || vm.month() > 12) {
                     vm.paymentInputErrorMessage("Invalid Month");
                     return;
-                } else if (!vm.year() || vm.year() < 2017) {
+                } else if (!vm.year() || vm.year() < 2018) {
                     vm.paymentInputErrorMessage("Invalid Year");
                     return;
                 } else if (!vm.address1() || !vm.address1().match(regexSemicolonCheck)) {
@@ -257,7 +257,7 @@ function checkValidStudents(students) {
             result = false;
         } else if (!student.studentLastName() || !student.studentLastName().match(regexSemicolonCheck)) {
             result = false;
-        } else if (!student.studentGrade()) {
+        } else if (!student.studentGrade() || student.studentGrade() < 0 || student.studentGrade() > 12) {
             result = false;
         }
     });
