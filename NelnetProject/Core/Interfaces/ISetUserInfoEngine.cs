@@ -14,7 +14,8 @@ namespace Core.Interfaces
         /// Inserts a new user record into the database with the information contained in the user model
         /// </summary>
         /// <param name="user">The user model to insert</param>
-        void InsertPersonalInfo(User user);
+        /// <param name="password">The password to be hashed and inserted into the database</param>
+        void InsertPersonalInfo(User user, string password);
 
         /// <summary>
         /// Updates the user record in the database specified by the userID in the user model

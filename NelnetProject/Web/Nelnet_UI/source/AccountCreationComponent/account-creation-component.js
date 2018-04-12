@@ -8,6 +8,9 @@ const END_PAGE = 4;
 //api url constants
 const accountCreationAPIURL = "/api/account";
 
+//user type
+const GENERAL_USER = 1;
+
 ko.components.register('account-creation-component', {
     viewModel: function (params) {
         let vm = this;
@@ -81,6 +84,16 @@ ko.components.register('account-creation-component', {
         vm.monthlyRate = ko.observable(0);
         vm.semesterlyRate = ko.observable(0);
 
+        //payment plan types
+        vm.PLAN_TYPE_VALUES = {}; 
+        vm.PLAN_TYPE_VALUES["MONTHLY"] = 1;
+        vm.PLAN_TYPE_VALUES["SEMESTERLY"] = 2;
+        vm.PLAN_TYPE_VALUES["YEARLY"] = 3;
+        
+        vm.getPaymentPlanType = function () {
+            return vm.PLAN_TYPE_VALUES[vm.paymentType()];
+        };
+
         //keep track of page state
         vm.currentPage = START_PAGE;
 
@@ -120,7 +133,7 @@ ko.components.register('account-creation-component', {
                 $("#btn-next").show();
             }
             //radio buttons
-            if (vm.currentPage == END_PAGE) {
+            if (vm.currentPage === END_PAGE) {
                 vm.calcRates();
             }
         };
@@ -150,7 +163,44 @@ ko.components.register('account-creation-component', {
 
         //finish and create account
         vm.done = function () {
-            //TODO
+            let students = vm.students().map(s => {
+                return {
+                    StudentID: 0, //should be set when the student is inserted into the database
+                    FirstName: s.studentFirstName(),
+                    LastName: s.studentLastName(),
+                    Grade: s.studentGrade()
+                };
+            });
+
+            console.log(students);
+
+            let accountCreationInformation = {
+                FirstName: vm.firstName(),
+                LastName: vm.lastName(),
+                Email: vm.email(),
+                Password: vm.password(),
+                Plan: vm.getPaymentPlanType(),
+                UserType: GENERAL_USER,
+                Students: students,
+                CardholderFirstName: vm.cardFirstName(),
+                CardholderLastName: vm.cardLastName(),
+                StreetAddress1: vm.address1(),
+                StreetAddress2: vm.address2(),
+                City: vm.city(),
+                State: vm.state(),
+                Zip: vm.zip(),
+                CardNumber: vm.cardNumber(),
+                ExpirationYear: vm.year(),
+                ExpirationMonth: vm.month()
+            };
+
+            console.log(accountCreationInformation);
+
+            createUser(accountCreationInformation).done(function (data) {
+                //TODO: move on to their dashboard
+            }).fail(function (jqXHR) {
+                window.alert("Could not create account, please try again later.");
+            });
         };
 
         //show current page and correct buttons
@@ -172,13 +222,23 @@ ko.components.register('account-creation-component', {
 
 //calculate the user's payment info
 function calculatePeriodicPayment(userPaymentPlan, students) {
-    let user = JSON.stringify({
+    let userData = JSON.stringify({
         Plan: userPaymentPlan,
         Students: students
     });
     return $.ajax(accountCreationAPIURL + "/CalculatePeriodicPayment", {
         method: "POST",
         contentType: "application/json; charset=utf-8",
-        data: user
+        data: userData
+    });
+}
+
+//create the user in the database
+function createUser(accountCreationInformation) {
+    let accountCreationInformationData = JSON.stringify(accountCreationInformation);
+    return $.ajax(accountCreationAPIURL + "/InsertUser", {
+        method: "POST",
+        contentType: "application/json; charset=utf-8",
+        data: accountCreationInformationData
     });
 }

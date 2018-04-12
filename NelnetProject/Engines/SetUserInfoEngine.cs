@@ -1,8 +1,10 @@
 ﻿using Core;
 using Core.DTOs;
 using Core.Interfaces;
+using Engines.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Engines
 {
@@ -10,6 +12,10 @@ namespace Engines
     {
         ISetUserInfoAccessor setUserInfoAccessor;
         ISetPaymentInfoAccessor setPaymentInfoAccessor;
+
+        //used for the generation of salt for password hashing
+        private readonly string alphaNumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private readonly int saltLength = 20;
 
         public SetUserInfoEngine(ISetUserInfoAccessor setUserInfoAccessor, ISetPaymentInfoAccessor setPaymentInfoAccessor)
         {
@@ -41,8 +47,13 @@ namespace Engines
         }
 
         //make a call to the SetUserInfoAccessor to add a new record to the database
-        public void InsertPersonalInfo(User user)
+        public void InsertPersonalInfo(User user, string password)
         {
+            Random random = new Random();
+            
+            user.Salt = new string(Enumerable.Repeat(alphaNumeric, saltLength).Select(s => s[random.Next(s.Length)]).ToArray());
+            user.Hashed = PasswordUtils.HashPasswords(password, user.Salt);
+
             setUserInfoAccessor.InsertPersonalInfo(user);
         }
 

@@ -84,14 +84,51 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        [Route("InsertPersonalInfo")]
-        public IHttpActionResult InsertPersonalInfo(User user)
+        [Route("InsertUser")]
+        public IHttpActionResult InsertUser([FromBody] AccountCreationDTO accountCreationInfo)
         {
-            if (!IsValidUserObject(user))
+            if (accountCreationInfo == null)
             {
-                return BadRequest("One or more required objects was not included in the request body.");
+                throw new ArgumentNullException(nameof(accountCreationInfo));
             }
-            setUserInfoEngine.InsertPersonalInfo(user);
+
+            UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
+            {
+                CustomerID = "", //This isn't neccessary for the creation of a customer in payment spring
+                FirstName = accountCreationInfo.CardholderFirstName,
+                LastName = accountCreationInfo.CardholderLastName,
+                StreetAddress1 = accountCreationInfo.StreetAddress1,
+                StreetAddress2 = accountCreationInfo.StreetAddress2,
+                City = accountCreationInfo.City,
+                State = accountCreationInfo.State,
+                Zip = accountCreationInfo.Zip,
+                CardNumber = accountCreationInfo.CardNumber,
+                ExpirationYear = accountCreationInfo.ExpirationYear,
+                ExpirationMonth = accountCreationInfo.ExpirationMonth,
+                CardType = "" //This also isn't neccessary for the creation of a customer in payment spring
+            };
+
+            string customerID = setUserInfoEngine.InsertPaymentInfo(paymentInfo);
+
+            //check if payment info is valid, if not return error
+
+            //verify email 
+
+            User user = new User
+            {
+                UserID = 0,
+                FirstName = accountCreationInfo.FirstName,
+                LastName = accountCreationInfo.LastName,
+                Email = accountCreationInfo.Email,
+                Hashed = "", //This should be set when the account is created
+                Salt = "", //This should also be set when the account is created
+                Plan = accountCreationInfo.Plan,
+                UserType = accountCreationInfo.UserType,
+                CustomerID = customerID,
+                Students = accountCreationInfo.Students
+            };
+            
+            setUserInfoEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
             return Ok();
         }
