@@ -11,7 +11,12 @@ namespace Web.Managers
 {
     public class PaymentManager
     {
-        public Func<DateTime> dateProvider = () => DateTime.Now;
+        //public Func<DateTime> dateProvider = () => DateTime.Now;
+        public Func<DateTime> dateProvider = () =>
+        {
+            DateTime now = DateTime.Now;
+            return new DateTime(2018, 9, 1, 10, now.Minute, now.Second);
+        };
 
         private double timerInterval;
         private int chargingHour;
@@ -31,6 +36,8 @@ namespace Web.Managers
             Timer timer = new Timer(timerInterval);
             timer.Elapsed += new ElapsedEventHandler(TimerIntervalElapsed);
             timer.Enabled = true;
+
+            TimerIntervalElapsed(null, null);
         }
 
         public void TimerIntervalElapsed(object sender, ElapsedEventArgs e)

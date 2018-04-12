@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Models;
 using Core.Exceptions;
+using System.Diagnostics;
 
 namespace Accessors
 {
@@ -60,6 +61,7 @@ namespace Accessors
             try
             {
                 client.Send(email);
+                Debug.WriteLine("Sent email to " + email.To);
 
             }
             catch (SmtpException e)

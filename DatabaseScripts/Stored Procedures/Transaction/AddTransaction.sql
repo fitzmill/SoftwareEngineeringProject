@@ -22,9 +22,9 @@ CREATE PROCEDURE AddTransaction
 	@UserID int,
 	@AmountCharged float,
 	@DateDue date,
-	@DateCharged date,
+	@DateCharged date = NULL,
 	@ProcessState tinyint,
-	@ReasonFailed varchar(255)
+	@ReasonFailed varchar(255) = NULL
 AS
 BEGIN
 	SET NOCOUNT ON;
