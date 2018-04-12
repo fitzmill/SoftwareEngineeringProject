@@ -168,63 +168,70 @@ ko.components.register('account-creation-component', {
         //move to the next page
         vm.next = function () {
             if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
+                let emailInUse = false;
                 if (!vm.firstName() || !vm.firstName().match(regexSemicolonCheck)) {
                     vm.personalInputErrorMessage("Invalid first name");
-                    return;
                 } else if (!vm.lastName() || !vm.lastName().match(regexSemicolonCheck)) {
                     vm.personalInputErrorMessage("Invalid last name");
-                    return;
                 } else if (!vm.email() || !vm.email().emailMeetsRequirements()) {
                     vm.personalInputErrorMessage("Invalid email");
-                    return;
                 } else if (vm.reenterEmail() !== vm.email()) {
                     vm.personalInputErrorMessage("Emails don't match");
-                    return;
                 } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
                     vm.personalInputErrorMessage("Passwords don't match");
-                    return;
                 }
+                emailExists(vm.email()).done(function (data) {
+                    emailInUse = data;
+                    if (emailInUse) {
+                        vm.personalInputErrorMessage("Email is already used by another user");
+                    } else {
+                        $("#info-page-" + vm.currentPage).hide();
+                        vm.currentPage++;
+                        $("#info-page-" + vm.currentPage).show();
+                        vm.updateButtons();
+                        vm.updateProgressBar();
+                    }
+                }).fail(function (jqXHR) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                });
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
                 if (!vm.cardNumber() || vm.cardNumber().toString().length < 15 || vm.cardNumber().toString().length > 19) {
                     vm.paymentInputErrorMessage("Invalid Card Number");
-                    return;
                 } else if (!vm.cardFirstName() || !vm.cardFirstName().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Card First Name");
-                    return;
                 } else if (!vm.cardLastName() || !vm.cardLastName().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Card Last Name");
-                    return;
                 } else if (!vm.month() || vm.month() < 1 || vm.month() > 12) {
                     vm.paymentInputErrorMessage("Invalid Month");
-                    return;
                 } else if (!vm.year() || vm.year() < 2018) {
                     vm.paymentInputErrorMessage("Invalid Year");
-                    return;
                 } else if (!vm.address1() || !vm.address1().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Street Address 1");
-                    return;
                 } else if (vm.address2() && !vm.address2().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid Street Address 2");
-                    return;
                 } else if (!vm.city() || !vm.city().match(regexSemicolonCheck)) {
                     vm.paymentInputErrorMessage("Invalid City");
-                    return;
                 } else if (!vm.state() || !vm.state().match(regexLettersOnlyCheck) || !vm.state().length === 2) {
                     vm.paymentInputErrorMessage("Invalid State");
-                    return;
                 } else if (!vm.zip() || !vm.zip().match(regexZipCheck)) {
                     vm.paymentInputErrorMessage("Invalid Zip Code")
-                    return;
+                } else {
+                    $("#info-page-" + vm.currentPage).hide();
+                    vm.currentPage++;
+                    $("#info-page-" + vm.currentPage).show();
+                    vm.updateButtons();
+                    vm.updateProgressBar();
                 }
-            } else if (vm.currentPage === STUDENT_INFORMATION_PAGE  && !checkValidStudents(vm.students())) {
+            } else if (vm.currentPage === STUDENT_INFORMATION_PAGE && !checkValidStudents(vm.students())) {
                 vm.studentInputErrorMessage("Invalid student information");
-                return;
+            } else if (vm.currentPage === STUDENT_INFORMATION_PAGE) {
+                $("#info-page-" + vm.currentPage).hide();
+                vm.currentPage++;
+                $("#info-page-" + vm.currentPage).show();
+                vm.updateButtons();
+                vm.updateProgressBar();
             }
-            $("#info-page-" + vm.currentPage).hide();
-            vm.currentPage++;
-            $("#info-page-" + vm.currentPage).show();
-            vm.updateButtons();
-            vm.updateProgressBar();
         };
 
         //finish and create account
@@ -322,6 +329,15 @@ function checkValidStudents(students) {
         }
     });
     return result;
+}
+
+//Checks to see if an entered email has already been used
+function emailExists(email) {
+    return $.ajax(accountCreationAPIURL + "/EmailExists", {
+        method: "POST",
+        contentType: "application/JSON; charset=utf-8",
+        data: JSON.stringify(email)
+    });
 }
 
 Number.prototype.formatMoney = function (decimals) {

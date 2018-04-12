@@ -42,6 +42,17 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        [Route("EmailExists")]
+        public IHttpActionResult EmailExists([FromBody] string email)
+        {
+            if (String.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email was not supplied");
+            }
+            return Ok(getUserInfoEngine.EmailExists(email));
+        }
+
+        [HttpPost]
         [Route("UpdatePersonalInfo")]
         public IHttpActionResult UpdatePersonalInfo(User user)
         {
