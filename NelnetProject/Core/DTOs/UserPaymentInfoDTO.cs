@@ -46,8 +46,7 @@ namespace Core.DTOs
                    CardNumber == dTO.CardNumber &&
                    ExpirationYear == dTO.ExpirationYear &&
                    ExpirationMonth == dTO.ExpirationMonth &&
-                   CardType == dTO.CardType &&
-                   CSC == dTO.CSC;
+                   CardType == dTO.CardType;
         }
 
         public override int GetHashCode()
@@ -65,7 +64,6 @@ namespace Core.DTOs
             hashCode = hashCode * -1521134295 + ExpirationYear.GetHashCode();
             hashCode = hashCode * -1521134295 + ExpirationMonth.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(CardType);
-            hashCode = hashCode * -1521134295 + CSC.GetHashCode();
             return hashCode;
         }
     }

@@ -266,9 +266,9 @@ ko.components.register('account-dashboard-component', {
                 ExpirationMonth: accountDashboardVM.ExpirationMonth()
             };
 
-            updatePaymentInfo(changedCardInfo).done(function () {
+            updatePaymentCardInfo(changedCardInfo).done(function () {
                 //reset it to last few digits
-                userPaymentInfo.CardNumber = changedPaymentInfo.CardNumber.substring(12);
+                userPaymentInfo.CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
                 userPaymentInfo.ExpirationYear = changedCardInfo.ExpirationYear;
                 userPaymentInfo.ExpirationMonth = changedCardInfo.ExpirationMonth;
 
@@ -285,13 +285,13 @@ ko.components.register('account-dashboard-component', {
             });
         };
 
-        accountDashboardAPIURL.updateBillingInfo = function () {
+        accountDashboardVM.updateBillingInfo = function (data, event) {
             if (!accountDashboardVM.CardFirstName() || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid first name on card");
+                accountDashboardVM.billingInputErrorMessage("Invalid first name");
                 $("#edit-billing-input-error").show();
                 return;
             } else if (!accountDashboardVM.CardLastName() || !accountDashboardVM.CardLastName().match(regexSemicolonCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid last name on card");
+                accountDashboardVM.billingInputErrorMessage("Invalid last name");
                 $("#edit-billing-input-error").show();
                 return;
             } else if (!accountDashboardVM.StreetAddress1() || !accountDashboardVM.StreetAddress1().match(regexSemicolonCheck)) {
@@ -320,7 +320,7 @@ ko.components.register('account-dashboard-component', {
             $("btn-save-edit-billing").attr('disabled', 'disabled');
             $("btn-cancel-edit-billing").attr('disabled', 'disabled');
 
-            let changedCardInfo = {
+            let changedBillingInfo = {
                 CustomerID: userPaymentInfo.CustomerID,
                 FirstName: accountDashboardVM.CardFirstName(),
                 LastName: accountDashboardVM.CardLastName(),
@@ -331,14 +331,14 @@ ko.components.register('account-dashboard-component', {
                 Zip: accountDashboardVM.Zip()
             };
 
-            updatePaymentInfo(changedCardInfo).done(function () {
-                userPaymentInfo.FirstName = changedCardInfo.FirstName;
-                userPaymentInfo.LastName = changedCardInfo.LastName;
-                userPaymentInfo.StreetAddress1 = changedCardInfo.StreetAddress1;
-                userPaymentInfo.StreetAddress2 = changedCardInfo.StreetAddress2;
-                userPaymentInfo.City = changedCardInfo.City;
-                userPaymentInfo.State = changedCardInfo.State;
-                userPaymentInfo.Zip = changedCardInfo.Zip;
+            updatePaymentBillingInfo(changedBillingInfo).done(function () {
+                userPaymentInfo.FirstName = changedBillingInfo.FirstName;
+                userPaymentInfo.LastName = changedBillingInfo.LastName;
+                userPaymentInfo.StreetAddress1 = changedBillingInfo.StreetAddress1;
+                userPaymentInfo.StreetAddress2 = changedBillingInfo.StreetAddress2;
+                userPaymentInfo.City = changedBillingInfo.City;
+                userPaymentInfo.State = changedBillingInfo.State;
+                userPaymentInfo.Zip = changedBillingInfo.Zip;
 
                 //UI will be updated here
                 accountDashboardVM.stopEditing(data, event);
@@ -348,8 +348,8 @@ ko.components.register('account-dashboard-component', {
                 window.alert("Could not save information: ".concat(errorMessage));
             }).always(function () {
                 //re-enable buttons
-                $("btn-save-edit-payment").removeAttr('disabled');
-                $("btn-cancel-edit-payment").removeAttr('disabled');
+                $("btn-save-edit-billing").removeAttr('disabled');
+                $("btn-cancel-edit-billing").removeAttr('disabled');
             });
         }
 
@@ -497,7 +497,7 @@ function updatePaymentBillingInfo(paymentBillingInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePaymentBillingInfo", {
         method: "POST",
         data: paymentBillingInfo
-    })
+    });
 }
 
 //Checks that student entries are valid
