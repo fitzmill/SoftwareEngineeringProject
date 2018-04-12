@@ -1,5 +1,3 @@
-Build failing because we ran out of the free trail, not because our solution won't build.
-
 [![Build Status](https://tuitionassistant.visualstudio.com/_apis/public/build/definitions/df358588-f09c-47b3-bd42-80c57eb563c1/1/badge)](https://tuitionassistant.visualstudio.com/TuitionAssistant/_build/index?definitionId=1)
 
 
