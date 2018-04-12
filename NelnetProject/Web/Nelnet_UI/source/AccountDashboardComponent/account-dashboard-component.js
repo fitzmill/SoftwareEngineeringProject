@@ -274,11 +274,11 @@ ko.components.register('account-dashboard-component', {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card number");
                 $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.ExpirationYear()) {
+            } else if (!accountDashboardVM.ExpirationYear() || accountDashboardVM.ExpirationYear() < 2018) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card expiration year");
                 $("#edit-payment-input-error").show();
                 return;
-            } else if (!accountDashboardVM.ExpirationMonth()) {
+            } else if (!accountDashboardVM.ExpirationMonth() || accountDashboardVM.ExpirationMonth() < 1 || accountDashboardVM.ExpirationMonth() > 12) {
                 accountDashboardVM.paymentInputErrorMessage("Invalid card expiration month");
                 $("#edit-payment-input-error").show();
                 return;
