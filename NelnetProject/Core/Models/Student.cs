@@ -31,7 +31,7 @@ namespace Core
         public string LastName { get; set; }
 
         /// <summary>
-        /// Students Grade Level (0 is Kindergarden)
+        /// Students Grade Level (0 is Kindergarten)
         /// </summary>
         [Range(0, 12)]
         public int Grade { get; set; }

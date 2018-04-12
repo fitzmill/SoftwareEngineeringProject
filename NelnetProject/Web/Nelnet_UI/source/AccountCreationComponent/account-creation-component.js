@@ -196,7 +196,7 @@ ko.components.register('account-creation-component', {
                     window.alert("Invalid email");
                 } else if (vm.reenterEmail() !== vm.email()) {
                     vm.personalInputErrorMessage("Emails don't match");
-                    window.alert("Emails dont't match")
+                    window.alert("Emails don't match")
                 } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
                     vm.personalInputErrorMessage("Password is not valid");
                     window.alert("Password is not valid");
