@@ -167,7 +167,7 @@ ko.components.register('account-creation-component', {
 
         //move to the next page
         vm.next = function () {
-            if (vm.currentPage == PERSONAL_INFORMATION_PAGE) {
+            if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
                 if (!vm.firstName() || !vm.firstName().match(regexSemicolonCheck)) {
                     vm.personalInputErrorMessage("Invalid first name");
                     return;
@@ -177,14 +177,14 @@ ko.components.register('account-creation-component', {
                 } else if (!vm.email() || !vm.email().emailMeetsRequirements()) {
                     vm.personalInputErrorMessage("Invalid email");
                     return;
-                } else if (vm.reenterEmail() != vm.email()) {
+                } else if (vm.reenterEmail() !== vm.email()) {
                     vm.personalInputErrorMessage("Emails don't match");
                     return;
                 } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
                     vm.personalInputErrorMessage("Passwords don't match");
                     return;
                 }
-            } else if (vm.currentPage == PAYMENT_INFORMATION_PAGE) {
+            } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
                 if (!vm.cardNumber() || vm.cardNumber().toString().length < 15 || vm.cardNumber().toString().length > 19) {
                     vm.paymentInputErrorMessage("Invalid Card Number");
                     return;
@@ -216,7 +216,7 @@ ko.components.register('account-creation-component', {
                     vm.paymentInputErrorMessage("Invalid Zip Code")
                     return;
                 }
-            } else if (vm.currentPage == STUDENT_INFORMATION_PAGE  && !checkValidStudents(vm.students())) {
+            } else if (vm.currentPage === STUDENT_INFORMATION_PAGE  && !checkValidStudents(vm.students())) {
                 vm.studentInputErrorMessage("Invalid student information");
                 return;
             }
