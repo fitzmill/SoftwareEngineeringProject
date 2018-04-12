@@ -61,7 +61,7 @@ namespace Core.DTOs
         public string ProcessState { get; set; }
 
         /// <summary>
-        /// States That A Transaction Failed (CARD_EXPIRED, FRAUD_ALERT, INSUFFICIENT_FUNDS, CARD_DECLINED)
+        /// States That A Transaction Failed Given By PaymentSpring
         /// </summary>
         public string ReasonFailed { get; set; }
 
