@@ -23,6 +23,9 @@ namespace Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jquery.validation").Include(
+                "~/Scripts/jquery.validate.js"));
         }
     }
 }

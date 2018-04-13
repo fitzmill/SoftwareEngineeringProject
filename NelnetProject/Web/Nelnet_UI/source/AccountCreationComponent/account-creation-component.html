@@ -15,12 +15,15 @@
             </div>
 
             <div id="info-page-1">
-                <input class="input-account-creation card-left card-half-column" data-bind="value: firstName" placeholder="First Name" />
-                <input class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" />
-                <input class="input-account-creation card-full-column" data-bind="value: email" placeholder="Email" />
-                <input class="input-account-creation card-full-column" data-bind="value: reenterEmail" placeholder="Confirm Email" />
-                <input class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password" />
-                <input class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" />
+                <form id="form-page-1">
+                    <input name="first-name" class="input-account-creation card-left card-half-column" data-bind="value: firstName" placeholder="First Name" required />
+                    <input name="last-name" class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" required />
+                    <input name="email" class="input-account-creation card-full-column" type="email" data-bind="value: email" placeholder="Email" required />
+                    <input name="confirm-email" class="input-account-creation card-full-column" type="email" data-bind="value: reenterEmail" placeholder="Confirm Email" equalTo="input[name~='email']" required />
+                    <input name="password" class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password" password required />
+                    <input name="confirm-password" class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" password equalTo="input[name~=password" required />
+                    
+                </form>
             </div>
 
             <div id="info-page-2">

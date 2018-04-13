@@ -60,6 +60,10 @@ String.prototype.passwordMeetsRequirements = function () {
     return this.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?!.*?[;'"]).{8,32}$/);
 }
 
+$.validator.addMethod("password", function (value) {
+    return value.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?!.*?[;'"]).{8,32}$/);
+}, "Password must be between 8 and 32 letters, contain lowercase and uppercase letters, a number, and a special character");
+
 String.prototype.emailMeetsRequirements = function () {
     //from emailregex.com
     return this.match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);

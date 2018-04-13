@@ -185,25 +185,7 @@ ko.components.register('account-creation-component', {
         vm.next = function () {
             if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
                 let emailInUse = false;
-                if (!vm.firstName() || !vm.firstName().match(regexSemicolonCheck)) {
-                    vm.personalInputErrorMessage("Invalid first name");
-                    window.alert("Invalid first name");
-                } else if (!vm.lastName() || !vm.lastName().match(regexSemicolonCheck)) {
-                    vm.personalInputErrorMessage("Invalid last name");
-                    window.alert("Invalid last name");
-                } else if (!vm.email() || !vm.email().emailMeetsRequirements()) {
-                    vm.personalInputErrorMessage("Invalid email");
-                    window.alert("Invalid email");
-                } else if (vm.reenterEmail() !== vm.email()) {
-                    vm.personalInputErrorMessage("Emails don't match");
-                    window.alert("Emails don't match")
-                } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
-                    vm.personalInputErrorMessage("Password is not valid");
-                    window.alert("Password is not valid");
-                } else if (vm.password() !== vm.reenterPassword()) {
-                    vm.personalInputErrorMessage("Passwords don't match");
-                    window.alert("Passwords don't match");
-                } else {
+                if ($("#form-page-1").valid()) {
                     emailExists(vm.email()).done(function (data) {
                        emailInUse = data;
                        if (emailInUse) {
