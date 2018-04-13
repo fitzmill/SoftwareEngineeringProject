@@ -29,7 +29,7 @@ namespace Core.Interfaces
         /// <param name="email"></param>
         /// <param name="password"></param>
         /// <returns>Returns true or false depending on whether or not the email and password match an account.</returns>
-        bool ValidateLoginInfo(string email, string password);
+        bool ValidateLoginInfo(string email, string password, out UserType userType);
 
         /// <summary>
         /// Gets a user's information when given a user's ID.

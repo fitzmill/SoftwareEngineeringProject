@@ -8,8 +8,10 @@ using Engines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
+using Web.Filters;
 
 namespace Web.Controllers
 {
@@ -31,8 +33,15 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("GetTransactionsForDateRange")]
+        [JwtAuthentication]
         public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
         {
+            string userType = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
+            if (!userType.Equals(UserType.ADMIN.ToString()))
+            {
+                return Unauthorized();
+            }
+
             if (dateRangeDTO == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
@@ -47,15 +56,28 @@ namespace Web.Controllers
 
         [HttpGet]
         [Route("GetAllReports")]
+        [JwtAuthentication]
         public IHttpActionResult GetAllReports()
         {
+            string userType = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
+            if (!userType.Equals(UserType.ADMIN.ToString()))
+            {
+                return Unauthorized();
+            }
             return Ok(getReportEngine.GetAllReports());
         }
 
         [HttpPost]
         [Route("InsertReport")]
+        [JwtAuthentication]
         public IHttpActionResult InsertReport(DateRangeDTO dateRange)
         {
+            string userType = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
+            if (!userType.Equals(UserType.ADMIN.ToString()))
+            {
+                return Unauthorized();
+            }
+
             if (dateRange == null || !ModelState.IsValid)
             {
                 return BadRequest("Report object was null in request");

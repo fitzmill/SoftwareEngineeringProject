@@ -1,4 +1,5 @@
-﻿using Core.DTOs;
+﻿using Core;
+using Core.DTOs;
 using Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,10 @@ namespace Web.Controllers
             this.getUserInfoEngine = getUserInfoEngine;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("ValidateLoginInfo")]
         [AllowAnonymous]
-        public IHttpActionResult ValidateLoginInfo([Required] LoginDTO loginDTO)
+        public IHttpActionResult ValidateLoginInfo()
         {
             AuthenticationHeaderValue authenticationHeader = Request.Headers.Authorization;
 
@@ -36,16 +37,22 @@ namespace Web.Controllers
 
             var encodedUsernamePassword = authenticationHeader.Parameter;
             var encoding = Encoding.GetEncoding("iso-8859-1");
-            string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+            string emailPassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
 
-            var seperatorIndex = usernamePassword.IndexOf(':');
+            var seperatorIndex = emailPassword.IndexOf(':');
 
-            string username = usernamePassword.Substring(0, seperatorIndex);
-            string password = usernamePassword.Substring(seperatorIndex + 1);
+            string email = emailPassword.Substring(0, seperatorIndex);
+            string password = emailPassword.Substring(seperatorIndex + 1);
 
-            if (getUserInfoEngine.ValidateLoginInfo(loginDTO.Email, loginDTO.Password))
+
+            if (getUserInfoEngine.ValidateLoginInfo(email, password, out UserType userType))
             {
-                return Ok(JwtManager.GenerateToken(loginDTO.Email));
+                return Ok(new LoginDTO()
+                {
+                    JwtToken = JwtManager.GenerateToken(email, userType),
+                    UserType = userType
+                });
+
             }
 
             return Unauthorized();

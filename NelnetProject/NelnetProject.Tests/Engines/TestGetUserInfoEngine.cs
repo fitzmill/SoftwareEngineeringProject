@@ -119,7 +119,8 @@ namespace NelnetProject.Tests.Engines
         {
             string email = "johnsmith@gmail.com";
             string password = "majlehlasg";
-            Assert.IsFalse(getUserInfoEngine.ValidateLoginInfo(email, password));
+            Assert.IsFalse(getUserInfoEngine.ValidateLoginInfo(email, password, out UserType userType));
+            Assert.AreEqual((UserType)0, userType);
         }
 
         [TestMethod]
@@ -127,7 +128,8 @@ namespace NelnetProject.Tests.Engines
         {
             string email = "johnsmith@gmail.com";
             string password = "password";
-            Assert.IsTrue(getUserInfoEngine.ValidateLoginInfo(email, password));
+            Assert.IsTrue(getUserInfoEngine.ValidateLoginInfo(email, password, out UserType userType));
+            Assert.AreEqual(UserType.GENERAL, userType);
         }
 
         [TestMethod]

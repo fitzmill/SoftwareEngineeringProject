@@ -31,15 +31,17 @@ namespace Engines
             return getUserInfoAccessor.GetAllActiveUsers();
         }
         // Validates the login of a user given an email and a password.
-        public bool ValidateLoginInfo(string email, string password)
+        public bool ValidateLoginInfo(string email, string password, out UserType userType)
         {
             PasswordDTO userPasswordInfo = getUserInfoAccessor.GetUserPasswordInfo(email);
             string hashedGivenPassword = PasswordUtils.HashPasswords(password, userPasswordInfo.Salt);
             if (hashedGivenPassword.Equals(userPasswordInfo.Hashed))
             {
+                userType = userPasswordInfo.UserType;
                 return true;
             } else
             {
+                userType = 0;
                 return false;
             }
         }

@@ -33,15 +33,17 @@ namespace Web.Controllers
 
         [HttpGet]
         [Route("GetUserInfo")]
-        [JwtAuthentication]
+        [JwtAuthentication(Roles = new UserType[] { UserType.ADMIN })]
         public IHttpActionResult GetUserInfo()
         {
+            var user = (ClaimsIdentity)User.Identity;
             var email = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
             return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
         }
 
         [HttpGet]
         [Route("GetUserInfoByID/{userID}")]
+        [JwtAuthentication]
         public IHttpActionResult GetUserInfoByID(string userID)
         {
             if (!int.TryParse(userID, out int parsedUserID))
@@ -53,6 +55,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("EmailExists")]
+        [AllowAnonymous]
         public IHttpActionResult EmailExists([FromBody] string email)
         {
             if (String.IsNullOrEmpty(email))
@@ -64,6 +67,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdatePersonalInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdatePersonalInfo(User user)
         {
             if (user == null || !ModelState.IsValid)
@@ -77,6 +81,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdateStudentInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
         {
             if (updatedInfo == null || !ModelState.IsValid)
@@ -92,6 +97,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("DeleteUser")]
+        [JwtAuthentication]
         public IHttpActionResult DeleteUser(User user)
         {
             if (user == null || !ModelState.IsValid)
@@ -105,6 +111,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("InsertUser")]
+        [AllowAnonymous]
         public IHttpActionResult InsertUser([FromBody] AccountCreationDTO accountCreationInfo)
         {
             if (accountCreationInfo == null || !ModelState.IsValid)
@@ -157,6 +164,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("GetUserInfoByEmail")]
+        [JwtAuthentication]
         public IHttpActionResult GetUserInfoByEmail([FromBody] string email)
         {
             if (String.IsNullOrEmpty(email))
@@ -168,6 +176,7 @@ namespace Web.Controllers
 
         [HttpGet]
         [Route("GetPaymentInfoForUser/{userID}")]
+        [JwtAuthentication]
         public IHttpActionResult GetPaymentInfoForUser(string userID)
         {
             if (!int.TryParse(userID, out int parsedUserID))
@@ -179,6 +188,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdatePaymentBillingInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressDTO)
         {
             if (paymentAddressDTO == null || !ModelState.IsValid)
@@ -191,6 +201,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdatePaymentCardInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdatePaymentCardInfo(PaymentCardDTO paymentCardDTO)
         {
             if (paymentCardDTO == null || !ModelState.IsValid)
@@ -203,6 +214,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("InsertPaymentInfo")]
+        [AllowAnonymous]
         public IHttpActionResult InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
             if (userPaymentInfo == null || !ModelState.IsValid)
@@ -216,6 +228,7 @@ namespace Web.Controllers
         //This is a get request with the above route. The 5 at the end of the example is an example userID
         [HttpGet]
         [Route("GetAllTransactionsForUser/{userID}")]
+        [JwtAuthentication]
         public IHttpActionResult GetAllTransactionsForUser(string userID)
         {
             //Tries to convert the parameter to an int
@@ -229,6 +242,7 @@ namespace Web.Controllers
         //GET api/account/GetNextTransactionForUser/{userID}
         [HttpGet]
         [Route("GetNextTransactionForUser/{userID}")]
+        [JwtAuthentication]
         public IHttpActionResult GetNextTransactionForUser(string userID)
         {
             if (!int.TryParse(userID, out int parsedUserID))
@@ -241,6 +255,7 @@ namespace Web.Controllers
         //POST api/account/CalculatePeriodicPayment
         [HttpPost]
         [Route("CalculatePeriodicPayment")]
+        [JwtAuthentication]
         public IHttpActionResult CalculatePeriodicPayment(User user)
         {
             if (user == null || !ModelState.IsValid)

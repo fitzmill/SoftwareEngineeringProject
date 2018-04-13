@@ -163,6 +163,7 @@ namespace Accessors
                 {
                     result.Hashed = reader.GetString(0);
                     result.Salt = reader.GetString(1);
+                    result.UserType = (UserType)reader.GetByte(2);
                 }
             }
             return result;

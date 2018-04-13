@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using Core;
 
 namespace Web
 {
@@ -17,7 +18,7 @@ namespace Web
         /// </summary>
         private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
 
-        public static string GenerateToken(string username, int expireMinutes = 20)
+        public static string GenerateToken(string email, UserType userType, int expireMinutes = 20)
         {
             var symmetricKey = Convert.FromBase64String(Secret);
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -27,7 +28,8 @@ namespace Web
             {
                 Subject = new ClaimsIdentity(new[]
                         {
-                            new Claim(ClaimTypes.Name, username)
+                            new Claim(ClaimTypes.Email, email),
+                            new Claim(ClaimTypes.Role, userType.ToString())
                         }),
 
                 Expires = now.AddMinutes(Convert.ToInt32(expireMinutes)),
@@ -61,8 +63,7 @@ namespace Web
                     IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
                 };
 
-                SecurityToken securityToken;
-                var principal = tokenHandler.ValidateToken(token, validationParameters, out securityToken);
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out SecurityToken securityToken);
 
                 return principal;
             }

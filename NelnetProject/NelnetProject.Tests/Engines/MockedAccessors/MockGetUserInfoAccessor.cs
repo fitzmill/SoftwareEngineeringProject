@@ -38,14 +38,13 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public PasswordDTO GetUserPasswordInfo(string email)
         {
-            PasswordDTO result = new PasswordDTO();
-            if (email.Equals(UserDB[0].Email))
+            var user = UserDB.FirstOrDefault(x => x.Email == email);
+            return new PasswordDTO()
             {
-                result.Hashed = UserDB[0].Hashed;
-                result.Salt = UserDB[0].Salt;
-                return result;
-            }
-            return null;
+                Hashed = user.Hashed,
+                Salt = user.Salt,
+                UserType = user.UserType
+            };
         }
 
         public string GetPaymentSpringCustomerID(int userID)
