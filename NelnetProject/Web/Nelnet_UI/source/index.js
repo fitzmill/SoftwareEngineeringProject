@@ -1,5 +1,20 @@
 ﻿require('pagerjs');
 
+$.validator.setDefaults({
+    highlight: function (element) {
+        $(element).addClass('input-error');
+    },
+    unhighlight: function (element) {
+        $(element).removeClass('input-error');
+        $(element).tooltip('dispose');
+    },
+    errorPlacement: function (error, element) {
+        $(element[0]).tooltip('dispose');
+        let text = error.text();
+        $(element[0]).tooltip({ title: text });
+    }
+});
+
 var index = (function () {
     require('./index.scss');
     document.getElementById("app").insertAdjacentHTML('beforeend', require('./index.html'));
