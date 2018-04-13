@@ -13,7 +13,7 @@ var userPaymentInfo = undefined;
 
 //add function to exports so index.js can see it
 exports.accountDashboardBeforeShow = function () {
-    user = JSON.parse(window.localStorage.getItem("user"));
+    user = JSON.parse(window.sessionStorage.getItem("user"));
 
     //if not logged in
     if (!user) {
@@ -156,7 +156,7 @@ ko.components.register('account-dashboard-component', {
 
                     updatePersonalInfo(changedUserInfo).done(function () {
                         //update user in local storage in the case of page reload
-                        localStorage.setItem("user", JSON.stringify(changedUserInfo));
+                        window.sessionStorage.setItem("user", JSON.stringify(changedUserInfo));
                         user = changedUserInfo;
                         accountDashboardVM.stopEditing(data, event);
                     }).fail(function (jqXHR) {

@@ -26,10 +26,10 @@ ko.components.register('login-component', {
                         vm.email("");
                         vm.password("");
                         if (user.UserType === "GENERAL") {
-                            window.localStorage.setItem("user", JSON.stringify(user));
+                            window.sessionStorage.setItem("user", JSON.stringify(user));
                             window.location = "#account-dashboard";
                         } else if (user.UserType === "ADMIN") {
-                            window.localStorage.setItem("user", JSON.stringify(user));
+                            window.sessionStorage.setItem("user", JSON.stringify(user));
                             window.location = "#admin";
                         }
                     }).fail(function (jqXHR) {

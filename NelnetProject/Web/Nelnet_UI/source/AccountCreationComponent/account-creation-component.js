@@ -307,7 +307,7 @@ ko.components.register('account-creation-component', {
             console.log(accountCreationInformation);
 
             createUser(accountCreationInformation).done(function (data) {
-                window.localStorage.setItem("user", JSON.stringify(data));
+                window.sessionStorage.setItem("user", JSON.stringify(data));
                 window.location = "#account-dashboard";
             }).fail(function (jqXHR) {
                 window.alert("Could not create account, please try again later.");

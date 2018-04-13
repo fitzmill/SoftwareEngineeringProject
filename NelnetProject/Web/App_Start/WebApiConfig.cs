@@ -8,6 +8,7 @@ namespace Web
         {
             // Web API configuration and services
             config.Filters.Add(new Filters.SqlRowNotAffectedFilterAttribute());
+            config.Filters.Add(new AuthorizeAttribute());
             // Web API routes
             config.MapHttpAttributeRoutes();
 

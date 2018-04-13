@@ -7,6 +7,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Web.Http;
 
 namespace Web.Controllers
@@ -22,24 +24,31 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("ValidateLoginInfo")]
+        [AllowAnonymous]
         public IHttpActionResult ValidateLoginInfo([Required] LoginDTO loginDTO)
         {
-            if (loginDTO == null || !ModelState.IsValid)
+            AuthenticationHeaderValue authenticationHeader = Request.Headers.Authorization;
+
+            if (authenticationHeader == null || !authenticationHeader.Scheme.StartsWith("Basic"))
             {
-                return BadRequest("One or more required objects was not included in the request body.");
+                return Unauthorized();
             }
-            string email = loginDTO.Email;
-            string password = loginDTO.Password;
-            bool result;
-            try
+
+            var encodedUsernamePassword = authenticationHeader.Parameter;
+            var encoding = Encoding.GetEncoding("iso-8859-1");
+            string usernamePassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+
+            var seperatorIndex = usernamePassword.IndexOf(':');
+
+            string username = usernamePassword.Substring(0, seperatorIndex);
+            string password = usernamePassword.Substring(seperatorIndex + 1);
+
+            if (getUserInfoEngine.ValidateLoginInfo(loginDTO.Email, loginDTO.Password))
             {
-                result = getUserInfoEngine.ValidateLoginInfo(email, password);
+                return Ok(JwtManager.GenerateToken(loginDTO.Email));
             }
-            catch (SqlException)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+
+            return Unauthorized();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 using Web.Filters;
 
@@ -28,6 +29,15 @@ namespace Web.Controllers
             this.getTransactionEngine = getTransactionEngine;
             this.paymentEngine = paymentEngine;
             this.setUserInfoEngine = setUserInfoEngine;
+        }
+
+        [HttpGet]
+        [Route("GetUserInfo")]
+        [JwtAuthentication]
+        public IHttpActionResult GetUserInfo()
+        {
+            var email = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
+            return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
         }
 
         [HttpGet]

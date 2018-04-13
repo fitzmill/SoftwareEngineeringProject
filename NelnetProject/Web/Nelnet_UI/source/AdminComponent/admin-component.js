@@ -3,7 +3,7 @@
 const adminAPIURL = "/api/admin";
 
 exports.adminDashboardBeforeShow = function () {
-    let user = JSON.parse(localStorage.getItem('user'));
+    let user = JSON.parse(window.sessionStorage.getItem('user'));
     //user not logged in
     if (!user || user.UserType !== "ADMIN") {
         window.location = '#';
@@ -105,7 +105,7 @@ ko.components.register('admin-component', {
             csv.downloadCSV("Transactions.csv");
         };
 
-        let user = JSON.parse(localStorage.getItem('user'));
+        let user = JSON.parse(window.sessionStorage.getItem('user'));
         if (user && user.UserType === "ADMIN") {
             vm.loadAdminInformation();
         }

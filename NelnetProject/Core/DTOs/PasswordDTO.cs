@@ -23,6 +23,11 @@ namespace Core.DTOs
         public string Salt { get; set; }
 
         /// <summary>
+        /// Type of user that password info belongs to
+        /// </summary>
+        public UserType UserType { get; set; }
+
+        /// <summary>
         /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
         /// </summary>
         public override bool Equals(object obj)
