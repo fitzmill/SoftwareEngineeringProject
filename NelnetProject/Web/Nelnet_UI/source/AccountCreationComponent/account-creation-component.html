@@ -14,7 +14,18 @@
                 <span id="dot-page-4" class="dot">4</span>
             </div>
 
-            <div id="info-page-1">
+            <div id="page-0" style="text-align:center">
+                <h1 style="margin-top:50px; margin-bottom:50px">Hi, we're glad you're here!</h1>
+                <h4 style="margin-bottom:20px">Here's what we'll need to get you started:</h4>
+                <ul style="text-align:left; padding-left:210px">
+                    <li>Basic contact information to keep you informed</li>
+                    <li>Payment information to automate your payments</li>
+                    <li>Student information to pay the right bills</li>
+                </ul>
+                <h4 style="margin-top:20px">Then you'll be ready to start making tuition payments.</h4>
+            </div>
+
+            <div id="page-1">
                 <input class="input-account-creation card-left card-half-column" data-bind="value: firstName" placeholder="First Name" />
                 <input class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" />
                 <input class="input-account-creation card-full-column" data-bind="value: email" placeholder="Email" />
@@ -23,7 +34,7 @@
                 <input class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" />
             </div>
 
-            <div id="info-page-2">
+            <div id="page-2">
                 <input class="input-account-creation card-half-column card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" />
                 <input class="input-account-creation card-half-column card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" />
 
@@ -39,7 +50,7 @@
                 <input class="input-account-creation card-small card-left" data-bind="value: state" placeholder="State" />
             </div>
 
-            <div id="info-page-3">
+            <div id="page-3">
                 <div data-bind="foreach: students">
                     <input class="input-account-creation card-medium card-left" data-bind="value: studentFirstName" placeholder="Student First Name" />
                     <input class="input-account-creation card-medium card-left" data-bind="value: studentLastName" placeholder="Student Last Name" />
@@ -48,7 +59,7 @@
                 <button id="btn-add-student" class="btn btn-primary" data-bind="click: addStudent">Add Another Student</button>
             </div>
 
-            <div id="info-page-4">
+            <div id="page-4">
                 <div class="output-account-creation">
                     <h4><b>Please select a payment plan:</b></h4>
                     <div class="radio-button">
@@ -71,6 +82,7 @@
         <div id="navigation-buttons">
             <button id="btn-cancel" class="btn btn-secondary btn-left" data-bind="click: cancel">Cancel</button>
             <button id="btn-back" class="btn btn-secondary btn-left" data-bind="click: back">Back</button>
+            <button id="btn-start" class="btn btn-success btn-center" data-bind="click: next">Let's Get Started</button>
             <button id="btn-next" class="btn btn-success btn-right" data-bind="click: next">Next</button>
             <button id="btn-done" class="btn btn-success btn-right" data-bind="click: done">Done</button>
         </div>
