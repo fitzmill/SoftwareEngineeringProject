@@ -8,11 +8,6 @@ const PAYMENT_INFORMATION_PAGE = 2;
 const STUDENT_INFORMATION_PAGE = 3;
 const END_PAGE = 4;
 
-//information validation through regex
-const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
-const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/; //regexNumCheck but also allows for hyphen(-)
-const regexLettersOnlyCheck = /(?!.*[^a-zA-Z]).{0,}/;
-
 //api url constants
 const accountCreationAPIURL = "/api/account";
 
@@ -204,52 +199,21 @@ ko.components.register('account-creation-component', {
                     });
                 }
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
-                if (!vm.cardNumber() || vm.cardNumber().toString().length < 15 || vm.cardNumber().toString().length > 19) {
-                    vm.paymentInputErrorMessage("Invalid Card Number");
-                    window.alert("Invalid Card Number");
-                } else if (!vm.cardFirstName() || !vm.cardFirstName().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Card First Name");
-                    window.alert("Invalid Card First Name");
-                } else if (!vm.cardLastName() || !vm.cardLastName().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Card Last Name");
-                    window.alert("Invalid Card Last Name");
-                } else if (!vm.month() || vm.month() < 1 || vm.month() > 12) {
-                    vm.paymentInputErrorMessage("Invalid Month");
-                    window.alert("Invalid Month");
-                } else if (!vm.year() || vm.year() < 2018) {
-                    vm.paymentInputErrorMessage("Invalid Year");
-                    window.alert("Invalid Year");
-                } else if (!vm.address1() || !vm.address1().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Street Address 1");
-                    window.alert("Invalid Street Address 1");
-                } else if (vm.address2() && !vm.address2().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Street Address 2");
-                    window.alert("Invalide Street Address 2");
-                } else if (!vm.city() || !vm.city().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid City");
-                    window.alert("Invalid City");
-                } else if (!vm.state() || !vm.state().match(regexLettersOnlyCheck) || !vm.state().length === 2) {
-                    vm.paymentInputErrorMessage("Invalid State");
-                    window.alert("Invalid State");
-                } else if (!vm.zip() || !vm.zip().match(regexZipCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Zip Code");
-                    window.alert("Invalid Zip Code");
-                } else {
+                if ($("#form-page-2").valid()) {
                     $("#info-page-" + vm.currentPage).hide();
                     vm.currentPage++;
                     $("#info-page-" + vm.currentPage).show();
                     vm.updateButtons();
                     vm.updateProgressBar();
                 }
-            } else if (vm.currentPage === STUDENT_INFORMATION_PAGE && !checkValidStudents(vm.students())) {
-                vm.studentInputErrorMessage("Invalid Student Information");
-                console.alert("Invalid Student Information");
             } else if (vm.currentPage === STUDENT_INFORMATION_PAGE) {
-                $("#info-page-" + vm.currentPage).hide();
-                vm.currentPage++;
-                $("#info-page-" + vm.currentPage).show();
-                vm.updateButtons();
-                vm.updateProgressBar();
+                if ($("#form-page-3").valid()) {
+                    $("#info-page-" + vm.currentPage).hide();
+                    vm.currentPage++;
+                    $("#info-page-" + vm.currentPage).show();
+                    vm.updateButtons();
+                    vm.updateProgressBar();
+                }
             }
         };
 
@@ -331,21 +295,6 @@ function createUser(accountCreationInformation) {
         contentType: "application/json; charset=utf-8",
         data: accountCreationInformationData
     });
-}
-
-//Checks that student entries are valid
-function checkValidStudents(students) {
-    let result = true;
-    students.forEach(function (student) {
-        if (!student.studentFirstName() || !student.studentFirstName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.studentLastName() || !student.studentLastName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.studentGrade() || student.studentGrade() < 0 || student.studentGrade() > 12) {
-            result = false;
-        }
-    });
-    return result;
 }
 
 //Checks to see if an entered email has already been used
