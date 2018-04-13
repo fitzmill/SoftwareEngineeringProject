@@ -8,6 +8,9 @@ using System.Web.Http;
 
 namespace Web.Filters
 {
+    /*
+     * Borrowed from https://github.com/cuongle/WebApi.Jwt
+     */
     public class AddChallengeOnUnauthorizedResult : IHttpActionResult
     {
         public AddChallengeOnUnauthorizedResult(AuthenticationHeaderValue challenge, IHttpActionResult innerResult)

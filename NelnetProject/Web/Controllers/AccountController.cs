@@ -33,22 +33,14 @@ namespace Web.Controllers
 
         [HttpGet]
         [Route("GetUserInfo")]
-        [JwtAuthentication(Roles = new UserType[] { UserType.ADMIN })]
+        [JwtAuthentication]
         public IHttpActionResult GetUserInfo()
         {
             var user = (ClaimsIdentity)User.Identity;
-            var email = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name).Value;
-            return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
-        }
-
-        [HttpGet]
-        [Route("GetUserInfoByID/{userID}")]
-        [JwtAuthentication]
-        public IHttpActionResult GetUserInfoByID(string userID)
-        {
-            if (!int.TryParse(userID, out int parsedUserID))
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userID == null || !int.TryParse(userID, out int parsedUserID))
             {
-                return BadRequest("Could not parse userID into an integer");
+                return Unauthorized();
             }
             return Ok(getUserInfoEngine.GetUserInfoByID(parsedUserID));
         }
@@ -76,7 +68,9 @@ namespace Web.Controllers
             }
 
             setUserInfoEngine.UpdatePersonalInfo(user);
-            return Ok();
+
+            var newToken = JwtManager.GenerateToken(user);
+            return Ok(newToken);
         }
 
         [HttpPost]
@@ -159,26 +153,18 @@ namespace Web.Controllers
             
             setUserInfoEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
-            return Ok(user);
-        }
 
-        [HttpPost]
-        [Route("GetUserInfoByEmail")]
-        [JwtAuthentication]
-        public IHttpActionResult GetUserInfoByEmail([FromBody] string email)
-        {
-            if (String.IsNullOrEmpty(email))
-            {
-                return BadRequest("Email was not supplied");
-            }
-            return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
+            var token = JwtManager.GenerateToken(user);
+
+            return Ok(token);
         }
 
         [HttpGet]
         [Route("GetPaymentInfoForUser/{userID}")]
         [JwtAuthentication]
-        public IHttpActionResult GetPaymentInfoForUser(string userID)
+        public IHttpActionResult GetPaymentInfoForUser()
         {
+            var userID = 
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");

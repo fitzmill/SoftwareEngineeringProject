@@ -44,13 +44,13 @@ namespace Web.Controllers
             string email = emailPassword.Substring(0, seperatorIndex);
             string password = emailPassword.Substring(seperatorIndex + 1);
 
-
-            if (getUserInfoEngine.ValidateLoginInfo(email, password, out UserType userType))
+            var user = getUserInfoEngine.ValidateLoginInfo(email, password);
+            if (user != null)
             {
                 return Ok(new LoginDTO()
                 {
-                    JwtToken = JwtManager.GenerateToken(email, userType),
-                    UserType = userType
+                    JwtToken = JwtManager.GenerateToken(user),
+                    UserType = user.UserType
                 });
 
             }

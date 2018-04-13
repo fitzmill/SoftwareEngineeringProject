@@ -17,6 +17,7 @@ namespace Web.Controllers
 {
     //this is the route in the url for this set of APIs. So the url would be localhost:port/api/admin
     [RoutePrefix("api/admin")]
+    [JwtAuthentication(Roles = new UserType[] { UserType.ADMIN })]
     public class AdminController : ApiController
     {
         IGetTransactionEngine getTransactionEngine;
@@ -33,15 +34,8 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("GetTransactionsForDateRange")]
-        [JwtAuthentication]
         public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
         {
-            string userType = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
-            if (!userType.Equals(UserType.ADMIN.ToString()))
-            {
-                return Unauthorized();
-            }
-
             if (dateRangeDTO == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
@@ -56,28 +50,15 @@ namespace Web.Controllers
 
         [HttpGet]
         [Route("GetAllReports")]
-        [JwtAuthentication]
         public IHttpActionResult GetAllReports()
         {
-            string userType = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
-            if (!userType.Equals(UserType.ADMIN.ToString()))
-            {
-                return Unauthorized();
-            }
             return Ok(getReportEngine.GetAllReports());
         }
 
         [HttpPost]
         [Route("InsertReport")]
-        [JwtAuthentication]
         public IHttpActionResult InsertReport(DateRangeDTO dateRange)
         {
-            string userType = JwtManager.GetPrincipal(Request.Headers.Authorization.Parameter).Claims.FirstOrDefault(x => x.Type == ClaimTypes.Role).Value;
-            if (!userType.Equals(UserType.ADMIN.ToString()))
-            {
-                return Unauthorized();
-            }
-
             if (dateRange == null || !ModelState.IsValid)
             {
                 return BadRequest("Report object was null in request");

@@ -11,6 +11,9 @@ using System.Web.Http.Filters;
 
 namespace Web.Filters
 {
+    /*
+     * Mostly borrowed from https://github.com/cuongle/WebApi.Jwt
+     */
     public class JwtAuthenticationAttribute : Attribute, IAuthenticationFilter
     {
         public string Realm { get; set; }
@@ -43,10 +46,9 @@ namespace Web.Filters
 
 
 
-        private bool ValidateToken(string token, out string email, out string role)
+        private bool ValidateToken(string token, out IList<Claim> claims)
         {
-            email = null;
-            role = null;
+            claims = null;
 
             var simplePrinciple = JwtManager.GetPrincipal(token);
             var identity = simplePrinciple?.Identity as ClaimsIdentity;
@@ -57,37 +59,34 @@ namespace Web.Filters
             if (!identity.IsAuthenticated)
                 return false;
 
-            var usernameClaim = identity.FindFirst(ClaimTypes.Email);
-            email = usernameClaim?.Value;
-
             var roleClaim = identity.FindFirst(ClaimTypes.Role);
-            role = roleClaim?.Value;
+            var role = roleClaim?.Value;
 
-            if (!this.Roles.Any(x => x.ToString() == roleClaim?.Value))
+            if (role == null || !this.Roles.Any(x => x.ToString() == roleClaim?.Value))
             {
                 return false;
             }
 
-            if (string.IsNullOrEmpty(email))
-                return false;
+            var emailClaim = identity.FindFirst(ClaimTypes.Email);
 
-            // More validate to check whether username exists in system
+            var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
+
+            var customerIdClaim = identity.FindFirst("CustomerID");
+
+            if (roleClaim == null || emailClaim == null || userIdClaim == null || customerIdClaim == null)
+            {
+                return false;
+            }
+
+            claims = new List<Claim>(new Claim[] { userIdClaim, emailClaim, roleClaim, customerIdClaim });
 
             return true;
         }
 
         protected Task<IPrincipal> AuthenticateJwtToken(string token)
         {
-            if (ValidateToken(token, out string email, out string role))
+            if (ValidateToken(token, out IList<Claim> claims))
             {
-                // based on username to get more information from database in order to build local identity
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Email, email),
-                    new Claim(ClaimTypes.Role, role)
-                    // Add more claims if needed...
-                };
-
                 var identity = new ClaimsIdentity(claims, "Jwt");
                 IPrincipal user = new ClaimsPrincipal(identity);
 

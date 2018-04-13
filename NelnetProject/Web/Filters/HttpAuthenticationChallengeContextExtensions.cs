@@ -4,6 +4,9 @@ using System.Web.Http.Filters;
 
 namespace Web.Filters
 {
+    /*
+     * Borrowed from https://github.com/cuongle/WebApi.Jwt
+     */
     public static class HttpAuthenticationChallengeContextExtensions
     {
         public static void ChallengeWith(this HttpAuthenticationChallengeContext context, string scheme)

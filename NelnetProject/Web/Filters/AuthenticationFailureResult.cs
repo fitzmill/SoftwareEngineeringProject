@@ -6,6 +6,9 @@ using System.Web.Http;
 
 namespace Web.Filters
 {
+    /*
+     * Borrowed from https://github.com/cuongle/WebApi.Jwt
+     */
     public class AuthenticationFailureResult : IHttpActionResult
     {
         public AuthenticationFailureResult(string reasonPhrase, HttpRequestMessage request)
