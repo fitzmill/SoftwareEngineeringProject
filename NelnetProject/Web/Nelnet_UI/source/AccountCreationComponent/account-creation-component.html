@@ -28,18 +28,18 @@
 
             <div id="info-page-2">
                 <form id="form-page-2">
-                    <input class="input-account-creation card-half-column card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" required no-code-chars/>
-                    <input class="input-account-creation card-half-column card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" required no-code-chars/>
+                    <input class="input-account-creation card-half-column card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" required type="no-code-chars"/>
+                    <input class="input-account-creation card-half-column card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" required type="no-code-chars"/>
 
-                    <input class="input-account-creation card-extra-large card-left" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number" required creditcard/>
+                    <input class="input-account-creation card-extra-large card-left" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number" required type="creditcard"/>
                     <input class="input-account-creation card-tiny card-left" data-bind="value: month" placeholder="MM"/>
                     <input class="input-account-creation card-tiny card-left" id="expireYear" data-bind="value: year" placeholder="YYYY"/>
 
-                    <input class="input-account-creation card-full-column" data-bind="value: address1" placeholder="Address Line 1" required no-code-chars/>
-                    <input class="input-account-creation card-full-column" data-bind="value: address2" placeholder="Address Line 2 (Optional)" no-code-chars/>
+                    <input class="input-account-creation card-full-column" data-bind="value: address1" placeholder="Address Line 1" required type="no-code-chars"/>
+                    <input class="input-account-creation card-full-column" data-bind="value: address2" placeholder="Address Line 2 (Optional)" type="no-code-chars"/>
 
-                    <input class="input-account-creation card-large card-left" data-bind="value: city" placeholder="City" required no-code-chars/>
-                    <input class="input-account-creation card-small card-left" data-bind="value: zip" placeholder="Zip Code" required zipcodeUS/>
+                    <input class="input-account-creation card-large card-left" data-bind="value: city" placeholder="City" required type="no-code-chars"/>
+                    <input class="input-account-creation card-small card-left" data-bind="value: zip" placeholder="Zip Code" required type="zipcodeUS"/>
                     <input class="input-account-creation card-small card-left" data-bind="value: state" placeholder="State"/>
                 </form>
             </div>
