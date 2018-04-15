@@ -43,7 +43,7 @@ namespace Accessors
 
                 dynamic result = JsonConvert.DeserializeObject(responseTask.Result);
 
-                if (result.errors.Count > 0)
+                if (result.errors != null && result.errors.Count > 0)
                 {
                     return new ChargeResultDTO()
                     {
