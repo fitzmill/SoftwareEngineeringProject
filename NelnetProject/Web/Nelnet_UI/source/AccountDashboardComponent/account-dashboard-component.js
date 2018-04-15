@@ -13,10 +13,8 @@ var userPaymentInfo = undefined;
 
 //add function to exports so index.js can see it
 exports.accountDashboardBeforeShow = function () {
-    user = JSON.parse(window.sessionStorage.getItem("user"));
-
     //if not logged in
-    if (!user) {
+    if (!window.sessionStorage.getItem("Jwt")) {
         window.location = "#";
         return;
     }
@@ -63,8 +61,16 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.confirmModalData = ko.observable();
 
         accountDashboardVM.loadUserInformation = function () {
+            //Gets users info
+            getUserInfo().done(function (data) {
+                user = data;
+                accountDashboardVM.setUser();
+            }).fail(function (jqXHR) {
+                window.alert("Could not get user information, please try refreshing the page");
+            });
+
             //Get all needed information from database
-            getPaymentSpringInfo(user.UserID).done(function (data) {
+            getPaymentSpringInfo().done(function (data) {
                 userPaymentInfo = data;
                 //updates payment display info
                 accountDashboardVM.setUIPaymentSpringInfo();
@@ -73,7 +79,7 @@ ko.components.register('account-dashboard-component', {
             });
 
             //gets all transactions for a user.
-            getAllTransactionsForUser(user.UserID).done(function (data) {
+            getAllTransactionsForUser().done(function (data) {
                 //sort so most recent is at top
                 data.sort((a, b) => b.TransactionID - a.TransactionID);
 
@@ -96,14 +102,12 @@ ko.components.register('account-dashboard-component', {
             });
 
             //gets the next payment details for the user
-            getNextTransactionForUser(user.UserID).done(function (data) {
+            getNextTransactionForUser().done(function (data) {
                 accountDashboardVM.NextPaymentDate(data.DateDue.parseDateTimeString());
                 accountDashboardVM.NextPaymentCost(Number(data.AmountCharged).toLocaleString('en'));
             }).fail(function (jqXHR) {
                 window.alert("Could not get your next transaction information, please try refreshing the page.");
             });
-
-            accountDashboardVM.setUser();
         };
 
         //Sets ko components from saved user
@@ -428,7 +432,7 @@ ko.components.register('account-dashboard-component', {
         };
 
         //make sure user has logged in properly
-        if (user) {
+        if ($("account-dashboard-component").is(":visible") && window.sessionStorage.getItem("Jwt")) {
             accountDashboardVM.loadUserInformation();
         }
 
@@ -440,27 +444,43 @@ ko.components.register('account-dashboard-component', {
     template: require('./account-dashboard-component.html')
 });
 
+//Gets a user's info
+function getUserInfo() {
+    return $.ajax(accountDashboardAPIURL + "/GetUserInfo", {
+        method: "GET",
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
+    });
+}
+
 //Gets a user's next transaction details
-function getNextTransactionForUser(userID) {
-    let userIDString = userID.toString();
-    return $.ajax(accountDashboardAPIURL + "/GetNextTransactionForUser/" + userIDString, {
-        method: "GET"
+function getNextTransactionForUser() {
+    return $.ajax(accountDashboardAPIURL + "/GetNextTransactionForUser", {
+        method: "GET",
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
 //Gets a user's transaction details
-function getAllTransactionsForUser(userID) {
-    let userIDString = userID.toString();
-    return $.ajax(accountDashboardAPIURL + "/GetAllTransactionsForUser/" + userIDString, {
-        method: "GET"
+function getAllTransactionsForUser() {
+    return $.ajax(accountDashboardAPIURL + "/GetAllTransactionsForUser", {
+        method: "GET",
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
 //GETs a user's payment spring information
-function getPaymentSpringInfo(userID) {
-    let userIDString = userID.toString();
-    return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser/" + userIDString, {
-        method: "GET"
+function getPaymentSpringInfo() {
+    return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser", {
+        method: "GET",
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
@@ -468,7 +488,10 @@ function getPaymentSpringInfo(userID) {
 function updatePersonalInfo(userInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePersonalInfo", {
         method: "POST",
-        data: userInfo
+        data: userInfo,
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
@@ -485,7 +508,10 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
     return $.ajax(accountDashboardAPIURL + "/UpdateStudentInfo", {
         method: "POST",
         contentType: "application/json; charset=utf-8",
-        data: jsonData
+        data: jsonData,
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
@@ -493,7 +519,10 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
 function deleteUser(user) {
     return $.ajax(accountDashboardAPIURL + "/DeleteUser", {
         method: "POST",
-        data: user
+        data: user,
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
@@ -501,7 +530,10 @@ function deleteUser(user) {
 function updatePaymentCardInfo(paymentCardInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePaymentCardInfo", {
         method: "POST",
-        data: paymentCardInfo
+        data: paymentCardInfo,
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
@@ -509,7 +541,10 @@ function updatePaymentCardInfo(paymentCardInfo) {
 function updatePaymentBillingInfo(paymentBillingInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePaymentBillingInfo", {
         method: "POST",
-        data: paymentBillingInfo
+        data: paymentBillingInfo,
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 

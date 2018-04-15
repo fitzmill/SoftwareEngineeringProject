@@ -17,7 +17,7 @@ namespace Web.Filters
     public class JwtAuthenticationAttribute : Attribute, IAuthenticationFilter
     {
         public string Realm { get; set; }
-        public UserType[] Roles { get; set; }
+        public UserType[] Roles { get; set; } = new UserType[] { };
         public bool AllowMultiple => false;
 
         public async Task AuthenticateAsync(HttpAuthenticationContext context, CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ namespace Web.Filters
             var roleClaim = identity.FindFirst(ClaimTypes.Role);
             var role = roleClaim?.Value;
 
-            if (role == null || !this.Roles.Any(x => x.ToString() == roleClaim?.Value))
+            if (role == null || (this.Roles.Length > 0 && !this.Roles.Any(x => x.ToString() == roleClaim?.Value)))
             {
                 return false;
             }

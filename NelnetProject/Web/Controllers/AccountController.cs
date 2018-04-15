@@ -160,11 +160,12 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        [Route("GetPaymentInfoForUser/{userID}")]
+        [Route("GetPaymentInfoForUser")]
         [JwtAuthentication]
         public IHttpActionResult GetPaymentInfoForUser()
         {
-            var userID = 
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
@@ -213,11 +214,12 @@ namespace Web.Controllers
 
         //This is a get request with the above route. The 5 at the end of the example is an example userID
         [HttpGet]
-        [Route("GetAllTransactionsForUser/{userID}")]
+        [Route("GetAllTransactionsForUser")]
         [JwtAuthentication]
-        public IHttpActionResult GetAllTransactionsForUser(string userID)
+        public IHttpActionResult GetAllTransactionsForUser()
         {
-            //Tries to convert the parameter to an int
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
@@ -227,10 +229,12 @@ namespace Web.Controllers
 
         //GET api/account/GetNextTransactionForUser/{userID}
         [HttpGet]
-        [Route("GetNextTransactionForUser/{userID}")]
+        [Route("GetNextTransactionForUser")]
         [JwtAuthentication]
-        public IHttpActionResult GetNextTransactionForUser(string userID)
+        public IHttpActionResult GetNextTransactionForUser()
         {
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");

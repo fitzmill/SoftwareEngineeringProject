@@ -20,28 +20,21 @@ ko.components.register('login-component', {
                 return;
             }
 
-            validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
-                if (validLogin) {
-                    getUserInfoByEmail(vm.email()).done(function (user) {
-                        vm.email("");
-                        vm.password("");
-                        if (user.UserType === "GENERAL") {
-                            window.sessionStorage.setItem("user", JSON.stringify(user));
-                            window.location = "#account-dashboard";
-                        } else if (user.UserType === "ADMIN") {
-                            window.sessionStorage.setItem("user", JSON.stringify(user));
-                            window.location = "#admin";
-                        }
-                    }).fail(function (jqXHR) {
-                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                        window.alert(errorMessage);
-                    });
-                } else {
-                    $("#label-invalid-info").show();
+            validateLoginInfo(vm.email(), vm.password()).done(function (loginInfo) {
+                window.sessionStorage.setItem('Jwt', loginInfo.JwtToken);
+                if (loginInfo.UserType === "GENERAL") {
+                    window.location = "#account-dashboard";
+                } else if (loginInfo.UserType === "ADMIN") {
+                    window.location = "#admin";
                 }
-            }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert(errorMessage);
+            }).fail(function (jqXHR, responseText, errorThrown) {
+                if (jqXHR.status === 401) {
+                    //invalid info
+                    $("#label-invalid-info").show();
+                } else {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert(errorMessage);
+                }
             });
         }
 
@@ -60,10 +53,9 @@ ko.components.register('login-component', {
 
 function validateLoginInfo(email, password) {
     return $.ajax(loginAPIURL + "/ValidateLoginInfo", {
-        method: "POST",
-        data: {
-            Email: email,
-            Password: password
+        method: "GET",
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Basic " + btoa(email + ':' + password));
         }
     });
 }

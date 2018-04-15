@@ -3,9 +3,8 @@
 const adminAPIURL = "/api/admin";
 
 exports.adminDashboardBeforeShow = function () {
-    let user = JSON.parse(window.sessionStorage.getItem('user'));
     //user not logged in
-    if (!user || user.UserType !== "ADMIN") {
+    if (!window.sessionStorage.getItem("Jwt")) {
         window.location = '#';
         return;
     }
@@ -36,6 +35,9 @@ ko.components.register('admin-component', {
             getReports().done((data) => {
                 vm.reports(data.map((report) => parseReportModel(report)));
             }).fail((jqXHR) => {
+                if (jqXHR.status === 401) {
+
+                }
                 window.alert("Could not get reports, please try refreshing the page");
             });
         }
@@ -105,8 +107,7 @@ ko.components.register('admin-component', {
             csv.downloadCSV("Transactions.csv");
         };
 
-        let user = JSON.parse(window.sessionStorage.getItem('user'));
-        if (user && user.UserType === "ADMIN") {
+        if ($("admin-component").is(":visible") && window.sessionStorage.getItem("Jwt")) {
             vm.loadAdminInformation();
         }
 
@@ -150,7 +151,10 @@ function parseReportModel(report) {
 //fetches all reports from the report api
 function getReports() {
     return $.ajax(adminAPIURL + "/GetAllReports", {
-        method: "GET"
+        method: "GET",
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+        }
     });
 }
 
@@ -168,6 +172,9 @@ function generateReport(startDate, endDate) {
         data: {
             StartDate: parsedStartDate,
             EndDate: parsedEndDate
+        },
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
         }
     });
 }
@@ -179,6 +186,9 @@ function getReportDetails(startDate, endDate) {
         data: {
             StartDate: startDate,
             EndDate: endDate
+        },
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
         }
     });
 }

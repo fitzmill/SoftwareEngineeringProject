@@ -13,7 +13,7 @@ var index = (function () {
         accountCreationComponent: require('./AccountCreationComponent/account-creation-component.js'),
         accountDashboardComponent: require('./AccountDashboardComponent/account-dashboard-component.js'),
         logout: function () {
-            window.localStorage.removeItem("user");
+            window.sessionStorage.removeItem("Jwt");
             window.location = "#";
         }
     };
