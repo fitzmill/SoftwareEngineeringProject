@@ -182,7 +182,7 @@ ko.components.register('account-dashboard-component', {
         //Changes student info in database and ui to what user entered
         accountDashboardVM.updateStudents = function (data, event) {
             if ($("#edit-students-form").valid()) {
-                console.log("borf");
+
                 //disable save and edit buttons
                 $("#btn-save-edit-student").attr("disabled", "disabled");
                 $("#btn-cancel-edit-student").attr("disabled", "disabled");
