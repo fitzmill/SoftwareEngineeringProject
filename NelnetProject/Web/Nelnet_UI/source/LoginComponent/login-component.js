@@ -13,6 +13,7 @@ ko.components.register('login-component', {
 
         vm.login = function () {
             if ($("#form-page-2").valid()) {
+                $("#btn-login").attr("disabled", "disabled");
                 validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
                     if (validLogin) {
                         getUserInfoByEmail(vm.email()).done(function (user) {
@@ -35,6 +36,9 @@ ko.components.register('login-component', {
                 }).fail(function (jqXHR) {
                     let errorMessage = JSON.parse(jqXHR.responseText).Message;
                     window.alert(errorMessage);
+                }).always(function () {
+                    //re-enable button
+                    $("#btn-login").removeAttr("disabled");
                 });
             }
         }
