@@ -68,7 +68,7 @@ ko.components.register('admin-component', {
 
                 //add up values
                 let amountCharged = charged.sumProperty('AmountCharged');
-                let amountPaid = data.filter(t => t.ProcessState === "SUCCESSFUL").sumProperty('AmountCharged');
+                let amountPaid = data.filter(t => t.ProcessState === "SUCCESSFUL" || t.ProcessState === "DEFERRED").sumProperty('AmountCharged');
                 let amountOutstanding = amountCharged - amountPaid;
 
                 //convert to currency
@@ -78,8 +78,7 @@ ko.components.register('admin-component', {
 
                 //filter all transactions to just get unsettled ones
                 //makes a deep copy of the array
-                //TODO: Implement support for Joe's eventual 'DEFERRED' process state
-                let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL")));
+                let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL" && t.ProcessState !== "DEFERRED")));
                 unsettledTransactions.forEach((t, index, array) => {
                     array[index].DateDue = t.DateDue.parseDateTimeString();
                     array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
