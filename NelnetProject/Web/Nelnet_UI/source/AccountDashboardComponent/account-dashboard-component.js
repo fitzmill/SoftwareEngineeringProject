@@ -243,48 +243,36 @@ ko.components.register('account-dashboard-component', {
 
         //Changes the payment info in payment spring and ui to what the user entered.
         accountDashboardVM.updatePaymentInfo = function (data, event) {
-             if (!accountDashboardVM.CardNumber() || accountDashboardVM.CardNumber().toString().length < 15 || accountDashboardVM.CardNumber().toString().length > 19) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid card number");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.ExpirationYear() || accountDashboardVM.ExpirationYear() < 2018) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid card expiration year");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.ExpirationMonth() || accountDashboardVM.ExpirationMonth() < 1 || accountDashboardVM.ExpirationMonth() > 12) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid card expiration month");
-                $("#edit-payment-input-error").show();
-                return;
-            }
+             //if ($("#edit-payment-form").valid()) {
+                 //disable cancel and save buttons while request loads
+                 $("#btn-save-edit-payment").attr('disabled', 'disabled');
+                 $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
 
-            //disable cancel and save buttons while request loads
-            $("#btn-save-edit-payment").attr('disabled', 'disabled');
-            $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
+                 let changedCardInfo = {
+                     CustomerID: userPaymentInfo.CustomerID,
+                     CardNumber: accountDashboardVM.CardNumber(),
+                     ExpirationYear: accountDashboardVM.ExpirationYear(),
+                     ExpirationMonth: accountDashboardVM.ExpirationMonth()
+                 };
 
-            let changedCardInfo = {
-                CustomerID: userPaymentInfo.CustomerID,
-                CardNumber: accountDashboardVM.CardNumber(),
-                ExpirationYear: accountDashboardVM.ExpirationYear(),
-                ExpirationMonth: accountDashboardVM.ExpirationMonth()
-            };
+                 updatePaymentCardInfo(changedCardInfo).done(function () {
+                     //reset it to last few digits
+                     userPaymentInfo.CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
+                     userPaymentInfo.ExpirationYear = changedCardInfo.ExpirationYear;
+                     userPaymentInfo.ExpirationMonth = changedCardInfo.ExpirationMonth;
 
-            updatePaymentCardInfo(changedCardInfo).done(function () {
-                //reset it to last few digits
-                userPaymentInfo.CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
-                userPaymentInfo.ExpirationYear = changedCardInfo.ExpirationYear;
-                userPaymentInfo.ExpirationMonth = changedCardInfo.ExpirationMonth;
-
-                //UI will be updated here
-                accountDashboardVM.stopEditing(data, event);
-            }).fail(function (jqXHR) {
-                changedPaymentInfo = undefined;
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not save information: ".concat(errorMessage));
-            }).always(function () {
-                //re-enable buttons
-                $("#btn-save-edit-payment").removeAttr('disabled');
-                $("#btn-cancel-edit-payment").removeAttr('disabled');
-            });
+                     //UI will be updated here
+                     accountDashboardVM.stopEditing(data, event);
+                 }).fail(function (jqXHR) {
+                     changedPaymentInfo = undefined;
+                     let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                     window.alert("Could not save information: ".concat(errorMessage));
+                 }).always(function () {
+                     //re-enable buttons
+                     $("#btn-save-edit-payment").removeAttr('disabled');
+                     $("#btn-cancel-edit-payment").removeAttr('disabled');
+                 });
+             //}
         };
 
         accountDashboardVM.updateBillingInfo = function (data, event) {
