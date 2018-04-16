@@ -35,10 +35,9 @@ ko.components.register('admin-component', {
             getReports().done((data) => {
                 vm.reports(data.map((report) => parseReportModel(report)));
             }).fail((jqXHR) => {
-                if (jqXHR.status === 401) {
-
-                }
-                window.alert("Could not get reports, please try refreshing the page");
+                if (jqXHR.status !== 401) {
+                    window.alert("Could not get reports, please try refreshing the page");
+                } 
             });
         }
 
@@ -46,8 +45,10 @@ ko.components.register('admin-component', {
             generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
                 vm.reports.unshift(parseReportModel(data));
             }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not generate report: ".concat(errorMessage));
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not generate report: ".concat(errorMessage));
+                }
             });
 
         };
@@ -93,8 +94,10 @@ ko.components.register('admin-component', {
                 $("#headerLoadingModal").hide();
 
             }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not get report details: ".concat(errorMessage));
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not get report details: ".concat(errorMessage));
+                }
 
                 $("#modalViewReport").modal("hide");
             });

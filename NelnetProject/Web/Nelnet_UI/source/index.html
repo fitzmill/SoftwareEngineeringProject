@@ -7,7 +7,7 @@
         <login-component></login-component>
     </div>
 
-    <div data-bind="page: {id: 'admin', beforeShow: adminComponent.adminDashboardBeforeShow}">
+    <div data-bind="page: {id: 'admin', beforeShow: adminComponent.adminDashboardBeforeShow, beforeHide: function() { $('.modal').modal('hide') }}">
         <admin-component></admin-component>
     </div>
 

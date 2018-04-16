@@ -32,7 +32,7 @@ namespace Web.Controllers
 
             if (authenticationHeader == null || !authenticationHeader.Scheme.StartsWith("Basic"))
             {
-                return Unauthorized();
+                return BadRequest();
             }
 
             var encodedUsernamePassword = authenticationHeader.Parameter;
@@ -55,7 +55,7 @@ namespace Web.Controllers
 
             }
 
-            return Unauthorized();
+            return Ok();
         }
     }
 }

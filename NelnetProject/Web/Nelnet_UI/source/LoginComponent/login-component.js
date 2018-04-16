@@ -21,6 +21,10 @@ ko.components.register('login-component', {
             }
 
             validateLoginInfo(vm.email(), vm.password()).done(function (loginInfo) {
+                if (!loginInfo) {
+                    $("label-invalid-info").show();
+                    return;
+                }
                 window.sessionStorage.setItem('Jwt', loginInfo.JwtToken);
                 if (loginInfo.UserType === "GENERAL") {
                     window.location = "#account-dashboard";
@@ -28,13 +32,8 @@ ko.components.register('login-component', {
                     window.location = "#admin";
                 }
             }).fail(function (jqXHR, responseText, errorThrown) {
-                if (jqXHR.status === 401) {
-                    //invalid info
-                    $("#label-invalid-info").show();
-                } else {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert(errorMessage);
-                }
+                let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                window.alert(errorMessage);
             });
         }
 

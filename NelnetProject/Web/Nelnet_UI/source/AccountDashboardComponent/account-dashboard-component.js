@@ -66,7 +66,9 @@ ko.components.register('account-dashboard-component', {
                 user = data;
                 accountDashboardVM.setUser();
             }).fail(function (jqXHR) {
-                window.alert("Could not get user information, please try refreshing the page");
+                if (jqXHR.status !== 401) {
+                    window.alert("Could not get user information, please try refreshing the page");
+                }
             });
 
             //Get all needed information from database
@@ -75,7 +77,9 @@ ko.components.register('account-dashboard-component', {
                 //updates payment display info
                 accountDashboardVM.setUIPaymentSpringInfo();
             }).fail(function (jqXHR) {
-                window.alert("Could not get payment information, please try refreshing the page.");
+                if (jqXHR.status !== 401) {
+                    window.alert("Could not get payment information, please try refreshing the page.");
+                }
             });
 
             //gets all transactions for a user.
@@ -98,7 +102,9 @@ ko.components.register('account-dashboard-component', {
                     };
                 }));
             }).fail(function (jqXHR) {
-                window.alert("Could not get transaction information, please try refreshing the page.");
+                if (jqXHR.status !== 401) {
+                    window.alert("Could not get transaction information, please try refreshing the page.");
+                }
             });
 
             //gets the next payment details for the user
@@ -106,7 +112,9 @@ ko.components.register('account-dashboard-component', {
                 accountDashboardVM.NextPaymentDate(data.DateDue.parseDateTimeString());
                 accountDashboardVM.NextPaymentCost(Number(data.AmountCharged).toLocaleString('en'));
             }).fail(function (jqXHR) {
-                window.alert("Could not get your next transaction information, please try refreshing the page.");
+                if (jqXHR.status !== 401) {
+                    window.alert("Could not get your next transaction information, please try refreshing the page.");
+                }
             });
         };
 
@@ -158,14 +166,16 @@ ko.components.register('account-dashboard-component', {
                     changedUserInfo.LastName = accountDashboardVM.UserLastName();
                     changedUserInfo.Email = accountDashboardVM.Email();
 
-                    updatePersonalInfo(changedUserInfo).done(function () {
+                    updatePersonalInfo(changedUserInfo).done(function (newToken) {
                         //update user in local storage in the case of page reload
-                        window.sessionStorage.setItem("user", JSON.stringify(changedUserInfo));
+                        window.sessionStorage.setItem("Jwt", newToken);
                         user = changedUserInfo;
                         accountDashboardVM.stopEditing(data, event);
                     }).fail(function (jqXHR) {
-                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                        window.alert("Could not save information: ".concat(errorMessage));
+                        if (jqXHR.status !== 401) {
+                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                            window.alert("Could not save information: ".concat(errorMessage));
+                        }
                     }).always(function () {
                         //re-enable buttons
                         $("#btn-save-edit-personal").removeAttr("disabled");
@@ -213,11 +223,12 @@ ko.components.register('account-dashboard-component', {
             updateStudentInfo(user.UserID, updatedStudents, deletedStudentIDs, newStudents).done(function () {
                 //update user in local storage in the case of page reload
                 user.Students = inputStudents;
-                localStorage.setItem("user", JSON.stringify(user));
                 accountDashboardVM.stopEditing(data, event);
             }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not save information: ".concat(errorMessage));
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not save information: ".concat(errorMessage));
+                }
             }).always(function () {
                 //re-enable buttons
                 $("#btn-save-edit-student").removeAttr("disabled");
@@ -290,9 +301,10 @@ ko.components.register('account-dashboard-component', {
                 //UI will be updated here
                 accountDashboardVM.stopEditing(data, event);
             }).fail(function (jqXHR) {
-                changedPaymentInfo = undefined;
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not save information: ".concat(errorMessage));
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not save information: ".concat(errorMessage));
+                }
             }).always(function () {
                 //re-enable buttons
                 $("btn-save-edit-payment").removeAttr('disabled');
@@ -358,9 +370,10 @@ ko.components.register('account-dashboard-component', {
                 //UI will be updated here
                 accountDashboardVM.stopEditing(data, event);
             }).fail(function (jqXHR) {
-                changedPaymentInfo = undefined;
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not save information: ".concat(errorMessage));
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not save information: ".concat(errorMessage));
+                }
             }).always(function () {
                 //re-enable buttons
                 $("btn-save-edit-billing").removeAttr('disabled');
