@@ -38,9 +38,10 @@
 
             <div id="page-2">
                 <form id="form-page-2">
-                    <input name="cardholder-first-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardFirstName" placeholder="Cardholder First Name" required/>
-                    <input name="card-holder-last-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardLastName" placeholder="Cardholder Last Name" required/>
-                    <input name="credit-card-number" class="input-account-creation card-extra-large card-left" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number" required minlength="15" maxlength="19"/>
+                    <input name="cardholder-first-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardFirstName" placeholder="Cardholder First Name" required />
+                    <input name="card-holder-last-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardLastName" placeholder="Cardholder Last Name" required />
+                    <input name="credit-card-number" class="input-account-creation card-extra-large card-left creditcard" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number" required />
+
                     <select name="expire-month" class="input-account-creation card-tiny card-left" style="height: 28.5px; margin-right: 0.9%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Months, value: month, optionsCaption: 'MM'" required/>
                     <select name="expire-year" class="input-account-creation card-smaller card-left" style="height: 28.5px; margin-left: 0%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Years, value: year, optionsCaption: 'YYYY'" required/>
                     <input name="address-1" class="input-account-creation card-full-column no-code-chars" data-bind="value: address1" placeholder="Address Line 1" required/>
