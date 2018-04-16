@@ -222,7 +222,13 @@ ko.components.register('account-creation-component', {
 
         //move to the next page
         vm.next = function () {
-            if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
+            if (vm.currentPage === WELCOME_PAGE){
+                $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                vm.currentPage++;
+                $(PAGE_ID_PREFIX + vm.currentPage).show();
+                vm.updateButtons();
+                vm.updateProgressBar();
+            } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
                 let emailInUse = false;
                 if ($("#form-page-1").valid()) {
                     emailExists(vm.email()).done(function (data) {
