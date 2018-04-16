@@ -231,21 +231,26 @@ ko.components.register('account-creation-component', {
             } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
                 let emailInUse = false;
                 if ($("#form-page-1").valid()) {
+                    $("#btn-cancel").attr("disabled", "disabled");
+                    $("#btn-next").attr("disabled", "disabled");
                     emailExists(vm.email()).done(function (data) {
-                       emailInUse = data;
-                       if (emailInUse) {
-                           vm.personalInputErrorMessage("Email is already in use");
-                           window.alert("Email is already in use");
-                       } else {
-                           $(PAGE_ID_PREFIX + vm.currentPage).hide();
-                           vm.currentPage++;
-                           $(PAGE_ID_PREFIX + vm.currentPage).show();
-                           vm.updateButtons();
-                           vm.updateProgressBar();
-                       }
+                        emailInUse = data;
+                        if (emailInUse) {
+                            vm.personalInputErrorMessage("Email is already in use");
+                            window.alert("Email is already in use");
+                        } else {
+                            $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                            vm.currentPage++;
+                            $(PAGE_ID_PREFIX + vm.currentPage).show();
+                            vm.updateButtons();
+                            vm.updateProgressBar();
+                        }
                     }).fail(function (jqXHR) {
-                       let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                       window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                        window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                    }).always(function (jqXHR) {
+                        $("#btn-cancel").removeAttr("disabled");
+                        $("#btn-next").removeAttr("disabled");
                     });
                 }
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
@@ -267,8 +272,26 @@ ko.components.register('account-creation-component', {
             }
         };
 
+        $("account-creation-component").keypress(function (e) {
+            //If the user presses enter, it will click the login button
+            if (e.which === 13) {
+                if ($("#btn-start").is(":visible")) {
+                    vm.next();
+                } else if ($("#btn-next").is(":visible")) {
+                    vm.next();
+                } else if ($("#btn-done").is(":visible")) {
+                    vm.done();
+                }
+            }
+        });
+
         //finish and create account
         vm.done = function () {
+            if (!$("#form-page-4").valid()) {
+                window.alert("Please select a payment plan");
+                return;
+            }
+
             let students = vm.students().map(s => {
                 return {
                     StudentID: 0, //should be set when the student is inserted into the database
@@ -298,11 +321,17 @@ ko.components.register('account-creation-component', {
                 ExpirationMonth: vm.month()
             };
 
+            $("#btn-done").attr("disabled", "disabled");
+            $("#btn-back").attr("disabled", "disabled");
+
             createUser(accountCreationInformation).done(function (data) {
                 window.localStorage.setItem("user", JSON.stringify(data));
                 window.location = "#account-dashboard";
             }).fail(function (jqXHR) {
                 window.alert("Could not create account, please try again later.");
+            }).always(function () {
+                $("#btn-done").removeAttr("disabled");
+                $("#btn-back").removeAttr("disabled");
             });
         };
 
