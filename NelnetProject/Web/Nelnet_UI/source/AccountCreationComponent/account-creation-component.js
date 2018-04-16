@@ -57,6 +57,7 @@ ko.components.register('account-creation-component', {
             studentLastName: ko.observable(),
             studentGrade: ko.observable()
         }]);
+        $(".btn-remove-student").attr("disabled", true);
 
         vm.addStudent = function () {
             vm.students.push({
@@ -65,6 +66,23 @@ ko.components.register('account-creation-component', {
                 studentLastName: ko.observable(),
                 studentGrade: ko.observable()
             });
+            if (vm.students().length > 1) {
+                $(".btn-remove-student").attr("disabled", false);
+            }
+        };
+
+        vm.removeStudent = function (student) {
+            if (vm.students().length > 1) {
+                let removeIndex = vm.students().findIndex(s => {
+                    return s.studentFirstName === student.studentFirstName &&
+                        s.studentLastName === student.studentLastName &&
+                        s.studentGrade === student.studentGrade;
+                });
+                vm.students.splice(removeIndex, 1);
+            }
+            if (vm.students().length <= 1) {
+                $(".btn-remove-student").attr("disabled", true);
+            }
         };
 
         //fourth page
@@ -227,8 +245,6 @@ ko.components.register('account-creation-component', {
                 };
             });
 
-            console.log(students);
-
             let accountCreationInformation = {
                 FirstName: vm.firstName(),
                 LastName: vm.lastName(),
@@ -248,8 +264,6 @@ ko.components.register('account-creation-component', {
                 ExpirationYear: vm.year(),
                 ExpirationMonth: vm.month()
             };
-
-            console.log(accountCreationInformation);
 
             createUser(accountCreationInformation).done(function (data) {
                 window.localStorage.setItem("user", JSON.stringify(data));

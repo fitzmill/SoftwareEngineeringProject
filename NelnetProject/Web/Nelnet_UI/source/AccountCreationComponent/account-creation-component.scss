@@ -84,6 +84,10 @@
     width: 38%;
 }
 
+.card-small-medium {
+    width: 29%;
+}
+
 .card-small {
     width: 15%;
 }
@@ -107,6 +111,16 @@
 
 .radio-button-label {
     display: inline;
+}
+
+.btn-remove-student {
+    height: 28.5px;
+    width: 15%;
+    float: right;
+    margin-top: 10px;
+    margin-right: 1.5%;
+    margin-left: 1.5%;
+    padding-top: 0.5px;
 }
 
 .btn-right {

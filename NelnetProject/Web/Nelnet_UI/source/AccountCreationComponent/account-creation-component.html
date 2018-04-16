@@ -52,9 +52,10 @@
 
             <div id="page-3">
                 <div data-bind="foreach: students">
-                    <input class="input-account-creation card-medium card-left" data-bind="value: studentFirstName" placeholder="Student First Name" />
-                    <input class="input-account-creation card-medium card-left" data-bind="value: studentLastName" placeholder="Student Last Name" />
-                    <input class="input-account-creation card-small card-right" data-bind="value: studentGrade" placeholder="Grade" />
+                    <input class="input-account-creation card-small-medium card-left" data-bind="value: studentFirstName" placeholder="Student First Name" />
+                    <input class="input-account-creation card-small-medium card-left" data-bind="value: studentLastName" placeholder="Student Last Name" />
+                    <input class="input-account-creation card-small card-left" data-bind="value: studentGrade" placeholder="Grade" />
+                    <button style="float: right" class="btn btn-danger btn-remove-student" data-bind="click: $parent.removeStudent">Remove</button>
                 </div>
                 <button id="btn-add-student" class="btn btn-primary" data-bind="click: addStudent">Add Another Student</button>
             </div>
