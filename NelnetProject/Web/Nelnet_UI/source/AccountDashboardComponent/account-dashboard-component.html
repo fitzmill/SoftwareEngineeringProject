@@ -42,16 +42,16 @@
         <div class="card-footer" style="background-color: white;">
             <h5 id="edit-payment-input-error" class="header-input-error" data-bind="text: paymentInputErrorMessage" style="display: none;"></h5>
             <div id="payment-information" class="edit-payment-inactive">
-                <h5 data-bind="text: 'XXXX XXXX XXXX ' + CardNumber()"></h5>
+                <h5 data-bind="text: 'Card Ending in: ' + CardNumber()"></h5>
                 <label data-bind="text: 'Exp: ' + ExpirationMonth() + '/' + ExpirationYear()"></label>
             </div>
 
             <div id="edit-payment-input" class="edit-payment-active">
-                <!--<form id="edit-payment-form">-->
+                <form id="edit-payment-form">
                     <input class="input-information creditcard" placeholder="Credit Card Number" data-bind="value: CardNumber" style="display: block;" required />
                     <select class="select-inline-info" data-bind="options: $root.dropdownOptions.Months, value: ExpirationMonth, optionsCaption: 'MM'" required />
                     <select class="select-inline-info" data-bind="options: $root.dropdownOptions.Years, value: ExpirationYear, optionsCaption: 'YYYY'" required />
-                <!--</form>-->
+                </form>
             </div>
         </div>
     </div>

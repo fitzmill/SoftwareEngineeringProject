@@ -243,7 +243,7 @@ ko.components.register('account-dashboard-component', {
 
         //Changes the payment info in payment spring and ui to what the user entered.
         accountDashboardVM.updatePaymentInfo = function (data, event) {
-             //if ($("#edit-payment-form").valid()) {
+             if ($("#edit-payment-form").valid()) {
                  //disable cancel and save buttons while request loads
                  $("#btn-save-edit-payment").attr('disabled', 'disabled');
                  $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
@@ -272,7 +272,7 @@ ko.components.register('account-dashboard-component', {
                      $("#btn-save-edit-payment").removeAttr('disabled');
                      $("#btn-cancel-edit-payment").removeAttr('disabled');
                  });
-             //}
+             }
         };
 
         accountDashboardVM.updateBillingInfo = function (data, event) {
