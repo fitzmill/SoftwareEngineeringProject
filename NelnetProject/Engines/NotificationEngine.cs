@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Core;
@@ -53,5 +54,10 @@ namespace Engines
             });
         }
 
+        public void SendAccountUpdateNotification(ClaimsIdentity user, string informationType)
+        {
+            var email = EmailUtil.AccountUpdatedNotification(user, informationType);
+            emailAccessor.SendEmail(email);
+        }
     }
 }

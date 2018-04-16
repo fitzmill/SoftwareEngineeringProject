@@ -3,6 +3,7 @@ using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -83,9 +84,41 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
+        public static EmailNotification AccountUpdatedNotification(ClaimsIdentity user, string informationType)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("User cannot be null");
+            }
+            if (String.IsNullOrEmpty(informationType))
+            {
+                throw new ArgumentNullException("Information type cannot be empty");
+            }
+
+            string subject = "Alert from Tuition Assistant: Account Information Updated";
+            string rawbody = string.Format("Your {0} information was updated on your account. If you did not make this change, please contact your administrator.", informationType);
+            return GenerateEmail(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value, subject, rawbody, user.Name);
+        }
+
         //Generates email notification with the default Tuition Assistant body template
         public static EmailNotification GenerateEmail(string to, string subject, string rawBody, string userFirstName)
         {
+            if (String.IsNullOrEmpty(to))
+            {
+                throw new ArgumentNullException("The 'to' field cannot be null");
+            }
+            if (String.IsNullOrEmpty(subject))
+            {
+                throw new ArgumentNullException("The 'subject' field cannot be null");
+            }
+            if (String.IsNullOrEmpty(rawBody))
+            {
+                throw new ArgumentNullException("The 'rawbody' field cannot be null");
+            }
+            if (String.IsNullOrEmpty(userFirstName))
+            {
+                throw new ArgumentNullException("The 'userFirstName' field cannot be null");
+            }
             string body = string.Format("Hi {0},<br><br>{1}<br>Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>", userFirstName, rawBody);
             return new EmailNotification()
             {

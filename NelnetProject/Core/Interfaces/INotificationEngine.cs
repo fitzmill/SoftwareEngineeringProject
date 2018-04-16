@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace Core.Interfaces
@@ -14,5 +15,12 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="transactions">List of one or more transactions</param>
         void SendTransactionNotifications(List<Transaction> transactions);
+
+        /// <summary>
+        /// Generates and sends a notification to a user telling them the information type has been changed on their account.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="informationType"></param>
+        void SendAccountUpdateNotification(ClaimsIdentity user, string informationType);
     }
 }
