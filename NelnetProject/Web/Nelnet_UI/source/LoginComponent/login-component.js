@@ -18,15 +18,20 @@ ko.components.register('login-component', {
                         $("#label-invalid-info").show();
                         return;
                     }
+                    vm.email("");
+                    vm.password("");
                     window.sessionStorage.setItem('Jwt', loginInfo.JwtToken);
                     if (loginInfo.UserType === "GENERAL") {
                         window.location = "#account-dashboard";
                     } else if (loginInfo.UserType === "ADMIN") {
                         window.location = "#admin";
                     }
-                }).fail(function (jqXHR, responseText, errorThrown) {
+                }).fail(function (jqXHR) {
                     let errorMessage = JSON.parse(jqXHR.responseText).Message;
                     window.alert(errorMessage);
+                }).always(function () {
+                    //re-enable button
+                    $("#btn-login").removeAttr("disabled");
                 });
             }
         }

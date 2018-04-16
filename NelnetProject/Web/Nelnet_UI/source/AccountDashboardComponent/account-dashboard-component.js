@@ -137,17 +137,15 @@ ko.components.register('account-dashboard-component', {
         //Changes the user info in database and ui to what the user entered.
         accountDashboardVM.updateUser = function (data, event) {
             if ($("#edit-personal-form").valid()) {
+                //disable save and cancel buttons
+                $("#btn-save-edit-personal").attr("disabled", "disabled");
+                $("#btn-cancel-edit-personal").attr("disabled", "disabled");
                 emailExists(accountDashboardVM.Email()).done(function (data) {
                     emailInUse = data;
                     if (emailInUse && accountDashboardVM.Email() !== user.Email) {
                         accountDashboardVM.personalInputErrorMessage("Email is already used by another user");
                         $("#edit-personal-input-error").show();
                     } else {
-                        //disable save and cancel buttons
-                        $("#btn-save-edit-personal").attr("disabled", "disabled");
-                        $("#btn-cancel-edit-personal").attr("disabled", "disabled");
-
-
                         let changedUserInfo = user;
                         changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
                         changedUserInfo.LastName = accountDashboardVM.UserLastName();
@@ -163,15 +161,15 @@ ko.components.register('account-dashboard-component', {
                                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
                                 window.alert("Could not save information: ".concat(errorMessage));
                             }
-                        }).always(function () {
-                            //re-enable buttons
-                            $("#btn-save-edit-personal").removeAttr("disabled");
-                            $("#btn-cancel-edit-personal").removeAttr("disabled");
                         });
                     }
                 }).fail(function (jqXHR) {
                     let errorMessage = JSON.parse(jqXHR.responseText).Message;
                     window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                }).always(function () {
+                    //re-enable buttons
+                    $("#btn-save-edit-personal").removeAttr("disabled");
+                    $("#btn-cancel-edit-personal").removeAttr("disabled");
                 });
             }
         };
@@ -270,8 +268,8 @@ ko.components.register('account-dashboard-component', {
             }
 
             //disable cancel and save buttons while request loads
-            $("btn-save-edit-payment").attr('disabled', 'disabled');
-            $("btn-cancel-edit-payment").attr('disabled', 'disabled');
+            $("#btn-save-edit-payment").attr('disabled', 'disabled');
+            $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
 
             let changedCardInfo = {
                 CustomerID: userPaymentInfo.CustomerID,
@@ -295,8 +293,8 @@ ko.components.register('account-dashboard-component', {
                 }
             }).always(function () {
                 //re-enable buttons
-                $("btn-save-edit-payment").removeAttr('disabled');
-                $("btn-cancel-edit-payment").removeAttr('disabled');
+                $("#btn-save-edit-payment").removeAttr('disabled');
+                $("#btn-cancel-edit-payment").removeAttr('disabled');
             });
         };
 
@@ -332,8 +330,8 @@ ko.components.register('account-dashboard-component', {
             }
 
             //disable cancel and save buttons while request loads
-            $("btn-save-edit-billing").attr('disabled', 'disabled');
-            $("btn-cancel-edit-billing").attr('disabled', 'disabled');
+            $("#btn-save-edit-billing").attr('disabled', 'disabled');
+            $("#btn-cancel-edit-billing").attr('disabled', 'disabled');
 
             let changedBillingInfo = {
                 CustomerID: userPaymentInfo.CustomerID,
@@ -364,8 +362,8 @@ ko.components.register('account-dashboard-component', {
                 }
             }).always(function () {
                 //re-enable buttons
-                $("btn-save-edit-billing").removeAttr('disabled');
-                $("btn-cancel-edit-billing").removeAttr('disabled');
+                $("#btn-save-edit-billing").removeAttr('disabled');
+                $("#btn-cancel-edit-billing").removeAttr('disabled');
             });
         }
 
