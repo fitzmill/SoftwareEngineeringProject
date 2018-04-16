@@ -181,50 +181,47 @@ ko.components.register('account-dashboard-component', {
 
         //Changes student info in database and ui to what user entered
         accountDashboardVM.updateStudents = function (data, event) {
-            if (!checkValidStudents(accountDashboardVM.Students())) {
-                accountDashboardVM.studentInputErrorMessage("Invalid student information");
-                $("#edit-student-input-error").show();
-                return;
+            if ($("#edit-students-form").valid()) {
+                console.log("borf");
+                //disable save and edit buttons
+                $("#btn-save-edit-student").attr("disabled", "disabled");
+                $("#btn-cancel-edit-student").attr("disabled", "disabled");
+
+                //to return to normal data instead of observables
+                let inputStudents = accountDashboardVM.Students().map(student => {
+                    return {
+                        StudentID: student.StudentID,
+                        FirstName: student.FirstName(),
+                        LastName: student.LastName(),
+                        Grade: student.Grade()
+                    };
+                });
+
+                //new students will have an undefined StudentID
+                let newStudents = inputStudents.filter((s) => !s.StudentID);
+                //deleted students will be in the user object but not in inputStudents
+                let originalStudentIDs = user.Students.map((s) => s.StudentID);
+                let inputStudentIDs = inputStudents.map((s) => s.StudentID);
+
+                let deletedStudentIDs = originalStudentIDs.filter((id) => !inputStudentIDs.includes(id));
+                //filter out new students
+                let updatedStudents = inputStudents.filter((s) => s.StudentID);
+
+                updateStudentInfo(user.UserID, updatedStudents, deletedStudentIDs, newStudents).done(function () {
+                    //update user in local storage in the case of page reload
+                    user.Students = inputStudents;
+                    accountDashboardVM.stopEditing(data, event);
+                }).fail(function (jqXHR) {
+                    if (jqXHR.status !== 401) {
+                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                        window.alert("Could not save information: ".concat(errorMessage));
+                    }
+                }).always(function () {
+                    //re-enable buttons
+                    $("#btn-save-edit-student").removeAttr("disabled");
+                    $("#btn-cancel-edit-student").removeAttr("disabled");
+                });
             }
-
-            //disable save and edit buttons
-            $("#btn-save-edit-student").attr("disabled", "disabled");
-            $("#btn-cancel-edit-student").attr("disabled", "disabled");
-
-            //to return to normal data instead of observables
-            let inputStudents = accountDashboardVM.Students().map(student => {
-                return {
-                    StudentID: student.StudentID,
-                    FirstName: student.FirstName(),
-                    LastName: student.LastName(),
-                    Grade: student.Grade()
-                };
-            });
-            
-            //new students will have an undefined StudentID
-            let newStudents = inputStudents.filter((s) => !s.StudentID);
-            //deleted students will be in the user object but not in inputStudents
-            let originalStudentIDs = user.Students.map((s) => s.StudentID);
-            let inputStudentIDs = inputStudents.map((s) => s.StudentID);
-
-            let deletedStudentIDs = originalStudentIDs.filter((id) => !inputStudentIDs.includes(id));
-            //filter out new students
-            let updatedStudents = inputStudents.filter((s) => s.StudentID);
-
-            updateStudentInfo(user.UserID, updatedStudents, deletedStudentIDs, newStudents).done(function () {
-                //update user in local storage in the case of page reload
-                user.Students = inputStudents;
-                accountDashboardVM.stopEditing(data, event);
-            }).fail(function (jqXHR) {
-                if (jqXHR.status !== 401) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Could not save information: ".concat(errorMessage));
-                }
-            }).always(function () {
-                //re-enable buttons
-                $("#btn-save-edit-student").removeAttr("disabled");
-                $("#btn-cancel-edit-student").removeAttr("disabled");
-            });
         };
 
 
@@ -295,7 +292,6 @@ ko.components.register('account-dashboard-component', {
 
         accountDashboardVM.updateBillingInfo = function (data, event) {
             if ($("#edit-billing-form").valid()) {
-                console.log("aah")
 
                 //disable cancel and save buttons while request loads
                 $("#btn-save-edit-billing").attr('disabled', 'disabled');

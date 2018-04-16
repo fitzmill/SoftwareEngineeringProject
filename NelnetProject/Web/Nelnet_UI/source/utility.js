@@ -58,7 +58,7 @@ String.prototype.parseDateTimeString = function () {
 }
 
 $.validator.addMethod("password", function (value) {
-    return value.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])(?!.*?[;'"]).{8,32}$/);
+    return value.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-\.])(?!.*?[;'"]).{8,32}$/);
 }, "Password must be between 8 and 32 characters, contain lowercase and uppercase letters, a number, and a special character.");
 $.validator.addMethod("no-code-chars", function (value) {
     return value.match(/^((?![<>\\\/{};\[\]]).)*$/);
