@@ -501,18 +501,3 @@ function emailExists(email) {
         data: JSON.stringify(email)
     });
 }
-
-//Checks that student entries are valid
-function checkValidStudents(students) {
-    let result = true;
-    students.forEach(function (student) {
-        if (!student.FirstName() || !student.FirstName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.LastName() || !student.LastName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (student.Grade() === undefined || student.Grade() < 0 || student.Grade() > 12) {
-            result = false;
-        }
-    });
-    return result;
-}
