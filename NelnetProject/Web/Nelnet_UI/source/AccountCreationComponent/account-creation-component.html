@@ -66,18 +66,20 @@
             <div id="page-4">
                 <div class="output-account-creation">
                     <h4><b>Please select a payment plan:</b></h4>
-                    <div class="radio-button" data-bind="click: function(){ $('#radio-button-1').prop('checked', true); }">
-                        <input id="radio-button-1" type="radio" name="paymentType" value="MONTHLY" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Monthly at $'+monthlyRate()+' (Sept - May)'" />
-                    </div>
-                    <div class="radio-button" data-bind="click: function(){ $('#radio-button-2').prop('checked', true); }">
-                        <input id="radio-button-2" type="radio" name="paymentType" value="SEMESTERLY" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Semesterly at $'+semesterlyRate()+' (Sept & Feb)'" />
-                    </div>
-                    <div class="radio-button" data-bind="click: function(){ $('#radio-button-3').prop('checked', true); }">
-                        <input id="radio-button-3" type="radio" name="paymentType" value="YEARLY" data-bind="checked: paymentType" />
-                        <h5 class="radio-button-label" data-bind="text: 'Yearly at $'+yearlyRate()+' (Sept)'" />
-                    </div>
+                    <form id="form-page-4">
+                        <div class="radio-button" data-bind="click: function(){ paymentType('MONTHLY') }">
+                            <input id="radio-button-1" type="radio" name="paymentType" value="MONTHLY" data-bind="checked: paymentType, click: () => true, clickBubble: false" required />
+                            <h5 class="radio-button-label" data-bind="text: 'Monthly at $'+monthlyRate()+' (Sept - May)'" />
+                        </div>
+                        <div class="radio-button" data-bind="click: function(){ paymentType('SEMESTERLY') }">
+                            <input id="radio-button-2" type="radio" name="paymentType" value="SEMESTERLY" data-bind="checked: paymentType, click: () => true, clickBubble: false" />
+                            <h5 class="radio-button-label" data-bind="text: 'Semesterly at $'+semesterlyRate()+' (Sept & Feb)'" />
+                        </div>
+                        <div class="radio-button" data-bind="click: function(){ paymentType('YEARLY') }">
+                            <input id="radio-button-3" type="radio" name="paymentType" value="YEARLY" data-bind="checked: paymentType, click: () => true, clickBubble: false" />
+                            <h5 class="radio-button-label" data-bind="text: 'Yearly at $'+yearlyRate()+' (Sept)'" />
+                        </div>
+                    </form>
                 </div>
             </div>
 
