@@ -14,11 +14,6 @@ const PAGE_ID_PREFIX = "#page-";
 const DOT_ID_PREFIX = "#dot-page-";
 const RECTANGLE_ID_PREFIX = "#rectangle-";
 
-//information validation through regex
-const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
-const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/; //regexNumCheck but also allows for hyphen(-)
-const regexLettersOnlyCheck = /(?!.*[^a-zA-Z]).{0,}/;
-
 //api url constants
 const accountCreationAPIURL = "/api/account";
 
@@ -227,11 +222,43 @@ ko.components.register('account-creation-component', {
 
         //move to the next page
         vm.next = function () {
-            $(PAGE_ID_PREFIX + vm.currentPage).hide();
-            vm.currentPage++;
-            $(PAGE_ID_PREFIX + vm.currentPage).show();
-            vm.updateButtons();
-            vm.updateProgressBar();
+            if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
+                let emailInUse = false;
+                if ($("#form-page-1").valid()) {
+                    emailExists(vm.email()).done(function (data) {
+                       emailInUse = data;
+                       if (emailInUse) {
+                           vm.personalInputErrorMessage("Email is already in use");
+                           window.alert("Email is already in use");
+                       } else {
+                           $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                           vm.currentPage++;
+                           $(PAGE_ID_PREFIX + vm.currentPage).show();
+                           vm.updateButtons();
+                           vm.updateProgressBar();
+                       }
+                    }).fail(function (jqXHR) {
+                       let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                       window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                    });
+                }
+            } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
+                if ($("#form-page-2").valid()) {
+                    $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                    vm.currentPage++;
+                    $(PAGE_ID_PREFIX + vm.currentPage).show();
+                    vm.updateButtons();
+                    vm.updateProgressBar();
+                }
+            } else if (vm.currentPage === STUDENT_INFORMATION_PAGE) {
+                if ($("#form-page-3").valid()) {
+                    $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                    vm.currentPage++;
+                    $(PAGE_ID_PREFIX + vm.currentPage).show();
+                    vm.updateButtons();
+                    vm.updateProgressBar();
+                }
+            }
         };
 
         //finish and create account
@@ -308,21 +335,6 @@ function createUser(accountCreationInformation) {
         contentType: "application/json; charset=utf-8",
         data: accountCreationInformationData
     });
-}
-
-//Checks that student entries are valid
-function checkValidStudents(students) {
-    let result = true;
-    students.forEach(function (student) {
-        if (!student.studentFirstName() || !student.studentFirstName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.studentLastName() || !student.studentLastName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.studentGrade() || student.studentGrade() < 0 || student.studentGrade() > 12) {
-            result = false;
-        }
-    });
-    return result;
 }
 
 //Checks to see if an entered email has already been used

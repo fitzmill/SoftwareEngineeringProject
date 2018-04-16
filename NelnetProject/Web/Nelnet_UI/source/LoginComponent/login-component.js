@@ -12,37 +12,31 @@ ko.components.register('login-component', {
         vm.password = ko.observable();
 
         vm.login = function () {
-            if (!vm.email().emailMeetsRequirements()) {
-                $("#label-invalid-info").show();
-                return;
-            } else if (!vm.password().passwordMeetsRequirements()) {
-                $("#label-invalid-info").show();
-                return;
+            if ($("#form-page-2").valid()) {
+                validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
+                    if (validLogin) {
+                        getUserInfoByEmail(vm.email()).done(function (user) {
+                            vm.email("");
+                            vm.password("");
+                            if (user.UserType === "GENERAL") {
+                                window.localStorage.setItem("user", JSON.stringify(user));
+                                window.location = "#account-dashboard";
+                            } else if (user.UserType === "ADMIN") {
+                                window.localStorage.setItem("user", JSON.stringify(user));
+                                window.location = "#admin";
+                            }
+                        }).fail(function (jqXHR) {
+                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                            window.alert(errorMessage);
+                        });
+                    } else {
+                        $("#label-invalid-info").show();
+                    }
+                }).fail(function (jqXHR) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert(errorMessage);
+                });
             }
-
-            validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
-                if (validLogin) {
-                    getUserInfoByEmail(vm.email()).done(function (user) {
-                        vm.email("");
-                        vm.password("");
-                        if (user.UserType === "GENERAL") {
-                            window.localStorage.setItem("user", JSON.stringify(user));
-                            window.location = "#account-dashboard";
-                        } else if (user.UserType === "ADMIN") {
-                            window.localStorage.setItem("user", JSON.stringify(user));
-                            window.location = "#admin";
-                        }
-                    }).fail(function (jqXHR) {
-                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                        window.alert(errorMessage);
-                    });
-                } else {
-                    $("#label-invalid-info").show();
-                }
-            }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert(errorMessage);
-            });
         }
 
         $("#card-login").keypress(function (e) {

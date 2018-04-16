@@ -194,7 +194,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Managers\PaymentManager.cs" />
+    <Compile Include="Managers\ScheduledEventManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -209,12 +209,14 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="images\information_icon_b0887c9.png" />
     <Content Include="images\login-background_f4b7bde.jpg" />
     <Content Include="Nelnet_UI\build\index.js" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.html" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.js" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.html" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.js" />
+    <Content Include="Nelnet_UI\source\assets\images\information_icon.png" />
     <Content Include="Nelnet_UI\source\assets\images\login-background.jpg" />
     <Content Include="Nelnet_UI\source\dropdownOptions.js" />
     <Content Include="Nelnet_UI\source\LoginComponent\login-component.html" />
@@ -228,6 +230,8 @@
     <Content Include="Nelnet_UI\source\AdminComponent\admin-component.html" />
     <Content Include="Nelnet_UI\source\AdminComponent\admin-component.js" />
     <Content Include="Nelnet_UI\source\utility.js" />
+    <Content Include="Scripts\additional-methods.js" />
+    <Content Include="Scripts\additional-methods.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -256,6 +260,9 @@
     <Content Include="Scripts\jquery-3.2.1.min.js" />
     <Content Include="Scripts\jquery-3.2.1.slim.js" />
     <Content Include="Scripts\jquery-3.2.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\knockout-3.4.2.debug.js" />
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
