@@ -12,10 +12,10 @@ ko.components.register('login-component', {
         vm.password = ko.observable();
 
         vm.login = function () {
-            if ($("#form-page-2").valid()) {
+            if ($("#form-login").valid()) {
                 validateLoginInfo(vm.email(), vm.password()).done(function (loginInfo) {
                     if (!loginInfo) {
-                        $("label-invalid-info").show();
+                        $("#label-invalid-info").show();
                         return;
                     }
                     window.sessionStorage.setItem('Jwt', loginInfo.JwtToken);
@@ -25,10 +25,6 @@ ko.components.register('login-component', {
                         window.location = "#admin";
                     }
                 }).fail(function (jqXHR, responseText, errorThrown) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert(errorMessage);
-                });
-                }).fail(function (jqXHR) {
                     let errorMessage = JSON.parse(jqXHR.responseText).Message;
                     window.alert(errorMessage);
                 });

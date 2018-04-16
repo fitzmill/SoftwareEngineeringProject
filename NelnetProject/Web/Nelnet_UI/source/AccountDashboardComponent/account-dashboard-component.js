@@ -153,26 +153,27 @@ ko.components.register('account-dashboard-component', {
                         changedUserInfo.LastName = accountDashboardVM.UserLastName();
                         changedUserInfo.Email = accountDashboardVM.Email();
 
-                    updatePersonalInfo(changedUserInfo).done(function (newToken) {
-                        //update user in local storage in the case of page reload
-                        window.sessionStorage.setItem("Jwt", newToken);
-                        user = changedUserInfo;
-                        accountDashboardVM.stopEditing(data, event);
-                    }).fail(function (jqXHR) {
-                        if (jqXHR.status !== 401) {
-                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                            window.alert("Could not save information: ".concat(errorMessage));
-                        }
-                    }).always(function () {
-                        //re-enable buttons
-                        $("#btn-save-edit-personal").removeAttr("disabled");
-                        $("#btn-cancel-edit-personal").removeAttr("disabled");
-                    });
-                }
-            }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Couldn't check if email has been used: ".concat(errorMessage));
-            });
+                        updatePersonalInfo(changedUserInfo).done(function (newToken) {
+                            //update user in local storage in the case of page reload
+                            window.sessionStorage.setItem("Jwt", newToken);
+                            user = changedUserInfo;
+                            accountDashboardVM.stopEditing(data, event);
+                        }).fail(function (jqXHR) {
+                            if (jqXHR.status !== 401) {
+                                let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                                window.alert("Could not save information: ".concat(errorMessage));
+                            }
+                        }).always(function () {
+                            //re-enable buttons
+                            $("#btn-save-edit-personal").removeAttr("disabled");
+                            $("#btn-cancel-edit-personal").removeAttr("disabled");
+                        });
+                    }
+                }).fail(function (jqXHR) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                });
+            }
         };
 
         //Changes student info in database and ui to what user entered
