@@ -253,8 +253,8 @@ ko.components.register('account-dashboard-component', {
             }
 
             //disable cancel and save buttons while request loads
-            $("btn-save-edit-payment").attr('disabled', 'disabled');
-            $("btn-cancel-edit-payment").attr('disabled', 'disabled');
+            $("#btn-save-edit-payment").attr('disabled', 'disabled');
+            $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
 
             let changedCardInfo = {
                 CustomerID: userPaymentInfo.CustomerID,
@@ -277,8 +277,8 @@ ko.components.register('account-dashboard-component', {
                 window.alert("Could not save information: ".concat(errorMessage));
             }).always(function () {
                 //re-enable buttons
-                $("btn-save-edit-payment").removeAttr('disabled');
-                $("btn-cancel-edit-payment").removeAttr('disabled');
+                $("#btn-save-edit-payment").removeAttr('disabled');
+                $("#btn-cancel-edit-payment").removeAttr('disabled');
             });
         };
 
@@ -314,8 +314,8 @@ ko.components.register('account-dashboard-component', {
             }
 
             //disable cancel and save buttons while request loads
-            $("btn-save-edit-billing").attr('disabled', 'disabled');
-            $("btn-cancel-edit-billing").attr('disabled', 'disabled');
+            $("#btn-save-edit-billing").attr('disabled', 'disabled');
+            $("#btn-cancel-edit-billing").attr('disabled', 'disabled');
 
             let changedBillingInfo = {
                 CustomerID: userPaymentInfo.CustomerID,
@@ -345,8 +345,8 @@ ko.components.register('account-dashboard-component', {
                 window.alert("Could not save information: ".concat(errorMessage));
             }).always(function () {
                 //re-enable buttons
-                $("btn-save-edit-billing").removeAttr('disabled');
-                $("btn-cancel-edit-billing").removeAttr('disabled');
+                $("#btn-save-edit-billing").removeAttr('disabled');
+                $("#btn-cancel-edit-billing").removeAttr('disabled');
             });
         }
 
@@ -369,7 +369,7 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.startEditing = function (data, event) {
             let senderElementID = event.target.id;
 
-            let informationSection = senderElementID.replace("btn-", "");
+            let informationSection = senderElementID.replace("#btn-", "");
 
             $("." + informationSection + "-active").show();
             $("." + informationSection + "-inactive").hide();
@@ -381,9 +381,9 @@ ko.components.register('account-dashboard-component', {
 
             let informationSection = "";
             if (senderElementID.includes("cancel")) {
-                informationSection = senderElementID.replace("btn-cancel-", "");
+                informationSection = senderElementID.replace("#btn-cancel-", "");
             } else if (senderElementID.includes("save")) {
-                informationSection = senderElementID.replace("btn-save-", "");
+                informationSection = senderElementID.replace("#btn-save-", "");
             }
             
             accountDashboardVM.setUser();
