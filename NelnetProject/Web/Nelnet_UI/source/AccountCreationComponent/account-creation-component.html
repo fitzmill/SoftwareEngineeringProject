@@ -16,12 +16,12 @@
 
             <div id="info-page-1">
                 <form id="form-page-1">
-                    <input name="first-name" class="input-account-creation card-left card-half-column" data-bind="value: firstName" placeholder="First Name" type="no-code-chars" required />
-                    <input name="last-name" class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" type="no-code-chars" required />
-                    <input name="email" class="input-account-creation card-full-column" type="email" data-bind="value: email" placeholder="Email" required />
-                    <input name="confirm-email" class="input-account-creation card-full-column" type="email" data-bind="value: reenterEmail" placeholder="Confirm Email" equalTo="input[name~='email']" required />
-                    <input name="password" class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password" required />
-                    <input name="confirm-password" class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" password equalTo="input[name~=password" required />
+                    <input name="first-name" class="input-account-creation card-left card-half-column" data-bind="value: firstName" placeholder="First Name" type="no-code-chars" required/>
+                    <input name="last-name" class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" type="no-code-chars" required/>
+                    <input name="account-creation-email" class="input-account-creation card-full-column" type="email" data-bind="value: email" placeholder="Email" required/>
+                    <input name="confirm-email" class="input-account-creation card-full-column" type="email" data-bind="value: reenterEmail" placeholder="Confirm Email" equalTo="input[name ~= 'account-creation-email']" required/>
+                    <input name="account-creation-password" class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password" required/>
+                    <input name="confirm-password" class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" password equalTo="input[name ~= 'account-creation-password']" required/>
                 </form>
             </div>
 
@@ -30,13 +30,13 @@
                     <input name="cardholder-first-name" class="input-account-creation card-half-column card-left" data-bind="value: cardFirstName" placeholder="Cardholder First Name" type="no-code-chars" required/>
                     <input name="card-holder-last-name" class="input-account-creation card-half-column card-left" data-bind="value: cardLastName" placeholder="Cardholder Last Name" type="no-code-chars" required/>
                     <input name="credit-card-number" class="input-account-creation card-extra-large card-left" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number" required minlength="15" maxlength="19"/>
-                    <select name="expire-month" class="select-inline-info-month card-tiny card-left" data-bind="options: $root.dropdownOptions.Months, value: month, optionsCaption: 'MM'" required/>
-                    <select name="expire-year" class="select-inline-info-year card-smaller card-left" data-bind="options: $root.dropdownOptions.Years, value: year, optionsCaption: 'YYYY'" required/>
+                    <select name="expire-month" class="input-account-creation card-tiny card-left" style="height: 27px; margin-right: 0.9%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Months, value: month, optionsCaption: 'MM'" required/>
+                    <select name="expire-year" class="input-account-creation card-smaller card-left" style="height: 27px; margin-left: 0%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Years, value: year, optionsCaption: 'YYYY'" required/>
                     <input name="address-1" class="input-account-creation card-full-column" data-bind="value: address1" placeholder="Address Line 1" type="no-code-chars" required/>
                     <input name="address-2" class="input-account-creation card-full-column" data-bind="value: address2" placeholder="Address Line 2 (Optional)" type="no-code-chars"/>
                     <input name="city" class="input-account-creation card-large card-left" data-bind="value: city" placeholder="City" type="no-code-chars" required/>
                     <input name="zip" class="input-account-creation card-small card-left" data-bind="value: zip" placeholder="Zip Code" type="zipcodeUS" required/>
-                    <select name="state" class="select-inline-info-state-and-grade card-small card-left" data-bind="options: $parent.dropdownOptions.States, value: state, optionsCaption: 'State'" required/>
+                    <select name="state" class="input-account-creation card-small card-left" style="height: 27px" data-bind="options: $parent.dropdownOptions.States, value: state, optionsCaption: 'State'" required/>
                 </form>
             </div>
 
@@ -45,7 +45,7 @@
                     <div data-bind="foreach: students">
                         <input class="input-account-creation card-medium card-left" data-bind="value: studentFirstName, attr: {name: 'student-first-name' + $index()}" placeholder="Student First Name" type="no-code-chars" required/>
                         <input class="input-account-creation card-medium card-left" data-bind="value: studentLastName, attr: {name: 'student-last-name' + $index()}" placeholder="Student Last Name" type="no-code-chars" required/>
-                        <select class="select-inline-info-state-and-grade card-small card-right" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: studentGrade, attr: {name: 'grade' + $index()}, optionsCaption: 'Grade'" required/>
+                        <select class="input-account-creation card-small card-right" style="height: 27px" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: studentGrade, attr: {name: 'grade' + $index()}, optionsCaption: 'Grade'" required/>
                     </div>
                     <button id="btn-add-student" class="btn btn-primary" data-bind="click: addStudent">Add Another Student</button>
                 </form>
