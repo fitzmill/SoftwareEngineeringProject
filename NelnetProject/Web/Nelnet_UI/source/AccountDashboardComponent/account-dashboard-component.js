@@ -122,12 +122,17 @@ ko.components.register('account-dashboard-component', {
             }));
         };
 
+        /* Methods for updating user information */
+
         //Changes the user info in database and ui to what the user entered.
         accountDashboardVM.updateUser = function (data, event) {
             if ($("#edit-personal-form").valid()) {
+
                 //disable save and cancel buttons
                 $("#btn-save-edit-personal").attr("disabled", "disabled");
                 $("#btn-cancel-edit-personal").attr("disabled", "disabled");
+
+                //Check if email already exists in database
                 emailExists(accountDashboardVM.Email()).done(function (data) {
                     emailInUse = data;
                     if (emailInUse && accountDashboardVM.Email() !== user.Email) {
