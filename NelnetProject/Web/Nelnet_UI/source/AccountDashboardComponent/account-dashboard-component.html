@@ -9,6 +9,7 @@
             <button id="btn-save-edit-personal" class="btn btn-success btn-edit edit-personal-active" data-bind="click: updateUser" style="display: none;">Save</button>
             <button id="btn-cancel-edit-personal" class="btn btn-default btn-edit edit-personal-active" data-bind="click: stopEditing" style="display: none;">Cancel</button>
         </div>
+
         <div class="card-body">
             <h5 id="edit-personal-input-error" class="header-input-error" data-bind="text: personalInputErrorMessage" style="display: none;"></h5>
             
@@ -25,7 +26,9 @@
             
         </div>
     </div>
+
     <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
+
     <div class="card card-account-information-section">
         <div class="card-header">
             <h3 class="header-information-section">Payment Information</h3>
@@ -33,14 +36,15 @@
             <button id="btn-save-edit-payment" class="btn btn-success btn-edit edit-payment-active" data-bind="click: updatePaymentInfo">Save</button>
             <button id="btn-cancel-edit-payment" class="btn btn-default btn-edit edit-payment-active" data-bind="click: stopEditing">Cancel</button>
         </div>
+
         <div class="card-body">
             <h5 data-bind="text: 'Payment Plan: ' + PaymentPlan()"></h5>
             <label>Next Payment Due: </label>
             <label class="enMoney" data-bind="text: NextPaymentCost"></label>
             <label data-bind="text: ' on ' + NextPaymentDate()"></label>
         </div>
+
         <div class="card-footer" style="background-color: white;">
-            <h5 id="edit-payment-input-error" class="header-input-error" data-bind="text: paymentInputErrorMessage" style="display: none;"></h5>
             <div id="payment-information" class="edit-payment-inactive">
                 <h5 data-bind="text: 'Card Ending in: ' + CardNumber()"></h5>
                 <label data-bind="text: 'Exp: ' + ExpirationMonth() + '/' + ExpirationYear()"></label>
@@ -63,6 +67,7 @@
             <button id="btn-save-edit-billing" class="btn btn-success btn-edit edit-billing-active" data-bind="click: updateBillingInfo">Save</button>
             <button id="btn-cancel-edit-billing" class="btn btn-default btn-edit edit-billing-active" data-bind="click: stopEditing">Cancel</button>
         </div>
+
         <div class="card-body">
             <h5 id="edit-billing-input-error" class="header-input-error" data-bind="text: billingInputErrorMessage" style="display: none;"></h5>
 
@@ -73,19 +78,22 @@
                 <h5 data-bind="text: City() + ', ' + State() + ' ' + Zip()"></h5>
             </div>
 
-
             <div class="edit-billing-active">
-                <div style="display: block;">
-                    <input type="text" placeholder="First Name" data-bind="value: CardFirstName" />
-                    <input type="text" placeholder="Last Name" data-bind="value: CardLastName" />
-                </div>
-                <input class="input-street-address input-information" type="text" placeholder="Street Address 1" data-bind="value: StreetAddress1" />
-                <input class="input-street-address input-information" type="text" placeholder="Street Address 2" data-bind="value: StreetAddress2" />
-                <div style="display: block; margin-bottom: 30px;">
-                    <input class="input-information" type="text" placeholder="City" data-bind="value: City" />
-                    <select class="select-inline-info" data-bind="options: $parent.dropdownOptions.States, value: State, optionsCaption: 'State'"></select>
-                    <input class="input-information" type="text" placeholder="Zip Code" data-bind="value: Zip" />
-                </div>
+                <form id="edit-billing-form">
+                    <div style="display: block;">
+                        <input class="input-information no-code-chars" placeholder="First Name" data-bind="value: CardFirstName" required />
+                        <input class="input-information no-code-chars" placeholder="Last Name" data-bind="value: CardLastName" required />
+                    </div>
+
+                    <input class="input-street-address input-information no-code-chars" placeholder="Street Address 1" data-bind="value: StreetAddress1" required />
+                    <input class="input-street-address input-information no-code-chars" placeholder="Street Address 2" data-bind="value: StreetAddress2" required />
+
+                    <div style="display: block; margin-bottom: 30px;">
+                        <input class="input-information no-code-chars" placeholder="City" data-bind="value: City" required />
+                        <select class="select-inline-info" data-bind="options: $parent.dropdownOptions.States, value: State, optionsCaption: 'State'" required />
+                        <input class="input-information zipcodeUS" type="text" placeholder="Zip Code" data-bind="value: Zip" required />
+                    </div>
+                </form>
             </div>
         </div>
     </div>
