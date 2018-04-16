@@ -11,15 +11,18 @@
         </div>
         <div class="card-body">
             <h5 id="edit-personal-input-error" class="header-input-error" data-bind="text: personalInputErrorMessage" style="display: none;"></h5>
-
+            
             <h4 class="edit-personal-inactive" data-bind="text: UserFirstName() + ' ' + UserLastName()"></h4>
             <h4 class="edit-personal-inactive" data-bind="text: Email"></h4>
 
             <div class="edit-personal-active">
-                <input class="input-information" type="text" placeholder="First Name" data-bind="value: UserFirstName" />
-                <input class="input-information" type="text" placeholder="Last Name" data-bind="value: UserLastName" />
+                <form id="edit-personal-form">
+                    <input name="dashboard-first-name" class="input-information" type="no-code-chars" placeholder="First Name" data-bind="value: UserFirstName" required />
+                    <input name="dashboard-last-name" class="input-information" type="no-code-chars" placeholder="Last Name" data-bind="value: UserLastName" required /> <br />
+                    <input name="dashboard-email" class="input-information" type="email" placeholder="Email" data-bind="value: Email" />
+                </form>
             </div>
-            <input class="edit-personal-active input-information" type="email" placeholder="Email" data-bind="value: Email" />
+            
         </div>
     </div>
     <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
