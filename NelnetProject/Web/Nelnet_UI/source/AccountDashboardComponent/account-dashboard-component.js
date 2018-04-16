@@ -369,7 +369,7 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.startEditing = function (data, event) {
             let senderElementID = event.target.id;
 
-            let informationSection = senderElementID.replace("#btn-", "");
+            let informationSection = senderElementID.replace("btn-", "");
 
             $("." + informationSection + "-active").show();
             $("." + informationSection + "-inactive").hide();
@@ -381,9 +381,9 @@ ko.components.register('account-dashboard-component', {
 
             let informationSection = "";
             if (senderElementID.includes("cancel")) {
-                informationSection = senderElementID.replace("#btn-cancel-", "");
+                informationSection = senderElementID.replace("btn-cancel-", "");
             } else if (senderElementID.includes("save")) {
-                informationSection = senderElementID.replace("#btn-save-", "");
+                informationSection = senderElementID.replace("btn-save-", "");
             }
             
             accountDashboardVM.setUser();
