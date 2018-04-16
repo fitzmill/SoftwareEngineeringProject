@@ -9,8 +9,7 @@ exports.Years = (function () {
     return years;
 })();
 
-exports.Grades = [{ num: undefined, text: undefined },
-    { num: 0, text: "Kindergarten" },
+exports.Grades = [{ num: 0, text: "Kindergarten" },
     { num: 1, text: "1st" },
     { num: 2, text: "2nd" },
     { num: 3, text: "3rd" },
