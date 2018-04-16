@@ -160,21 +160,6 @@ ko.components.register('account-dashboard-component', {
                     window.alert("Couldn't check if email has been used: ".concat(errorMessage));
                 });
             }
-            //let emailInUse = false;
-            //if (!accountDashboardVM.UserFirstName() || !accountDashboardVM.UserFirstName().match(regexSemicolonCheck)) {
-            //    accountDashboardVM.personalInputErrorMessage("Invalid first name");
-            //    $("#edit-personal-input-error").show();
-            //    return;
-            //} else if (!accountDashboardVM.UserLastName() || !accountDashboardVM.UserLastName().match(regexSemicolonCheck)) {
-            //    accountDashboardVM.personalInputErrorMessage("Invalid last name");
-            //    $("#edit-personal-input-error").show();
-            //    return;
-            //} else if (!accountDashboardVM.Email() || !accountDashboardVM.Email().emailMeetsRequirements()) {
-            //    accountDashboardVM.personalInputErrorMessage("Email does not meet requirements");
-            //    $("#edit-personal-input-error").show();
-            //    return;
-            //} 
-            
         };
 
         //Changes student info in database and ui to what user entered
