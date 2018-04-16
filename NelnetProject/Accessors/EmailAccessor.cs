@@ -20,13 +20,15 @@ namespace Accessors
         private string senderEmail;
         private string senderUsername;
         private string senderPassword;
+        private string smtpHost;
         private int port;
 
-        public EmailAccessor(string senderEmail, string senderUsername, string senderPassword, int port)
+        public EmailAccessor(string senderEmail, string senderUsername, string senderPassword, string smtpHost, int port)
         {
             this.senderEmail = senderEmail;
             this.senderUsername = senderUsername;
             this.senderPassword = senderPassword;
+            this.smtpHost = smtpHost;
             this.port = port;
         }
         
@@ -46,7 +48,7 @@ namespace Accessors
             }
 
             MailMessage email = new MailMessage();
-            SmtpClient client = new SmtpClient("smtp.gmail.com");
+            SmtpClient client = new SmtpClient(smtpHost);
 
             email.From = new MailAddress(senderEmail);
             email.To.Add(emailNotification.To);

@@ -67,18 +67,20 @@ namespace Web.Filters
                 return false;
             }
 
+            var nameClaim = identity.FindFirst(ClaimTypes.Name);
+
             var emailClaim = identity.FindFirst(ClaimTypes.Email);
 
             var userIdClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
 
             var customerIdClaim = identity.FindFirst("CustomerID");
 
-            if (roleClaim == null || emailClaim == null || userIdClaim == null || customerIdClaim == null)
+            if (roleClaim == null || nameClaim == null || emailClaim == null || userIdClaim == null || customerIdClaim == null)
             {
                 return false;
             }
 
-            claims = new List<Claim>(new Claim[] { userIdClaim, emailClaim, roleClaim, customerIdClaim });
+            claims = new List<Claim>(new Claim[] { userIdClaim, nameClaim, emailClaim, roleClaim, customerIdClaim });
 
             return true;
         }
