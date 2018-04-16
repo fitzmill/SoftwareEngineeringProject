@@ -127,5 +127,50 @@ namespace NelnetProject.Tests.Engines.Utils
             Assert.AreEqual(expectedBody, email.Body);
         }
 
+        [TestMethod]
+        public void TestAccountUpdatedNotification()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            var expected = new EmailNotification()
+            {
+                To = email,
+                Subject = "Alert from Tuition Assistant: Account Information Updated",
+                Body = "Hi Sean,<br><br>Your personal information was updated on your account. If you did not make this change, " +
+                "please contact your administrator.<br>Please contact us if you have any questions." +
+                "<br><br><br>Powered by Tuition Assistant<br>"
+            };
+
+            
+            var result = EmailUtil.AccountUpdatedNotification(email, firstName, "personal");
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Email cannot be empty")]
+        public void TestAccountUpdatedNotificationNullTo()
+        {
+            var firstName = "Sean";
+            EmailUtil.AccountUpdatedNotification(null, firstName, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "First name cannot be empty")]
+        public void TestAccountUpdatedNotificationNullFirstName()
+        {
+            var email = "hi@me.com";
+            EmailUtil.AccountUpdatedNotification(email, null, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Information type cannot be empty")]
+        public void TestAccountUpdatedNotificationNullInfoType()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            EmailUtil.AccountUpdatedNotification(email, firstName, null);
+        }
+
     }
 }

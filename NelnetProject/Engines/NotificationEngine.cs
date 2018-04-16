@@ -54,10 +54,10 @@ namespace Engines
             });
         }
 
-        public void SendAccountUpdateNotification(ClaimsIdentity user, string informationType)
+        public void SendAccountUpdateNotification(string email, string firstName, string informationType)
         {
-            var email = EmailUtil.AccountUpdatedNotification(user, informationType);
-            emailAccessor.SendEmail(email);
+            var emailNotification = EmailUtil.AccountUpdatedNotification(email, firstName, informationType);
+            emailAccessor.SendEmail(emailNotification);
         }
     }
 }

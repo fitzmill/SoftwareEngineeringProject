@@ -21,6 +21,6 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="user"></param>
         /// <param name="informationType"></param>
-        void SendAccountUpdateNotification(ClaimsIdentity user, string informationType);
+        void SendAccountUpdateNotification(string email, string firstName, string informationType);
     }
 }

@@ -78,7 +78,7 @@ namespace Web.Controllers
             var newToken = JwtManager.GenerateToken(user);
 
             var claimsIdentity = (ClaimsIdentity)User.Identity;
-            notificationEngine.SendAccountUpdateNotification(claimsIdentity, "personal");
+            notificationEngine.SendAccountUpdateNotification(user.Email, user.FirstName, "personal");
             return Ok(newToken);
         }
 
@@ -97,7 +97,8 @@ namespace Web.Controllers
             setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
 
             var user = (ClaimsIdentity)User.Identity;
-            notificationEngine.SendAccountUpdateNotification(user, "student");
+            notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                user.Name, "student");
             return Ok();
         }
 
@@ -197,7 +198,8 @@ namespace Web.Controllers
             setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
 
             var user = (ClaimsIdentity)User.Identity;
-            notificationEngine.SendAccountUpdateNotification(user, "billing");
+            notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                user.Name, "billing");
             return Ok();
         }
 
@@ -213,7 +215,8 @@ namespace Web.Controllers
             setUserInfoEngine.UpdatePaymentCardInfo(paymentCardDTO);
 
             var user = (ClaimsIdentity)User.Identity;
-            notificationEngine.SendAccountUpdateNotification(user, "payment");
+            notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                user.Name, "payment");
             return Ok();
         }
 

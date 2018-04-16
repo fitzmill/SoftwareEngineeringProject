@@ -84,11 +84,15 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
-        public static EmailNotification AccountUpdatedNotification(ClaimsIdentity user, string informationType)
+        public static EmailNotification AccountUpdatedNotification(string email, string firstName, string informationType)
         {
-            if (user == null)
+            if (String.IsNullOrEmpty(email))
             {
-                throw new ArgumentNullException("User cannot be null");
+                throw new ArgumentNullException("Email cannot be empty");
+            }
+            if (String.IsNullOrEmpty(firstName))
+            {
+                throw new ArgumentNullException("First name cannot be empty");
             }
             if (String.IsNullOrEmpty(informationType))
             {
@@ -97,7 +101,7 @@ namespace Engines.Utils
 
             string subject = "Alert from Tuition Assistant: Account Information Updated";
             string rawbody = string.Format("Your {0} information was updated on your account. If you did not make this change, please contact your administrator.", informationType);
-            return GenerateEmail(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value, subject, rawbody, user.Name);
+            return GenerateEmail(email, subject, rawbody, firstName);
         }
 
         //Generates email notification with the default Tuition Assistant body template
