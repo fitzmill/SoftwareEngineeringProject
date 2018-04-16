@@ -119,8 +119,7 @@ namespace NelnetProject.Tests.Engines
         {
             string email = "johnsmith@gmail.com";
             string password = "majlehlasg";
-            Assert.IsFalse(getUserInfoEngine.ValidateLoginInfo(email, password, out UserType userType));
-            Assert.AreEqual((UserType)0, userType);
+            Assert.IsNull(getUserInfoEngine.ValidateLoginInfo(email, password));
         }
 
         [TestMethod]
@@ -128,8 +127,7 @@ namespace NelnetProject.Tests.Engines
         {
             string email = "johnsmith@gmail.com";
             string password = "password";
-            Assert.IsTrue(getUserInfoEngine.ValidateLoginInfo(email, password, out UserType userType));
-            Assert.AreEqual(UserType.GENERAL, userType);
+            Assert.AreEqual(getUserInfoAccessor.GetUserInfoByEmail(email), getUserInfoEngine.ValidateLoginInfo(email, password));
         }
 
         [TestMethod]
@@ -145,21 +143,6 @@ namespace NelnetProject.Tests.Engines
         {
             int userID = 23;
             Assert.AreEqual(null, getUserInfoEngine.GetUserInfoByID(userID));
-        }
-
-        [TestMethod]
-        public void TestGetUserInfoByEmailWithCorrectEmail()
-        {
-            string email = "johnsmith@gmail.com";
-            string firstName = "John";
-            Assert.AreEqual(firstName, getUserInfoEngine.GetUserInfoByEmail(email).FirstName);
-        }
-
-        [TestMethod]
-        public void TestGetUserInfoByEmailWithoutCorrectEmail()
-        {
-            string email = "thisemailisntanemail@gmail.com";
-            Assert.AreEqual(null, getUserInfoEngine.GetUserInfoByEmail(email));
         }
 
         [TestMethod]

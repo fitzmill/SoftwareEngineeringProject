@@ -51,14 +51,6 @@ namespace NelnetProject.Tests.Accessors
         }
 
         [TestMethod]
-        public void TestGetUserPasswordInfo()
-        {
-            string email = "cooper@cooperknaak.dating";
-            PasswordDTO response = getUserInfoAccessor.GetUserPasswordInfo(email);
-            Assert.IsNotNull(response);
-        }
-
-        [TestMethod]
         public void TestGetPaymentSpringCustomerID()
         {
             int userID = 2;
