@@ -245,7 +245,7 @@ namespace Web.Controllers
         //POST api/account/CalculatePeriodicPayment
         [HttpPost]
         [Route("CalculatePeriodicPayment")]
-        [JwtAuthentication]
+        [AllowAnonymous]
         public IHttpActionResult CalculatePeriodicPayment(User user)
         {
             if (user == null || !ModelState.IsValid)
