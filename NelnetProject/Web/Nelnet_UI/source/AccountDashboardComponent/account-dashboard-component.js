@@ -125,17 +125,15 @@ ko.components.register('account-dashboard-component', {
         //Changes the user info in database and ui to what the user entered.
         accountDashboardVM.updateUser = function (data, event) {
             if ($("#edit-personal-form").valid()) {
+                //disable save and cancel buttons
+                $("#btn-save-edit-personal").attr("disabled", "disabled");
+                $("#btn-cancel-edit-personal").attr("disabled", "disabled");
                 emailExists(accountDashboardVM.Email()).done(function (data) {
                     emailInUse = data;
                     if (emailInUse && accountDashboardVM.Email() !== user.Email) {
                         accountDashboardVM.personalInputErrorMessage("Email is already used by another user");
                         $("#edit-personal-input-error").show();
                     } else {
-                        //disable save and cancel buttons
-                        $("#btn-save-edit-personal").attr("disabled", "disabled");
-                        $("#btn-cancel-edit-personal").attr("disabled", "disabled");
-
-
                         let changedUserInfo = user;
                         changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
                         changedUserInfo.LastName = accountDashboardVM.UserLastName();
@@ -149,15 +147,15 @@ ko.components.register('account-dashboard-component', {
                         }).fail(function (jqXHR) {
                             let errorMessage = JSON.parse(jqXHR.responseText).Message;
                             window.alert("Could not save information: ".concat(errorMessage));
-                        }).always(function () {
-                            //re-enable buttons
-                            $("#btn-save-edit-personal").removeAttr("disabled");
-                            $("#btn-cancel-edit-personal").removeAttr("disabled");
                         });
                     }
                 }).fail(function (jqXHR) {
                     let errorMessage = JSON.parse(jqXHR.responseText).Message;
                     window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                }).always(function () {
+                    //re-enable buttons
+                    $("#btn-save-edit-personal").removeAttr("disabled");
+                    $("#btn-cancel-edit-personal").removeAttr("disabled");
                 });
             }
         };
