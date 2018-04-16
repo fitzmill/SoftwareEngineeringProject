@@ -1,5 +1,7 @@
 ﻿require('./admin-component.scss');
 
+const utility = require('../utility.js');
+
 const adminAPIURL = "/api/admin";
 
 exports.adminDashboardBeforeShow = function () {
@@ -155,9 +157,7 @@ function parseReportModel(report) {
 function getReports() {
     return $.ajax(adminAPIURL + "/GetAllReports", {
         method: "GET",
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -176,9 +176,7 @@ function generateReport(startDate, endDate) {
             StartDate: parsedStartDate,
             EndDate: parsedEndDate
         },
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -190,8 +188,6 @@ function getReportDetails(startDate, endDate) {
             StartDate: startDate,
             EndDate: endDate
         },
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }

@@ -57,11 +57,3 @@ function validateLoginInfo(email, password) {
         }
     });
 }
-
-function getUserInfoByEmail(email) {
-    return $.ajax(accountAPIURL + "/GetUserInfoByEmail", {
-        method: "POST",
-        contentType: "application/JSON; charset=utf-8",
-        data: JSON.stringify(email)
-    });
-}

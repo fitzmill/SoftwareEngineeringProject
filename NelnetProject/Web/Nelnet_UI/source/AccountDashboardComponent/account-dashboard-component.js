@@ -1,6 +1,8 @@
 ﻿require('./account-dashboard-component.scss');
 require('../assets/background-image.scss');
 
+const utility = require('../utility.js');
+
 const accountDashboardAPIURL = "/api/account";
 
 const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
@@ -447,9 +449,7 @@ ko.components.register('account-dashboard-component', {
 function getUserInfo() {
     return $.ajax(accountDashboardAPIURL + "/GetUserInfo", {
         method: "GET",
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -457,9 +457,7 @@ function getUserInfo() {
 function getNextTransactionForUser() {
     return $.ajax(accountDashboardAPIURL + "/GetNextTransactionForUser", {
         method: "GET",
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -467,9 +465,7 @@ function getNextTransactionForUser() {
 function getAllTransactionsForUser() {
     return $.ajax(accountDashboardAPIURL + "/GetAllTransactionsForUser", {
         method: "GET",
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -477,9 +473,7 @@ function getAllTransactionsForUser() {
 function getPaymentSpringInfo() {
     return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser", {
         method: "GET",
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -488,9 +482,7 @@ function updatePersonalInfo(userInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePersonalInfo", {
         method: "POST",
         data: userInfo,
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -508,9 +500,7 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: jsonData,
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -519,9 +509,7 @@ function deleteUser(user) {
     return $.ajax(accountDashboardAPIURL + "/DeleteUser", {
         method: "POST",
         data: user,
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -530,9 +518,7 @@ function updatePaymentCardInfo(paymentCardInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePaymentCardInfo", {
         method: "POST",
         data: paymentCardInfo,
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -541,9 +527,7 @@ function updatePaymentBillingInfo(paymentBillingInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePaymentBillingInfo", {
         method: "POST",
         data: paymentBillingInfo,
-        beforeSend: function (jqXHR) {
-            jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
-        }
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
