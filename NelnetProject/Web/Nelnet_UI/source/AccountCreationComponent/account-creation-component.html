@@ -30,7 +30,7 @@
                 <input class="input-account-creation card-right card-half-column" data-bind="value: lastName" placeholder="Last Name" />
                 <input class="input-account-creation card-full-column" data-bind="value: email" placeholder="Email" />
                 <input class="input-account-creation card-full-column" data-bind="value: reenterEmail" placeholder="Confirm Email" />
-                <input class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password" />
+                <input class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password: 8-32 characters, number(s), special character(s), lowercase and uppercase letter(s)" />
                 <input class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" />
             </div>
 
@@ -55,7 +55,7 @@
                     <input class="input-account-creation card-small-medium card-left" data-bind="value: studentFirstName" placeholder="Student First Name" />
                     <input class="input-account-creation card-small-medium card-left" data-bind="value: studentLastName" placeholder="Student Last Name" />
                     <input class="input-account-creation card-small card-left" data-bind="value: studentGrade" placeholder="Grade" />
-                    <button style="float: right" class="btn btn-danger btn-remove-student" data-bind="click: $parent.removeStudent">Remove</button>
+                    <button style="float: right" class="btn btn-danger btn-remove-student" data-bind="click: $parent.removeStudent($index())">Remove</button>
                 </div>
                 <button id="btn-add-student" class="btn btn-primary" data-bind="click: addStudent">Add Another Student</button>
             </div>
@@ -63,15 +63,15 @@
             <div id="page-4">
                 <div class="output-account-creation">
                     <h4><b>Please select a payment plan:</b></h4>
-                    <div class="radio-button">
-                        <input type="radio" name="paymentType" value="MONTHLY" data-bind="checked: paymentType" />
+                    <div class="radio-button" data-bind="click: function(){ $('#radio-button-1').prop('checked', true); }">
+                        <input id="radio-button-1" type="radio" name="paymentType" value="MONTHLY" data-bind="checked: paymentType" />
                         <h5 class="radio-button-label" data-bind="text: 'Monthly at $'+monthlyRate()+' (Sept - May)'" />
                     </div>
-                    <div class="radio-button">
-                        <input type="radio" name="paymentType" value="SEMESTERLY" data-bind="checked: paymentType" />
+                    <div class="radio-button" data-bind="click: function(){ $('#radio-button-2').prop('checked', true); }">
+                        <input id="radio-button-2" type="radio" name="paymentType" value="SEMESTERLY" data-bind="checked: paymentType" />
                         <h5 class="radio-button-label" data-bind="text: 'Semesterly at $'+semesterlyRate()+' (Sept & Feb)'" />
                     </div>
-                    <div class="radio-button">
+                    <div class="radio-button" data-bind="click: function(){ $('#radio-button-3').prop('checked', true); }">
                         <input id="radio-button-3" type="radio" name="paymentType" value="YEARLY" data-bind="checked: paymentType" />
                         <h5 class="radio-button-label" data-bind="text: 'Yearly at $'+yearlyRate()+' (Sept)'"/>
                     </div>
