@@ -1,11 +1,12 @@
 ﻿require('./admin-component.scss');
 
+const utility = require('../utility.js');
+
 const adminAPIURL = "/api/admin";
 
 exports.adminDashboardBeforeShow = function () {
-    let user = JSON.parse(localStorage.getItem('user'));
     //user not logged in
-    if (!user || user.UserType !== "ADMIN") {
+    if (!window.sessionStorage.getItem("Jwt")) {
         window.location = '#';
         return;
     }
@@ -36,7 +37,9 @@ ko.components.register('admin-component', {
             getReports().done((data) => {
                 vm.reports(data.map((report) => parseReportModel(report)));
             }).fail((jqXHR) => {
-                window.alert("Could not get reports, please try refreshing the page");
+                if (jqXHR.status !== 401) {
+                    window.alert("Could not get reports, please try refreshing the page");
+                } 
             });
         }
 
@@ -44,8 +47,10 @@ ko.components.register('admin-component', {
             generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
                 vm.reports.unshift(parseReportModel(data));
             }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not generate report: ".concat(errorMessage));
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not generate report: ".concat(errorMessage));
+                }
             });
 
         };
@@ -91,8 +96,10 @@ ko.components.register('admin-component', {
                 $("#headerLoadingModal").hide();
 
             }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not get report details: ".concat(errorMessage));
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not get report details: ".concat(errorMessage));
+                }
 
                 $("#modalViewReport").modal("hide");
             });
@@ -105,8 +112,7 @@ ko.components.register('admin-component', {
             csv.downloadCSV("Transactions.csv");
         };
 
-        let user = JSON.parse(localStorage.getItem('user'));
-        if (user && user.UserType === "ADMIN") {
+        if ($("admin-component").is(":visible") && window.sessionStorage.getItem("Jwt")) {
             vm.loadAdminInformation();
         }
 
@@ -150,7 +156,8 @@ function parseReportModel(report) {
 //fetches all reports from the report api
 function getReports() {
     return $.ajax(adminAPIURL + "/GetAllReports", {
-        method: "GET"
+        method: "GET",
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -168,7 +175,8 @@ function generateReport(startDate, endDate) {
         data: {
             StartDate: parsedStartDate,
             EndDate: parsedEndDate
-        }
+        },
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
@@ -179,6 +187,7 @@ function getReportDetails(startDate, endDate) {
         data: {
             StartDate: startDate,
             EndDate: endDate
-        }
+        },
+        beforeSend: utility.attachJwtTokenToRequest
     });
 }

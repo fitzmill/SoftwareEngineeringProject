@@ -8,13 +8,16 @@ using Engines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Http;
+using Web.Filters;
 
 namespace Web.Controllers
 {
     //this is the route in the url for this set of APIs. So the url would be localhost:port/api/admin
     [RoutePrefix("api/admin")]
+    [JwtAuthentication(Roles = new UserType[] { UserType.ADMIN })]
     public class AdminController : ApiController
     {
         IGetTransactionEngine getTransactionEngine;

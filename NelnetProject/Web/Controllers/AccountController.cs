@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Web.Http;
 using Web.Filters;
 
@@ -31,18 +32,22 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        [Route("GetUserInfoByID/{userID}")]
-        public IHttpActionResult GetUserInfoByID(string userID)
+        [Route("GetUserInfo")]
+        [JwtAuthentication]
+        public IHttpActionResult GetUserInfo()
         {
-            if (!int.TryParse(userID, out int parsedUserID))
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userID == null || !int.TryParse(userID, out int parsedUserID))
             {
-                return BadRequest("Could not parse userID into an integer");
+                return Unauthorized();
             }
             return Ok(getUserInfoEngine.GetUserInfoByID(parsedUserID));
         }
 
         [HttpPost]
         [Route("EmailExists")]
+        [AllowAnonymous]
         public IHttpActionResult EmailExists([FromBody] string email)
         {
             if (String.IsNullOrEmpty(email))
@@ -54,6 +59,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdatePersonalInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdatePersonalInfo(User user)
         {
             if (user == null || !ModelState.IsValid)
@@ -62,11 +68,14 @@ namespace Web.Controllers
             }
 
             setUserInfoEngine.UpdatePersonalInfo(user);
-            return Ok();
+
+            var newToken = JwtManager.GenerateToken(user);
+            return Ok(newToken);
         }
 
         [HttpPost]
         [Route("UpdateStudentInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
         {
             if (updatedInfo == null || !ModelState.IsValid)
@@ -82,6 +91,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("DeleteUser")]
+        [JwtAuthentication]
         public IHttpActionResult DeleteUser(User user)
         {
             if (user == null || !ModelState.IsValid)
@@ -95,6 +105,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("InsertUser")]
+        [AllowAnonymous]
         public IHttpActionResult InsertUser([FromBody] AccountCreationDTO accountCreationInfo)
         {
             if (accountCreationInfo == null || !ModelState.IsValid)
@@ -142,24 +153,19 @@ namespace Web.Controllers
             
             setUserInfoEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
-            return Ok(user);
-        }
 
-        [HttpPost]
-        [Route("GetUserInfoByEmail")]
-        public IHttpActionResult GetUserInfoByEmail([FromBody] string email)
-        {
-            if (String.IsNullOrEmpty(email))
-            {
-                return BadRequest("Email was not supplied");
-            }
-            return Ok(getUserInfoEngine.GetUserInfoByEmail(email));
+            var token = JwtManager.GenerateToken(user);
+
+            return Ok(token);
         }
 
         [HttpGet]
-        [Route("GetPaymentInfoForUser/{userID}")]
-        public IHttpActionResult GetPaymentInfoForUser(string userID)
+        [Route("GetPaymentInfoForUser")]
+        [JwtAuthentication]
+        public IHttpActionResult GetPaymentInfoForUser()
         {
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
@@ -169,6 +175,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdatePaymentBillingInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressDTO)
         {
             if (paymentAddressDTO == null || !ModelState.IsValid)
@@ -181,6 +188,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("UpdatePaymentCardInfo")]
+        [JwtAuthentication]
         public IHttpActionResult UpdatePaymentCardInfo(PaymentCardDTO paymentCardDTO)
         {
             if (paymentCardDTO == null || !ModelState.IsValid)
@@ -193,6 +201,7 @@ namespace Web.Controllers
 
         [HttpPost]
         [Route("InsertPaymentInfo")]
+        [AllowAnonymous]
         public IHttpActionResult InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
             if (userPaymentInfo == null || !ModelState.IsValid)
@@ -205,10 +214,12 @@ namespace Web.Controllers
 
         //This is a get request with the above route. The 5 at the end of the example is an example userID
         [HttpGet]
-        [Route("GetAllTransactionsForUser/{userID}")]
-        public IHttpActionResult GetAllTransactionsForUser(string userID)
+        [Route("GetAllTransactionsForUser")]
+        [JwtAuthentication]
+        public IHttpActionResult GetAllTransactionsForUser()
         {
-            //Tries to convert the parameter to an int
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
@@ -218,9 +229,12 @@ namespace Web.Controllers
 
         //GET api/account/GetNextTransactionForUser/{userID}
         [HttpGet]
-        [Route("GetNextTransactionForUser/{userID}")]
-        public IHttpActionResult GetNextTransactionForUser(string userID)
+        [Route("GetNextTransactionForUser")]
+        [JwtAuthentication]
+        public IHttpActionResult GetNextTransactionForUser()
         {
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
@@ -231,6 +245,7 @@ namespace Web.Controllers
         //POST api/account/CalculatePeriodicPayment
         [HttpPost]
         [Route("CalculatePeriodicPayment")]
+        [AllowAnonymous]
         public IHttpActionResult CalculatePeriodicPayment(User user)
         {
             if (user == null || !ModelState.IsValid)

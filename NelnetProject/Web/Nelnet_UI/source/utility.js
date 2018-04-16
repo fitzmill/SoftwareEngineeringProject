@@ -104,3 +104,7 @@ $.validator.addMethod("creditcard", function (value, element) {
 
     return (nCheck % 10) === 0;
 }, "Please enter a valid credit card number.");
+
+module.exports.attachJwtTokenToRequest = function(jqXHR) {
+    jqXHR.setRequestHeader("Authorization", "Bearer " + window.sessionStorage.getItem("Jwt"));
+};

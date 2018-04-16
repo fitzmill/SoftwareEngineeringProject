@@ -11,35 +11,32 @@ namespace Core.DTOs
     public class LoginDTO
     {
         /// <summary>
-        /// Holds the email for the login information
+        /// Holds the JwtToken that gets generated on login
         /// </summary>
         [Required]
-        [StringLength(255, MinimumLength = 1)]
-        public string Email { get; set; }
+        public string JwtToken { get; set; }
 
         /// <summary>
-        /// Holds the password for the login information
+        /// Holds the logged in user's type for page redirection
         /// </summary>
         [Required]
-        [StringLength(int.MaxValue, MinimumLength = 1)]
-        public string Password { get; set; }
+        public UserType UserType { get; set; }
 
         /// <summary>
         /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
         /// </summary>
         public override bool Equals(object obj)
         {
-            var dTO = obj as LoginDTO;
-            return dTO != null &&
-                   Email == dTO.Email &&
-                   Password == dTO.Password;
+            return obj as LoginDTO != null &&
+                   JwtToken == (obj as LoginDTO).JwtToken &&
+                   UserType == (obj as LoginDTO).UserType;
         }
 
         public override int GetHashCode()
         {
             var hashCode = 244290743;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Email);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Password);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(JwtToken);
+            hashCode = hashCode * -1521134295 + EqualityComparer<UserType>.Default.GetHashCode(UserType);
             return hashCode;
         }
     }
