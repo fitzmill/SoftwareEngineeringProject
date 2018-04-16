@@ -1,4 +1,5 @@
-﻿using Core.DTOs;
+﻿using Core;
+using Core.DTOs;
 using Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,8 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Web.Http;
 
 namespace Web.Controllers
@@ -20,26 +23,39 @@ namespace Web.Controllers
             this.getUserInfoEngine = getUserInfoEngine;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("ValidateLoginInfo")]
-        public IHttpActionResult ValidateLoginInfo([Required] LoginDTO loginDTO)
+        [AllowAnonymous]
+        public IHttpActionResult ValidateLoginInfo()
         {
-            if (loginDTO == null || !ModelState.IsValid)
+            AuthenticationHeaderValue authenticationHeader = Request.Headers.Authorization;
+
+            if (authenticationHeader == null || !authenticationHeader.Scheme.StartsWith("Basic"))
             {
-                return BadRequest("One or more required objects was not included in the request body.");
+                return BadRequest();
             }
-            string email = loginDTO.Email;
-            string password = loginDTO.Password;
-            bool result;
-            try
+
+            var encodedUsernamePassword = authenticationHeader.Parameter;
+            var encoding = Encoding.GetEncoding("iso-8859-1");
+            string emailPassword = encoding.GetString(Convert.FromBase64String(encodedUsernamePassword));
+
+            var seperatorIndex = emailPassword.IndexOf(':');
+
+            string email = emailPassword.Substring(0, seperatorIndex);
+            string password = emailPassword.Substring(seperatorIndex + 1);
+
+            var user = getUserInfoEngine.ValidateLoginInfo(email, password);
+            if (user != null)
             {
-                result = getUserInfoEngine.ValidateLoginInfo(email, password);
+                return Ok(new LoginDTO()
+                {
+                    JwtToken = JwtManager.GenerateToken(user),
+                    UserType = user.UserType
+                });
+
             }
-            catch (SqlException)
-            {
-                return InternalServerError();
-            }
-            return Ok(result);
+
+            return Ok();
         }
     }
 }

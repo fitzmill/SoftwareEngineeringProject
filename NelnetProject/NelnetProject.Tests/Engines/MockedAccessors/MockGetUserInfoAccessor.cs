@@ -36,18 +36,6 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
             return UserDB.FirstOrDefault(x => x.Email == email);
         }
 
-        public PasswordDTO GetUserPasswordInfo(string email)
-        {
-            PasswordDTO result = new PasswordDTO();
-            if (email.Equals(UserDB[0].Email))
-            {
-                result.Hashed = UserDB[0].Hashed;
-                result.Salt = UserDB[0].Salt;
-                return result;
-            }
-            return null;
-        }
-
         public string GetPaymentSpringCustomerID(int userID)
         {
             return UserDB.FirstOrDefault(u => u.UserID == userID)?.CustomerID;

@@ -31,16 +31,16 @@ namespace Engines
             return getUserInfoAccessor.GetAllActiveUsers();
         }
         // Validates the login of a user given an email and a password.
-        public bool ValidateLoginInfo(string email, string password)
+        public User ValidateLoginInfo(string email, string password)
         {
-            PasswordDTO userPasswordInfo = getUserInfoAccessor.GetUserPasswordInfo(email);
-            string hashedGivenPassword = PasswordUtils.HashPasswords(password, userPasswordInfo.Salt);
-            if (hashedGivenPassword.Equals(userPasswordInfo.Hashed))
+            var user = getUserInfoAccessor.GetUserInfoByEmail(email);
+            string hashedGivenPassword = PasswordUtils.HashPasswords(password, user.Salt);
+            if (hashedGivenPassword.Equals(user.Hashed))
             {
-                return true;
+                return user;
             } else
             {
-                return false;
+                return null;
             }
         }
 
@@ -48,12 +48,6 @@ namespace Engines
         public User GetUserInfoByID(int userID)
         {
             return getUserInfoAccessor.GetUserInfoByID(userID);
-        }
-
-        // Gets a user's information when given an email.
-        public User GetUserInfoByEmail(string email)
-        {
-            return getUserInfoAccessor.GetUserInfoByEmail(email);
         }
 
         // Gets a user's payment info from Payment Spring with their customer ID.
