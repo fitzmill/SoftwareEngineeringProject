@@ -110,7 +110,7 @@
             <div data-bind="foreach: Students">
                 <div>
                     <h5 class="student-info edit-student-inactive" data-bind="text: FirstName() + ' ' + LastName()" style="margin-top: 20px"></h5>
-                    <h5 class="student-info edit-student-inactive" data-bind="text: $root.dropdownOptions.Grades.find((obj) => obj.num == Grade()).text"></h5>
+                    <h5 class="student-info edit-student-inactive" data-bind="text: Grade() === undefined ? undefined : $root.dropdownOptions.Grades.find((obj) => obj.num == Grade()).text"></h5>
 
                     <button id="btn-delete-student" class="btn btn-danger edit-student-active" data-bind="click: function(student) { $parent.openConfirmModal(student, 'You are about to delete a student, are you sure?', $parent.deleteStudent) }">Delete Student</button>
 
@@ -119,7 +119,7 @@
                         <input class="input-information no-code-chars" placeholder="Student Last Name" data-bind="value: LastName, attr: {name: 'LastName' + $index()}" required />
                     </div>
 
-                    <select class="select-inline-info edit-student-active student-info" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: Grade, optionsCaption: 'Grade', , attr: {name: 'Grade' + $index()}" style="margin-bottom: 10px" required />
+                    <select class="select-inline-info edit-student-active student-info" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: Grade, optionsCaption: 'Grade', attr: {name: 'Grade' + $index()}" style="margin-bottom: 10px" required />
                 </div>
             </div>
         </form>
