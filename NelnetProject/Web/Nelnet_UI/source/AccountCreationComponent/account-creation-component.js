@@ -2,11 +2,17 @@
 require('../assets/background-image.scss');
 
 //paging constants
-const START_PAGE = 1;
+const START_PAGE = 0;
+const WELCOME_PAGE = 0;
 const PERSONAL_INFORMATION_PAGE = 1;
 const PAYMENT_INFORMATION_PAGE = 2;
 const STUDENT_INFORMATION_PAGE = 3;
 const END_PAGE = 4;
+
+//prefixes for updating the correct pages, and the progress bar
+const PAGE_ID_PREFIX = "#page-";
+const DOT_ID_PREFIX = "#dot-page-";
+const RECTANGLE_ID_PREFIX = "#rectangle-";
 
 //api url constants
 const accountCreationAPIURL = "/api/account";
@@ -46,6 +52,7 @@ ko.components.register('account-creation-component', {
             studentLastName: ko.observable(),
             studentGrade: ko.observable()
         }]);
+        $(".btn-remove-student").attr("disabled", true);
 
         vm.addStudent = function () {
             vm.students.push({
@@ -54,6 +61,23 @@ ko.components.register('account-creation-component', {
                 studentLastName: ko.observable(),
                 studentGrade: ko.observable()
             });
+            if (vm.students().length > 1) {
+                $(".btn-remove-student").attr("disabled", false);
+            }
+        };
+
+        vm.removeStudent = function (student) {
+            if (vm.students().length > 1) {
+                let removeIndex = vm.students().findIndex(s => {
+                    return s.studentFirstName === student.studentFirstName &&
+                        s.studentLastName === student.studentLastName &&
+                        s.studentGrade === student.studentGrade;
+                });
+                vm.students.splice(removeIndex, 1);
+            }
+            if (vm.students().length <= 1) {
+                $(".btn-remove-student").attr("disabled", true);
+            }
         };
 
         //fourth page
@@ -123,33 +147,53 @@ ko.components.register('account-creation-component', {
 
         //create function to update progress bar
         vm.updateProgressBar = function () {
-            for (let i = START_PAGE; i < END_PAGE; i++) {
+            for (let i = START_PAGE + 1; i < END_PAGE; i++) {
                 if (i >= vm.currentPage) {
-                    $('#rectangle-' + i)[0].style.backgroundColor = "#afafaf";
+                    $(RECTANGLE_ID_PREFIX + i)[0].style.backgroundColor = "#afafaf";
                 } else {
-                    $('#rectangle-' + i)[0].style.backgroundColor = "#007bff";
+                    $(RECTANGLE_ID_PREFIX + i)[0].style.backgroundColor = "#007bff";
                 }
             }
 
-            for (let i = START_PAGE; i <= END_PAGE; i++) {
+            for (let i = START_PAGE + 1; i <= END_PAGE; i++) {
                 if (i > vm.currentPage) {
-                    $('#dot-page-' + i)[0].style.backgroundColor = "#afafaf";
+                    $(DOT_ID_PREFIX + i)[0].style.backgroundColor = "#afafaf";
                 } else {
-                    $('#dot-page-' + i)[0].style.backgroundColor = "#007bff";
+                    $(DOT_ID_PREFIX + i)[0].style.backgroundColor = "#007bff";
                 }
+            }
+
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#progress-bar").hide();
+            } else {
+                $("#progress-bar").show();
             }
         };
 
         //create function to update buttons
         vm.updateButtons = function () {
-            if (vm.currentPage === START_PAGE) {
+            //let's get started button
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#btn-start").show();
+            } else {
+                $("#btn-start").hide();
+            }
+            //back and cancel buttons
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#btn-cancel").hide();
+                $("#btn-back").hide();
+            } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
                 $("#btn-cancel").show();
                 $("#btn-back").hide();
             } else {
                 $("#btn-cancel").hide();
                 $("#btn-back").show();
             }
-            if (vm.currentPage === END_PAGE) {
+            //next and done buttons
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#btn-done").hide();
+                $("#btn-next").hide();
+            }else if (vm.currentPage === END_PAGE) {
                 $("#btn-done").show();
                 $("#btn-next").hide();
             } else {
@@ -169,16 +213,22 @@ ko.components.register('account-creation-component', {
 
         //move to the previous page
         vm.back = function () {
-            $("#info-page-" + vm.currentPage).hide();
+            $(PAGE_ID_PREFIX + vm.currentPage).hide();
             vm.currentPage--;
-            $("#info-page-" + vm.currentPage).show();
+            $(PAGE_ID_PREFIX + vm.currentPage).show();
             vm.updateButtons();
             vm.updateProgressBar();
         };
 
         //move to the next page
         vm.next = function () {
-            if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
+            if (vm.currentPage === WELCOME_PAGE){
+                $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                vm.currentPage++;
+                $(PAGE_ID_PREFIX + vm.currentPage).show();
+                vm.updateButtons();
+                vm.updateProgressBar();
+            } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
                 let emailInUse = false;
                 if ($("#form-page-1").valid()) {
                     emailExists(vm.email()).done(function (data) {
@@ -187,9 +237,9 @@ ko.components.register('account-creation-component', {
                            vm.personalInputErrorMessage("Email is already in use");
                            window.alert("Email is already in use");
                        } else {
-                           $("#info-page-" + vm.currentPage).hide();
+                           $(PAGE_ID_PREFIX + vm.currentPage).hide();
                            vm.currentPage++;
-                           $("#info-page-" + vm.currentPage).show();
+                           $(PAGE_ID_PREFIX + vm.currentPage).show();
                            vm.updateButtons();
                            vm.updateProgressBar();
                        }
@@ -200,17 +250,17 @@ ko.components.register('account-creation-component', {
                 }
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
                 if ($("#form-page-2").valid()) {
-                    $("#info-page-" + vm.currentPage).hide();
+                    $(PAGE_ID_PREFIX + vm.currentPage).hide();
                     vm.currentPage++;
-                    $("#info-page-" + vm.currentPage).show();
+                    $(PAGE_ID_PREFIX + vm.currentPage).show();
                     vm.updateButtons();
                     vm.updateProgressBar();
                 }
             } else if (vm.currentPage === STUDENT_INFORMATION_PAGE) {
                 if ($("#form-page-3").valid()) {
-                    $("#info-page-" + vm.currentPage).hide();
+                    $(PAGE_ID_PREFIX + vm.currentPage).hide();
                     vm.currentPage++;
-                    $("#info-page-" + vm.currentPage).show();
+                    $(PAGE_ID_PREFIX + vm.currentPage).show();
                     vm.updateButtons();
                     vm.updateProgressBar();
                 }
@@ -227,8 +277,6 @@ ko.components.register('account-creation-component', {
                     Grade: s.studentGrade()
                 };
             });
-
-            console.log(students);
 
             let accountCreationInformation = {
                 FirstName: vm.firstName(),
@@ -250,8 +298,6 @@ ko.components.register('account-creation-component', {
                 ExpirationMonth: vm.month()
             };
 
-            console.log(accountCreationInformation);
-
             createUser(accountCreationInformation).done(function (data) {
                 window.localStorage.setItem("user", JSON.stringify(data));
                 window.location = "#account-dashboard";
@@ -263,9 +309,9 @@ ko.components.register('account-creation-component', {
         //show current page and correct buttons
         for (let i = START_PAGE; i <= END_PAGE; i++) {
             if (i === vm.currentPage) {
-                $("#info-page-" + i).show();
+                $(PAGE_ID_PREFIX + i).show();
             } else {
-                $("#info-page-" + i).hide();
+                $(PAGE_ID_PREFIX + i).hide();
             }
         }
         vm.updateButtons();
