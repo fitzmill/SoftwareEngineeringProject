@@ -50,12 +50,6 @@ namespace Engines
             return getUserInfoAccessor.GetUserInfoByID(userID);
         }
 
-        // Gets a user's information when given an email.
-        public User GetUserInfoByEmail(string email)
-        {
-            return getUserInfoAccessor.GetUserInfoByEmail(email);
-        }
-
         // Gets a user's payment info from Payment Spring with their customer ID.
         public UserPaymentInfoDTO GetPaymentInfoForUser(int userID)
         {
