@@ -12,29 +12,27 @@ ko.components.register('login-component', {
         vm.password = ko.observable();
 
         vm.login = function () {
-            if (!vm.email().emailMeetsRequirements()) {
-                $("#label-invalid-info").show();
-                return;
-            } else if (!vm.password().passwordMeetsRequirements()) {
-                $("#label-invalid-info").show();
-                return;
+            if ($("#form-page-2").valid()) {
+                validateLoginInfo(vm.email(), vm.password()).done(function (loginInfo) {
+                    if (!loginInfo) {
+                        $("label-invalid-info").show();
+                        return;
+                    }
+                    window.sessionStorage.setItem('Jwt', loginInfo.JwtToken);
+                    if (loginInfo.UserType === "GENERAL") {
+                        window.location = "#account-dashboard";
+                    } else if (loginInfo.UserType === "ADMIN") {
+                        window.location = "#admin";
+                    }
+                }).fail(function (jqXHR, responseText, errorThrown) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert(errorMessage);
+                });
+                }).fail(function (jqXHR) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert(errorMessage);
+                });
             }
-
-            validateLoginInfo(vm.email(), vm.password()).done(function (loginInfo) {
-                if (!loginInfo) {
-                    $("label-invalid-info").show();
-                    return;
-                }
-                window.sessionStorage.setItem('Jwt', loginInfo.JwtToken);
-                if (loginInfo.UserType === "GENERAL") {
-                    window.location = "#account-dashboard";
-                } else if (loginInfo.UserType === "ADMIN") {
-                    window.location = "#admin";
-                }
-            }).fail(function (jqXHR, responseText, errorThrown) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert(errorMessage);
-            });
         }
 
         $("#card-login").keypress(function (e) {
