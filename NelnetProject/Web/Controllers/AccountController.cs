@@ -131,7 +131,7 @@ namespace Web.Controllers
 
             string customerID = setUserInfoEngine.InsertPaymentInfo(paymentInfo);
 
-            //check if payment info is valid, if not return error
+            //check if payment info is valid, if not return bad request
             if(customerID == null)
             {
                 return BadRequest("Payment information is invalid.");
