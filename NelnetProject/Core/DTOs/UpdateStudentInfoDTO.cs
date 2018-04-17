@@ -9,12 +9,6 @@ namespace Core.DTOs
     public class UpdateStudentInfoDTO
     {
         /// <summary>
-        /// The UserID that the students are associated with
-        /// </summary>
-        [Range(0, int.MaxValue)]
-        public int UserID { get; set; }
-
-        /// <summary>
         /// List of students that have only had their properties updated
         /// </summary>
         [Required]
@@ -39,7 +33,6 @@ namespace Core.DTOs
         {
             var dTO = obj as UpdateStudentInfoDTO;
             return dTO != null &&
-                   UserID == dTO.UserID &&
                    EqualityComparer<List<Student>>.Default.Equals(UpdatedStudents, dTO.UpdatedStudents) &&
                    EqualityComparer<List<int>>.Default.Equals(DeletedStudentIDs, dTO.DeletedStudentIDs) &&
                    EqualityComparer<List<Student>>.Default.Equals(AddedStudents, dTO.AddedStudents);
@@ -48,7 +41,6 @@ namespace Core.DTOs
         public override int GetHashCode()
         {
             var hashCode = 553243157;
-            hashCode = hashCode * -1521134295 + UserID.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<List<Student>>.Default.GetHashCode(UpdatedStudents);
             hashCode = hashCode * -1521134295 + EqualityComparer<List<int>>.Default.GetHashCode(DeletedStudentIDs);
             hashCode = hashCode * -1521134295 + EqualityComparer<List<Student>>.Default.GetHashCode(AddedStudents);

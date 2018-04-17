@@ -87,16 +87,17 @@ namespace Web.Controllers
         [JwtAuthentication]
         public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
         {
-            if (updatedInfo == null || !ModelState.IsValid)
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (updatedInfo == null || !ModelState.IsValid || userID == null || !int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
             setUserInfoEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
-            setUserInfoEngine.InsertStudentInfo(updatedInfo.UserID, updatedInfo.AddedStudents);
+            setUserInfoEngine.InsertStudentInfo(parsedUserID, updatedInfo.AddedStudents);
             setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
-
-            var user = (ClaimsIdentity)User.Identity;
+            
             notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
                 user.Name, "student");
             return Ok();

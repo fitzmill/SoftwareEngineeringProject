@@ -1,36 +1,38 @@
 ﻿require('./billing-information-component.scss');
 
-const utility = require('../utility.js');
+const utility = require('../../utility.js');
 
 const accountDashboardAPIURL = "/api/account";
 
 var billingInfo = undefined;
 
-ko.components.register("billing-information-component", {
-    viewModel = function (params) {
+ko.components.register('billing-information-component', {
+    viewModel: function (params) {
         var vm = this;
 
         billingInfo = params.billingInfo;
 
-        accountDashboardVM.CardFirstName = ko.observable();
-        accountDashboardVM.CardLastName = ko.observable();
-        accountDashboardVM.StreetAddress1 = ko.observable();
-        accountDashboardVM.StreetAddress2 = ko.observable();
-        accountDashboardVM.City = ko.observable();
-        accountDashboardVM.State = ko.observable();
-        accountDashboardVM.Zip = ko.observable();
+        vm.CardFirstName = ko.observable();
+        vm.CardLastName = ko.observable();
+        vm.StreetAddress1 = ko.observable();
+        vm.StreetAddress2 = ko.observable();
+        vm.City = ko.observable();
+        vm.State = ko.observable();
+        vm.Zip = ko.observable();
 
-        accountDashboardVM.setUIBillingInfo = function () {
-            accountDashboardVM.CardFirstName(userPaymentInfo.FirstName);
-            accountDashboardVM.CardLastName(userPaymentInfo.LastName);
-            accountDashboardVM.StreetAddress1(userPaymentInfo.StreetAddress1);
-            accountDashboardVM.StreetAddress2(userPaymentInfo.StreetAddress2);
-            accountDashboardVM.City(userPaymentInfo.City);
-            accountDashboardVM.State(userPaymentInfo.State);
-            accountDashboardVM.Zip(userPaymentInfo.Zip);
+        vm.setUIBillingInfo = function () {
+            vm.CardFirstName(billingInfo().FirstName);
+            vm.CardLastName(billingInfo().LastName);
+            vm.StreetAddress1(billingInfo().StreetAddress1);
+            vm.StreetAddress2(billingInfo().StreetAddress2);
+            vm.City(billingInfo().City);
+            vm.State(billingInfo().State);
+            vm.Zip(billingInfo().Zip);
         };
 
-        accountDashboardVM.updateBillingInfo = function (data, event) {
+        billingInfo.subscribe(vm.setUIBillingInfo);
+
+        vm.updateBillingInfo = function (data, event) {
             if ($("#edit-billing-form").valid()) {
 
                 //disable cancel and save buttons while request loads
@@ -38,27 +40,27 @@ ko.components.register("billing-information-component", {
                 $("#btn-cancel-edit-billing").attr('disabled', 'disabled');
 
                 let changedBillingInfo = {
-                    CustomerID: billingInfo.CustomerID,
-                    FirstName: accountDashboardVM.CardFirstName(),
-                    LastName: accountDashboardVM.CardLastName(),
-                    StreetAddress1: accountDashboardVM.StreetAddress1(),
-                    StreetAddress2: accountDashboardVM.StreetAddress2(),
-                    City: accountDashboardVM.City(),
-                    State: accountDashboardVM.State(),
-                    Zip: accountDashboardVM.Zip()
+                    CustomerID: billingInfo().CustomerID,
+                    FirstName: vm.CardFirstName(),
+                    LastName: vm.CardLastName(),
+                    StreetAddress1: vm.StreetAddress1(),
+                    StreetAddress2: vm.StreetAddress2(),
+                    City: vm.City(),
+                    State: vm.State(),
+                    Zip: vm.Zip()
                 };
 
                 updatePaymentBillingInfo(changedBillingInfo).done(function () {
-                    userPaymentInfo.FirstName = changedBillingInfo.FirstName;
-                    userPaymentInfo.LastName = changedBillingInfo.LastName;
-                    userPaymentInfo.StreetAddress1 = changedBillingInfo.StreetAddress1;
-                    userPaymentInfo.StreetAddress2 = changedBillingInfo.StreetAddress2;
-                    userPaymentInfo.City = changedBillingInfo.City;
-                    userPaymentInfo.State = changedBillingInfo.State;
-                    userPaymentInfo.Zip = changedBillingInfo.Zip;
+                    billingInfo().FirstName = changedBillingInfo.FirstName;
+                    billingInfo().LastName = changedBillingInfo.LastName;
+                    billingInfo().StreetAddress1 = changedBillingInfo.StreetAddress1;
+                    billingInfo().StreetAddress2 = changedBillingInfo.StreetAddress2;
+                    billingInfo().City = changedBillingInfo.City;
+                    billingInfo().State = changedBillingInfo.State;
+                    billingInfo().Zip = changedBillingInfo.Zip;
 
                     //UI will be updated here
-                    accountDashboardVM.stopEditing(data, event);
+                    params.stopEditing(data, event);
                 }).fail(function (jqXHR) {
                     if (jqXHR.status !== 401) {
                         let errorMessage = JSON.parse(jqXHR.responseText).Message;
