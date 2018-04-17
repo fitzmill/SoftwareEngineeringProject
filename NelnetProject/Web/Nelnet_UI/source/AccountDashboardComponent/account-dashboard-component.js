@@ -20,12 +20,6 @@ exports.accountDashboardBeforeShow = function () {
         window.location = "#";
         return;
     }
-
-    //this will only be true when redirected to this page from login, since the component will be binded
-    if ($("account-dashboard-component").children().length > 0) {
-        vm = ko.dataFor($('account-dashboard-component').get(0).firstChild);
-        vm.loadUserInformation();
-    }
 };
 
 ko.components.register('account-dashboard-component', {
@@ -208,6 +202,15 @@ ko.components.register('account-dashboard-component', {
                     //update user in local storage in the case of page reload
                     user.Students = inputStudents;
                     accountDashboardVM.stopEditing(data, event);
+                    //gets the price of the next payment for the user based on the new students added
+                    getNextTransactionForUser().done(function (data) {
+                        accountDashboardVM.NextPaymentDate(data.DateDue.parseDateTimeString());
+                        accountDashboardVM.NextPaymentCost(Number(data.AmountCharged).toLocaleString('en'));
+                    }).fail(function (jqXHR) {
+                        if (jqXHR.status !== 401) {
+                            window.alert("Could not get your next transaction information, please try refreshing the page.");
+                        }
+                    });
                 }).fail(function (jqXHR) {
                     if (jqXHR.status !== 401) {
                         let errorMessage = JSON.parse(jqXHR.responseText).Message;
@@ -220,7 +223,6 @@ ko.components.register('account-dashboard-component', {
                 });
             }
         };
-
 
         accountDashboardVM.addStudent = function () {
             accountDashboardVM.Students.push({
@@ -246,7 +248,9 @@ ko.components.register('account-dashboard-component', {
                     });
                 });
             } else {
-                accountDashboardVM.Students(accountDashboardVM.Students().filter((s) => s.StudentID !== student.StudentID));
+                accountDashboardVM.Students(accountDashboardVM.Students().filter((s) => {
+                    return s.StudentID !== student.StudentID || s.FirstName() !== student.FirstName() || s.LastName() !== student.LastName();
+                }));
             }
         };
 
