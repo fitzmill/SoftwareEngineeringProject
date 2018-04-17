@@ -356,7 +356,7 @@ ko.components.register('account-creation-component', {
 //calculate the user's periodic payment
 function calculatePeriodicPayment(user) {
     let userData = JSON.stringify(user);
-    return $.ajax("${paymentControllerRoot}/CalculatePeriodicPayment", {
+    return $.ajax(`${paymentControllerRoot}/CalculatePeriodicPayment`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: userData
@@ -366,7 +366,7 @@ function calculatePeriodicPayment(user) {
 //create the user in the database
 function createUser(accountCreationInformation) {
     let accountCreationInformationData = JSON.stringify(accountCreationInformation);
-    return $.ajax("${userInfoControllerRoot}/InsertUser", {
+    return $.ajax(`${userInfoControllerRoot}/InsertUser`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: accountCreationInformationData
@@ -375,7 +375,7 @@ function createUser(accountCreationInformation) {
 
 //Checks to see if an entered email has already been used
 function emailExists(email) {
-    return $.ajax("${userInfoControllerRoot}/EmailExists", {
+    return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
         method: "POST",
         contentType: "application/JSON; charset=utf-8",
         data: JSON.stringify(email)

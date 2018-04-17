@@ -3,8 +3,6 @@ require('../assets/background-image.scss');
 
 const utility = require('../utility.js');
 
-//const accountDashboardAPIURL = "/api/account";
-
 //api url constants
 const userInfoControllerRoot = "/api/userinfo";
 const paymentControllerRoot = "/api/payment";
@@ -419,7 +417,7 @@ ko.components.register('account-dashboard-component', {
 
 //Gets a user's info
 function getUserInfo() {
-    return $.ajax("${userInfoControllerRoot}/GetUserInfo", {
+    return $.ajax(`${userInfoControllerRoot}/GetUserInfo`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -427,7 +425,7 @@ function getUserInfo() {
 
 //Gets a user's next transaction details
 function getNextTransactionForUser() {
-    return $.ajax("${paymentControllerRoot}/GetNextTransactionForUser", {
+    return $.ajax(`${paymentControllerRoot}/GetNextTransactionForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -435,7 +433,7 @@ function getNextTransactionForUser() {
 
 //Gets a user's transaction details
 function getAllTransactionsForUser() {
-    return $.ajax("${paymentControllerRoot}/GetAllTransactionsForUser", {
+    return $.ajax(`${paymentControllerRoot}/GetAllTransactionsForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -443,7 +441,7 @@ function getAllTransactionsForUser() {
 
 //GETs a user's payment spring information
 function getPaymentSpringInfo() {
-    return $.ajax("${billingControllerRoot}/GetPaymentInfoForUser", {
+    return $.ajax(`${billingControllerRoot}/GetPaymentInfoForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -451,7 +449,7 @@ function getPaymentSpringInfo() {
 
 //POSTs any changes to the user
 function updatePersonalInfo(userInfo) {
-    return $.ajax("${userInfoControllerRoot}/UpdatePersonalInfo", {
+    return $.ajax(`${userInfoControllerRoot}/UpdatePersonalInfo`, {
         method: "POST",
         data: userInfo,
         beforeSend: utility.attachJwtTokenToRequest
@@ -468,7 +466,7 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
         DeletedStudentIDs: deletedStudentIDs,
         AddedStudents: newStudents
     });
-    return $.ajax("${userInfoControllerRoot}/UpdateStudentInfo", {
+    return $.ajax(`${userInfoControllerRoot}/UpdateStudentInfo`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: jsonData,
@@ -478,7 +476,7 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
 
 //POSTs a user to be deleted
 function deleteUser(user) {
-    return $.ajax("${userInfoControllerRoot}/DeleteUser", {
+    return $.ajax(`${userInfoControllerRoot}/DeleteUser`, {
         method: "POST",
         data: user,
         beforeSend: utility.attachJwtTokenToRequest
@@ -487,7 +485,7 @@ function deleteUser(user) {
 
 //POSTs any changes to the credit card info
 function updatePaymentCardInfo(paymentCardInfo) {
-    return $.ajax("${billingControllerRoot}/UpdatePaymentCardInfo", {
+    return $.ajax(`${billingControllerRoot}/UpdatePaymentCardInfo`, {
         method: "POST",
         data: paymentCardInfo,
         beforeSend: utility.attachJwtTokenToRequest
@@ -496,7 +494,7 @@ function updatePaymentCardInfo(paymentCardInfo) {
 
 //POSTs any changes to the user's billing address
 function updatePaymentBillingInfo(paymentBillingInfo) {
-    return $.ajax("${billingControllerRoot}/UpdatePaymentBillingInfo", {
+    return $.ajax(`${billingControllerRoot}/UpdatePaymentBillingInfo`, {
         method: "POST",
         data: paymentBillingInfo,
         beforeSend: utility.attachJwtTokenToRequest
@@ -504,7 +502,7 @@ function updatePaymentBillingInfo(paymentBillingInfo) {
 }
 
 function emailExists(email) {
-    return $.ajax("${userInfoControllerRoot}/EmailExists", {
+    return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
         method: "POST",
         contentType: "application/JSON; charset=utf-8",
         data: JSON.stringify(email)

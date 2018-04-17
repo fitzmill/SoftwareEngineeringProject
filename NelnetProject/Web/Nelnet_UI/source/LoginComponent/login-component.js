@@ -2,7 +2,6 @@
 require('../assets/background-image.scss');
 
 const loginAPIURL = "/api/login";
-const accountAPIURL = "/api/account";
 
 ko.components.register('login-component', {
     viewModel: function (params) {
