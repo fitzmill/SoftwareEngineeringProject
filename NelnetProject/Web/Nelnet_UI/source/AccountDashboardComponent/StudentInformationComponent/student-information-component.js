@@ -2,7 +2,10 @@
 
 const utility = require('../../utility.js');
 
-const accountDashboardAPIURL = "/api/account";
+//api url constants
+const userInfoControllerRoot = "/api/userinfo";
+const paymentControllerRoot = "/api/payment";
+const billingControllerRoot = "/api/billing";
 
 var localStudents = undefined;
 

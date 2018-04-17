@@ -26,49 +26,57 @@ ko.components.register('personal-information-component', {
 
         //Changes the user info in database and ui to what the user entered.
         vm.updatePersonalInfo = function (data, event) {
-            if ($("#edit-personal-form").valid()) {
-
-                //disable save and cancel buttons
-                $("#btn-save-edit-personal").prop("disabled", true);
-                $("#btn-cancel-edit-personal").prop("disabled", true);
-
-                //Check if email already exists in database
-                emailExists(vm.Email()).done(function (data) {
-                    emailInUse = data;
-                    if (emailInUse && vm.Email() !== personalInfo().Email) {
-                        vm.personalInputErrorMessage("Email is already used by another user");
-                        $("#edit-personal-input-error").show();
-                    } else {
-                        let changedUserInfo = personalInfo();
-                        changedUserInfo.FirstName = vm.UserFirstName();
-                        changedUserInfo.LastName = vm.UserLastName();
-                        changedUserInfo.Email = vm.Email();
-
-                        updatePersonalInfo(changedUserInfo).done(function (newToken) {
-                            //update user in local storage in the case of page reload
-                            window.sessionStorage.setItem("Jwt", newToken);
-                            personalInfo(changedUserInfo);
-                            params.stopEditing(data, event);
-                        }).fail(function (jqXHR) {
-                            if (jqXHR.status !== 401) {
-                                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                                window.alert("Could not save information: ".concat(errorMessage));
-                            }
-                        }).always(function () {
-                            //re-enable buttons
-                            $("#btn-save-edit-personal").removeAttr("disabled");
-                            $("#btn-cancel-edit-personal").removeAttr("disabled");
-                        });
-                    }
-                }).fail(function (jqXHR) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Couldn't check if email has been used: ".concat(errorMessage));
-
-                    //re-enable buttons if fail
-                    $("#btn-save-edit-personal").removeAttr("disabled");
-                    $("#btn-cancel-edit-personal").removeAttr("disabled");
-                });
+            let validator = $("#edit-personal-form").validate();
+            if (accountDashboardVM.Email() == user.Email) {
+                validator.resetForm();
+                if ($("#edit-personal-form").valid()) {
+                    vm.updateUserValidated(data, event);
+                }
+            } else {
+                validator.resetForm();
+                if ($("#edit-personal-form").valid()) {
+                    emailExists(vm.Email()).done(function (data) {
+                        if (data) {
+                            validator.showErrors({
+                                dashboardEmail: "Email already exists"
+                            });
+                        } else {
+                            vm.updateUserValidated(data, event);
+                        }
+                    }).fail(function (jqXHR) {
+                        if (jqXHR.status !== 401) {
+                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                            window.alert("Could not save information: ".concat(errorMessage));
+                        }
+                    });
+                }
             }
+        };
+
+        vm.updateUserValidated = function (data, event) {
+            //disable save and cancel buttons
+            $("#btn-save-edit-personal").attr("disabled", "disabled");
+            $("#btn-cancel-edit-personal").attr("disabled", "disabled");
+            let changedUserInfo = user;
+            changedUserInfo.FirstName = vm.UserFirstName();
+            changedUserInfo.LastName = vm.UserLastName();
+            changedUserInfo.Email = vm.Email();
+
+            updatePersonalInfo(changedUserInfo).done(function (newToken) {
+                //update user in local storage in the case of page reload
+                window.sessionStorage.setItem("Jwt", newToken);
+                user = changedUserInfo;
+                accountDashboardVM.stopEditing(data, event);
+            }).fail(function (jqXHR) {
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not save information: ".concat(errorMessage));
+                }
+            }).always(function () {
+                //re-enable buttons
+                $("#btn-save-edit-personal").removeAttr("disabled");
+                $("#btn-cancel-edit-personal").removeAttr("disabled");
+            });
         };
     },
 

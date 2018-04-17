@@ -1,18 +1,16 @@
+USE [NelnetPaymentProcessing]
+GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
+-- Description:	<Delete the given student from the database>
 -- =============================================
 CREATE PROCEDURE DeleteStudentInfoByStudentID
 	@ID int
 AS
 BEGIN
-
-    -- Insert statements for procedure here
 	DELETE FROM [dbo].[Student]
 	WHERE StudentID=@ID
 END

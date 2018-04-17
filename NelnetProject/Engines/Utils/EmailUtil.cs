@@ -84,6 +84,7 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
+        //Generates email notification for updated account information
         public static EmailNotification AccountUpdatedNotification(string email, string firstName, string informationType)
         {
             if (String.IsNullOrEmpty(email))
@@ -102,6 +103,38 @@ namespace Engines.Utils
             string subject = "Alert from Tuition Assistant: Account Information Updated";
             string rawbody = string.Format("Your {0} information was updated on your account. If you did not make this change, please contact your administrator.", informationType);
             return GenerateEmail(email, subject, rawbody, firstName);
+        }
+
+        //Generates email notification for account creation
+        public static EmailNotification AccountCreatedNotification(User user, Transaction nextTransaction)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("User cannot be null.");
+            }
+            if (nextTransaction == null)
+            {
+                throw new ArgumentNullException("Next transaction cannot be null.");
+            }
+
+            string subject = "Welcome to Tuition Assistant!";
+            string rawbody = string.Format("Thank you creating an account with Tuition Assistant. We're glad you're here!<br><br>" +
+                "Your next automatic payment will be on {0:MMMM d yyyy}, for an amount of ${1:f2}.<br>" +
+                "We'll let you know five days before we charge your account.", nextTransaction.DateDue, nextTransaction.AmountCharged);
+            return GenerateEmail(user.Email, subject, rawbody, user.FirstName);
+        }
+
+        //Generates email notification for account deletion
+        public static EmailNotification AccountDeletedNotification(User user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("User cannot be null.");
+            }
+
+            string subject = "Alert from Tuition Assistant: Account Deleted";
+            string rawbody = "The account associated with your email address has been deleted.";
+            return GenerateEmail(user.Email, subject, rawbody, user.FirstName);
         }
 
         //Generates email notification with the default Tuition Assistant body template

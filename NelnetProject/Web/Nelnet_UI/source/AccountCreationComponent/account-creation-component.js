@@ -15,7 +15,8 @@ const DOT_ID_PREFIX = "#dot-page-";
 const RECTANGLE_ID_PREFIX = "#rectangle-";
 
 //api url constants
-const accountCreationAPIURL = "/api/account";
+const userInfoControllerRoot = "/api/userinfo";
+const paymentControllerRoot = "/api/payment";
 
 //user type
 const GENERAL_USER = 1;
@@ -229,15 +230,14 @@ ko.components.register('account-creation-component', {
                 vm.updateButtons();
                 vm.updateProgressBar();
             } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
-                let emailInUse = false;
+                let validator = $("#form-page-1").validate();
+                validator.resetForm();
                 if ($("#form-page-1").valid()) {
-                    $("#btn-cancel").attr("disabled", "disabled");
-                    $("#btn-next").attr("disabled", "disabled");
                     emailExists(vm.email()).done(function (data) {
-                        emailInUse = data;
-                        if (emailInUse) {
-                            vm.personalInputErrorMessage("Email is already in use");
-                            window.alert("Email is already in use");
+                        if (data) {
+                            validator.showErrors({
+                                accountCreationEmail: "Email already exists"
+                            });
                         } else {
                             $(PAGE_ID_PREFIX + vm.currentPage).hide();
                             vm.currentPage++;
@@ -246,11 +246,10 @@ ko.components.register('account-creation-component', {
                             vm.updateProgressBar();
                         }
                     }).fail(function (jqXHR) {
-                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                        window.alert("Couldn't check if email has been used: ".concat(errorMessage));
-                    }).always(function (jqXHR) {
-                        $("#btn-cancel").removeAttr("disabled");
-                        $("#btn-next").removeAttr("disabled");
+                        if (jqXHR.status !== 401) {
+                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                            window.alert("Could not save information: ".concat(errorMessage));
+                        }
                     });
                 }
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
@@ -328,7 +327,10 @@ ko.components.register('account-creation-component', {
                 window.sessionStorage.setItem("Jwt", data);
                 window.location = "#account-dashboard";
             }).fail(function (jqXHR) {
-                window.alert("Could not create account, please try again later.");
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not create account: ".concat(errorMessage));
+                }
             }).always(function () {
                 $("#btn-done").removeAttr("disabled");
                 $("#btn-back").removeAttr("disabled");
@@ -352,10 +354,10 @@ ko.components.register('account-creation-component', {
     template: require('./account-creation-component.html')
 });
 
-//calculate the user's payment info
+//calculate the user's periodic payment
 function calculatePeriodicPayment(user) {
     let userData = JSON.stringify(user);
-    return $.ajax(accountCreationAPIURL + "/CalculatePeriodicPayment", {
+    return $.ajax(`${paymentControllerRoot}/CalculatePeriodicPayment`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: userData
@@ -365,18 +367,18 @@ function calculatePeriodicPayment(user) {
 //create the user in the database
 function createUser(accountCreationInformation) {
     let accountCreationInformationData = JSON.stringify(accountCreationInformation);
-    return $.ajax(accountCreationAPIURL + "/InsertUser", {
+    return $.ajax(`${userInfoControllerRoot}/InsertUser`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: accountCreationInformationData
     });
 }
 
-//Checks to see if an entered email has already been used
+//POSTs to see if an email is used in the database
 function emailExists(email) {
-    return $.ajax(accountCreationAPIURL + "/EmailExists", {
+    return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
         method: "POST",
-        contentType: "application/JSON; charset=utf-8",
+        contentType: "application/json; charset=utf-8",
         data: JSON.stringify(email)
     });
 }
