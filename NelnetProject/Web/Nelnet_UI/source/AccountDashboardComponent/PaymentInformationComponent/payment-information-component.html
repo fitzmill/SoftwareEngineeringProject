@@ -1,0 +1,30 @@
+﻿<div class="card card-account-information-section">
+    <div class="card-header">
+        <h3 class="header-information-section">Payment Information</h3>
+        <button id="btn-edit-payment" class="btn btn-primary btn-edit edit-payment-inactive" data-bind="click: $parent.startEditing">Edit</button>
+        <button id="btn-save-edit-payment" class="btn btn-success btn-edit edit-payment-active" data-bind="click: updatePaymentInfo">Save</button>
+        <button id="btn-cancel-edit-payment" class="btn btn-default btn-edit edit-payment-active" data-bind="click: function (data, event) { $parent.stopEditing(data, event); setUIPaymentInfo(); }">Cancel</button>
+    </div>
+
+    <div class="card-body">
+        <h5 data-bind="text: 'Payment Plan: ' + paymentPlan()"></h5>
+        <label>Next Payment Due: </label>
+        <label class="enMoney" data-bind="text: nextPaymentCost"></label>
+        <label data-bind="text: ' on ' + nextPaymentDate()"></label>
+    </div>
+
+    <div class="card-footer" style="background-color: white;">
+        <div id="payment-information" class="edit-payment-inactive">
+            <h5 data-bind="text: 'Card Ending in: ' + cardNumber()"></h5>
+            <label data-bind="text: 'Exp: ' + expirationMonth() + '/' + expirationYear()"></label>
+        </div>
+
+        <div id="edit-payment-input" class="edit-payment-active">
+            <form id="edit-payment-form">
+                <input name="dashboard-card-number" class="input-information creditcard" placeholder="Credit Card Number" data-bind="value: cardNumber" style="display: block;" required />
+                <select name="dashboard-card-expmonth" class="select-inline-info" data-bind="options: $root.dropdownOptions.Months, value: expirationMonth, optionsCaption: 'MM'" required />
+                <select name="dashboard-card-expyear" class="select-inline-info" data-bind="options: $root.dropdownOptions.Years, value: expirationYear, optionsCaption: 'YYYY'" required />
+            </form>
+        </div>
+    </div>
+</div>
