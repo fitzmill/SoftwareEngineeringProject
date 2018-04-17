@@ -113,6 +113,8 @@ namespace Web.Controllers
             }
 
             setUserInfoEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
+            notificationEngine.SendAccountDeletionNotification(user);
+
             return Ok();
         }
 
@@ -144,7 +146,7 @@ namespace Web.Controllers
 
             string customerID = setUserInfoEngine.InsertPaymentInfo(paymentInfo);
 
-            //check if payment info is valid, if not return error
+            //check if payment info is valid, if not return bad request
             if(customerID == null)
             {
                 return BadRequest("Payment information is invalid.");
@@ -166,6 +168,7 @@ namespace Web.Controllers
             
             setUserInfoEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
+            notificationEngine.SendAccountCreationNotification(user, paymentEngine.CalculateNextPaymentForUser(user.UserID, DateTime.Today));
 
             var token = JwtManager.GenerateToken(user);
 

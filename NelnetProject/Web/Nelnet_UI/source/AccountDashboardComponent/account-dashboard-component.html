@@ -112,7 +112,7 @@
                     <h5 class="student-info edit-student-inactive" data-bind="text: FirstName() + ' ' + LastName()" style="margin-top: 20px"></h5>
                     <h5 class="student-info edit-student-inactive" data-bind="text: Grade() === undefined ? undefined : $root.dropdownOptions.Grades.find((obj) => obj.num == Grade()).text"></h5>
 
-                    <button id="btn-delete-student" class="btn btn-danger edit-student-active" data-bind="click: function(student) { $parent.openConfirmModal(student, 'You are about to delete a student, are you sure?', $parent.deleteStudent) }">Delete Student</button>
+                    <button class="btn btn-danger btn-delete-student edit-student-active" data-bind="click: function(student) { $parent.openConfirmModal(student, 'You are about to delete a student, are you sure?', $parent.deleteStudent) }">Delete Student</button>
 
                     <div class="student-info edit-student-active">
                         <input class="input-information no-code-chars" placeholder="Student First Name" data-bind="value: FirstName, attr: {name: 'FirstName' + $index()}" required />

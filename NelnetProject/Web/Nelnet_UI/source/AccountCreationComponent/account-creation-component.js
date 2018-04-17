@@ -326,7 +326,10 @@ ko.components.register('account-creation-component', {
                 window.sessionStorage.setItem("Jwt", data);
                 window.location = "#account-dashboard";
             }).fail(function (jqXHR) {
-                window.alert("Could not create account, please try again later.");
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not create account: ".concat(errorMessage));
+                }
             }).always(function () {
                 $("#btn-done").removeAttr("disabled");
                 $("#btn-back").removeAttr("disabled");
