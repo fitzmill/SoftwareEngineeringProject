@@ -166,6 +166,7 @@ namespace Web.Controllers
             
             setUserInfoEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
+            notificationEngine.SendAccountCreationNotification(user, paymentEngine.CalculateNextPaymentForUser(user.UserID, DateTime.Today));
 
             var token = JwtManager.GenerateToken(user);
 

@@ -19,8 +19,16 @@ namespace Core.Interfaces
         /// <summary>
         /// Generates and sends a notification to a user telling them the information type has been changed on their account.
         /// </summary>
-        /// <param name="user"></param>
-        /// <param name="informationType"></param>
+        /// <param name="user">the user</param>
+        /// <param name="informationType">the type of info that was updated</param>
         void SendAccountUpdateNotification(string email, string firstName, string informationType);
+
+        /// <summary>
+        /// Generates and sends a notification to a user thanking them for creating an account, and tells them when their
+        /// next payment will be.
+        /// </summary>
+        /// <param name="user">the user</param>
+        /// <param name="nextTransaction">the date and amount of the next transaction</param>
+        void SendAccountCreationNotification(User user, Transaction nextTransaction);
     }
 }
