@@ -60,8 +60,13 @@ namespace Engines
             emailAccessor.SendEmail(emailNotification);
         }
 
-        public void SendAccountCreationNotification(User user, Transaction nextTransaction)
+        public void SendAccountCreationNotification(User user, DateTime today)
         {
+            Transaction nextTransaction = new Transaction()
+            {
+                AmountCharged = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION),
+                DateDue = TuitionUtil.NextPaymentDueDate(user.Plan, today)
+            };
             EmailNotification email = EmailUtil.AccountCreatedNotification(user, nextTransaction);
             emailAccessor.SendEmail(email);
         }
@@ -71,5 +76,6 @@ namespace Engines
             EmailNotification email = EmailUtil.AccountDeletedNotification(user);
             emailAccessor.SendEmail(email);
         }
+
     }
 }

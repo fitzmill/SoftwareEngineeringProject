@@ -162,7 +162,7 @@ namespace NelnetProject.Tests.Engines
                 }
             };
             
-            notificationEngine.SendAccountCreationNotification(user, nextTransaction);
+            notificationEngine.SendAccountCreationNotification(user, new DateTime(2018, 7, 14)); //todo
 
             CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
         }

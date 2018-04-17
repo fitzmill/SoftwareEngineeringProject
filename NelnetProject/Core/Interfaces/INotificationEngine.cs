@@ -28,8 +28,8 @@ namespace Core.Interfaces
         /// next payment will be.
         /// </summary>
         /// <param name="user">the user</param>
-        /// <param name="nextTransaction">the date and amount of the next transaction</param>
-        void SendAccountCreationNotification(User user, Transaction nextTransaction);
+        /// <param name="today">today's date</param>
+        void SendAccountCreationNotification(User user, DateTime today);
 
         /// <summary>
         /// Generates and sends a notification to a user when their account is deleted.
