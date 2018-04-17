@@ -1,10 +1,6 @@
 ﻿using Core.DTOs;
 using Core.Interfaces;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Security.Claims;
 using System.Web.Http;
 using Web.Filters;
@@ -14,6 +10,8 @@ namespace Web.Controllers
     /// <summary>
     /// Controller for getting/setting billing information with PaymentSpring.
     /// </summary>
+    [RoutePrefix("api/billing")]
+    [SqlRowNotAffectedFilter]
     public class BillingController : ApiController
     {
         IGetUserInfoEngine _getUserInfoEngine;
