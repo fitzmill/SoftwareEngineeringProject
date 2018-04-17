@@ -229,15 +229,14 @@ ko.components.register('account-creation-component', {
                 vm.updateButtons();
                 vm.updateProgressBar();
             } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
-                let emailInUse = false;
+                let validator = $("#form-page-1").validate();
+                validator.resetForm();
                 if ($("#form-page-1").valid()) {
-                    $("#btn-cancel").attr("disabled", "disabled");
-                    $("#btn-next").attr("disabled", "disabled");
                     emailExists(vm.email()).done(function (data) {
-                        emailInUse = data;
-                        if (emailInUse) {
-                            vm.personalInputErrorMessage("Email is already in use");
-                            window.alert("Email is already in use");
+                        if (data) {
+                            validator.showErrors({
+                                accountCreationEmail: "Email already exists"
+                            });
                         } else {
                             $(PAGE_ID_PREFIX + vm.currentPage).hide();
                             vm.currentPage++;
@@ -246,11 +245,10 @@ ko.components.register('account-creation-component', {
                             vm.updateProgressBar();
                         }
                     }).fail(function (jqXHR) {
-                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                        window.alert("Couldn't check if email has been used: ".concat(errorMessage));
-                    }).always(function (jqXHR) {
-                        $("#btn-cancel").removeAttr("disabled");
-                        $("#btn-next").removeAttr("disabled");
+                        if (jqXHR.status !== 401) {
+                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                            window.alert("Could not save information: ".concat(errorMessage));
+                        }
                     });
                 }
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
@@ -375,11 +373,11 @@ function createUser(accountCreationInformation) {
     });
 }
 
-//Checks to see if an entered email has already been used
+//POSTs to see if an email is used in the database
 function emailExists(email) {
-    return $.ajax(accountCreationAPIURL + "/EmailExists", {
+    return $.ajax(accountCreationAPIURL + '/EmailExists', {
         method: "POST",
-        contentType: "application/JSON; charset=utf-8",
+        contentType: "application/json; charset=utf-8",
         data: JSON.stringify(email)
     });
 }
