@@ -166,5 +166,31 @@ namespace NelnetProject.Tests.Engines
 
             CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
         }
+
+        [TestMethod]
+        public void TestAccountDeletedNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+
+            var expected = new List<EmailNotification>()
+            {
+                new EmailNotification()
+                {
+                    To = user.Email,
+                    Subject = "Alert from Tuition Assistant: Account Deleted",
+                    Body = "Hi Joe,<br><br>The account associated with your email address has been deleted.<br>" +
+                    "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+                }
+            };
+
+            notificationEngine.SendAccountDeletionNotification(user);
+
+            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+        }
+
     }
 }

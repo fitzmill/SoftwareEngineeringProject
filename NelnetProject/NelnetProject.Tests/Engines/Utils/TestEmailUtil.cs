@@ -225,5 +225,34 @@ namespace NelnetProject.Tests.Engines.Utils
             EmailUtil.AccountCreatedNotification(user, null);
         }
 
+        [TestMethod]
+        public void TestAccountDeletedNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+
+            var expected = new EmailNotification()
+            {
+                To = user.Email,
+                Subject = "Alert from Tuition Assistant: Account Deleted",
+                Body = "Hi Joe,<br><br>The account associated with your email address has been deleted.<br>" +
+                "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+            };
+
+            var result = EmailUtil.AccountDeletedNotification(user);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "User cannot be null")]
+        public void TestAccountDeletedNotificationNullUser()
+        {
+            EmailUtil.AccountDeletedNotification(null);
+        }
+
     }
 }
