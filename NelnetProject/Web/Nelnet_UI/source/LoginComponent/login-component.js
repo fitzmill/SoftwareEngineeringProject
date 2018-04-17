@@ -49,7 +49,7 @@ ko.components.register('login-component', {
 });
 
 function validateLoginInfo(email, password) {
-    return $.ajax(loginAPIURL + "/ValidateLoginInfo", {
+    return $.ajax(`${loginAPIURL}/ValidateLoginInfo`, {
         method: "GET",
         beforeSend: function (jqXHR) {
             jqXHR.setRequestHeader("Authorization", "Basic " + btoa(email + ':' + password));

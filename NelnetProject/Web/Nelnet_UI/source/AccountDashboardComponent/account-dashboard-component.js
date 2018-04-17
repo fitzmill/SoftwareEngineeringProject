@@ -360,8 +360,8 @@ ko.components.register('account-dashboard-component', {
 
             let informationSection = senderElementID.replace("btn-", "");
 
-            $("." + informationSection + "-active").show();
-            $("." + informationSection + "-inactive").hide();
+            $(`.${informationSection}-active`).show();
+            $(`.${informationSection}-inactive`).hide();
         };
 
         //hides save and cancel buttons along with text boxes and shows labels and edit button
@@ -378,11 +378,11 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.setUser();
             accountDashboardVM.setUIPaymentSpringInfo();
 
-            $("." + informationSection + "-active").hide();
-            $("." + informationSection + "-inactive").show();
+            $(`.${informationSection}-active`).hide();
+            $(`.${informationSection}-inactive`).show();
 
             //hide error message if it's shown
-            $("#" + informationSection + "-input-error").hide();
+            $(`#${informationSection}-input-error`).hide();
         };
 
         accountDashboardVM.openConfirmModal = function (data, message, confirmAction) {
