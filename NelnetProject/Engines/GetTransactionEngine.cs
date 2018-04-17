@@ -39,7 +39,7 @@ namespace Engines
         {
             if (startTime > endTime)
             {
-                throw new ReportException("Start date is later than end date.");
+                throw new ArgumentException("Start date is later than end date.");
             }
             return getTransactionAccessor.GetTransactionsForDateRange(startTime, endTime);
         }
