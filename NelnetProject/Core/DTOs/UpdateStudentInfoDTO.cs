@@ -31,28 +31,5 @@ namespace Core.DTOs
         /// </summary>
         [Required]
         public List<Student> AddedStudents { get; set; }
-
-        /// <summary>
-        /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            var dTO = obj as UpdateStudentInfoDTO;
-            return dTO != null &&
-                   UserID == dTO.UserID &&
-                   EqualityComparer<List<Student>>.Default.Equals(UpdatedStudents, dTO.UpdatedStudents) &&
-                   EqualityComparer<List<int>>.Default.Equals(DeletedStudentIDs, dTO.DeletedStudentIDs) &&
-                   EqualityComparer<List<Student>>.Default.Equals(AddedStudents, dTO.AddedStudents);
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = 553243157;
-            hashCode = hashCode * -1521134295 + UserID.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<List<Student>>.Default.GetHashCode(UpdatedStudents);
-            hashCode = hashCode * -1521134295 + EqualityComparer<List<int>>.Default.GetHashCode(DeletedStudentIDs);
-            hashCode = hashCode * -1521134295 + EqualityComparer<List<Student>>.Default.GetHashCode(AddedStudents);
-            return hashCode;
-        }
     }
 }
