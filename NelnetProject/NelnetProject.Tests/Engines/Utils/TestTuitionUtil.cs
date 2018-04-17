@@ -66,7 +66,7 @@ namespace NelnetProject.Tests.Engines.Utils
         {
             User user = BuildTestUser(PaymentPlan.MONTHLY);
             double amountDue = TuitionUtil.GenerateAmountDue(user, 2);
-            Assert.AreEqual(1375.00, amountDue);
+            Assert.AreEqual(Math.Round(1375 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION), amountDue);
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace NelnetProject.Tests.Engines.Utils
         {
             User user = BuildTestUser(PaymentPlan.SEMESTERLY);
             double amountDue = TuitionUtil.GenerateAmountDue(user, 2);
-            Assert.AreEqual(6875.00, amountDue);
+            Assert.AreEqual(Math.Round(6875 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION), amountDue);
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace NelnetProject.Tests.Engines.Utils
         {
             User user = BuildTestUser(PaymentPlan.YEARLY);
             double amountDue = TuitionUtil.GenerateAmountDue(user, 2);
-            Assert.AreEqual(13750, amountDue);
+            Assert.AreEqual(Math.Round(13750 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION), amountDue);
         }
 
         [TestMethod]

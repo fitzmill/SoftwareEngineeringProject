@@ -14,7 +14,8 @@ namespace Engines.Utils
     {
         public static readonly int OVERDUE_RETRY_PERIOD = 7;
         public static readonly int DUE_DAY = 5;
-        public static readonly double LATE_FEE = 25 * 1.03;
+        public static readonly double PROCESSING_FEE = 1.03;
+        public static readonly double LATE_FEE = 25 * PROCESSING_FEE;
         public static readonly int DEFAULT_PRECISION = 2;
 
         private static Dictionary<int, int> rates = new Dictionary<int, int>()
@@ -92,7 +93,7 @@ namespace Engines.Utils
                 yearlyAmount += rates[grade];
             }
 
-            double periodAmount = yearlyAmount / monthsDue[user.Plan].Count();
+            double periodAmount = (yearlyAmount / monthsDue[user.Plan].Count()) * PROCESSING_FEE;
             double amountDue = Math.Round(periodAmount, precision);
 
             //add on late fee if the last transaction
