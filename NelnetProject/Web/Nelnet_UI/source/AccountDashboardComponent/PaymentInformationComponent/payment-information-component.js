@@ -2,7 +2,7 @@
 
 var utility = require('../../utility.js');
 
-const accountDashboardAPIURL = "/api/account";
+const billingControllerRoot = "/api/billing";
 
 var paymentInfo = undefined;
 
@@ -78,7 +78,7 @@ ko.components.register('payment-information-component', {
 
 //POSTs any changes to the credit card info
 function updatePaymentCardInfo(paymentCardInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentCardInfo", {
+    return $.ajax(`${billingControllerRoot}/UpdatePaymentCardInfo`, {
         method: "POST",
         data: paymentCardInfo,
         beforeSend: utility.attachJwtTokenToRequest

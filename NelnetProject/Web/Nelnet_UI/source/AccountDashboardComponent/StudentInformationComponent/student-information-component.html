@@ -14,7 +14,7 @@
 
                 <button class="btn btn-danger btn-delete-student edit-student-active" data-bind="click: function(student) { $parents[1].openConfirmModal(student, 'You are about to delete a student, are you sure?', $parent.deleteStudent) }">Delete Student</button>
 
-                <div class="student-info edit-student-active">
+                <div class="student-info edit-student-active" style="display: none">
                     <input class="input-information no-code-chars" placeholder="Student First Name" data-bind="value: firstName, attr: {name: 'FirstName' + $index()}" required />
                     <input class="input-information no-code-chars" placeholder="Student Last Name" data-bind="value: lastName, attr: {name: 'LastName' + $index()}" required />
                 </div>

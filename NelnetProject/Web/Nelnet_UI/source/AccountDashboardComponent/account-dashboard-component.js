@@ -3,7 +3,10 @@ require('../assets/background-image.scss');
 
 const utility = require('../utility.js');
 
-const accountDashboardAPIURL = "/api/account";
+//api url constants
+const userInfoControllerRoot = "/api/userinfo";
+const paymentControllerRoot = "/api/payment";
+const billingControllerRoot = "/api/billing";
 
 require('./PersonalInformationComponent/personal-information-component.js');
 require('./PaymentInformationComponent/payment-information-component.js');
@@ -121,8 +124,8 @@ ko.components.register('account-dashboard-component', {
 
             let informationSection = senderElementID.replace("btn-", "");
 
-            $("." + informationSection + "-active").show();
-            $("." + informationSection + "-inactive").hide();
+            $(`.${informationSection}-active`).show();
+            $(`.${informationSection}-inactive`).hide();
         };
 
         //hides save and cancel buttons along with text boxes and shows labels and edit button
@@ -136,8 +139,8 @@ ko.components.register('account-dashboard-component', {
                 informationSection = senderElementID.replace("btn-save-", "");
             }
 
-            $("." + informationSection + "-active").hide();
-            $("." + informationSection + "-inactive").show();
+            $(`.${informationSection}-active`).hide();
+            $(`.${informationSection}-inactive`).show();
 
             //hide error message if it's shown
             $("#" + informationSection + "-input-error").hide();
@@ -173,7 +176,7 @@ ko.components.register('account-dashboard-component', {
 
 //Gets a user's info
 function getUserInfo() {
-    return $.ajax(accountDashboardAPIURL + "/GetUserInfo", {
+    return $.ajax(`${userInfoControllerRoot}/GetUserInfo`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -181,7 +184,7 @@ function getUserInfo() {
 
 //Gets a user's next transaction details
 function getNextTransactionForUser() {
-    return $.ajax(accountDashboardAPIURL + "/GetNextTransactionForUser", {
+    return $.ajax(`${paymentControllerRoot}/GetNextPaymentForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -189,7 +192,7 @@ function getNextTransactionForUser() {
 
 //Gets a user's transaction details
 function getAllTransactionsForUser() {
-    return $.ajax(accountDashboardAPIURL + "/GetAllTransactionsForUser", {
+    return $.ajax(`${paymentControllerRoot}/GetAllTransactionsForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -197,7 +200,7 @@ function getAllTransactionsForUser() {
 
 //GETs a user's payment spring information
 function getPaymentSpringInfo() {
-    return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser", {
+    return $.ajax(`${billingControllerRoot}/GetPaymentInfoForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -205,7 +208,7 @@ function getPaymentSpringInfo() {
 
 //POSTs a user to be deleted
 function deleteUser(user) {
-    return $.ajax(accountDashboardAPIURL + "/DeleteUser", {
+    return $.ajax(`${userInfoControllerRoot}/DeleteUser`, {
         method: "POST",
         data: user,
         beforeSend: utility.attachJwtTokenToRequest

@@ -4,8 +4,6 @@ const utility = require('../../utility.js');
 
 //api url constants
 const userInfoControllerRoot = "/api/userinfo";
-const paymentControllerRoot = "/api/payment";
-const billingControllerRoot = "/api/billing";
 
 var localStudents = undefined;
 
@@ -110,7 +108,7 @@ function updateStudentInfo(updatedStudents, deletedStudentIDs, newStudents) {
         DeletedStudentIDs: deletedStudentIDs,
         AddedStudents: newStudents
     });
-    return $.ajax(accountDashboardAPIURL + "/UpdateStudentInfo", {
+    return $.ajax(`${userInfoControllerRoot}/UpdateStudentInfo`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: jsonData,

@@ -2,7 +2,8 @@
 
 const utility = require('../../utility.js');
 
-const accountDashboardAPIURL = "/api/account";
+//api url constants
+const userInfoControllerRoot = "/api/userinfo";
 
 var personalInfo = undefined;
 
@@ -27,13 +28,11 @@ ko.components.register('personal-information-component', {
         //Changes the user info in database and ui to what the user entered.
         vm.updatePersonalInfo = function (data, event) {
             let validator = $("#edit-personal-form").validate();
-            if (accountDashboardVM.Email() == user.Email) {
-                validator.resetForm();
+            if (vm.Email() === personalInfo.Email) {
                 if ($("#edit-personal-form").valid()) {
                     vm.updateUserValidated(data, event);
                 }
             } else {
-                validator.resetForm();
                 if ($("#edit-personal-form").valid()) {
                     emailExists(vm.Email()).done(function (data) {
                         if (data) {
@@ -84,7 +83,7 @@ ko.components.register('personal-information-component', {
 });
 
 function emailExists(email) {
-    return $.ajax(accountDashboardAPIURL + "/EmailExists", {
+    return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
         method: "POST",
         contentType: "application/JSON; charset=utf-8",
         data: JSON.stringify(email)
@@ -93,7 +92,7 @@ function emailExists(email) {
 
 //POSTs any changes to the user
 function updatePersonalInfo(userInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePersonalInfo", {
+    return $.ajax(`${userInfoControllerRoot}/UpdatePersonalInfo`, {
         method: "POST",
         data: userInfo,
         beforeSend: utility.attachJwtTokenToRequest
