@@ -20,7 +20,8 @@ If you don't already have it, download SQL Server Management Studio from
 This will allow you to create the database and insert dummy data and stored
 procedures.
 
-Once SSMS is installed, open and run the script __ClearAllDataAndInsertDummyData.sql__
+Once SSMS is installed, create a local SQL database named ***NelnetPaymentProcessing***.
+Then, open and run the script __ClearAllDataAndInsertDummyData.sql__
 in the __DatabaseScripts__ folder. This will create the database and insert
 the dummy data to be used while testing the project.
 
