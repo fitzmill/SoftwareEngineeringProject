@@ -89,5 +89,50 @@ namespace NelnetProject.Tests.Engines
 
             CollectionAssert.AreEqual(expectedEmails, actualEmails);
         }
+
+        [TestMethod]
+        public void TestSendAccountUpdateNotification()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            var expected = new EmailNotification()
+            {
+                To = email,
+                Subject = "Alert from Tuition Assistant: Account Information Updated",
+                Body = "Hi Sean,<br><br>Your personal information was updated on your account. If you did not make this change, " +
+                "please contact your administrator.<br>Please contact us if you have any questions." +
+                "<br><br><br>Powered by Tuition Assistant<br>"
+            };
+
+            notificationEngine.SendAccountUpdateNotification(email, firstName, "personal");
+            var result = mockEmailAccessor.emails.Find(x => x.To == email);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Email cannot be empty")]
+        public void TestSendAccountUpdateNotificationNullTo()
+        {
+            var firstName = "Sean";
+            notificationEngine.SendAccountUpdateNotification(null, firstName, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "First name cannot be empty")]
+        public void TestSendAccountUpdatedNotificationNullFirstName()
+        {
+            var email = "hi@me.com";
+            notificationEngine.SendAccountUpdateNotification(email, null, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Information type cannot be empty")]
+        public void TestSendAccountUpdatedNotificationNullInfoType()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            notificationEngine.SendAccountUpdateNotification(email, firstName, null);
+        }
     }
 }

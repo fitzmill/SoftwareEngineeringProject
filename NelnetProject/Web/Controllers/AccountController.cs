@@ -22,13 +22,19 @@ namespace Web.Controllers
         IGetTransactionEngine getTransactionEngine;
         ISetUserInfoEngine setUserInfoEngine;
         IPaymentEngine paymentEngine;
+        INotificationEngine notificationEngine;
 
-        public AccountController(IGetUserInfoEngine getUserInfoEngine, ISetUserInfoEngine setUserInfoEngine, IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine)
+        public AccountController(IGetUserInfoEngine getUserInfoEngine, 
+            ISetUserInfoEngine setUserInfoEngine, 
+            IGetTransactionEngine getTransactionEngine, 
+            IPaymentEngine paymentEngine,
+            INotificationEngine notificationEngine)
         {
             this.getUserInfoEngine = getUserInfoEngine;
             this.getTransactionEngine = getTransactionEngine;
             this.paymentEngine = paymentEngine;
             this.setUserInfoEngine = setUserInfoEngine;
+            this.notificationEngine = notificationEngine;
         }
 
         [HttpGet]
@@ -70,6 +76,9 @@ namespace Web.Controllers
             setUserInfoEngine.UpdatePersonalInfo(user);
 
             var newToken = JwtManager.GenerateToken(user);
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            notificationEngine.SendAccountUpdateNotification(user.Email, user.FirstName, "personal");
             return Ok(newToken);
         }
 
@@ -86,6 +95,10 @@ namespace Web.Controllers
             setUserInfoEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
             setUserInfoEngine.InsertStudentInfo(updatedInfo.UserID, updatedInfo.AddedStudents);
             setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
+
+            var user = (ClaimsIdentity)User.Identity;
+            notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                user.Name, "student");
             return Ok();
         }
 
@@ -183,6 +196,10 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
             setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
+
+            var user = (ClaimsIdentity)User.Identity;
+            notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                user.Name, "billing");
             return Ok();
         }
 
@@ -196,6 +213,10 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
             setUserInfoEngine.UpdatePaymentCardInfo(paymentCardDTO);
+
+            var user = (ClaimsIdentity)User.Identity;
+            notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                user.Name, "payment");
             return Ok();
         }
 

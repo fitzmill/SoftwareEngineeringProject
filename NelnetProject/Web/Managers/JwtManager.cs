@@ -28,6 +28,7 @@ namespace Web
             {
                 Subject = new ClaimsIdentity(new[]
                         {
+                            new Claim(ClaimTypes.Name, user.FirstName),
                             new Claim(ClaimTypes.NameIdentifier, user.UserID.ToString()),
                             new Claim(ClaimTypes.Email, user.Email),
                             new Claim(ClaimTypes.Role, user.UserType.ToString()),

@@ -139,9 +139,12 @@ ko.components.register('account-dashboard-component', {
         //Changes the user info in database and ui to what the user entered.
         accountDashboardVM.updateUser = function (data, event) {
             if ($("#edit-personal-form").valid()) {
+
                 //disable save and cancel buttons
                 $("#btn-save-edit-personal").attr("disabled", "disabled");
                 $("#btn-cancel-edit-personal").attr("disabled", "disabled");
+
+                //Check if email already exists in database
                 emailExists(accountDashboardVM.Email()).done(function (data) {
                     emailInUse = data;
                     if (emailInUse && accountDashboardVM.Email() !== user.Email) {
@@ -178,50 +181,47 @@ ko.components.register('account-dashboard-component', {
 
         //Changes student info in database and ui to what user entered
         accountDashboardVM.updateStudents = function (data, event) {
-            if (!checkValidStudents(accountDashboardVM.Students())) {
-                accountDashboardVM.studentInputErrorMessage("Invalid student information");
-                $("#edit-student-input-error").show();
-                return;
+            if ($("#edit-students-form").valid()) {
+
+                //disable save and edit buttons
+                $("#btn-save-edit-student").attr("disabled", "disabled");
+                $("#btn-cancel-edit-student").attr("disabled", "disabled");
+
+                //to return to normal data instead of observables
+                let inputStudents = accountDashboardVM.Students().map(student => {
+                    return {
+                        StudentID: student.StudentID,
+                        FirstName: student.FirstName(),
+                        LastName: student.LastName(),
+                        Grade: student.Grade()
+                    };
+                });
+
+                //new students will have an undefined StudentID
+                let newStudents = inputStudents.filter((s) => !s.StudentID);
+                //deleted students will be in the user object but not in inputStudents
+                let originalStudentIDs = user.Students.map((s) => s.StudentID);
+                let inputStudentIDs = inputStudents.map((s) => s.StudentID);
+
+                let deletedStudentIDs = originalStudentIDs.filter((id) => !inputStudentIDs.includes(id));
+                //filter out new students
+                let updatedStudents = inputStudents.filter((s) => s.StudentID);
+
+                updateStudentInfo(user.UserID, updatedStudents, deletedStudentIDs, newStudents).done(function () {
+                    //update user in local storage in the case of page reload
+                    user.Students = inputStudents;
+                    accountDashboardVM.stopEditing(data, event);
+                }).fail(function (jqXHR) {
+                    if (jqXHR.status !== 401) {
+                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                        window.alert("Could not save information: ".concat(errorMessage));
+                    }
+                }).always(function () {
+                    //re-enable buttons
+                    $("#btn-save-edit-student").removeAttr("disabled");
+                    $("#btn-cancel-edit-student").removeAttr("disabled");
+                });
             }
-
-            //disable save and edit buttons
-            $("#btn-save-edit-student").attr("disabled", "disabled");
-            $("#btn-cancel-edit-student").attr("disabled", "disabled");
-
-            //to return to normal data instead of observables
-            let inputStudents = accountDashboardVM.Students().map(student => {
-                return {
-                    StudentID: student.StudentID,
-                    FirstName: student.FirstName(),
-                    LastName: student.LastName(),
-                    Grade: student.Grade()
-                };
-            });
-            
-            //new students will have an undefined StudentID
-            let newStudents = inputStudents.filter((s) => !s.StudentID);
-            //deleted students will be in the user object but not in inputStudents
-            let originalStudentIDs = user.Students.map((s) => s.StudentID);
-            let inputStudentIDs = inputStudents.map((s) => s.StudentID);
-
-            let deletedStudentIDs = originalStudentIDs.filter((id) => !inputStudentIDs.includes(id));
-            //filter out new students
-            let updatedStudents = inputStudents.filter((s) => s.StudentID);
-
-            updateStudentInfo(user.UserID, updatedStudents, deletedStudentIDs, newStudents).done(function () {
-                //update user in local storage in the case of page reload
-                user.Students = inputStudents;
-                accountDashboardVM.stopEditing(data, event);
-            }).fail(function (jqXHR) {
-                if (jqXHR.status !== 401) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Could not save information: ".concat(errorMessage));
-                }
-            }).always(function () {
-                //re-enable buttons
-                $("#btn-save-edit-student").removeAttr("disabled");
-                $("#btn-cancel-edit-student").removeAttr("disabled");
-            });
         };
 
 
@@ -255,118 +255,81 @@ ko.components.register('account-dashboard-component', {
 
         //Changes the payment info in payment spring and ui to what the user entered.
         accountDashboardVM.updatePaymentInfo = function (data, event) {
-             if (!accountDashboardVM.CardNumber() || accountDashboardVM.CardNumber().toString().length < 15 || accountDashboardVM.CardNumber().toString().length > 19) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid card number");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.ExpirationYear() || accountDashboardVM.ExpirationYear() < 2018) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid card expiration year");
-                $("#edit-payment-input-error").show();
-                return;
-            } else if (!accountDashboardVM.ExpirationMonth() || accountDashboardVM.ExpirationMonth() < 1 || accountDashboardVM.ExpirationMonth() > 12) {
-                accountDashboardVM.paymentInputErrorMessage("Invalid card expiration month");
-                $("#edit-payment-input-error").show();
-                return;
-            }
+            if ($("#edit-payment-form").valid()) {
 
-            //disable cancel and save buttons while request loads
-            $("#btn-save-edit-payment").attr('disabled', 'disabled');
-            $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
+                 //disable cancel and save buttons while request loads
+                 $("#btn-save-edit-payment").attr('disabled', 'disabled');
+                 $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
 
-            let changedCardInfo = {
-                CustomerID: userPaymentInfo.CustomerID,
-                CardNumber: accountDashboardVM.CardNumber(),
-                ExpirationYear: accountDashboardVM.ExpirationYear(),
-                ExpirationMonth: accountDashboardVM.ExpirationMonth()
-            };
+                 let changedCardInfo = {
+                     CustomerID: userPaymentInfo.CustomerID,
+                     CardNumber: accountDashboardVM.CardNumber(),
+                     ExpirationYear: accountDashboardVM.ExpirationYear(),
+                     ExpirationMonth: accountDashboardVM.ExpirationMonth()
+                 };
 
-            updatePaymentCardInfo(changedCardInfo).done(function () {
-                //reset it to last few digits
-                userPaymentInfo.CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
-                userPaymentInfo.ExpirationYear = changedCardInfo.ExpirationYear;
-                userPaymentInfo.ExpirationMonth = changedCardInfo.ExpirationMonth;
+                 updatePaymentCardInfo(changedCardInfo).done(function () {
+                     //reset it to last few digits
+                     userPaymentInfo.CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
+                     userPaymentInfo.ExpirationYear = changedCardInfo.ExpirationYear;
+                     userPaymentInfo.ExpirationMonth = changedCardInfo.ExpirationMonth;
 
-                //UI will be updated here
-                accountDashboardVM.stopEditing(data, event);
-            }).fail(function (jqXHR) {
-                if (jqXHR.status !== 401) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Could not save information: ".concat(errorMessage));
-                }
-            }).always(function () {
-                //re-enable buttons
-                $("#btn-save-edit-payment").removeAttr('disabled');
-                $("#btn-cancel-edit-payment").removeAttr('disabled');
-            });
+                     //UI will be updated here
+                     accountDashboardVM.stopEditing(data, event);
+                 }).fail(function (jqXHR) {
+                     if (jqXHR.status !== 401) {
+                         changedPaymentInfo = undefined;
+                         let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                         window.alert("Could not save information: ".concat(errorMessage));
+                     }
+                 }).always(function () {
+                     //re-enable buttons
+                     $("#btn-save-edit-payment").removeAttr('disabled');
+                     $("#btn-cancel-edit-payment").removeAttr('disabled');
+                 });
+             }
         };
 
         accountDashboardVM.updateBillingInfo = function (data, event) {
-            if (!accountDashboardVM.CardFirstName() || !accountDashboardVM.CardFirstName().match(regexSemicolonCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid first name");
-                $("#edit-billing-input-error").show();
-                return;
-            } else if (!accountDashboardVM.CardLastName() || !accountDashboardVM.CardLastName().match(regexSemicolonCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid last name");
-                $("#edit-billing-input-error").show();
-                return;
-            } else if (!accountDashboardVM.StreetAddress1() || !accountDashboardVM.StreetAddress1().match(regexSemicolonCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid first street address");
-                $("#edit-billing-input-error").show();
-                return;
-            } else if (!accountDashboardVM.StreetAddress2().match(regexSemicolonCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid second street address");
-                $("#edit-billing-input-error").show();
-                return;
-            } else if (!accountDashboardVM.City() || !accountDashboardVM.City().match(regexSemicolonCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid city name");
-                $("#edit-billing-input-error").show();
-                return;
-            } else if (!accountDashboardVM.State() || !accountDashboardVM.State().match(regexLettersOnlyCheck) || accountDashboardVM.State().length !== 2) {
-                accountDashboardVM.billingInputErrorMessage("Invalid state abbreviation");
-                $("#edit-billing-input-error").show();
-                return;
-            } else if (!accountDashboardVM.Zip() || !accountDashboardVM.Zip().match(regexZipCheck)) {
-                accountDashboardVM.billingInputErrorMessage("Invalid zip code");
-                $("#edit-billing-input-error").show();
-                return;
+            if ($("#edit-billing-form").valid()) {
+
+                //disable cancel and save buttons while request loads
+                $("#btn-save-edit-billing").attr('disabled', 'disabled');
+                $("#btn-cancel-edit-billing").attr('disabled', 'disabled');
+
+                let changedBillingInfo = {
+                    CustomerID: userPaymentInfo.CustomerID,
+                    FirstName: accountDashboardVM.CardFirstName(),
+                    LastName: accountDashboardVM.CardLastName(),
+                    StreetAddress1: accountDashboardVM.StreetAddress1(),
+                    StreetAddress2: accountDashboardVM.StreetAddress2(),
+                    City: accountDashboardVM.City(),
+                    State: accountDashboardVM.State(),
+                    Zip: accountDashboardVM.Zip()
+                };
+
+                updatePaymentBillingInfo(changedBillingInfo).done(function () {
+                    userPaymentInfo.FirstName = changedBillingInfo.FirstName;
+                    userPaymentInfo.LastName = changedBillingInfo.LastName;
+                    userPaymentInfo.StreetAddress1 = changedBillingInfo.StreetAddress1;
+                    userPaymentInfo.StreetAddress2 = changedBillingInfo.StreetAddress2;
+                    userPaymentInfo.City = changedBillingInfo.City;
+                    userPaymentInfo.State = changedBillingInfo.State;
+                    userPaymentInfo.Zip = changedBillingInfo.Zip;
+
+                    //UI will be updated here
+                    accountDashboardVM.stopEditing(data, event);
+                }).fail(function (jqXHR) {
+                    if (jqXHR.status !== 401) {
+                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                        window.alert("Could not save information: ".concat(errorMessage));
+                    }
+                }).always(function () {
+                    //re-enable buttons
+                    $("#btn-save-edit-billing").removeAttr('disabled');
+                    $("#btn-cancel-edit-billing").removeAttr('disabled');
+                });
             }
-
-            //disable cancel and save buttons while request loads
-            $("#btn-save-edit-billing").attr('disabled', 'disabled');
-            $("#btn-cancel-edit-billing").attr('disabled', 'disabled');
-
-            let changedBillingInfo = {
-                CustomerID: userPaymentInfo.CustomerID,
-                FirstName: accountDashboardVM.CardFirstName(),
-                LastName: accountDashboardVM.CardLastName(),
-                StreetAddress1: accountDashboardVM.StreetAddress1(),
-                StreetAddress2: accountDashboardVM.StreetAddress2(),
-                City: accountDashboardVM.City(),
-                State: accountDashboardVM.State(),
-                Zip: accountDashboardVM.Zip()
-            };
-
-            updatePaymentBillingInfo(changedBillingInfo).done(function () {
-                userPaymentInfo.FirstName = changedBillingInfo.FirstName;
-                userPaymentInfo.LastName = changedBillingInfo.LastName;
-                userPaymentInfo.StreetAddress1 = changedBillingInfo.StreetAddress1;
-                userPaymentInfo.StreetAddress2 = changedBillingInfo.StreetAddress2;
-                userPaymentInfo.City = changedBillingInfo.City;
-                userPaymentInfo.State = changedBillingInfo.State;
-                userPaymentInfo.Zip = changedBillingInfo.Zip;
-
-                //UI will be updated here
-                accountDashboardVM.stopEditing(data, event);
-            }).fail(function (jqXHR) {
-                if (jqXHR.status !== 401) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Could not save information: ".concat(errorMessage));
-                }
-            }).always(function () {
-                //re-enable buttons
-                $("#btn-save-edit-billing").removeAttr('disabled');
-                $("#btn-cancel-edit-billing").removeAttr('disabled');
-            });
         }
 
         //Sets the ko variables to the saved payment spring information
@@ -537,19 +500,4 @@ function emailExists(email) {
         contentType: "application/JSON; charset=utf-8",
         data: JSON.stringify(email)
     });
-}
-
-//Checks that student entries are valid
-function checkValidStudents(students) {
-    let result = true;
-    students.forEach(function (student) {
-        if (!student.FirstName() || !student.FirstName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.LastName() || !student.LastName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (student.Grade() === undefined || student.Grade() < 0 || student.Grade() > 12) {
-            result = false;
-        }
-    });
-    return result;
 }
