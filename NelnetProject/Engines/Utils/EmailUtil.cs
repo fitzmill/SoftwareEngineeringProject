@@ -124,6 +124,19 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawbody, user.FirstName);
         }
 
+        //Generates email notification for account deletion
+        public static EmailNotification AccountDeletedNotification(User user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("User cannot be null.");
+            }
+
+            string subject = "Alert from Tuition Assistant: Account Deleted";
+            string rawbody = "The account associated with your email address has been deleted.";
+            return GenerateEmail(user.Email, subject, rawbody, user.FirstName);
+        }
+
         //Generates email notification with the default Tuition Assistant body template
         public static EmailNotification GenerateEmail(string to, string subject, string rawBody, string userFirstName)
         {

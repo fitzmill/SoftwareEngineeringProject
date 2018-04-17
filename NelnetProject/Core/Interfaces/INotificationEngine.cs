@@ -30,5 +30,11 @@ namespace Core.Interfaces
         /// <param name="user">the user</param>
         /// <param name="nextTransaction">the date and amount of the next transaction</param>
         void SendAccountCreationNotification(User user, Transaction nextTransaction);
+
+        /// <summary>
+        /// Generates and sends a notification to a user when their account is deleted.
+        /// </summary>
+        /// <param name="user">the user</param>
+        void SendAccountDeletionNotification(User user);
     }
 }

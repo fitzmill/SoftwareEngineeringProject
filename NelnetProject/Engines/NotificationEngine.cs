@@ -65,5 +65,11 @@ namespace Engines
             EmailNotification email = EmailUtil.AccountCreatedNotification(user, nextTransaction);
             emailAccessor.SendEmail(email);
         }
+
+        public void SendAccountDeletionNotification(User user)
+        {
+            EmailNotification email = EmailUtil.AccountDeletedNotification(user);
+            emailAccessor.SendEmail(email);
+        }
     }
 }

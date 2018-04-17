@@ -113,6 +113,8 @@ namespace Web.Controllers
             }
 
             setUserInfoEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
+            notificationEngine.SendAccountDeletionNotification(user);
+
             return Ok();
         }
 
