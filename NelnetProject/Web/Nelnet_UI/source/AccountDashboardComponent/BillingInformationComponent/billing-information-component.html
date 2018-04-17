@@ -1,0 +1,37 @@
+﻿<div class="card card-account-information-section">
+    <div class="card-header">
+        <h3 class="header-information-section">Billing Information</h3>
+        <button id="btn-edit-billing" class="btn btn-primary btn-edit edit-billing-inactive" data-bind="click: $parent.startEditing">Edit</button>
+        <button id="btn-save-edit-billing" class="btn btn-success btn-edit edit-billing-active" data-bind="click: updateBillingInfo">Save</button>
+        <button id="btn-cancel-edit-billing" class="btn btn-default btn-edit edit-billing-active" data-bind="click: function() { $parent.stopEditing; setUIBillingInfo(); }">Cancel</button>
+    </div>
+
+    <div class="card-body">
+        <h5 id="edit-billing-input-error" class="header-input-error" data-bind="text: billingInputErrorMessage" style="display: none;"></h5>
+
+        <div class="edit-billing-inactive">
+            <h5 data-bind="text: CardFirstName() + ' ' + CardLastName()"></h5>
+            <h5 data-bind="text: StreetAddress1"></h5>
+            <h5 data-bind="text: StreetAddress2"></h5>
+            <h5 data-bind="text: City() + ', ' + State() + ' ' + Zip()"></h5>
+        </div>
+
+        <div class="edit-billing-active">
+            <form id="edit-billing-form">
+                <div style="display: block;">
+                    <input name="dashboard-billing-firstname" class="input-information no-code-chars" placeholder="First Name" data-bind="value: CardFirstName" required />
+                    <input name="dashboard-billing-lastname" class="input-information no-code-chars" placeholder="Last Name" data-bind="value: CardLastName" required />
+                </div>
+
+                <input name="dashboard-billing-address1" class="input-street-address input-information no-code-chars" placeholder="Street Address 1" data-bind="value: StreetAddress1" required />
+                <input name="dashboard-billing-address2" class="input-street-address input-information no-code-chars" placeholder="Street Address 2" data-bind="value: StreetAddress2" required />
+
+                <div style="display: block; margin-bottom: 30px;">
+                    <input name="dashboard-billing-city" class="input-information no-code-chars" placeholder="City" data-bind="value: City" required />
+                    <select name="dashboard-billing-state" class="select-inline-info" data-bind="options: $parent.dropdownOptions.States, value: State, optionsCaption: 'State'" required />
+                    <input name="dashboard-billing-zip" class="input-information zipcodeUS" type="text" placeholder="Zip Code" data-bind="value: Zip" required />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

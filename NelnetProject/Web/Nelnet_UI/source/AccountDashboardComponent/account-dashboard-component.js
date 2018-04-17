@@ -32,13 +32,8 @@ ko.components.register('account-dashboard-component', {
     viewModel: function (params) {
         var accountDashboardVM = this;
 
-        accountDashboardVM.CardFirstName = ko.observable();
-        accountDashboardVM.CardLastName = ko.observable();
-        accountDashboardVM.StreetAddress1 = ko.observable();
-        accountDashboardVM.StreetAddress2 = ko.observable();
-        accountDashboardVM.City = ko.observable();
-        accountDashboardVM.State = ko.observable();
-        accountDashboardVM.Zip = ko.observable();
+        accountDashboardVM.billingInfo = ko.observable();
+
         accountDashboardVM.CardNumber = ko.observable();
         accountDashboardVM.ExpirationYear = ko.observable();
         accountDashboardVM.ExpirationMonth = ko.observable();
@@ -76,6 +71,8 @@ ko.components.register('account-dashboard-component', {
             //Get all needed information from database
             getPaymentSpringInfo().done(function (data) {
                 userPaymentInfo = data;
+                accountDashboardVM.billingInfo(data);
+                require('./BillingInformationComponent/billing-information-component.js');
                 //updates payment display info
                 accountDashboardVM.setUIPaymentSpringInfo();
             }).fail(function (jqXHR) {
@@ -290,57 +287,8 @@ ko.components.register('account-dashboard-component', {
              }
         };
 
-        accountDashboardVM.updateBillingInfo = function (data, event) {
-            if ($("#edit-billing-form").valid()) {
-
-                //disable cancel and save buttons while request loads
-                $("#btn-save-edit-billing").attr('disabled', 'disabled');
-                $("#btn-cancel-edit-billing").attr('disabled', 'disabled');
-
-                let changedBillingInfo = {
-                    CustomerID: userPaymentInfo.CustomerID,
-                    FirstName: accountDashboardVM.CardFirstName(),
-                    LastName: accountDashboardVM.CardLastName(),
-                    StreetAddress1: accountDashboardVM.StreetAddress1(),
-                    StreetAddress2: accountDashboardVM.StreetAddress2(),
-                    City: accountDashboardVM.City(),
-                    State: accountDashboardVM.State(),
-                    Zip: accountDashboardVM.Zip()
-                };
-
-                updatePaymentBillingInfo(changedBillingInfo).done(function () {
-                    userPaymentInfo.FirstName = changedBillingInfo.FirstName;
-                    userPaymentInfo.LastName = changedBillingInfo.LastName;
-                    userPaymentInfo.StreetAddress1 = changedBillingInfo.StreetAddress1;
-                    userPaymentInfo.StreetAddress2 = changedBillingInfo.StreetAddress2;
-                    userPaymentInfo.City = changedBillingInfo.City;
-                    userPaymentInfo.State = changedBillingInfo.State;
-                    userPaymentInfo.Zip = changedBillingInfo.Zip;
-
-                    //UI will be updated here
-                    accountDashboardVM.stopEditing(data, event);
-                }).fail(function (jqXHR) {
-                    if (jqXHR.status !== 401) {
-                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                        window.alert("Could not save information: ".concat(errorMessage));
-                    }
-                }).always(function () {
-                    //re-enable buttons
-                    $("#btn-save-edit-billing").removeAttr('disabled');
-                    $("#btn-cancel-edit-billing").removeAttr('disabled');
-                });
-            }
-        }
-
         //Sets the ko variables to the saved payment spring information
         accountDashboardVM.setUIPaymentSpringInfo = function () {
-            accountDashboardVM.CardFirstName(userPaymentInfo.FirstName);
-            accountDashboardVM.CardLastName(userPaymentInfo.LastName);
-            accountDashboardVM.StreetAddress1(userPaymentInfo.StreetAddress1);
-            accountDashboardVM.StreetAddress2(userPaymentInfo.StreetAddress2);
-            accountDashboardVM.City(userPaymentInfo.City);
-            accountDashboardVM.State(userPaymentInfo.State);
-            accountDashboardVM.Zip(userPaymentInfo.Zip);
             accountDashboardVM.CardNumber(userPaymentInfo.CardNumber);
             accountDashboardVM.ExpirationYear(userPaymentInfo.ExpirationYear);
             accountDashboardVM.ExpirationMonth(userPaymentInfo.ExpirationMonth);
@@ -481,15 +429,6 @@ function updatePaymentCardInfo(paymentCardInfo) {
     return $.ajax(accountDashboardAPIURL + "/UpdatePaymentCardInfo", {
         method: "POST",
         data: paymentCardInfo,
-        beforeSend: utility.attachJwtTokenToRequest
-    });
-}
-
-//POSTs any changes to the user's billing address
-function updatePaymentBillingInfo(paymentBillingInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentBillingInfo", {
-        method: "POST",
-        data: paymentBillingInfo,
         beforeSend: utility.attachJwtTokenToRequest
     });
 }
