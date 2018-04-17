@@ -1,4 +1,4 @@
-[![Build Status](https://tuitionassistant.visualstudio.com/_apis/public/build/definitions/df358588-f09c-47b3-bd42-80c57eb563c1/1/badge)](https://tuitionassistant.visualstudio.com/MyFirstProject/_build/index?definitionId=1)
+[![Build Status](https://tuitionassistant.visualstudio.com/_apis/public/build/definitions/df358588-f09c-47b3-bd42-80c57eb563c1/1/badge)](https://tuitionassistant.visualstudio.com/TuitionAssistant/_build/index?definitionId=1)
 
 
 # Spring2018CourseProjectNelnet
