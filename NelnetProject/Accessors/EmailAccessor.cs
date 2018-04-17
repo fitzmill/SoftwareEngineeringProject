@@ -36,15 +36,15 @@ namespace Accessors
         {
             if (string.IsNullOrEmpty(emailNotification.To))
             {
-                throw new EmailException("Could not send email: No addressee.");
+                throw new ArgumentNullException("'To' field cannot be empty");
             }
             if (string.IsNullOrEmpty(emailNotification.Subject))
             {
-                throw new EmailException("Could not send email: No subject line.");
+                throw new ArgumentNullException("'Subject' field cannot be empty");
             }
             if (string.IsNullOrEmpty(emailNotification.Body))
             {
-                throw new EmailException("Could not send email: No body.");
+                throw new ArgumentNullException("'Body' field cannot be empty");
             }
 
             MailMessage email = new MailMessage();
@@ -60,16 +60,8 @@ namespace Accessors
             client.Credentials = new System.Net.NetworkCredential(senderUsername, senderPassword);
             client.EnableSsl = true;
 
-            try
-            {
-                client.Send(email);
-                Debug.WriteLine("Sent email to " + email.To);
-
-            }
-            catch (SmtpException e)
-            {
-                throw new EmailException("Could not send email: SMTP error", e);
-            }
+            client.Send(email);
+            Debug.WriteLine("Sent email to " + email.To);
         }
     }
 }

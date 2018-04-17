@@ -22,7 +22,7 @@ namespace Engines
         {
             if (startDate > endDate)
             {
-                throw new ReportException("Start date is later than the end date.");
+                throw new ArgumentException("Start date is later than the end date.");
             }
 
             var report = new Report()

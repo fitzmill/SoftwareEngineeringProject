@@ -56,8 +56,6 @@
     <Compile Include="Enums\PaymentPlan.cs" />
     <Compile Include="Enums\ProcessState.cs" />
     <Compile Include="Enums\UserType.cs" />
-    <Compile Include="Exceptions\EmailException.cs" />
-    <Compile Include="Exceptions\ReportException.cs" />
     <Compile Include="Exceptions\SqlRowNotAffectedException.cs" />
     <Compile Include="Interfaces\IChargePaymentAccessor.cs" />
     <Compile Include="Interfaces\IEmailAccessor.cs" />

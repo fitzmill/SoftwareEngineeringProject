@@ -134,7 +134,7 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ReportException),
+        [ExpectedException(typeof(ArgumentException),
             "Start date is later than end date.")]
         public void TestGetTransactionsForOutOfOrderDateRange()
         {
