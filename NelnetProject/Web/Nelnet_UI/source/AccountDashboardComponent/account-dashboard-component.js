@@ -425,7 +425,7 @@ function getUserInfo() {
 
 //Gets a user's next transaction details
 function getNextTransactionForUser() {
-    return $.ajax(`${paymentControllerRoot}/GetNextTransactionForUser`, {
+    return $.ajax(`${paymentControllerRoot}/GetNextPaymentForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
