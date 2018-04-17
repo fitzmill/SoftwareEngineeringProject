@@ -17,7 +17,6 @@ const RECTANGLE_ID_PREFIX = "#rectangle-";
 //api url constants
 const userInfoControllerRoot = "/api/userinfo";
 const paymentControllerRoot = "/api/payment";
-const billingControllerRoot = "/api/billing";
 
 //user type
 const GENERAL_USER = 1;
@@ -354,10 +353,10 @@ ko.components.register('account-creation-component', {
     template: require('./account-creation-component.html')
 });
 
-//calculate the user's payment info
+//calculate the user's periodic payment
 function calculatePeriodicPayment(user) {
     let userData = JSON.stringify(user);
-    return $.ajax("${billingControllerRoot}/CalculatePeriodicPayment", {
+    return $.ajax("${paymentControllerRoot}/CalculatePeriodicPayment", {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: userData
