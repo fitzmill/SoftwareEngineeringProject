@@ -28,7 +28,8 @@ namespace Engines
 
         public void SendTransactionNotifications(List<Transaction> transactions)
         {
-            transactions.ForEach (t => {
+            foreach (Transaction t in transactions)
+            {
                 ProcessState state = t.ProcessState;
                 User user = getUserInfoAccessor.GetUserInfoByID(t.UserID);
 
@@ -51,7 +52,7 @@ namespace Engines
                 }
 
                 emailAccessor.SendEmail(email);
-            });
+            }
         }
 
         public void SendAccountUpdateNotification(string email, string firstName, string informationType)
