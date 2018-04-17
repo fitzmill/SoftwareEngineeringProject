@@ -135,47 +135,57 @@ ko.components.register('account-dashboard-component', {
 
         //Changes the user info in database and ui to what the user entered.
         accountDashboardVM.updateUser = function (data, event) {
-            if ($("#edit-personal-form").valid()) {
-
-                //disable save and cancel buttons
-                $("#btn-save-edit-personal").attr("disabled", "disabled");
-                $("#btn-cancel-edit-personal").attr("disabled", "disabled");
-
-                //Check if email already exists in database
-                emailExists(accountDashboardVM.Email()).done(function (data) {
-                    emailInUse = data;
-                    if (emailInUse && accountDashboardVM.Email() !== user.Email) {
-                        accountDashboardVM.personalInputErrorMessage("Email is already used by another user");
-                        $("#edit-personal-input-error").show();
-                    } else {
-                        let changedUserInfo = user;
-                        changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
-                        changedUserInfo.LastName = accountDashboardVM.UserLastName();
-                        changedUserInfo.Email = accountDashboardVM.Email();
-
-                        updatePersonalInfo(changedUserInfo).done(function (newToken) {
-                            //update user in local storage in the case of page reload
-                            window.sessionStorage.setItem("Jwt", newToken);
-                            user = changedUserInfo;
-                            accountDashboardVM.stopEditing(data, event);
-                        }).fail(function (jqXHR) {
-                            if (jqXHR.status !== 401) {
-                                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                                window.alert("Could not save information: ".concat(errorMessage));
-                            }
-                        });
-                    }
-                }).fail(function (jqXHR) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Couldn't check if email has been used: ".concat(errorMessage));
-                }).always(function () {
-                    //re-enable buttons
-                    $("#btn-save-edit-personal").removeAttr("disabled");
-                    $("#btn-cancel-edit-personal").removeAttr("disabled");
-                });
+            let validator = $("#edit-personal-form").validate();
+            if (accountDashboardVM.Email() == user.Email) {
+                validator.resetForm();
+                if ($("#edit-personal-form").valid()) {
+                    accountDashboardVM.updateUserValidated(data, event);
+                }
+            } else {
+                validator.resetForm();
+                if ($("#edit-personal-form").valid()) {
+                    emailExists(accountDashboardVM.Email()).done(function (data) {
+                        if (data) {
+                            validator.showErrors({
+                                dashboardEmail: "Email already exists"
+                            });
+                        } else {
+                            accountDashboardVM.updateUserValidated(data, event);
+                        }
+                    }).fail(function (jqXHR) {
+                        if (jqXHR.status !== 401) {
+                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                            window.alert("Could not save information: ".concat(errorMessage));
+                        }
+                    });
+                }
             }
         };
+        accountDashboardVM.updateUserValidated = function (data, event) {
+            //disable save and cancel buttons
+            $("#btn-save-edit-personal").attr("disabled", "disabled");
+            $("#btn-cancel-edit-personal").attr("disabled", "disabled");
+            let changedUserInfo = user;
+            changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
+            changedUserInfo.LastName = accountDashboardVM.UserLastName();
+            changedUserInfo.Email = accountDashboardVM.Email();
 
+            updatePersonalInfo(changedUserInfo).done(function (newToken) {
+                //update user in local storage in the case of page reload
+                window.sessionStorage.setItem("Jwt", newToken);
+                user = changedUserInfo;
+                accountDashboardVM.stopEditing(data, event);
+            }).fail(function (jqXHR) {
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not save information: ".concat(errorMessage));
+                }
+            }).always(function () {
+                //re-enable buttons
+                $("#btn-save-edit-personal").removeAttr("disabled");
+                $("#btn-cancel-edit-personal").removeAttr("disabled");
+            });
+        };
         //Changes student info in database and ui to what user entered
         accountDashboardVM.updateStudents = function (data, event) {
             if ($("#edit-students-form").valid()) {
@@ -193,7 +203,6 @@ ko.components.register('account-dashboard-component', {
                         Grade: student.Grade()
                     };
                 });
-
                 //new students will have an undefined StudentID
                 let newStudents = inputStudents.filter((s) => !s.StudentID);
                 //deleted students will be in the user object but not in inputStudents
@@ -501,6 +510,7 @@ function updatePaymentBillingInfo(paymentBillingInfo) {
     });
 }
 
+//Checks if email already associated with account
 function emailExists(email) {
     return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
         method: "POST",
