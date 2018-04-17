@@ -2,162 +2,19 @@
     <h1>Account Dashboard</h1>
     <button class="btn btn-primary btn-logout" data-bind="click: $parent.logout">Logout</button>
 
-    <div class="card card-account-information-section">
-        <div class="card-header">
-            <h3 class="header-information-section">Personal Information</h3>
-            <button id="btn-edit-personal" class="btn btn-primary btn-edit edit-personal-inactive" data-bind="click: startEditing">Edit</button>
-            <button id="btn-save-edit-personal" class="btn btn-success btn-edit edit-personal-active" data-bind="click: updateUser" style="display: none;">Save</button>
-            <button id="btn-cancel-edit-personal" class="btn btn-default btn-edit edit-personal-active" data-bind="click: stopEditing" style="display: none;">Cancel</button>
-        </div>
-
-        <div class="card-body">
-            <h5 id="edit-personal-input-error" class="header-input-error" data-bind="text: personalInputErrorMessage" style="display: none;"></h5>
-            
-            <h4 class="edit-personal-inactive" data-bind="text: UserFirstName() + ' ' + UserLastName()"></h4>
-            <h4 class="edit-personal-inactive" data-bind="text: Email"></h4>
-
-            <div class="edit-personal-active">
-                <form id="edit-personal-form">
-                    <input name="dashboard-first-name" class="input-information no-code-chars" placeholder="First Name" data-bind="value: UserFirstName" required />
-                    <input name="dashboard-last-name" class="input-information no-code-chars" placeholder="Last Name" data-bind="value: UserLastName" required /> <br />
-                    <input name="dashboardEmail" class="input-information email" type="email" placeholder="Email" data-bind="value: Email" required />
-                </form>
-            </div>
-            
-        </div>
-    </div>
+    <personal-information-component params="personalInfo: personalInfo, stopEditing: stopEditing"></personal-information-component>
 
     <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
 
-    <div class="card card-account-information-section">
-        <div class="card-header">
-            <h3 class="header-information-section">Payment Information</h3>
-            <button id="btn-edit-payment" class="btn btn-primary btn-edit edit-payment-inactive" data-bind="click: startEditing">Edit</button>
-            <button id="btn-save-edit-payment" class="btn btn-success btn-edit edit-payment-active" data-bind="click: updatePaymentInfo">Save</button>
-            <button id="btn-cancel-edit-payment" class="btn btn-default btn-edit edit-payment-active" data-bind="click: stopEditing">Cancel</button>
-        </div>
+    <payment-information-component params="paymentInfo: paymentInfo, paymentPlan: paymentPlan, 
+                                   nextPaymentDate: nextPaymentDate, nextPaymentCost: nextPaymentCost, 
+                                   stopEditing: stopEditing"></payment-information-component>
 
-        <div class="card-body">
-            <h5 data-bind="text: 'Payment Plan: ' + PaymentPlan()"></h5>
-            <label>Next Payment Due: </label>
-            <label class="enMoney" data-bind="text: NextPaymentCost"></label>
-            <label data-bind="text: ' on ' + NextPaymentDate()"></label>
-        </div>
+    <billing-information-component params="billingInfo: billingInfo, stopEditing: stopEditing"></billing-information-component>
 
-        <div class="card-footer" style="background-color: white;">
-            <div id="payment-information" class="edit-payment-inactive">
-                <h5 data-bind="text: 'Card Ending in: ' + CardNumber()"></h5>
-                <label data-bind="text: 'Exp: ' + ExpirationMonth() + '/' + ExpirationYear()"></label>
-            </div>
+    <student-information-component params="students: studentInfo, stopEditing: stopEditing, deleteUser: deleteUser"></student-information-component>
 
-            <div id="edit-payment-input" class="edit-payment-active">
-                <form id="edit-payment-form">
-                    <input name="dashboard-card-number" class="input-information creditcard" placeholder="Credit Card Number" data-bind="value: CardNumber" style="display: block;" required />
-                    <select name="dashboard-card-expmonth" class="select-inline-info" data-bind="options: $root.dropdownOptions.Months, value: ExpirationMonth, optionsCaption: 'MM'" required />
-                    <select name="dashboard-card-expyear" class="select-inline-info" data-bind="options: $root.dropdownOptions.Years, value: ExpirationYear, optionsCaption: 'YYYY'" required />
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-account-information-section">
-        <div class="card-header">
-            <h3 class="header-information-section">Billing Information</h3>
-            <button id="btn-edit-billing" class="btn btn-primary btn-edit edit-billing-inactive" data-bind="click: startEditing">Edit</button>
-            <button id="btn-save-edit-billing" class="btn btn-success btn-edit edit-billing-active" data-bind="click: updateBillingInfo">Save</button>
-            <button id="btn-cancel-edit-billing" class="btn btn-default btn-edit edit-billing-active" data-bind="click: stopEditing">Cancel</button>
-        </div>
-
-        <div class="card-body">
-            <h5 id="edit-billing-input-error" class="header-input-error" data-bind="text: billingInputErrorMessage" style="display: none;"></h5>
-
-            <div class="edit-billing-inactive">
-                <h5 data-bind="text: CardFirstName() + ' ' + CardLastName()"></h5>
-                <h5 data-bind="text: StreetAddress1"></h5>
-                <h5 data-bind="text: StreetAddress2"></h5>
-                <h5 data-bind="text: City() + ', ' + State() + ' ' + Zip()"></h5>
-            </div>
-
-            <div class="edit-billing-active">
-                <form id="edit-billing-form">
-                    <div style="display: block;">
-                        <input name="dashboard-billing-firstname" class="input-information no-code-chars" placeholder="First Name" data-bind="value: CardFirstName" required />
-                        <input name="dashboard-billing-lastname" class="input-information no-code-chars" placeholder="Last Name" data-bind="value: CardLastName" required />
-                    </div>
-
-                    <input name="dashboard-billing-address1" class="input-street-address input-information no-code-chars" placeholder="Street Address 1" data-bind="value: StreetAddress1" required />
-                    <input name="dashboard-billing-address2" class="input-street-address input-information no-code-chars" placeholder="Street Address 2" data-bind="value: StreetAddress2" required />
-
-                    <div style="display: block; margin-bottom: 30px;">
-                        <input name="dashboard-billing-city" class="input-information no-code-chars" placeholder="City" data-bind="value: City" required />
-                        <select name="dashboard-billing-state" class="select-inline-info" data-bind="options: $parent.dropdownOptions.States, value: State, optionsCaption: 'State'" required />
-                        <input name="dashboard-billing-zip" class="input-information zipcodeUS" type="text" placeholder="Zip Code" data-bind="value: Zip" required />
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="card card-account-information-section">
-        <div class="card-header">
-            <h3 class="header-information-section">Student Information</h3>
-            <button id="btn-edit-student" class="btn btn-primary btn-edit edit-student-inactive" data-bind="click: startEditing">Edit</button>
-            <button id="btn-save-edit-student" class="btn btn-success btn-edit edit-student-active" data-bind="click: updateStudents">Save</button>
-            <button id="btn-cancel-edit-student" class="btn btn-default btn-edit edit-student-active" data-bind="click: stopEditing">Cancel</button>
-        </div>
-
-        <form id="edit-students-form">
-            <div data-bind="foreach: Students">
-                <div>
-                    <h5 class="student-info edit-student-inactive" data-bind="text: FirstName() + ' ' + LastName()" style="margin-top: 20px"></h5>
-                    <h5 class="student-info edit-student-inactive" data-bind="text: Grade() === undefined ? undefined : $root.dropdownOptions.Grades.find((obj) => obj.num == Grade()).text"></h5>
-
-                    <button class="btn btn-danger btn-delete-student edit-student-active" data-bind="click: function(student) { $parent.openConfirmModal(student, 'You are about to delete a student, are you sure?', $parent.deleteStudent) }">Delete Student</button>
-
-                    <div class="student-info edit-student-active">
-                        <input class="input-information no-code-chars" placeholder="Student First Name" data-bind="value: FirstName, attr: {name: 'FirstName' + $index()}" required />
-                        <input class="input-information no-code-chars" placeholder="Student Last Name" data-bind="value: LastName, attr: {name: 'LastName' + $index()}" required />
-                    </div>
-
-                    <select class="select-inline-info edit-student-active student-info" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: Grade, optionsCaption: 'Grade', attr: {name: 'Grade' + $index()}" style="margin-bottom: 10px" required />
-                </div>
-            </div>
-        </form>
-
-        <button class="btn btn-primary edit-student-active" data-bind="click: addStudent">Add Another Student</button>
-    </div>
-
-    <div class="card card-account-information-section">
-        <div class="card-header">
-            <h3 class="header-information-section">Transaction History</h3>
-        </div>
-        <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Date Due</th>
-                        <th>Amount Charged</th>
-                        <th>
-                            Process State
-                            <img id="processStateInformation" src="../assets/images/information_icon.png" height="20" width="20" data-toggle="tooltip" data-html="true"
-                                 title="RETRYING: The system is attempting to charge this transaction again <br>
-                            FAILED: The system has retried the maximum amount of times, <br>
-                            DEFERRED: This transaction has been added to a new transaction with a late fee"/>
-                        </th>
-                        <th>Reason Failed</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: Transactions">
-                    <tr>
-                        <td data-bind="text: DateDue"></td>
-                        <td data-bind="text: AmountCharged"></td>
-                        <td data-bind="text: ProcessState"></td>
-                        <td data-bind="text: ReasonFailed"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <transaction-information-component params="transactions: transactions"></transaction-information-component>
 
     <!--ConfirmModal-->
     <div id="confirmModal" class="modal fade" role="dialog" aria-hidden="true" data-backdrop="static" data-bind="with: confirmModalData">

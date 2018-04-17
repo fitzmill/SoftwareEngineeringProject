@@ -9,12 +9,6 @@ namespace Core.DTOs
     public class UpdateStudentInfoDTO
     {
         /// <summary>
-        /// The UserID that the students are associated with
-        /// </summary>
-        [Range(0, int.MaxValue)]
-        public int UserID { get; set; }
-
-        /// <summary>
         /// List of students that have only had their properties updated
         /// </summary>
         [Required]

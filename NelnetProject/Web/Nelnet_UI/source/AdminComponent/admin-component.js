@@ -38,14 +38,17 @@ ko.components.register('admin-component', {
         }
 
         vm.generateReport = function () {
-            generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
-                vm.reports.unshift(parseReportModel(data));
-            }).fail(function (jqXHR) {
-                if (jqXHR.status !== 401) {
-                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                    window.alert("Could not generate report: ".concat(errorMessage));
-                }
-            });
+            if ($("#form-custom-report").valid()) {
+                generateReport(vm.generateStartDate(), vm.generateEndDate()).done(function (data) {
+                    vm.reports.unshift(parseReportModel(data));
+                }).fail(function (jqXHR) {
+                    if (jqXHR.status !== 401) {
+                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                        window.alert("Could not generate report: ".concat(errorMessage));
+                    }
+                });
+            }
+
 
         };
 

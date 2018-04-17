@@ -31,42 +31,49 @@ namespace Engines
 
         public IList<Transaction> ChargePayments(List<Transaction> charges, DateTime today)
         {
-           return charges.Select(charge =>
-           {
-               //Create dto to be sent to Payment Spring
-               PaymentDTO payment = new PaymentDTO
-               {
-                   CustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(charge.UserID),
-                   Amount = (int) charge.AmountCharged * 1000 //Charge is in cents
-               };
+            IList<Transaction> result = new List<Transaction>();
+            foreach (Transaction charge in charges)
+            {
+                result.Add(ChargePayment(charge, today));
+            }
+            return result;
+        }
 
-               //Charge Payment Spring
-               ChargeResultDTO result = chargePaymentAccessor.ChargeCustomer(payment);
+        private Transaction ChargePayment(Transaction charge, DateTime today)
+        {
+            //Create dto to be sent to Payment Spring
+            PaymentDTO payment = new PaymentDTO
+            {
+                CustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(charge.UserID),
+                Amount = (int) charge.AmountCharged * 100 //Charge is in cents
+            };
 
-               //If charge fails, retry for seven days. After that, the charge is marked as failed.
-               ProcessState processState = ProcessState.SUCCESSFUL;
-               if (!result.WasSuccessful)
-               {
-                   processState = TuitionUtil.IsPastRetryPeriod(charge, today) ? ProcessState.FAILED : ProcessState.RETRYING;
-               }
+            //Charge Payment Spring
+            ChargeResultDTO result = chargePaymentAccessor.ChargeCustomer(payment);
 
-               //Generate result transaction
-               Transaction resultTransaction = new Transaction
-               {
-                   TransactionID = charge.TransactionID,
-                   UserID = charge.UserID,
-                   AmountCharged = charge.AmountCharged,
-                   DateDue = charge.DateDue,
-                   DateCharged = today,
-                   ProcessState = processState,
-                   ReasonFailed = result.ErrorMessage
-               };
+            //If charge fails, retry for seven days. After that, the charge is marked as failed.
+            ProcessState processState = ProcessState.SUCCESSFUL;
+            if (!result.WasSuccessful)
+            {
+                processState = TuitionUtil.IsPastRetryPeriod(charge, today) ? ProcessState.FAILED : ProcessState.RETRYING;
+            }
 
-               //Update transaction entry in DB
-               setTransactionAccessor.UpdateTransaction(resultTransaction);
+            //Generate result transaction
+            Transaction resultTransaction = new Transaction
+            {
+                TransactionID = charge.TransactionID,
+                UserID = charge.UserID,
+                AmountCharged = charge.AmountCharged,
+                DateDue = charge.DateDue,
+                DateCharged = today,
+                ProcessState = processState,
+                ReasonFailed = result.ErrorMessage
+            };
 
-               return resultTransaction;
-           }).ToList();
+            //Update transaction entry in DB
+            setTransactionAccessor.UpdateTransaction(resultTransaction);
+
+            return resultTransaction;
         }
 
         public IList<Transaction> GeneratePayments(DateTime today) //to be run on the 1st of each month
@@ -108,8 +115,6 @@ namespace Engines
                     DateDue = new DateTime(today.Year, today.Month, TuitionUtil.DUE_DAY),
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 });
-
-                
             }
 
             //Store them in the database

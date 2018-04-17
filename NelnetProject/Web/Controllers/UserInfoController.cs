@@ -99,19 +99,19 @@ namespace Web.Controllers
         [JwtAuthentication]
         public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
         {
-            if (updatedInfo == null || !ModelState.IsValid)
+            var user = (ClaimsIdentity)User.Identity;
+            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (updatedInfo == null || !ModelState.IsValid || userID == null || !int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
             _setUserInfoEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
-            _setUserInfoEngine.InsertStudentInfo(updatedInfo.UserID, updatedInfo.AddedStudents);
+            _setUserInfoEngine.InsertStudentInfo(parsedUserID, updatedInfo.AddedStudents);
             _setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
 
-            var user = (ClaimsIdentity) User.Identity;
-            _notificationEngine.SendAccountUpdateNotification
-                (user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value, user.Name, "student");
-
+            _notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
+                user.Name, "student");
             return Ok();
         }
 
