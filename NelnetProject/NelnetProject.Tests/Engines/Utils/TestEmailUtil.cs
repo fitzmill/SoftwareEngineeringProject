@@ -140,7 +140,6 @@ namespace NelnetProject.Tests.Engines.Utils
                 "please contact your administrator.<br>Please contact us if you have any questions." +
                 "<br><br><br>Powered by Tuition Assistant<br>"
             };
-
             
             var result = EmailUtil.AccountUpdatedNotification(email, firstName, "personal");
 
@@ -170,6 +169,60 @@ namespace NelnetProject.Tests.Engines.Utils
             var email = "hi@me.com";
             var firstName = "Sean";
             EmailUtil.AccountUpdatedNotification(email, firstName, null);
+        }
+
+        [TestMethod]
+        public void TestAccountCreatedNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+            Transaction nextTransaction = new Transaction()
+            {
+                DateDue = new DateTime(2018, 9, 5),
+                AmountCharged = 3125
+            };
+
+            var expected = new EmailNotification()
+            {
+                To = user.Email,
+                Subject = "Welcome to Tuition Assistant!",
+                Body = "Hi Joe,<br><br>Thank you creating an account with Tuition Assistant. We're glad you're here!<br><br>" +
+                "Your next automatic payment will be on September 5 2018, for an amount of $3125.00.<br>" +
+                "We'll let you know five days before we charge your account.<br>" +
+                "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+            };
+
+            var result = EmailUtil.AccountCreatedNotification(user, nextTransaction);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "User cannot be null")]
+        public void TestAccountCreatedNotificationNullUser()
+        {
+            Transaction nextTransaction = new Transaction()
+            {
+                DateDue = new DateTime(2018, 9, 5),
+                AmountCharged = 3125
+            };
+
+            EmailUtil.AccountCreatedNotification(null, nextTransaction);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Transaction cannot be null")]
+        public void TestAccountCreatedNotificationNullTransaction()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+            EmailUtil.AccountCreatedNotification(user, null);
         }
 
     }

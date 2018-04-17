@@ -134,5 +134,37 @@ namespace NelnetProject.Tests.Engines
             var firstName = "Sean";
             notificationEngine.SendAccountUpdateNotification(email, firstName, null);
         }
+
+        [TestMethod]
+        public void TestSendAccountCreationNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+            Transaction nextTransaction = new Transaction()
+            {
+                DateDue = new DateTime(2018, 9, 5),
+                AmountCharged = 3125
+            };
+
+            var expected = new List<EmailNotification>()
+            {
+                new EmailNotification()
+                {
+                    To = user.Email,
+                    Subject = "Welcome to Tuition Assistant!",
+                    Body = "Hi Joe,<br><br>Thank you creating an account with Tuition Assistant. We're glad you're here!<br><br>" +
+                    "Your next automatic payment will be on September 5 2018, for an amount of $3125.00.<br>" +
+                    "We'll let you know five days before we charge your account.<br>" +
+                    "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+                }
+            };
+            
+            notificationEngine.SendAccountCreationNotification(user, nextTransaction);
+
+            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+        }
     }
 }
