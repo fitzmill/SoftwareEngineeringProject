@@ -38,7 +38,8 @@ namespace Engines
             if (hashedGivenPassword.Equals(user.Hashed))
             {
                 return user;
-            } else
+            }
+            else
             {
                 return null;
             }
