@@ -136,29 +136,7 @@ ko.components.register('account-dashboard-component', {
             if (accountDashboardVM.Email() == user.Email) {
                 validator.resetForm();
                 if ($("#edit-personal-form").valid()) {
-                    //disable save and cancel buttons
-                    $("#btn-save-edit-personal").attr("disabled", "disabled");
-                    $("#btn-cancel-edit-personal").attr("disabled", "disabled");
-                    let changedUserInfo = user;
-                    changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
-                    changedUserInfo.LastName = accountDashboardVM.UserLastName();
-                    changedUserInfo.Email = accountDashboardVM.Email();
-              
-                    updatePersonalInfo(changedUserInfo).done(function (newToken) {
-                        //update user in local storage in the case of page reload
-                        window.sessionStorage.setItem("Jwt", newToken);
-                        user = changedUserInfo;
-                        accountDashboardVM.stopEditing(data, event);
-                    }).fail(function (jqXHR) {
-                        if (jqXHR.status !== 401) {
-                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                            window.alert("Could not save information: ".concat(errorMessage));
-                        }
-                    }).always(function () {
-                        //re-enable buttons
-                        $("#btn-save-edit-personal").removeAttr("disabled");
-                        $("#btn-cancel-edit-personal").removeAttr("disabled");
-                    });
+                    accountDashboardVM.updateUserValidated(data, event);
                 }
             } else {
                 validator.resetForm();
@@ -169,29 +147,7 @@ ko.components.register('account-dashboard-component', {
                                 dashboardEmail: "Email already exists"
                             });
                         } else {
-                            //disable save and cancel buttons
-                            $("#btn-save-edit-personal").attr("disabled", "disabled");
-                            $("#btn-cancel-edit-personal").attr("disabled", "disabled");
-                            let changedUserInfo = user;
-                            changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
-                            changedUserInfo.LastName = accountDashboardVM.UserLastName();
-                            changedUserInfo.Email = accountDashboardVM.Email();
-
-                            updatePersonalInfo(changedUserInfo).done(function (newToken) {
-                                //update user in local storage in the case of page reload
-                                window.sessionStorage.setItem("Jwt", newToken);
-                                user = changedUserInfo;
-                                accountDashboardVM.stopEditing(data, event);
-                            }).fail(function (jqXHR) {
-                                if (jqXHR.status !== 401) {
-                                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                                    window.alert("Could not save information: ".concat(errorMessage));
-                                }
-                            }).always(function () {
-                                //re-enable buttons
-                                $("#btn-save-edit-personal").removeAttr("disabled");
-                                $("#btn-cancel-edit-personal").removeAttr("disabled");
-                            });
+                            accountDashboardVM.updateUserValidated(data, event);
                         }
                     }).fail(function (jqXHR) {
                         if (jqXHR.status !== 401) {
@@ -202,7 +158,31 @@ ko.components.register('account-dashboard-component', {
                 }
             }
         };
+        accountDashboardVM.updateUserValidated = function (data, event) {
+            //disable save and cancel buttons
+            $("#btn-save-edit-personal").attr("disabled", "disabled");
+            $("#btn-cancel-edit-personal").attr("disabled", "disabled");
+            let changedUserInfo = user;
+            changedUserInfo.FirstName = accountDashboardVM.UserFirstName();
+            changedUserInfo.LastName = accountDashboardVM.UserLastName();
+            changedUserInfo.Email = accountDashboardVM.Email();
 
+            updatePersonalInfo(changedUserInfo).done(function (newToken) {
+                //update user in local storage in the case of page reload
+                window.sessionStorage.setItem("Jwt", newToken);
+                user = changedUserInfo;
+                accountDashboardVM.stopEditing(data, event);
+            }).fail(function (jqXHR) {
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not save information: ".concat(errorMessage));
+                }
+            }).always(function () {
+                //re-enable buttons
+                $("#btn-save-edit-personal").removeAttr("disabled");
+                $("#btn-cancel-edit-personal").removeAttr("disabled");
+            });
+        };
         //Changes student info in database and ui to what user entered
         accountDashboardVM.updateStudents = function (data, event) {
             if ($("#edit-students-form").valid()) {
@@ -220,7 +200,6 @@ ko.components.register('account-dashboard-component', {
                         Grade: student.Grade()
                     };
                 });
-
                 //new students will have an undefined StudentID
                 let newStudents = inputStudents.filter((s) => !s.StudentID);
                 //deleted students will be in the user object but not in inputStudents
