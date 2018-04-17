@@ -3,7 +3,10 @@ require('../assets/background-image.scss');
 
 const utility = require('../utility.js');
 
-const accountDashboardAPIURL = "/api/account";
+//api url constants
+const userInfoControllerRoot = "/api/userinfo";
+const paymentControllerRoot = "/api/payment";
+const billingControllerRoot = "/api/billing";
 
 const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
 const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/;
@@ -366,8 +369,8 @@ ko.components.register('account-dashboard-component', {
 
             let informationSection = senderElementID.replace("btn-", "");
 
-            $("." + informationSection + "-active").show();
-            $("." + informationSection + "-inactive").hide();
+            $(`.${informationSection}-active`).show();
+            $(`.${informationSection}-inactive`).hide();
         };
 
         //hides save and cancel buttons along with text boxes and shows labels and edit button
@@ -384,11 +387,11 @@ ko.components.register('account-dashboard-component', {
             accountDashboardVM.setUser();
             accountDashboardVM.setUIPaymentSpringInfo();
 
-            $("." + informationSection + "-active").hide();
-            $("." + informationSection + "-inactive").show();
+            $(`.${informationSection}-active`).hide();
+            $(`.${informationSection}-inactive`).show();
 
             //hide error message if it's shown
-            $("#" + informationSection + "-input-error").hide();
+            $(`#${informationSection}-input-error`).hide();
         };
 
         accountDashboardVM.openConfirmModal = function (data, message, confirmAction) {
@@ -423,7 +426,7 @@ ko.components.register('account-dashboard-component', {
 
 //Gets a user's info
 function getUserInfo() {
-    return $.ajax(accountDashboardAPIURL + "/GetUserInfo", {
+    return $.ajax(`${userInfoControllerRoot}/GetUserInfo`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -431,7 +434,7 @@ function getUserInfo() {
 
 //Gets a user's next transaction details
 function getNextTransactionForUser() {
-    return $.ajax(accountDashboardAPIURL + "/GetNextTransactionForUser", {
+    return $.ajax(`${paymentControllerRoot}/GetNextPaymentForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -439,7 +442,7 @@ function getNextTransactionForUser() {
 
 //Gets a user's transaction details
 function getAllTransactionsForUser() {
-    return $.ajax(accountDashboardAPIURL + "/GetAllTransactionsForUser", {
+    return $.ajax(`${paymentControllerRoot}/GetAllTransactionsForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
@@ -447,24 +450,15 @@ function getAllTransactionsForUser() {
 
 //GETs a user's payment spring information
 function getPaymentSpringInfo() {
-    return $.ajax(accountDashboardAPIURL + "/GetPaymentInfoForUser", {
+    return $.ajax(`${billingControllerRoot}/GetPaymentInfoForUser`, {
         method: "GET",
         beforeSend: utility.attachJwtTokenToRequest
     });
 }
 
-//POSTs to see if an email is used in the database
-function emailExists(email) {
-    return $.ajax(accountDashboardAPIURL + '/EmailExists', {
-        method: "POST",
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(email)
-    });
-}
-
 //POSTs any changes to the user
 function updatePersonalInfo(userInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePersonalInfo", {
+    return $.ajax(`${userInfoControllerRoot}/UpdatePersonalInfo`, {
         method: "POST",
         data: userInfo,
         beforeSend: utility.attachJwtTokenToRequest
@@ -481,7 +475,7 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
         DeletedStudentIDs: deletedStudentIDs,
         AddedStudents: newStudents
     });
-    return $.ajax(accountDashboardAPIURL + "/UpdateStudentInfo", {
+    return $.ajax(`${userInfoControllerRoot}/UpdateStudentInfo`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: jsonData,
@@ -491,7 +485,7 @@ function updateStudentInfo(userID, updatedStudents, deletedStudentIDs, newStuden
 
 //POSTs a user to be deleted
 function deleteUser(user) {
-    return $.ajax(accountDashboardAPIURL + "/DeleteUser", {
+    return $.ajax(`${userInfoControllerRoot}/DeleteUser`, {
         method: "POST",
         data: user,
         beforeSend: utility.attachJwtTokenToRequest
@@ -500,7 +494,7 @@ function deleteUser(user) {
 
 //POSTs any changes to the credit card info
 function updatePaymentCardInfo(paymentCardInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentCardInfo", {
+    return $.ajax(`${billingControllerRoot}/UpdatePaymentCardInfo`, {
         method: "POST",
         data: paymentCardInfo,
         beforeSend: utility.attachJwtTokenToRequest
@@ -509,9 +503,18 @@ function updatePaymentCardInfo(paymentCardInfo) {
 
 //POSTs any changes to the user's billing address
 function updatePaymentBillingInfo(paymentBillingInfo) {
-    return $.ajax(accountDashboardAPIURL + "/UpdatePaymentBillingInfo", {
+    return $.ajax(`${billingControllerRoot}/UpdatePaymentBillingInfo`, {
         method: "POST",
         data: paymentBillingInfo,
         beforeSend: utility.attachJwtTokenToRequest
+    });
+}
+
+//Checks if email already associated with account
+function emailExists(email) {
+    return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
+        method: "POST",
+        contentType: "application/JSON; charset=utf-8",
+        data: JSON.stringify(email)
     });
 }

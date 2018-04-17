@@ -15,7 +15,8 @@ const DOT_ID_PREFIX = "#dot-page-";
 const RECTANGLE_ID_PREFIX = "#rectangle-";
 
 //api url constants
-const accountCreationAPIURL = "/api/account";
+const userInfoControllerRoot = "/api/userinfo";
+const paymentControllerRoot = "/api/payment";
 
 //user type
 const GENERAL_USER = 1;
@@ -353,10 +354,10 @@ ko.components.register('account-creation-component', {
     template: require('./account-creation-component.html')
 });
 
-//calculate the user's payment info
+//calculate the user's periodic payment
 function calculatePeriodicPayment(user) {
     let userData = JSON.stringify(user);
-    return $.ajax(accountCreationAPIURL + "/CalculatePeriodicPayment", {
+    return $.ajax(`${paymentControllerRoot}/CalculatePeriodicPayment`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: userData
@@ -366,7 +367,7 @@ function calculatePeriodicPayment(user) {
 //create the user in the database
 function createUser(accountCreationInformation) {
     let accountCreationInformationData = JSON.stringify(accountCreationInformation);
-    return $.ajax(accountCreationAPIURL + "/InsertUser", {
+    return $.ajax(`${userInfoControllerRoot}/InsertUser`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: accountCreationInformationData
@@ -375,7 +376,7 @@ function createUser(accountCreationInformation) {
 
 //POSTs to see if an email is used in the database
 function emailExists(email) {
-    return $.ajax(accountCreationAPIURL + '/EmailExists', {
+    return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: JSON.stringify(email)

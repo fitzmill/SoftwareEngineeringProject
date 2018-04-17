@@ -141,7 +141,15 @@ namespace NelnetProject.Tests.Engines
             User user = new User()
             {
                 FirstName = "Joe",
-                Email = "joe@joe.r.accountant"
+                Email = "joe@joe.r.accountant",
+                Plan = PaymentPlan.MONTHLY,
+                Students = new List<Student>()
+                {
+                    new Student()
+                    {
+                        Grade = 8
+                    }
+                }
             };
             Transaction nextTransaction = new Transaction()
             {
@@ -156,13 +164,13 @@ namespace NelnetProject.Tests.Engines
                     To = user.Email,
                     Subject = "Welcome to Tuition Assistant!",
                     Body = "Hi Joe,<br><br>Thank you creating an account with Tuition Assistant. We're glad you're here!<br><br>" +
-                    "Your next automatic payment will be on September 5 2018, for an amount of $3125.00.<br>" +
+                    "Your next automatic payment will be on August 5 2018, for an amount of $386.25.<br>" +
                     "We'll let you know five days before we charge your account.<br>" +
                     "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
                 }
             };
             
-            notificationEngine.SendAccountCreationNotification(user, nextTransaction);
+            notificationEngine.SendAccountCreationNotification(user, new DateTime(2018, 7, 14));
 
             CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
         }
