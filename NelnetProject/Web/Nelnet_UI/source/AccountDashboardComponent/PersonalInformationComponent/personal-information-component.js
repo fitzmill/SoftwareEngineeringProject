@@ -28,7 +28,7 @@ ko.components.register('personal-information-component', {
         //Changes the user info in database and ui to what the user entered.
         vm.updatePersonalInfo = function (data, event) {
             let validator = $("#edit-personal-form").validate();
-            if (vm.Email() === personalInfo.Email) {
+            if (vm.Email() == personalInfo().Email) {
                 if ($("#edit-personal-form").valid()) {
                     vm.updateUserValidated(data, event);
                 }
@@ -56,7 +56,7 @@ ko.components.register('personal-information-component', {
             //disable save and cancel buttons
             $("#btn-save-edit-personal").attr("disabled", "disabled");
             $("#btn-cancel-edit-personal").attr("disabled", "disabled");
-            let changedUserInfo = user;
+            let changedUserInfo = personalInfo();
             changedUserInfo.FirstName = vm.UserFirstName();
             changedUserInfo.LastName = vm.UserLastName();
             changedUserInfo.Email = vm.Email();
@@ -65,7 +65,7 @@ ko.components.register('personal-information-component', {
                 //update user in local storage in the case of page reload
                 window.sessionStorage.setItem("Jwt", newToken);
                 user = changedUserInfo;
-                accountDashboardVM.stopEditing(data, event);
+                params.stopEditing(data, event);
             }).fail(function (jqXHR) {
                 if (jqXHR.status !== 401) {
                     let errorMessage = JSON.parse(jqXHR.responseText).Message;
