@@ -154,7 +154,7 @@ namespace Web.Controllers
             UserPaymentInfoDTO paymentInfo = CreatePaymentInfo(accountCreationInfo);
             string customerID = _setUserInfoEngine.InsertPaymentInfo(paymentInfo);
 
-            //check if payment info is valid, if not return error
+            //check if payment info is valid, if not return bad request
             if (customerID == null)
             {
                 return BadRequest("Payment information is invalid.");

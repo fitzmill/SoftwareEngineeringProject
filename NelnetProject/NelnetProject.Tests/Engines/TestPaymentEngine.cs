@@ -8,6 +8,7 @@ using NelnetProject.Tests.Engines.MockedAccessors;
 using Engines;
 using System.Diagnostics;
 using Core.DTOs;
+using Engines.Utils;
 
 namespace NelnetProject.Tests.Engines
 {
@@ -143,14 +144,14 @@ namespace NelnetProject.Tests.Engines
                 new Transaction
                 {
                     UserID = 1,
-                    AmountCharged = 875 + 55 + 25 + .75,
+                    AmountCharged = Math.Round(55 + TuitionUtil.LATE_FEE + 875 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION),
                     DateDue = new DateTime(2018, 9, 5),
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 },
                 new Transaction
                 {
                     UserID = 2,
-                    AmountCharged = 1250,
+                    AmountCharged = Math.Round(1250 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION),
                     DateDue = new DateTime(2018, 9, 5),
                     ProcessState = ProcessState.NOT_YET_CHARGED
                 }
@@ -276,7 +277,7 @@ namespace NelnetProject.Tests.Engines
             Transaction expected = new Transaction()
             {
                 UserID = 1,
-                AmountCharged = 875,
+                AmountCharged = Math.Round(875 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION),
                 DateDue = new DateTime(2018, 5, 5),
                 ProcessState = ProcessState.NOT_YET_CHARGED
             };
