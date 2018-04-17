@@ -20,12 +20,6 @@ exports.accountDashboardBeforeShow = function () {
         window.location = "#";
         return;
     }
-
-    //this will only be true when redirected to this page from login, since the component will be binded
-    if ($("account-dashboard-component").children().length > 0) {
-        vm = ko.dataFor($('account-dashboard-component').get(0).firstChild);
-        vm.loadUserInformation();
-    }
 };
 
 ko.components.register('account-dashboard-component', {
