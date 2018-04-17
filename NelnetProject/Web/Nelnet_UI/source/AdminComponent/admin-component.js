@@ -10,12 +10,6 @@ exports.adminDashboardBeforeShow = function () {
         window.location = '#';
         return;
     }
-
-    //this will only be true when redirected to this page from login, since the component will be binded
-    if ($("admin-component").children().length > 0) {
-        vm = ko.dataFor($('admin-component').get(0).firstChild);
-        vm.loadAdminInformation();
-    }
 }
 
 ko.components.register('admin-component', {
