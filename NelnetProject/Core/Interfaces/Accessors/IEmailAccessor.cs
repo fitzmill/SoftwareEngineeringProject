@@ -1,7 +1,4 @@
 ﻿using Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Interfaces
 {
@@ -13,7 +10,7 @@ namespace Core.Interfaces
         /// <summary>
         /// Sends an email notification.
         /// </summary>
-        /// <param name="emailNotification"></param>
+        /// <param name="emailNotification">The information needed to send the email</param>
         void SendEmail(EmailNotification emailNotification);
     }
 }

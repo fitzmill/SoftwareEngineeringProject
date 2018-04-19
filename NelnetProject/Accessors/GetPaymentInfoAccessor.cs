@@ -1,31 +1,27 @@
-﻿using System.Net.Http;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Core.DTOs;
 using Core.Interfaces;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System;
 
 namespace Accessors
 {
     public class GetPaymentInfoAccessor : IGetPaymentInfoAccessor
     {
-        private HttpClientBuilder clientBuilder;
-        private string urlBase;
-        private readonly string customerExtention = "/customers/";
+        private readonly HttpClientBuilder _clientBuilder;
+        private readonly string _urlBase;
+        private readonly string _customerExtention = "/customers/";
 
         public GetPaymentInfoAccessor(HttpClientBuilder clientBuilder, string urlBase)
         {
-            this.urlBase = urlBase;
-            this.clientBuilder = clientBuilder;
+            _urlBase = urlBase;
+            _clientBuilder = clientBuilder;
         }
 
-        // Gets a user's payment info from Payment Spring with their Payment Spring Customer ID.
         public UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID) {
-            using (var client = clientBuilder.BuildClientWithPrivateKey())
+            using (var client = _clientBuilder.BuildClientWithPrivateKey())
             {
                 UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO();
-                Task<string> responseString = client.GetStringAsync(urlBase + customerExtention + customerID);
+                Task<string> responseString = client.GetStringAsync($"{_urlBase}{_customerExtention}{customerID}");
                 dynamic deserializedResponse = JsonConvert.DeserializeObject(responseString.Result);
 
                 paymentInfo.FirstName = deserializedResponse.first_name;

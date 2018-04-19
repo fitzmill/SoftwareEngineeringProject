@@ -1,5 +1,4 @@
 ﻿using Core;
-using Core.DTOs;
 using Core.Interfaces;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -8,21 +7,23 @@ namespace Accessors
 {
     public class GetUserInfoAccessor : IGetUserInfoAccessor
     {
-        string connectionString;
+        private readonly string _connectionString;
+
         public GetUserInfoAccessor(string connectionString)
         {
-            this.connectionString = connectionString;
+            _connectionString = connectionString;
         }
 
-        //Gets all regular active users from the database
         public IList<User> GetAllActiveUsers()
         {
             string query = "[dbo].[GetAllUsers]";
             IList<User> result = new List<User>();
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
-                SqlCommand command = new SqlCommand(query, conn);
-                command.CommandType = System.Data.CommandType.StoredProcedure;
+                SqlCommand command = new SqlCommand(query, conn)
+                {
+                    CommandType = System.Data.CommandType.StoredProcedure
+                };
                 conn.Open();
                 var reader = command.ExecuteReader();
                 bool firstRow = true;
@@ -59,17 +60,17 @@ namespace Accessors
                         FirstName = reader.GetString(10),
                         LastName = reader.GetString(11),
                         Grade = reader.GetByte(12),
-                });
+                    });
                 }
             }
             return result;
         }
-        // Gets a user's info from the database by a User's ID
+
         public User GetUserInfoByID(int userID)
         {
             string query = "[dbo].[GetUserInfoByUserID]";
             User result = new User();
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.Add(new SqlParameter("@UserID", userID));
@@ -105,13 +106,12 @@ namespace Accessors
             return result;
         }
 
-        // Gets a user's info from the database by a user's email
         public User GetUserInfoByEmail(string email)
         {
             string query = "[dbo].[GetUserInfoByEmail]";
             User result = new User();
             Student student = new Student();
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.Add(new SqlParameter("@Email", email));
@@ -147,12 +147,11 @@ namespace Accessors
             return result;
         }
 
-        // Checks if an email already exists in the database.
         public bool EmailExists(string email)
         {
             string query = "[dbo].[EmailExists]";
             bool result = false;
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.Add(new SqlParameter("@Email", email));
@@ -167,12 +166,11 @@ namespace Accessors
             return result;
         }
 
-        // Gets a user's Payment Spring customerID
         public string GetPaymentSpringCustomerID(int userID)
         {
             string query = "[dbo].[GetCustomerID]";
             string result = "";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
                 command.Parameters.Add(new SqlParameter("@UserID", userID));

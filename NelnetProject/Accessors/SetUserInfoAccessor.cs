@@ -1,36 +1,28 @@
 ﻿using Core;
 using Core.Exceptions;
 using Core.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
 
 namespace Accessors
 {
     public class SetUserInfoAccessor : ISetUserInfoAccessor
     {
-        string connectionString;
+        private readonly string _connectionString;
 
         public SetUserInfoAccessor(string connectionString)
         {
-            this.connectionString = connectionString;
+            _connectionString = connectionString;
         }
 
-        //insert a new record into the user table
         public void InsertPersonalInfo(User user)
         { 
-            //specifies stored query and parameters
             string query = "[dbo].[InsertPersonalInfo]";
-
-            //add the personal record from the user to the database
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
-                //fill in parameters
                 command.Parameters.Add(new SqlParameter("@FirstName", user.FirstName));
                 command.Parameters.Add(new SqlParameter("@LastName", user.LastName));
                 command.Parameters.Add(new SqlParameter("@Email", user.Email));
@@ -40,33 +32,27 @@ namespace Accessors
                 command.Parameters.Add(new SqlParameter("@UserType", user.UserType));
                 command.Parameters.Add(new SqlParameter("@CustomerID", user.CustomerID));
 
-                //set the command type
                 command.CommandType = CommandType.StoredProcedure;
 
-                //open connection
                 connection.Open();
 
-                //execute command
                 var reader = command.ExecuteReader();
                 
                 if (reader.Read())
                 {
-                    //read the id of the user that has just been created
                     user.UserID = (int)reader.GetDecimal(0);
                 }
             }
         }
 
-        //use the id from the user model to update the record asociated with the user
         public void UpdatePersonalInfo(User user)
         {
             string query = "[dbo].[UpdatePersonalInfo]";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
-                //fill in parameters
                 command.Parameters.Add(new SqlParameter("@ID", user.UserID));
                 command.Parameters.Add(new SqlParameter("@FirstName", user.FirstName));
                 command.Parameters.Add(new SqlParameter("@LastName", user.LastName));
@@ -77,13 +63,10 @@ namespace Accessors
                 command.Parameters.Add(new SqlParameter("@UserType", user.UserType));
                 command.Parameters.Add(new SqlParameter("@CustomerID", user.CustomerID));
 
-                //set command type
                 command.CommandType = CommandType.StoredProcedure;
 
-                //open connection
                 connection.Open();
 
-                //execute command
                 int rowsAffected = command.ExecuteNonQuery();
                 
                 if(rowsAffected != 1)
@@ -93,12 +76,11 @@ namespace Accessors
             }
         }
 
-        //remove all personal data from the database associated with the userID
         public void DeletePersonalInfo(int userID)
         {
             string query = "[dbo].[DeletePersonalInfo]";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -117,12 +99,11 @@ namespace Accessors
             }
         }
 
-        //add a new student to the database associated with the userID
         public void InsertStudentInfo(int userID, Student student)
         {
             string query = "[dbo].[InsertStudentInfo]";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -144,12 +125,11 @@ namespace Accessors
             }
         }
 
-        //update a student in the database with the information provided
         public void UpdateStudentInfo(Student student)
         {
             string query = "[dbo].[UpdateStudentInfo]";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -166,17 +146,16 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
-                    throw new SqlRowNotAffectedException("Student row could not be found to update");
+                    throw new SqlRowNotAffectedException("Student could not be found to update");
                 }
             }
         }
 
-        //remove data associated with the particular studentID
         public void DeleteStudentInfoByStudentID(int studentID)
         {
             string query = "[dbo].[DeleteStudentInfoByStudentID]";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -190,17 +169,16 @@ namespace Accessors
 
                 if (rowsAffected != 1)
                 {
-                    throw new SqlRowNotAffectedException("Student row could not be found to delete");
+                    throw new SqlRowNotAffectedException("Student could not be found to be deleted");
                 }
             }
         }
 
-        //delete all the students associated with a specific user id
         public void DeleteStudentInfoByUserID(int userID)
         {
             string query = "[dbo].[DeleteStudentInfoByUserID]";
 
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -214,7 +192,7 @@ namespace Accessors
 
                 if (rowsAffected < 0)
                 {
-                    throw new SqlRowNotAffectedException("Student row could not be found to delete");
+                    throw new SqlRowNotAffectedException("Students could not be found to be deleted");
                 }
             }
         }

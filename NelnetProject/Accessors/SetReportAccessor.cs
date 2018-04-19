@@ -1,27 +1,23 @@
 ﻿using Core.Interfaces;
 using Core.Models;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Accessors
 {
     public class SetReportAccessor : ISetReportAccessor
     {
-        string connectionString;
+        private readonly string _connectionString;
 
         public SetReportAccessor(string connectionString)
         {
-            this.connectionString = connectionString;
+            _connectionString = connectionString;
         }
+
         public void InsertReport(Report report)
         {
             string query = "[dbo].[InsertReport]";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 var command = new SqlCommand(query, conn);
 

@@ -1,35 +1,29 @@
 ﻿using Core.DTOs;
 using Core.Interfaces;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
-
-
 
 namespace Accessors
 {
     public class SetPaymentInfoAccessor : ISetPaymentInfoAccessor
     {
-        private HttpClientBuilder clientBuilder;
-        private string urlBase; 
+        private readonly HttpClientBuilder _clientBuilder;
+        private readonly string _urlBase;
+        private readonly string _customerExtention = "/customers";
 
         public SetPaymentInfoAccessor(HttpClientBuilder clientBuilder, string url)
         {
-            this.clientBuilder = clientBuilder;
-            this.urlBase = url;
+            _clientBuilder = clientBuilder;
+            _urlBase = url;
         }
 
-        //create a customer through the paymentSpring API and return the generated customerID
         public string CreateCustomer(UserPaymentInfoDTO customerInfo)
         {
-            string createCustomerUrl = this.urlBase + "/customers";
+            string createCustomerUrl = $"{_urlBase}{_customerExtention}";
 
-            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            using (HttpClient client = _clientBuilder.BuildClientWithPrivateKey())
             {
                 var values = new Dictionary<string, string>
                 {
@@ -57,12 +51,11 @@ namespace Accessors
             }
         }
 
-        //updates solely the customer's name and address related billing information
         public void UpdateCustomerBillingInformation(PaymentAddressDTO paymentAddressInfo)
         {
-            string updateCustomerUrl = urlBase + "/customers/" + paymentAddressInfo.CustomerID;
+            string updateCustomerUrl = $"{_urlBase}{_customerExtention}/{paymentAddressInfo.CustomerID}";
 
-            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            using (HttpClient client = _clientBuilder.BuildClientWithPrivateKey())
             {
                 var values = new Dictionary<string, string>
                 {
@@ -81,12 +74,11 @@ namespace Accessors
             }
         }
 
-        //updates solely the customer's card information
         public void UpdateCustomerCardInformation(PaymentCardDTO paymentCardInfo)
         {
-            string updateCustomerUrl = urlBase + "/customers/" + paymentCardInfo.CustomerID;
+            string updateCustomerUrl = $"{_urlBase}{_customerExtention}/{paymentCardInfo.CustomerID}";
 
-            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            using (HttpClient client = _clientBuilder.BuildClientWithPrivateKey())
             {
                 var values = new Dictionary<string, string>
                 {
@@ -101,12 +93,11 @@ namespace Accessors
             }
         }
 
-        //delete the customer information from paymentSpring
         public void DeleteCustomer(string customerID)
         {
-            string deleteCustomerUrl = this.urlBase + "/customers";
+            string deleteCustomerUrl = $"{_urlBase}{_customerExtention}";
 
-            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            using (HttpClient client = _clientBuilder.BuildClientWithPrivateKey())
             {
                 var values = new Dictionary<string, string>
                 {
