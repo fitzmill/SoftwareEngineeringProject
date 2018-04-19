@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Core.Interfaces
+namespace Core.Interfaces.Engines
 {
     /// <summary>
-    /// The Engine for retrieving and formatting transactions
+    /// Engine for computations relating to transactions.
     /// </summary>
-    public interface IGetTransactionEngine
+    interface ITransactionEngine
     {
         /// <summary>
         /// Gets a list of all transactions from the accessor for a user based on their userID

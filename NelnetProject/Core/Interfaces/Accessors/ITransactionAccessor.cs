@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace Core.Interfaces
+namespace Core.Interfaces.Accessors
 {
     /// <summary>
-    /// Accessor for getting transactions from the database
+    /// Accessor for CRUD operations with transactions in the database.
     /// </summary>
-    public interface IGetTransactionAccessor
+    interface ITransactionAccessor
     {
         /// <summary>
         /// Gets a list of all transactions from the database for a user based on their userID
@@ -35,5 +35,17 @@ namespace Core.Interfaces
         /// </summary>
         /// <returns>List of all FAILED transactions</returns>
         IList<Transaction> GetAllFailedTransactions();
+
+        /// <summary>
+        /// Adds a transaction to the database
+        /// </summary>
+        /// <param name="transaction">The transaction to add to the database</param>
+        void AddTransaction(Transaction transaction);
+
+        /// <summary>
+        /// Updates a transaction that's already in the database
+        /// </summary>
+        /// <param name="transaction">The information to update the transaction in the database</param>
+        void UpdateTransaction(Transaction transaction);
     }
 }

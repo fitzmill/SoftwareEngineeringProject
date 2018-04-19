@@ -1,13 +1,23 @@
 ﻿using Core.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Core.Interfaces
+namespace Core.Interfaces.Engines
 {
     /// <summary>
-    /// Methods for altering report information
+    /// Engine for computations relating to reports.
     /// </summary>
-    public interface ISetReportEngine
+    interface IReportEngine
     {
+        /// <summary>
+        /// Gets all reports in the database from the accessor in descending order
+        /// </summary>
+        /// <returns>List of all reports from most recent to oldest</returns>
+        IList<Report> GetAllReports();
+
         /// <summary>
         /// Creates a report from the given start and end date and inserts it into the database.
         /// </summary>
