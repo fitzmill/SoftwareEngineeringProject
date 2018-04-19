@@ -6,7 +6,7 @@ namespace Core.Interfaces.Accessors
     /// <summary>
     /// Accessor for CRUD operations with reports in the database.
     /// </summary>
-    interface IReportAccessor
+    public interface IReportAccessor
     {
         /// <summary>
         /// Gets all reports from the database in descending order by executing a stored procedure

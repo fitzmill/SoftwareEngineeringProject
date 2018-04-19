@@ -1,17 +1,18 @@
-﻿using Core.Interfaces;
+﻿using Core;
+using Core.DTOs;
+using Core.Interfaces.Accessors;
 using System;
 using System.Collections.Generic;
-using Core;
+using System.Data;
 using System.Data.SqlClient;
-using Core.DTOs;
 
 namespace Accessors
 {
-    public class GetTransactionAccessor : IGetTransactionAccessor
+    class TransactionAccessor : ITransactionAccessor
     {
         private readonly string _connectionString;
 
-        public GetTransactionAccessor(string connectionString)
+        public TransactionAccessor(string connectionString)
         {
             _connectionString = connectionString;
         }
@@ -21,7 +22,7 @@ namespace Accessors
             string query = "[dbo].[GetAllTransactionsForUser]";
 
             var result = new List<Transaction>();
-            
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
@@ -33,7 +34,7 @@ namespace Accessors
                 conn.Open();
 
                 var reader = command.ExecuteReader();
-                
+
                 while (reader.Read())
                 {
                     result.Add(new Transaction()
@@ -113,7 +114,7 @@ namespace Accessors
                         ProcessState = (ProcessState)reader.GetByte(5),
                         ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
                     });
-                }      
+                }
             }
 
             return result;
@@ -155,6 +156,59 @@ namespace Accessors
                 }
             }
             return result;
+        }
+
+        public void AddTransaction(Transaction transaction)
+        {
+            string query = "[dbo].[AddTransaction]";
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, con);
+                command.Parameters.Add(new SqlParameter("@UserID", transaction.UserID));
+                command.Parameters.Add(new SqlParameter("@AmountCharged", transaction.AmountCharged));
+                command.Parameters.Add(new SqlParameter("@DateDue", transaction.DateDue));
+                command.Parameters.Add(new SqlParameter("@DateCharged", transaction.DateCharged));
+                command.Parameters.Add(new SqlParameter("@ProcessState", transaction.ProcessState));
+                command.Parameters.Add(new SqlParameter("@ReasonFailed", transaction.ReasonFailed));
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                con.Open();
+
+                var reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    transaction.TransactionID = (int)reader.GetDecimal(0);
+                }
+            }
+        }
+
+        public void UpdateTransaction(Transaction transaction)
+        {
+            string query = "[dbo].[UpdateTransaction]";
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, con);
+                command.Parameters.Add(new SqlParameter("@TransactionID", transaction.TransactionID));
+                command.Parameters.Add(new SqlParameter("@UserID", transaction.UserID));
+                command.Parameters.Add(new SqlParameter("@AmountCharged", transaction.AmountCharged));
+                command.Parameters.Add(new SqlParameter("@DateDue", transaction.DateDue));
+                command.Parameters.Add(new SqlParameter("@DateCharged", transaction.DateCharged));
+                command.Parameters.Add(new SqlParameter("@ProcessState", transaction.ProcessState));
+                command.Parameters.Add(new SqlParameter("@ReasonFailed", transaction.ReasonFailed));
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                con.Open();
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected != 1)
+                {
+                    throw new Exception("Incorrect number of rows affected: " + rowsAffected);
+                }
+            }
         }
     }
 }

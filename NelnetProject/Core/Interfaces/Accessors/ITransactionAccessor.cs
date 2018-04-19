@@ -7,7 +7,7 @@ namespace Core.Interfaces.Accessors
     /// <summary>
     /// Accessor for CRUD operations with transactions in the database.
     /// </summary>
-    interface ITransactionAccessor
+    public interface ITransactionAccessor
     {
         /// <summary>
         /// Gets a list of all transactions from the database for a user based on their userID
