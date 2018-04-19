@@ -9,9 +9,9 @@ ko.components.register('personal-information-component', {
     viewModel: function (params) {
         var vm = this;
 
-        vm.UserFirstName = ko.observable("");
-        vm.UserLastName = ko.observable("");
-        vm.Email = ko.observable("");
+        vm.UserFirstName = ko.observable();
+        vm.UserLastName = ko.observable();
+        vm.Email = ko.observable();
 
         vm.personalInfo = params.personalInfo;
 
