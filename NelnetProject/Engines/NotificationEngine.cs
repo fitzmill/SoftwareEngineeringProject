@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Core;
 using Core.Interfaces;
 using Core.Models;
@@ -26,7 +21,7 @@ namespace Engines
             this.getUserInfoAccessor = getUserInfoAccessor;
         }
 
-        public void SendTransactionNotifications(List<Transaction> transactions)
+        public void SendTransactionNotifications(IList<Transaction> transactions)
         {
             foreach (Transaction t in transactions)
             {
