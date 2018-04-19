@@ -128,9 +128,14 @@ namespace Engines
 
         public Transaction CalculateNextPaymentForUser(int userID, DateTime today)
         {
+            List<Transaction> userTransactions = getTransactionAccessor.GetAllFailedTransactions().ToList();
+            Transaction failed = userTransactions.Find(t => t.UserID == userID);
+            double overdueAmount = (failed == null) ? 0.0 : failed.AmountCharged;
+
             User user = getUserInfoAccessor.GetUserInfoByID(userID);
-            double nextAmount = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
+            double nextAmount = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION, overdueAmount);
             DateTime dueDate = TuitionUtil.NextPaymentDueDate(user.Plan, today);
+
             return new Transaction()
             {
                 UserID = userID,

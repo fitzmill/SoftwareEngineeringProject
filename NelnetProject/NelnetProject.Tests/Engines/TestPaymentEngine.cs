@@ -270,15 +270,33 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        public void TestCalculatePaymentForNextUser()
+        public void TestCalculatePaymentForNextUserWithOverdue()
         {
             int userId = 1;
             DateTime today = new DateTime(2018, 4, 15);
             Transaction expected = new Transaction()
             {
                 UserID = 1,
-                AmountCharged = Math.Round(875 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION),
+                AmountCharged = Math.Round(982.00, TuitionUtil.DEFAULT_PRECISION),
                 DateDue = new DateTime(2018, 5, 5),
+                ProcessState = ProcessState.NOT_YET_CHARGED
+            };
+
+            Transaction actual = paymentEngine.CalculateNextPaymentForUser(userId, today);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestCalculatePaymentForNextUserNotOverdue()
+        {
+            int userId = 2;
+            DateTime today = new DateTime(2018, 4, 15);
+            Transaction expected = new Transaction()
+            {
+                UserID = 2,
+                AmountCharged = Math.Round(1287.50, TuitionUtil.DEFAULT_PRECISION),
+                DateDue = new DateTime(2018, 9, 5),
                 ProcessState = ProcessState.NOT_YET_CHARGED
             };
 
