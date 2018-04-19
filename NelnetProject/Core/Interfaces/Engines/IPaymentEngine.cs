@@ -36,7 +36,7 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="user">A user with a payment plan and one or more students</param>
         /// <returns>The periodic payment amount</returns>
-        Double CalculatePeriodicPayment(User user);
+        double CalculatePeriodicPayment(User user);
 
     }
 }
