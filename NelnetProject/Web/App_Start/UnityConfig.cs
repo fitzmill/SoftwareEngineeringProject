@@ -1,7 +1,7 @@
 using Accessors;
 using Core.Interfaces;
+using Core.Interfaces.Accessors;
 using Engines;
-using Microsoft.Practices.Unity.Configuration;
 using System;
 using System.Configuration;
 using Unity;
@@ -44,9 +44,8 @@ namespace Web
         {
             //database accessors
             var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
-            container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(connectionStringConstructor);
             container.RegisterType<IGetUserInfoAccessor, GetUserInfoAccessor>(connectionStringConstructor);
-            container.RegisterType<ISetTransactionAccessor, SetTransactionAccessor>(connectionStringConstructor);
+            container.RegisterType<ITransactionAccessor, TransactionAccessor>(connectionStringConstructor);
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(connectionStringConstructor);
             container.RegisterType<IGetReportAccessor, GetReportAccessor>(connectionStringConstructor);
             container.RegisterType<ISetReportAccessor, SetReportAccessor>(connectionStringConstructor);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Core.Interfaces
+namespace Core.Interfaces.Engines
 {
     /// <summary>
     /// Interface for engine that generates and sends notifications.
