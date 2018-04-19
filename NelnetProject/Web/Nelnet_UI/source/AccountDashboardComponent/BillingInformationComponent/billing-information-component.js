@@ -4,13 +4,11 @@ const utility = require('../../utility.js');
 
 const billingControllerRoot = "/api/billing";
 
-var billingInfo = undefined;
-
 ko.components.register('billing-information-component', {
     viewModel: function (params) {
         var vm = this;
 
-        billingInfo = params.billingInfo;
+        vm.billingInfo = params.billingInfo;
 
         vm.CardFirstName = ko.observable();
         vm.CardLastName = ko.observable();
@@ -21,16 +19,16 @@ ko.components.register('billing-information-component', {
         vm.Zip = ko.observable();
 
         vm.setUIBillingInfo = function () {
-            vm.CardFirstName(billingInfo().FirstName);
-            vm.CardLastName(billingInfo().LastName);
-            vm.StreetAddress1(billingInfo().StreetAddress1);
-            vm.StreetAddress2(billingInfo().StreetAddress2);
-            vm.City(billingInfo().City);
-            vm.State(billingInfo().State);
-            vm.Zip(billingInfo().Zip);
+            vm.CardFirstName(vm.billingInfo().FirstName);
+            vm.CardLastName(vm.billingInfo().LastName);
+            vm.StreetAddress1(vm.billingInfo().StreetAddress1);
+            vm.StreetAddress2(vm.billingInfo().StreetAddress2);
+            vm.City(vm.billingInfo().City);
+            vm.State(vm.billingInfo().State);
+            vm.Zip(vm.billingInfo().Zip);
         };
 
-        billingInfo.subscribe(vm.setUIBillingInfo);
+        vm.billingInfo.subscribe(vm.setUIBillingInfo);
 
         vm.updateBillingInfo = function (data, event) {
             if ($("#edit-billing-form").valid()) {
@@ -40,7 +38,7 @@ ko.components.register('billing-information-component', {
                 $("#btn-cancel-edit-billing").attr('disabled', 'disabled');
 
                 let changedBillingInfo = {
-                    CustomerID: billingInfo().CustomerID,
+                    CustomerID: vm.billingInfo().CustomerID,
                     FirstName: vm.CardFirstName(),
                     LastName: vm.CardLastName(),
                     StreetAddress1: vm.StreetAddress1(),
@@ -51,13 +49,13 @@ ko.components.register('billing-information-component', {
                 };
 
                 updatePaymentBillingInfo(changedBillingInfo).done(function () {
-                    billingInfo().FirstName = changedBillingInfo.FirstName;
-                    billingInfo().LastName = changedBillingInfo.LastName;
-                    billingInfo().StreetAddress1 = changedBillingInfo.StreetAddress1;
-                    billingInfo().StreetAddress2 = changedBillingInfo.StreetAddress2;
-                    billingInfo().City = changedBillingInfo.City;
-                    billingInfo().State = changedBillingInfo.State;
-                    billingInfo().Zip = changedBillingInfo.Zip;
+                    vm.billingInfo().FirstName = changedBillingInfo.FirstName;
+                    vm.billingInfo().LastName = changedBillingInfo.LastName;
+                    vm.billingInfo().StreetAddress1 = changedBillingInfo.StreetAddress1;
+                    vm.billingInfo().StreetAddress2 = changedBillingInfo.StreetAddress2;
+                    vm.billingInfo().City = changedBillingInfo.City;
+                    vm.billingInfo().State = changedBillingInfo.State;
+                    vm.billingInfo().Zip = changedBillingInfo.Zip;
 
                     //UI will be updated here
                     params.stopEditing(data, event);

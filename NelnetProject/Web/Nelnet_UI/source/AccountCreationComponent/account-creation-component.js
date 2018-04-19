@@ -105,21 +105,21 @@ ko.components.register('account-creation-component', {
 
             user.Plan = vm.PLAN_TYPE_VALUES["YEARLY"];
             calculatePeriodicPayment(user).done(function (data) {
-                vm.yearlyRate(Number(data).toLocaleString('en'));
+                vm.yearlyRate(data.formatAsMoney());
             }).fail(function (jqXHR) {
                 window.alert("Could not calculate yearly rate.");
             });
 
             user.Plan = vm.PLAN_TYPE_VALUES["SEMESTERLY"];
             calculatePeriodicPayment(user).done(function (data) {
-                vm.semesterlyRate(Number(data).toLocaleString('en'));
+                vm.semesterlyRate(data.formatAsMoney());
             }).fail(function (jqXHR) {
                 window.alert("Could not calculate semesterly rate.");
             });
 
             user.Plan = vm.PLAN_TYPE_VALUES["MONTHLY"];
             calculatePeriodicPayment(user).done(function (data) {
-                vm.monthlyRate(Number(data).toLocaleString('en'));
+                vm.monthlyRate(data.formatAsMoney());
             }).fail(function (jqXHR) {
                 window.alert("Could not calculate monthly rate.");
             });

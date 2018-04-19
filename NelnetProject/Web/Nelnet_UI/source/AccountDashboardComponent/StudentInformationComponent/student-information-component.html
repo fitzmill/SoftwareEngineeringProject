@@ -1,9 +1,11 @@
 ﻿<div class="card card-account-information-section">
     <div class="card-header">
         <h3 class="header-information-section">Student Information</h3>
+        <!-- ko if: localStudents() !== undefined -->
         <button id="btn-edit-student" class="btn btn-primary btn-edit edit-student-inactive" data-bind="click: $parent.startEditing">Edit</button>
         <button id="btn-save-edit-student" class="btn btn-success btn-edit edit-student-active" data-bind="click: updateStudents">Save</button>
         <button id="btn-cancel-edit-student" class="btn btn-default btn-edit edit-student-active" data-bind="click: function (data, event) { $parent.stopEditing(data, event); setUIStudentInfo(); }">Cancel</button>
+        <!-- /ko -->
     </div>
 
     <form id="edit-students-form">

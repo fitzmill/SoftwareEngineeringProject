@@ -5,18 +5,16 @@ const utility = require('../../utility.js');
 //api url constants
 const userInfoControllerRoot = "/api/userinfo";
 
-var localStudents = undefined;
-
 ko.components.register("student-information-component", {
     viewModel: function (params) {
         var vm = this;
 
         vm.students = ko.observableArray([]);
 
-        localStudents = params.students;
+        vm.localStudents = params.students;
 
         vm.setUIStudentInfo = function () {
-            vm.students(localStudents().map((student) => {
+            vm.students(vm.localStudents().map((student) => {
                 return {
                     studentID: student.StudentID,
                     firstName: ko.observable(student.FirstName),
@@ -26,7 +24,7 @@ ko.components.register("student-information-component", {
             }));
         }
 
-        localStudents.subscribe(vm.setUIStudentInfo);
+        vm.localStudents.subscribe(vm.setUIStudentInfo);
 
         //Changes student info in database and ui to what user entered
         vm.updateStudents = function (data, event) {
@@ -49,7 +47,7 @@ ko.components.register("student-information-component", {
                 //new students will have an undefined StudentID
                 let newStudents = inputStudents.filter((s) => !s.StudentID);
                 //deleted students will be in the user object but not in inputStudents
-                let originalStudentIDs = localStudents().map((s) => s.StudentID);
+                let originalStudentIDs = vm.localStudents().map((s) => s.StudentID);
                 let inputStudentIDs = inputStudents.map((s) => s.StudentID);
 
                 let deletedStudentIDs = originalStudentIDs.filter((id) => !inputStudentIDs.includes(id));
@@ -58,7 +56,7 @@ ko.components.register("student-information-component", {
 
                 updateStudentInfo(updatedStudents, deletedStudentIDs, newStudents).done(function () {
                     //update user in local storage in the case of page reload
-                    localStudents(inputStudents);
+                    vm.localStudents(inputStudents);
                     params.stopEditing(data, event);
                 }).fail(function (jqXHR) {
                     if (jqXHR.status !== 401) {

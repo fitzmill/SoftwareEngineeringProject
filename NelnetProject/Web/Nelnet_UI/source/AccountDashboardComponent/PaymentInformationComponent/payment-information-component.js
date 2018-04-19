@@ -4,8 +4,6 @@ var utility = require('../../utility.js');
 
 const billingControllerRoot = "/api/billing";
 
-var paymentInfo = undefined;
-
 ko.components.register('payment-information-component', {
     viewModel: function (params) {
         var vm = this;
@@ -15,7 +13,7 @@ ko.components.register('payment-information-component', {
         vm.expirationMonth = ko.observable();
         vm.cardType = ko.observable();
 
-        paymentInfo = params.paymentInfo;
+        vm.paymentInfo = params.paymentInfo;
 
         vm.paymentPlan = params.paymentPlan;
 
@@ -23,13 +21,13 @@ ko.components.register('payment-information-component', {
         vm.nextPaymentCost = params.nextPaymentCost;
 
         vm.setUIPaymentInfo = function () {
-            vm.cardNumber(paymentInfo().CardNumber);
-            vm.expirationYear(paymentInfo().ExpirationYear);
-            vm.expirationMonth(paymentInfo().ExpirationMonth);
-            vm.cardType(paymentInfo().CardType);
+            vm.cardNumber(vm.paymentInfo().CardNumber);
+            vm.expirationYear(vm.paymentInfo().ExpirationYear);
+            vm.expirationMonth(vm.paymentInfo().ExpirationMonth);
+            vm.cardType(vm.paymentInfo().CardType);
         }
 
-        paymentInfo.subscribe(vm.setUIPaymentInfo);
+        vm.paymentInfo.subscribe(vm.setUIPaymentInfo);
 
         //Changes the payment info in payment spring and ui to what the user entered.
         vm.updatePaymentInfo = function (data, event) {
@@ -40,7 +38,7 @@ ko.components.register('payment-information-component', {
                 $("#btn-cancel-edit-payment").attr('disabled', 'disabled');
 
                 let changedCardInfo = {
-                    CustomerID: paymentInfo().CustomerID,
+                    CustomerID: vm.paymentInfo().CustomerID,
                     CardNumber: vm.cardNumber(),
                     ExpirationYear: vm.expirationYear(),
                     ExpirationMonth: vm.expirationMonth()
@@ -48,17 +46,17 @@ ko.components.register('payment-information-component', {
 
                 updatePaymentCardInfo(changedCardInfo).done(function () {
                     //reset it to last few digits
-                    paymentInfo().CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
-                    paymentInfo().ExpirationYear = changedCardInfo.ExpirationYear;
-                    paymentInfo().ExpirationMonth = changedCardInfo.ExpirationMonth;
+                    vm.paymentInfo().CardNumber = changedCardInfo.CardNumber.substring(changedCardInfo.CardNumber.length - 4).replace(/[0]*/, "");
+                    vm.paymentInfo().ExpirationYear = changedCardInfo.ExpirationYear;
+                    vm.paymentInfo().ExpirationMonth = changedCardInfo.ExpirationMonth;
 
-                    vm.cardNumber(paymentInfo().CardNumber);
+                    vm.cardNumber(vm.paymentInfo().CardNumber);
 
                     //UI will be updated here
                     params.stopEditing(data, event);
                 }).fail(function (jqXHR) {
                     if (jqXHR.status !== 401) {
-                        changedPaymentInfo = undefined;
+                        changedvm.paymentInfo = undefined;
                         let errorMessage = JSON.parse(jqXHR.responseText).Message;
                         window.alert("Could not save information: ".concat(errorMessage));
                     }
