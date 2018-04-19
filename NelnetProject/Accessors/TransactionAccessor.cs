@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 
 namespace Accessors
 {
-    class TransactionAccessor : ITransactionAccessor
+    public class TransactionAccessor : ITransactionAccessor
     {
         private readonly string _connectionString;
 

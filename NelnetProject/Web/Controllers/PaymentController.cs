@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using Core.Interfaces.Engines;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -15,12 +16,12 @@ namespace Web.Controllers
     [SqlRowNotAffectedFilter]
     public class PaymentController : ApiController
     {
-        IGetTransactionEngine _getTransactionEngine;
-        IPaymentEngine _paymentEngine;
+        private readonly ITransactionEngine _transactionEngine;
+        private readonly IPaymentEngine _paymentEngine;
 
-        public PaymentController(IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine)
+        public PaymentController(ITransactionEngine transactionEngine, IPaymentEngine paymentEngine)
         {
-            _getTransactionEngine = getTransactionEngine;
+            _transactionEngine = transactionEngine;
             _paymentEngine = paymentEngine;
         }
 
@@ -41,7 +42,7 @@ namespace Web.Controllers
                 return BadRequest("Could not parse userID into an integer");
             }
 
-            return Ok(_getTransactionEngine.GetAllTransactionsForUser(parsedUserID));
+            return Ok(_transactionEngine.GetAllTransactionsForUser(parsedUserID));
         }
 
         /// <summary>

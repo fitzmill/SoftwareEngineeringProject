@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 namespace Accessors
 {
-    class ReportAccessor : IReportAccessor
+    public class ReportAccessor : IReportAccessor
     {
         private readonly string _connectionString;
 

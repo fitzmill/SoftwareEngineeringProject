@@ -10,13 +10,13 @@ namespace Core.Interfaces.Engines
     /// <summary>
     /// Engine for computations relating to reports.
     /// </summary>
-    interface IReportEngine
+    public interface IReportEngine
     {
         /// <summary>
         /// Gets all reports in the database from the accessor in descending order
         /// </summary>
-        /// <returns>List of all reports from most recent to oldest</returns>
-        IList<Report> GetAllReports();
+        /// <returns>Collection of all reports from most recent to oldest</returns>
+        IEnumerable<Report> GetAllReports();
 
         /// <summary>
         /// Creates a report from the given start and end date and inserts it into the database.

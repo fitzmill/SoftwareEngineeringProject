@@ -12,7 +12,7 @@ namespace Core.Interfaces
         /// Generates and sends notifications based on the given transactions.
         /// </summary>
         /// <param name="transactions">List of one or more transactions</param>
-        void SendTransactionNotifications(List<Transaction> transactions);
+        void SendTransactionNotifications(IList<Transaction> transactions);
 
         /// <summary>
         /// Generates and sends a notification to a user telling them the information type has been changed on their account.
