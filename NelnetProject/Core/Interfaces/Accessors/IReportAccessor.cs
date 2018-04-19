@@ -11,8 +11,8 @@ namespace Core.Interfaces.Accessors
         /// <summary>
         /// Gets all reports from the database in descending order by executing a stored procedure
         /// </summary>
-        /// <returns>List of all reports ordered from most recent to oldest</returns>
-        IList<Report> GetAllReports();
+        /// <returns>Collection of all reports ordered from most recent to oldest</returns>
+        IEnumerable<Report> GetAllReports();
 
         /// <summary>
         /// Inserts report into database by calling stored procedure

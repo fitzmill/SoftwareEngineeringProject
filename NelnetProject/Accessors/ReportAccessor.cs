@@ -14,7 +14,7 @@ namespace Accessors
             _connectionString = connectionString;
         }
 
-        public IList<Report> GetAllReports()
+        public IEnumerable<Report> GetAllReports()
         {
             string query = "[dbo].[GetAllReports]";
 

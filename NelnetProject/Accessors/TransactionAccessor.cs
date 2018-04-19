@@ -17,7 +17,7 @@ namespace Accessors
             _connectionString = connectionString;
         }
 
-        public IList<Transaction> GetAllTransactionsForUser(int userID)
+        public IEnumerable<Transaction> GetAllTransactionsForUser(int userID)
         {
             string query = "[dbo].[GetAllTransactionsForUser]";
 
@@ -52,7 +52,7 @@ namespace Accessors
             return result;
         }
 
-        public IList<Transaction> GetAllUnsettledTransactions()
+        public IEnumerable<Transaction> GetAllUnsettledTransactions()
         {
             string query = "[dbo].[GetAllUnsettledTransactions]";
 
@@ -86,7 +86,7 @@ namespace Accessors
             return result;
         }
 
-        public IList<Transaction> GetAllFailedTransactions()
+        public IEnumerable<Transaction> GetAllFailedTransactions()
         {
             string query = "[dbo].[GetAllFailedTransactions]";
 
@@ -120,7 +120,7 @@ namespace Accessors
             return result;
         }
 
-        public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startDate, DateTime endDate)
+        public IEnumerable<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startDate, DateTime endDate)
         {
             string query = "[dbo].[GetAllTransactionsForDateRange]";
 
