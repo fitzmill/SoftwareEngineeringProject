@@ -2,11 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using Core;
-using Core.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NelnetProject.Tests.Engines.MockedAccessors;
 using Engines;
-using System.Diagnostics;
 using Core.DTOs;
 using Engines.Utils;
 
@@ -15,12 +13,11 @@ namespace NelnetProject.Tests.Engines
     [TestClass]
     public class TestPaymentEngine
     {
-        PaymentEngine paymentEngine;
-        MockGetUserInfoAccessor getUserInfoAccessor;
-        MockGetPaymentInfoAccessor getPaymentInfoAccessor;
-        MockChargePaymentAccessor chargePaymentAccessor;
-        MockSetTransactionAccessor setTransactionAccessor;
-        MockGetTransactionAccessor getTransactionAccessor;
+        private readonly PaymentEngine _paymentEngine;
+        MockGetUserInfoAccessor _getUserInfoAccessor;
+        MockGetPaymentInfoAccessor _getPaymentInfoAccessor;
+        MockChargePaymentAccessor _chargePaymentAccessor;
+        MockTransactionAccessor _transactionAccessor;
 
         public static List<Student> StudentsDB = new List<Student>()
         {
@@ -118,12 +115,11 @@ namespace NelnetProject.Tests.Engines
 
         public TestPaymentEngine()
         {
-            getUserInfoAccessor = new MockGetUserInfoAccessor(StudentsDB, MockUsersDB);
-            getPaymentInfoAccessor = new MockGetPaymentInfoAccessor(MockPaymentSpring);
-            chargePaymentAccessor = new MockChargePaymentAccessor();
-            setTransactionAccessor = new MockSetTransactionAccessor();
-            getTransactionAccessor = new MockGetTransactionAccessor(TransactionDB);
-            paymentEngine = new PaymentEngine(getUserInfoAccessor, getPaymentInfoAccessor, chargePaymentAccessor, setTransactionAccessor, getTransactionAccessor);
+            _getUserInfoAccessor = new MockGetUserInfoAccessor(StudentsDB, MockUsersDB);
+            _getPaymentInfoAccessor = new MockGetPaymentInfoAccessor(MockPaymentSpring);
+            _chargePaymentAccessor = new MockChargePaymentAccessor();
+            _transactionAccessor = new MockTransactionAccessor(TransactionDB);
+            _paymentEngine = new PaymentEngine(_getUserInfoAccessor, _getPaymentInfoAccessor, _chargePaymentAccessor, _transactionAccessor);
         }
 
         private User BuildTestUser(PaymentPlan paymentPlan)
@@ -157,12 +153,12 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            List<Transaction> result = paymentEngine.GeneratePayments(genDate).ToList();
+            List<Transaction> result = _paymentEngine.GeneratePayments(genDate).ToList();
 
             CollectionAssert.AreEqual(expectedTransactions, result);
 
             expectedTransactions.AddRange(TransactionDB.Where(t => t.ProcessState == ProcessState.DEFERRED));
-            CollectionAssert.AreEqual(expectedTransactions, setTransactionAccessor.Transactions);
+            CollectionAssert.AreEqual(expectedTransactions, _transactionAccessor.Transactions.ToList());
         }
 
         [TestMethod]
@@ -212,17 +208,17 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
+            _chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
             {
                 WasSuccessful = true
             });
-            chargePaymentAccessor.MockPaymentSpring.Add("123nonono", new ChargeResultDTO()
+            _chargePaymentAccessor.MockPaymentSpring.Add("123nonono", new ChargeResultDTO()
             {
                 WasSuccessful = false,
                 ErrorMessage = "Insufficient Funds"
             });
 
-            List<Transaction> resultTransaction = paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
+            List<Transaction> resultTransaction = _paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
 
             CollectionAssert.AreEqual(expectedTransactions, resultTransaction);
         }
@@ -258,13 +254,13 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
+            _chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
             {
                 WasSuccessful = false,
                 ErrorMessage = "Card Expired"
             });
 
-            List<Transaction> resultTransaction = paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
+            List<Transaction> resultTransaction = _paymentEngine.ChargePayments(inputTransactions, chargeDate).ToList();
 
             CollectionAssert.AreEqual(expectedTransactions, resultTransaction);
         }
@@ -282,7 +278,7 @@ namespace NelnetProject.Tests.Engines
                 ProcessState = ProcessState.NOT_YET_CHARGED
             };
 
-            Transaction actual = paymentEngine.CalculateNextPaymentForUser(userId, today);
+            Transaction actual = _paymentEngine.CalculateNextPaymentForUser(userId, today);
 
             Assert.AreEqual(expected, actual);
         }
@@ -300,7 +296,7 @@ namespace NelnetProject.Tests.Engines
                 ProcessState = ProcessState.NOT_YET_CHARGED
             };
 
-            Transaction actual = paymentEngine.CalculateNextPaymentForUser(userId, today);
+            Transaction actual = _paymentEngine.CalculateNextPaymentForUser(userId, today);
 
             Assert.AreEqual(expected, actual);
         }

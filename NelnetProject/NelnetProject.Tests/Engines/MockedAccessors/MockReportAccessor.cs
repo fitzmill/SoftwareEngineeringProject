@@ -1,14 +1,12 @@
-﻿using Core.Interfaces;
+﻿using Core.Interfaces.Accessors;
 using Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NelnetProject.Tests.Engines.MockedAccessors
 {
-    public class MockGetReportAccessor : IGetReportAccessor
+    public class MockReportAccessor : IReportAccessor
     {
         private List<Report> MockDB = new List<Report>()
         {
@@ -35,9 +33,16 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
             }
         };
 
-        public IList<Report> GetAllReports()
+        public IEnumerable<Report> GetAllReports()
         {
             return MockDB;
+        }
+
+        public void InsertReport(Report report)
+        {
+            report.ReportID = MockDB.Select(x => x.ReportID).Max() + 1;
+            report.DateCreated = DateTime.Now;
+            MockDB.Add(report);
         }
     }
 }

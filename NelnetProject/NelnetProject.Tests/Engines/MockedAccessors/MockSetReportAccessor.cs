@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NelnetProject.Tests.Engines.MockedAccessors
 {
-    public class MockSetReportAccessor : ISetReportAccessor
+    public class MockSetReportAccessor
     {
         public List<Report> MockDB = new List<Report>()
         {
