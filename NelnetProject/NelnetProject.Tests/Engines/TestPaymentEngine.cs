@@ -21,21 +21,21 @@ namespace NelnetProject.Tests.Engines
 
         public static List<Student> StudentsDB = new List<Student>()
         {
-            new Student ()
+            new Student
             {
                 StudentID = 1,
                 FirstName = "Joe",
                 LastName = "Sheepman",
                 Grade = 8
             },
-            new Student ()
+            new Student
             {
                 StudentID = 2,
                 FirstName = "Bill",
                 LastName = "Billman",
                 Grade = 11
             },
-            new Student ()
+            new Student
             {
                 StudentID = 3,
                 FirstName = "Jeff",
@@ -45,7 +45,7 @@ namespace NelnetProject.Tests.Engines
         };
         public static List<User> MockUsersDB = new List<User>()
         {
-            new User()
+            new User
             {
                 UserID = 1,
                 FirstName = "John",
@@ -58,7 +58,7 @@ namespace NelnetProject.Tests.Engines
                 CustomerID = "fed123",
                 Students = new List<Student>() { StudentsDB[0], StudentsDB[1] }
             },
-            new User()
+            new User
             {
                 UserID = 2,
                 FirstName = "Lucas",
@@ -74,7 +74,7 @@ namespace NelnetProject.Tests.Engines
         };
         public static List<UserPaymentInfoDTO> MockPaymentSpring = new List<UserPaymentInfoDTO>()
         {
-            new UserPaymentInfoDTO()
+            new UserPaymentInfoDTO
             {
                 CustomerID = "fed123",
                 FirstName = "John",
@@ -91,8 +91,22 @@ namespace NelnetProject.Tests.Engines
             }
         };
 
-        private List<Transaction> TransactionDB = new List<Transaction>{
-            new Transaction()
+        //private List<Transaction> TransactionDB = 
+
+        public TestPaymentEngine()
+        {
+            _getUserInfoAccessor = new MockGetUserInfoAccessor(StudentsDB, MockUsersDB);
+            _getPaymentInfoAccessor = new MockGetPaymentInfoAccessor(MockPaymentSpring);
+            _chargePaymentAccessor = new MockChargePaymentAccessor();
+            _transactionAccessor = new MockTransactionAccessor(new List<Transaction>());
+            _paymentEngine = new PaymentEngine(_getUserInfoAccessor, _getPaymentInfoAccessor, _chargePaymentAccessor, _transactionAccessor);
+        }
+
+        [TestInitialize]
+        public void InitTest()
+        {
+            _transactionAccessor.Transactions = new List<Transaction>{
+            new Transaction
             {
                 TransactionID = 2,
                 UserID = 2,
@@ -101,7 +115,7 @@ namespace NelnetProject.Tests.Engines
                 DateCharged = new DateTime(2018, 2, 9),
                 ProcessState = ProcessState.SUCCESSFUL
             },
-            new Transaction()
+            new Transaction
             {
                 TransactionID = 3,
                 UserID = 1,
@@ -112,14 +126,6 @@ namespace NelnetProject.Tests.Engines
                 ReasonFailed = "Insufficient funds"
             }
         };
-
-        public TestPaymentEngine()
-        {
-            _getUserInfoAccessor = new MockGetUserInfoAccessor(StudentsDB, MockUsersDB);
-            _getPaymentInfoAccessor = new MockGetPaymentInfoAccessor(MockPaymentSpring);
-            _chargePaymentAccessor = new MockChargePaymentAccessor();
-            _transactionAccessor = new MockTransactionAccessor(TransactionDB);
-            _paymentEngine = new PaymentEngine(_getUserInfoAccessor, _getPaymentInfoAccessor, _chargePaymentAccessor, _transactionAccessor);
         }
 
         private User BuildTestUser(PaymentPlan paymentPlan)
@@ -135,7 +141,7 @@ namespace NelnetProject.Tests.Engines
         public void TestGeneratePaymentsAllThisMonth()
         {
             DateTime genDate = new DateTime(2018, 9, 1);
-            List<Transaction> expectedTransactions = new List<Transaction>
+            List<Transaction> expectedTransactionsReturned = new List<Transaction>
             {
                 new Transaction
                 {
@@ -153,12 +159,47 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
+            List<Transaction> expectedTransactionsInDB = new List<Transaction>
+            {
+                new Transaction
+                {
+                    TransactionID = 2,
+                    UserID = 2,
+                    AmountCharged = 64.00,
+                    DateDue = new DateTime(2018, 2, 9),
+                    DateCharged = new DateTime(2018, 2, 9),
+                    ProcessState = ProcessState.SUCCESSFUL
+                },
+                new Transaction
+                {
+                    UserID = 1,
+                    AmountCharged = Math.Round(55 + TuitionUtil.LATE_FEE + 875 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION),
+                    DateDue = new DateTime(2018, 9, 5),
+                    ProcessState = ProcessState.NOT_YET_CHARGED
+                },
+                new Transaction
+                {
+                    UserID = 2,
+                    AmountCharged = Math.Round(1250 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION),
+                    DateDue = new DateTime(2018, 9, 5),
+                    ProcessState = ProcessState.NOT_YET_CHARGED
+                },
+                new Transaction
+                {
+                    TransactionID = 3,
+                    UserID = 1,
+                    AmountCharged = 55.00,
+                    DateDue = new DateTime(2018, 2, 9),
+                    DateCharged = null,
+                    ProcessState = ProcessState.DEFERRED,
+                    ReasonFailed = "Insufficient funds"
+                }
+            };
+
             List<Transaction> result = _paymentEngine.GeneratePayments(genDate).ToList();
 
-            CollectionAssert.AreEqual(expectedTransactions, result);
-
-            expectedTransactions.AddRange(TransactionDB.Where(t => t.ProcessState == ProcessState.DEFERRED));
-            CollectionAssert.AreEqual(expectedTransactions, _transactionAccessor.Transactions.ToList());
+            CollectionAssert.AreEqual(expectedTransactionsReturned, result);
+            CollectionAssert.AreEqual(expectedTransactionsInDB, _transactionAccessor.Transactions.ToList());
         }
 
         [TestMethod]
