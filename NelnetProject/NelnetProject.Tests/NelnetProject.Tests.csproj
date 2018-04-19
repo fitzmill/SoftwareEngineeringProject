@@ -50,12 +50,11 @@
     <Reference Include="System.Data" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Accessors\TestGetUserInfoAccessor.cs" />
     <Compile Include="Accessors\TestGetTransactionAccessor.cs" />
-    <Compile Include="Accessors\TestSetUserInfoAccessor.cs" />
     <Compile Include="Accessors\TestSetTransactionAccessor.cs" />
     <Compile Include="Accessors\TestGetReportAccessor.cs" />
     <Compile Include="Accessors\TestSetReportAccessor.cs" />
+    <Compile Include="Accessors\TestUserAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockChargePaymentAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockEmailAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockGetPaymentInfoAccessor.cs" />
