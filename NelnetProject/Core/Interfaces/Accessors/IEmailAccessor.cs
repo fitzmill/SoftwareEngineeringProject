@@ -1,6 +1,6 @@
 ﻿using Core.Models;
 
-namespace Core.Interfaces
+namespace Core.Interfaces.Accessors
 {
     /// <summary>
     /// Interface for the accessor to the email sending service.

@@ -4,6 +4,7 @@ using System.Linq;
 using Core;
 using Core.DTOs;
 using Core.Interfaces;
+using Core.Interfaces.Accessors;
 using Engines.Utils;
 
 namespace Engines
@@ -16,17 +17,15 @@ namespace Engines
         private IGetUserInfoAccessor getUserInfoAccessor;
         private IGetPaymentInfoAccessor getPaymentInfoAccessor;
         private IChargePaymentAccessor chargePaymentAccessor;
-        private ISetTransactionAccessor setTransactionAccessor;
-        private IGetTransactionAccessor getTransactionAccessor;
+        private readonly ITransactionAccessor _transactionAccessor;
 
         public PaymentEngine(IGetUserInfoAccessor getUserInfoAccessor, IGetPaymentInfoAccessor getPaymentInfoAccessor, 
-            IChargePaymentAccessor chargePaymentAccessor, ISetTransactionAccessor setTransactionAccessor, IGetTransactionAccessor getTransactionAccessor)
+            IChargePaymentAccessor chargePaymentAccessor, ITransactionAccessor transactionAccessor)
         {
             this.getUserInfoAccessor = getUserInfoAccessor;
             this.getPaymentInfoAccessor = getPaymentInfoAccessor;
             this.chargePaymentAccessor = chargePaymentAccessor;
-            this.setTransactionAccessor = setTransactionAccessor;
-            this.getTransactionAccessor = getTransactionAccessor;
+            _transactionAccessor = transactionAccessor;
         }
 
         public IList<Transaction> ChargePayments(List<Transaction> charges, DateTime today)
@@ -71,7 +70,7 @@ namespace Engines
             };
 
             //Update transaction entry in DB
-            setTransactionAccessor.UpdateTransaction(resultTransaction);
+            _transactionAccessor.UpdateTransaction(resultTransaction);
 
             return resultTransaction;
         }
@@ -81,7 +80,7 @@ namespace Engines
             //Get all users
             IList<User> users = getUserInfoAccessor.GetAllActiveUsers();
 
-            IList<Transaction> failedTransactions = getTransactionAccessor.GetAllFailedTransactions();
+            IEnumerable<Transaction> failedTransactions = _transactionAccessor.GetAllFailedTransactions();
 
             //Generate all payments that are due this month
             List<Transaction> newTransactions = new List<Transaction>();
@@ -118,17 +117,17 @@ namespace Engines
             }
 
             //Store them in the database
-            newTransactions.ForEach(t => setTransactionAccessor.AddTransaction(t));
+            newTransactions.ForEach(t => _transactionAccessor.AddTransaction(t));
 
             //update newly deferred transactionss
-            transactionsToUpdate.ForEach(t => setTransactionAccessor.UpdateTransaction(t));
+            transactionsToUpdate.ForEach(t => _transactionAccessor.UpdateTransaction(t));
 
             return newTransactions;
         }
 
         public Transaction CalculateNextPaymentForUser(int userID, DateTime today)
         {
-            List<Transaction> userTransactions = getTransactionAccessor.GetAllFailedTransactions().ToList();
+            List<Transaction> userTransactions = _transactionAccessor.GetAllFailedTransactions().ToList();
             Transaction failed = userTransactions.Find(t => t.UserID == userID);
             double overdueAmount = (failed == null) ? 0.0 : failed.AmountCharged;
 

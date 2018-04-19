@@ -49,14 +49,12 @@
     <Compile Include="GetPaymentInfoAccessor.cs" />
     <Compile Include="ChargePaymentAccessor.cs" />
     <Compile Include="EmailAccessor.cs" />
-    <Compile Include="GetReportAccessor.cs" />
-    <Compile Include="GetTransactionAccessor.cs" />
     <Compile Include="GetUserInfoAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportAccessor.cs" />
     <Compile Include="SetPaymentInfoAccessor.cs" />
-    <Compile Include="SetReportAccessor.cs" />
-    <Compile Include="SetTransactionAccessor.cs" />
     <Compile Include="SetUserInfoAccessor.cs" />
+    <Compile Include="TransactionAccessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj">

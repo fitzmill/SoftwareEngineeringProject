@@ -1,37 +1,33 @@
-﻿using Accessors;
-using Core;
+﻿using Core;
 using Core.DTOs;
-using Core.Exceptions;
-using Core.Interfaces;
-using Core.Models;
-using Engines;
+using Core.Interfaces.Engines;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Web;
 using System.Web.Http;
 using Web.Filters;
 
 namespace Web.Controllers
 {
-    //this is the route in the url for this set of APIs. So the url would be localhost:port/api/admin
+    /// <summary>
+    /// Controller for all admin endpoints.
+    /// </summary>
     [RoutePrefix("api/admin")]
     [JwtAuthentication(Roles = new UserType[] { UserType.ADMIN })]
     public class AdminController : ApiController
     {
-        IGetTransactionEngine getTransactionEngine;
-        IGetReportEngine getReportEngine;
-        ISetReportEngine setReportEngine;
+        private readonly ITransactionEngine _transactionEngine;
+        private readonly IReportEngine _reportEngine;
 
-        //this object gets injected as a dependency by Unity
-        public AdminController(IGetTransactionEngine getTransactionEngine, IGetReportEngine getReportEngine, ISetReportEngine setReportEngine)
+        public AdminController(ITransactionEngine transactionEngine, IReportEngine reportEngine)
         {
-            this.getTransactionEngine = getTransactionEngine;
-            this.getReportEngine = getReportEngine;
-            this.setReportEngine = setReportEngine;
+            _transactionEngine = transactionEngine;
+            _reportEngine = reportEngine;
         }
 
+        /// <summary>
+        /// Gets all transactions for a given date range.
+        /// </summary>
+        /// <param name="dateRangeDTO">The date range object</param>
+        /// <returns>A collection of transactions with user info</returns>
         [HttpPost]
         [Route("GetTransactionsForDateRange")]
         public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
@@ -40,21 +36,31 @@ namespace Web.Controllers
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
+
             var startDate = new DateTime(dateRangeDTO.StartDate.Year, dateRangeDTO.StartDate.Month, dateRangeDTO.StartDate.Day);
             var endDate = new DateTime(dateRangeDTO.EndDate.Year, dateRangeDTO.EndDate.Month, dateRangeDTO.EndDate.Day);
 
-            var result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
+            var result = _transactionEngine.GetTransactionsForDateRange(startDate, endDate);
 
             return Ok(result);
         }
 
+        /// <summary>
+        /// Gets all reports in the database.
+        /// </summary>
+        /// <returns>A collection of all the reports</returns>
         [HttpGet]
         [Route("GetAllReports")]
         public IHttpActionResult GetAllReports()
         {
-            return Ok(getReportEngine.GetAllReports());
+            return Ok(_reportEngine.GetAllReports());
         }
 
+        /// <summary>
+        /// Inserts a report into the database and returns it.
+        /// </summary>
+        /// <param name="dateRange">The date range object</param>
+        /// <returns>The report</returns>
         [HttpPost]
         [Route("InsertReport")]
         public IHttpActionResult InsertReport(DateRangeDTO dateRange)
@@ -67,7 +73,7 @@ namespace Web.Controllers
             var startDate = new DateTime(dateRange.StartDate.Year, dateRange.StartDate.Month, dateRange.StartDate.Day);
             var endDate = new DateTime(dateRange.EndDate.Year, dateRange.EndDate.Month, dateRange.EndDate.Day);
 
-            var report = setReportEngine.InsertReport(startDate, endDate);
+            var report = _reportEngine.InsertReport(startDate, endDate);
 
             return Ok(report);
         }
