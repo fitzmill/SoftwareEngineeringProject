@@ -1,9 +1,11 @@
 ﻿<div class="card card-account-information-section">
     <div class="card-header">
         <h3 class="header-information-section">Billing Information</h3>
+        <!-- ko if: billingInfo() !== undefined -->
         <button id="btn-edit-billing" class="btn btn-primary btn-edit edit-billing-inactive" data-bind="click: $parent.startEditing">Edit</button>
         <button id="btn-save-edit-billing" class="btn btn-success btn-edit edit-billing-active" data-bind="click: updateBillingInfo">Save</button>
         <button id="btn-cancel-edit-billing" class="btn btn-default btn-edit edit-billing-active" data-bind="click: function(data, event) { $parent.stopEditing(data, event); setUIBillingInfo(); }">Cancel</button>
+        <!-- /ko -->
     </div>
 
     <div class="card-body">

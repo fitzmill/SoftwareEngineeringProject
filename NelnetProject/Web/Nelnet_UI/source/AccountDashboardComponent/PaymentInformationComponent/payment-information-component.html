@@ -1,9 +1,11 @@
 ﻿<div class="card card-account-information-section">
     <div class="card-header">
         <h3 class="header-information-section">Payment Information</h3>
+        <!-- ko if: paymentInfo() !== undefined -->
         <button id="btn-edit-payment" class="btn btn-primary btn-edit edit-payment-inactive" data-bind="click: $parent.startEditing">Edit</button>
         <button id="btn-save-edit-payment" class="btn btn-success btn-edit edit-payment-active" data-bind="click: updatePaymentInfo">Save</button>
         <button id="btn-cancel-edit-payment" class="btn btn-default btn-edit edit-payment-active" data-bind="click: function (data, event) { $parent.stopEditing(data, event); setUIPaymentInfo(); }">Cancel</button>
+        <!-- /ko -->
     </div>
 
     <div class="card-body">
