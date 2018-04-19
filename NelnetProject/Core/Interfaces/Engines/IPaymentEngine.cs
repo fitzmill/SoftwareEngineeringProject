@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Interfaces
 {
@@ -27,7 +26,7 @@ namespace Core.Interfaces
         /// <summary>
         /// Gets the date and amount of the next payment for the user based on their userID
         /// </summary>
-        /// <param name="userID"></param>
+        /// <param name="userID">The id of the user to generate a payment for</param>
         /// <param name="today">Today's date.</param>
         /// <returns></returns>
         Transaction CalculateNextPaymentForUser(int userID, DateTime today);

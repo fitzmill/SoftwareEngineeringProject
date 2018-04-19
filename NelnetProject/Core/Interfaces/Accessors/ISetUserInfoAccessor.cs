@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Core.Interfaces
+﻿namespace Core.Interfaces
 {
     /// <summary>
     /// Stores information about users in the database.
@@ -24,13 +20,13 @@ namespace Core.Interfaces
         /// <summary>
         /// Delete a user record from the database specified by the userID in the user model
         /// </summary>
-        /// <param name="userID"></param>
+        /// <param name="userID">The user id associated with the account to be deleted</param>
         void DeletePersonalInfo(int userID);
 
         /// <summary>
         /// Insert new student record into the database
         /// </summary>
-        /// <param name="userID">The id of the user that the students will be associated with</param>
+        /// <param name="userID">The id of the user with which the students will be associated</param>
         /// <param name="students">The student record to be inserted</param>
         void InsertStudentInfo(int userID, Student student);
 
@@ -51,6 +47,5 @@ namespace Core.Interfaces
         /// </summary>
         /// <param name="userID">The id of the user whose students to delete</param>
         void DeleteStudentInfoByUserID(int userID);
-
     }
 }
