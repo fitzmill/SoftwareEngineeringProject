@@ -1,20 +1,17 @@
 ﻿using Core.Interfaces;
 using Core.Models;
-using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Accessors
 {
     public class GetReportAccessor : IGetReportAccessor
     {
-        string connectionString;
+        private readonly string _connectionString;
+
         public GetReportAccessor(string connectionString)
         {
-            this.connectionString = connectionString;
+            _connectionString = connectionString;
         }
 
         public IList<Report> GetAllReports()
@@ -23,7 +20,7 @@ namespace Accessors
 
             var result = new List<Report>();
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, conn);
 

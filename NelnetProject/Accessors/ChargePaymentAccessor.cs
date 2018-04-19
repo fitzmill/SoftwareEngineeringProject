@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Core.DTOs;
 using Core.Interfaces;
@@ -15,20 +12,20 @@ namespace Accessors
     /// </summary>
     public class ChargePaymentAccessor : IChargePaymentAccessor
     {
-        private HttpClientBuilder clientBuilder;
-        private string urlBase;
+        private readonly HttpClientBuilder _clientBuilder;
+        private readonly string _urlBase;
 
         public ChargePaymentAccessor(HttpClientBuilder clientBuilder, string url)
         {
-            this.clientBuilder = clientBuilder;
-            urlBase = url;
+            _clientBuilder = clientBuilder;
+            _urlBase = url;
         }
 
         public ChargeResultDTO ChargeCustomer(PaymentDTO payment)
         {
-            string chargeUrl = urlBase + "/charge";
+            string chargeUrl = _urlBase + "/charge";
 
-            using (HttpClient client = clientBuilder.BuildClientWithPrivateKey())
+            using (HttpClient client = _clientBuilder.BuildClientWithPrivateKey())
             {
                 var values = new Dictionary<string, string>
                 {

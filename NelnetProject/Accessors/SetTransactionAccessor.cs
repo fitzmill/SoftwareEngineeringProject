@@ -1,7 +1,5 @@
 ﻿using Core.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Core;
 using System.Data.SqlClient;
 using System.Data;
@@ -11,18 +9,17 @@ namespace Accessors
     public class SetTransactionAccessor : ISetTransactionAccessor
     {
 
-        private string connectionString;
+        private readonly string _connectionString;
 
         public SetTransactionAccessor(string connectionString)
         {
-            this.connectionString = connectionString;
+            _connectionString = connectionString;
         }
 
-        //Executes a stored procedure to insert a transaction with all of the Transaction object's properties as parameters
         public void AddTransaction(Transaction transaction)
         {
             string query = "[dbo].[AddTransaction]";
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, con);
                 command.Parameters.Add(new SqlParameter("@UserID", transaction.UserID));
@@ -42,15 +39,13 @@ namespace Accessors
                 {
                     transaction.TransactionID = (int)reader.GetDecimal(0);
                 }
-
             }
         }
 
-        //Executes a stored procedure to update a transaction with all of the Transaction object's properties as parameters
         public void UpdateTransaction(Transaction transaction)
         {
             string query = "[dbo].[UpdateTransaction]";
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection con = new SqlConnection(_connectionString))
             {
                 SqlCommand command = new SqlCommand(query, con);
                 command.Parameters.Add(new SqlParameter("@TransactionID", transaction.TransactionID));
@@ -71,7 +66,6 @@ namespace Accessors
                 {
                     throw new Exception("Incorrect number of rows affected: " + rowsAffected);
                 }
-
             }
         }
     }

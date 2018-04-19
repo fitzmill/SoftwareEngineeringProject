@@ -1,7 +1,4 @@
 ﻿using Core.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Interfaces
 {
@@ -11,10 +8,10 @@ namespace Core.Interfaces
     public interface IGetPaymentInfoAccessor
     {
         /// <summary>
-        /// Gets a user's payment info from Payment Spring with their Payment Spring Customer ID.
+        /// Gets a user's payment info from PaymentSpring with their PaymentSpring Customer ID.
         /// </summary>
-        /// <param name="customerID"></param>
-        /// <returns>A user's payment info provided by Payment Spring/returns>
+        /// <param name="customerID">The customer id provided by PaymentSpring associated with the customer</param>
+        /// <returns>A user's payment info provided by PaymentSpring/returns>
         UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID);
     }
 }
