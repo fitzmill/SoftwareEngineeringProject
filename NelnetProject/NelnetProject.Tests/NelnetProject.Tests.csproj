@@ -60,7 +60,6 @@
     <Compile Include="Engines\MockedAccessors\MockReportAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockGetUserInfoAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockSetPaymentInfoAccessor.cs" />
-    <Compile Include="Engines\MockedAccessors\MockSetReportAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockSetUserInfoAccessor.cs" />
     <Compile Include="Engines\TestTransactionEngine.cs" />
