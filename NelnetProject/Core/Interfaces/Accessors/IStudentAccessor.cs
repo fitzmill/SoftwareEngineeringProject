@@ -1,27 +1,35 @@
-﻿namespace Core.Interfaces
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.Interfaces.Accessors
 {
     /// <summary>
-    /// Stores information about users in the database.
+    /// Accessor for performing CRUD operations with Student table
     /// </summary>
-    public interface ISetUserInfoAccessor
+    public interface IStudentAccessor
     {
         /// <summary>
-        /// Inserts a new user record into the database with the information contained in the user model
+        /// Gets a student's info by their ID
         /// </summary>
-        /// <param name="user">The user model to insert</param>
-        void InsertPersonalInfo(User user);
+        /// <param name="studentID"></param>
+        /// <returns></returns>
+        Student GetStudentInfoByID(int studentID);
 
         /// <summary>
-        /// Updates the user record in the database specified by the userID in the user model
+        /// Gets all students who are associated with a userID
         /// </summary>
-        /// <param name="user">The user model to update</param>
-        void UpdatePersonalInfo(User user);
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        IEnumerable<Student> GetStudentInfoByUserID(int userID);
 
         /// <summary>
-        /// Delete a user record from the database specified by the userID in the user model
+        /// Gets all students in the database
         /// </summary>
-        /// <param name="userID">The user id associated with the account to be deleted</param>
-        void DeletePersonalInfo(int userID);
+        /// <returns>A list of all students in the database</returns>
+        IEnumerable<Student> GetAllStudents();
 
         /// <summary>
         /// Insert new student record into the database

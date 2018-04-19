@@ -1,12 +1,23 @@
 ﻿using Core.DTOs;
 
-namespace Core.Interfaces
+namespace Core.Interfaces.Accessors
 {
-    /// <summary>
-    /// Sets payment info in Payment Spring
-    /// </summary>
-    public interface ISetPaymentInfoAccessor
+    public interface IPaymentAccessor
     {
+        /// <summary>
+        /// Gets a user's payment info from PaymentSpring with their PaymentSpring Customer ID.
+        /// </summary>
+        /// <param name="customerID">The customer id provided by PaymentSpring associated with the customer</param>
+        /// <returns>A user's payment info provided by PaymentSpring/returns>
+        UserPaymentInfoDTO GetPaymentInfoForCustomer(string customerID);
+
+        /// <summary>
+        /// Charges a customer through PaymentSpring.
+        /// </summary>
+        /// <param name="payment">The payment DTO, containing necessary information to charge through PaymentSpring</param>
+        /// <returns>The charge result from PaymentSpring</returns>
+        ChargeResultDTO ChargeCustomer(PaymentDTO payment);
+
         /// <summary>
         /// Creates a new customer with paymentSpring
         /// </summary>

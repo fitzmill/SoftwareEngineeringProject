@@ -1,5 +1,7 @@
 using Accessors;
 using Core.Interfaces;
+using Core.Interfaces.Accessors;
+using Core.Interfaces.Engines;
 using Engines;
 using Microsoft.Practices.Unity.Configuration;
 using System;
@@ -45,9 +47,8 @@ namespace Web
             //database accessors
             var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
             container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(connectionStringConstructor);
-            container.RegisterType<IGetUserInfoAccessor, GetUserInfoAccessor>(connectionStringConstructor);
             container.RegisterType<ISetTransactionAccessor, SetTransactionAccessor>(connectionStringConstructor);
-            container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(connectionStringConstructor);
+            container.RegisterType<IUserAccessor, UserAccessor>(connectionStringConstructor);
             container.RegisterType<IGetReportAccessor, GetReportAccessor>(connectionStringConstructor);
             container.RegisterType<ISetReportAccessor, SetReportAccessor>(connectionStringConstructor);
 
@@ -60,9 +61,7 @@ namespace Web
 
             //payment spring accessors
             var paymentSpringConstructor = new InjectionConstructor(httpClientBuilder, ConfigurationManager.AppSettings["PaymentSpringApiUrl"]);
-            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(paymentSpringConstructor);
-            container.RegisterType<ISetPaymentInfoAccessor, SetPaymentInfoAccessor>(paymentSpringConstructor);
-            container.RegisterType<IChargePaymentAccessor, ChargePaymentAccessor>(paymentSpringConstructor);
+            container.RegisterType<IPaymentAccessor, PaymentAccessor>(paymentSpringConstructor);
 
             //email accessor
             container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor(
@@ -78,9 +77,8 @@ namespace Web
             container.RegisterType<IGetReportEngine, GetReportEngine>();
             container.RegisterType<ISetReportEngine, SetReportEngine>();
             container.RegisterType<INotificationEngine, NotificationEngine>();
-            container.RegisterType<IGetUserInfoEngine, GetUserInfoEngine>();
+            container.RegisterType<IUserEngine, UserEngine>();
             container.RegisterType<IPaymentEngine, PaymentEngine>();
-            container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
 
             //scheduled event manager
             container.RegisterType<ScheduledEventManager>(new InjectionConstructor(
