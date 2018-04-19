@@ -1,9 +1,5 @@
 ﻿using Core.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Interfaces
 {
@@ -15,7 +11,7 @@ namespace Core.Interfaces
         /// <summary>
         /// Gets all reports from the database in descending order by executing a stored procedure
         /// </summary>
-        /// <returns>List of all reports in descending order</returns>
+        /// <returns>List of all reports ordered from most recent to oldest</returns>
         IList<Report> GetAllReports();
     }
 }

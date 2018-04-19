@@ -1,7 +1,4 @@
 ﻿using Core.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Interfaces
 {
@@ -11,9 +8,9 @@ namespace Core.Interfaces
     public interface IChargePaymentAccessor
     {
         /// <summary>
-        /// Charges a customer.
+        /// Charges a customer through PaymentSpring.
         /// </summary>
-        /// <param name="payment">The payment DTO</param>
+        /// <param name="payment">The payment DTO, containing necessary information to charge through PaymentSpring</param>
         /// <returns>The charge result from PaymentSpring</returns>
         ChargeResultDTO ChargeCustomer(PaymentDTO payment);
     }
