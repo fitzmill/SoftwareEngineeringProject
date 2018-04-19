@@ -44,7 +44,7 @@ ko.components.register('account-dashboard-component', {
             //gets the next payment details for the user
             getNextTransactionForUser().done(function (data) {
                 accountDashboardVM.nextPaymentDate(data.DateDue.parseDateTimeString());
-                accountDashboardVM.nextPaymentCost(Number(data.AmountCharged).toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"));
+                accountDashboardVM.nextPaymentCost(data.AmountCharged.formatAsMoney());
             }).fail(function (jqXHR) {
                 if (jqXHR.status !== 401) {
                     window.alert("Could not get your next transaction information, please try refreshing the page.");

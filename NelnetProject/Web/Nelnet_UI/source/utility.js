@@ -57,6 +57,10 @@ String.prototype.parseDateTimeString = function () {
     return month + "/" + day + "/" + year;
 }
 
+Number.prototype.formatAsMoney = function () {
+    return this.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+}
+
 $.validator.addMethod("password", function (value) {
     return value.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-\.])(?!.*?[;'"]).{8,32}$/);
 }, "Password must be between 8 and 32 characters, contain lowercase and uppercase letters, a number, and a special character.");
