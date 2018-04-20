@@ -54,6 +54,7 @@
     <Compile Include="ReportAccessor.cs" />
     <Compile Include="SetPaymentInfoAccessor.cs" />
     <Compile Include="SetUserInfoAccessor.cs" />
+    <Compile Include="SqlConnectionFactory.cs" />
     <Compile Include="TransactionAccessor.cs" />
   </ItemGroup>
   <ItemGroup>
