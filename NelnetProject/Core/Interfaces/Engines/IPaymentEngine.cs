@@ -37,7 +37,7 @@ namespace Core.Interfaces.Engines
         /// </summary>
         /// <param name="user">A user with a payment plan and one or more students</param>
         /// <returns>The periodic payment amount</returns>
-        Double CalculatePeriodicPayment(User user);
+        double CalculatePeriodicPayment(User user);
 
         /// <summary>
         /// Insert new payment info into PaymentSpring

@@ -52,6 +52,7 @@
     <Compile Include="ReportAccessor.cs" />
 	<Compile Include="StudentAccessor.cs" />
     <Compile Include="UserAccessor.cs" />
+	<Compile Include="SqlConnectionFactory.cs" />
     <Compile Include="TransactionAccessor.cs" />
   </ItemGroup>
   <ItemGroup>

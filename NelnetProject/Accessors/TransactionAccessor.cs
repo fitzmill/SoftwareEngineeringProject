@@ -1,144 +1,84 @@
 ﻿using Core;
 using Core.DTOs;
+using Core.Exceptions;
 using Core.Interfaces.Accessors;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace Accessors
 {
     public class TransactionAccessor : ITransactionAccessor
     {
-        private readonly string _connectionString;
-
-        public TransactionAccessor(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
         public IEnumerable<Transaction> GetAllTransactionsForUser(int userID)
         {
-            string query = "[dbo].[GetAllTransactionsForUser]";
+            string query = "SELECT * FROM [dbo].[Transaction] t WHERE t.UserID = @UserID";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@UserID", userID }
+            };
 
             var result = new List<Transaction>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            SqlConnectionFactory.RunSqlQuery(query, parameters, reader =>
             {
-                SqlCommand command = new SqlCommand(query, conn);
-
-                command.Parameters.Add(new SqlParameter("@UserID", userID));
-
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-
-                conn.Open();
-
-                var reader = command.ExecuteReader();
-
                 while (reader.Read())
                 {
-                    result.Add(new Transaction()
-                    {
-                        TransactionID = reader.GetInt32(0),
-                        UserID = reader.GetInt32(1),
-                        AmountCharged = reader.GetDouble(2),
-                        DateDue = reader.GetDateTime(3),
-                        DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-                        ProcessState = (ProcessState)reader.GetByte(5),
-                        ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
-                    });
+                    result.Add(TransactionFromReader(reader));
                 }
-            }
+            });
+
             return result;
         }
 
         public IEnumerable<Transaction> GetAllUnsettledTransactions()
         {
-            string query = "[dbo].[GetAllUnsettledTransactions]";
+            string query = "SELECT * FROM [dbo].[Transaction] t WHERE t.ProcessState <> 2 AND t.ProcessState <> 4"; //Not successful or failed
 
             var result = new List<Transaction>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            SqlConnectionFactory.RunSqlQuery(query, reader =>
             {
-                SqlCommand command = new SqlCommand(query, conn)
-                {
-                    CommandType = System.Data.CommandType.StoredProcedure
-                };
-
-                conn.Open();
-
-                var reader = command.ExecuteReader();
-
                 while (reader.Read())
                 {
-                    result.Add(new Transaction()
-                    {
-                        TransactionID = reader.GetInt32(0),
-                        UserID = reader.GetInt32(1),
-                        AmountCharged = reader.GetDouble(2),
-                        DateDue = reader.GetDateTime(3),
-                        DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-                        ProcessState = (ProcessState)reader.GetByte(5),
-                        ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
-                    });
+                    result.Add(TransactionFromReader(reader));
                 }
-            }
+            });
+
             return result;
         }
 
         public IEnumerable<Transaction> GetAllFailedTransactions()
         {
-            string query = "[dbo].[GetAllFailedTransactions]";
+            string query = "SELECT * FROM [dbo].[Transaction] t WHERE t.ProcessState = 4";
 
             var result = new List<Transaction>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            SqlConnectionFactory.RunSqlQuery(query, reader =>
             {
-                SqlCommand command = new SqlCommand(query, conn)
-                {
-                    CommandType = System.Data.CommandType.StoredProcedure
-                };
-
-                conn.Open();
-                var reader = command.ExecuteReader();
-
                 while (reader.Read())
                 {
-                    result.Add(new Transaction()
-                    {
-                        TransactionID = reader.GetInt32(0),
-                        UserID = reader.GetInt32(1),
-                        AmountCharged = reader.GetDouble(2),
-                        DateDue = reader.GetDateTime(3),
-                        DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
-                        ProcessState = (ProcessState)reader.GetByte(5),
-                        ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
-                    });
+                    result.Add(TransactionFromReader(reader));
                 }
-            }
+            });
 
             return result;
         }
 
         public IEnumerable<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startDate, DateTime endDate)
         {
-            string query = "[dbo].[GetAllTransactionsForDateRange]";
+            string query = "SELECT t.TransactionID, u.FirstName, u.LastName, u.Email, t.AmountCharged, t.DateDue, t.DateCharged, t.ProcessState, t.ReasonFailed " +
+                "FROM [dbo].[Transaction] t JOIN [dbo].[User] u ON t.UserID = u.UserID WHERE t.DateDue >= @StartDate AND t.DateDue <= @EndDate";
+            var parameters = new Dictionary<string, object>
+            {
+                { "@StartDate", startDate },
+                { "@EndDate", endDate }
+            };
 
             var result = new List<TransactionWithUserInfoDTO>();
 
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            SqlConnectionFactory.RunSqlQuery(query, parameters, reader =>
             {
-                SqlCommand command = new SqlCommand(query, conn);
-
-                command.Parameters.Add(new SqlParameter("@StartDate", startDate.Date));
-                command.Parameters.Add(new SqlParameter("@EndDate", endDate.Date));
-
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-
-                conn.Open();
-
-                var reader = command.ExecuteReader();
-
                 while (reader.Read())
                 {
                     result.Add(new TransactionWithUserInfoDTO()
@@ -154,61 +94,74 @@ namespace Accessors
                         ReasonFailed = reader.IsDBNull(8) ? null : reader.GetString(8)
                     });
                 }
-            }
+            });
+
             return result;
         }
 
         public void AddTransaction(Transaction transaction)
         {
-            string query = "[dbo].[AddTransaction]";
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            string query = "INSERT INTO [dbo].[Transaction] (UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) " +
+                "VALUES (@UserID, @AmountCharged, @DateDue, @DateCharged, @ProcessState, @ReasonFailed); SELECT SCOPE_IDENTITY()";
+            var parameters = new Dictionary<string, object>
             {
-                SqlCommand command = new SqlCommand(query, con);
-                command.Parameters.Add(new SqlParameter("@UserID", transaction.UserID));
-                command.Parameters.Add(new SqlParameter("@AmountCharged", transaction.AmountCharged));
-                command.Parameters.Add(new SqlParameter("@DateDue", transaction.DateDue));
-                command.Parameters.Add(new SqlParameter("@DateCharged", transaction.DateCharged));
-                command.Parameters.Add(new SqlParameter("@ProcessState", transaction.ProcessState));
-                command.Parameters.Add(new SqlParameter("@ReasonFailed", transaction.ReasonFailed));
+                { "@UserID", transaction.UserID },
+                { "@AmountCharged", transaction.AmountCharged },
+                { "@DateDue", transaction.DateDue },
+                { "@DateCharged", transaction.DateCharged },
+                { "@ProcessState", transaction.ProcessState },
+                { "@ReasonFailed", transaction.ReasonFailed }
+            };
 
-                command.CommandType = CommandType.StoredProcedure;
-
-                con.Open();
-
-                var reader = command.ExecuteReader();
-
+            SqlConnectionFactory.RunSqlQuery(query, parameters, reader =>
+            {
                 if (reader.Read())
                 {
                     transaction.TransactionID = (int)reader.GetDecimal(0);
                 }
-            }
+            });
         }
 
         public void UpdateTransaction(Transaction transaction)
         {
-            string query = "[dbo].[UpdateTransaction]";
-            using (SqlConnection con = new SqlConnection(_connectionString))
+            string query = "UPDATE [dbo].[Transaction] SET UserID = @UserID, AmountCharged = @AmountCharged, DateDue = @DateDue, DateCharged = @DateCharged, " +
+                "ProcessState = @ProcessState, ReasonFailed = @ReasonFailed WHERE TransactionID = @TransactionID; SELECT SCOPE_IDENTITY()";
+            var parameters = new Dictionary<string, object>
             {
-                SqlCommand command = new SqlCommand(query, con);
-                command.Parameters.Add(new SqlParameter("@TransactionID", transaction.TransactionID));
-                command.Parameters.Add(new SqlParameter("@UserID", transaction.UserID));
-                command.Parameters.Add(new SqlParameter("@AmountCharged", transaction.AmountCharged));
-                command.Parameters.Add(new SqlParameter("@DateDue", transaction.DateDue));
-                command.Parameters.Add(new SqlParameter("@DateCharged", transaction.DateCharged));
-                command.Parameters.Add(new SqlParameter("@ProcessState", transaction.ProcessState));
-                command.Parameters.Add(new SqlParameter("@ReasonFailed", transaction.ReasonFailed));
+                { "@TransactionID", transaction.TransactionID },
+                { "@UserID", transaction.UserID },
+                { "@AmountCharged", transaction.AmountCharged },
+                { "@DateDue", transaction.DateDue },
+                { "@DateCharged", transaction.DateCharged },
+                { "@ProcessState", transaction.ProcessState },
+                { "@ReasonFailed", transaction.ReasonFailed }
+            };
 
-                command.CommandType = CommandType.StoredProcedure;
+            int rowsAffected = SqlConnectionFactory.RunSqlNonQuery(query, parameters);
 
-                con.Open();
-
-                int rowsAffected = command.ExecuteNonQuery();
-
-                if (rowsAffected != 1)
-                {
-                    throw new Exception("Incorrect number of rows affected: " + rowsAffected);
-                }
+            if (rowsAffected != 1)
+            {
+                throw new SqlRowNotAffectedException($"Given transaction did not affect 1 row. Rows affected: {rowsAffected}");
             }
+        }
+
+        /// <summary>
+        /// Helper method to extract single a transaction from an SqlDataReader.
+        /// </summary>
+        /// <param name="reader">the SqlDataReader</param>
+        /// <returns>the extracted transaction</returns>
+        private Transaction TransactionFromReader(SqlDataReader reader)
+        {
+            return new Transaction
+            {
+                TransactionID = reader.GetInt32(0),
+                UserID = reader.GetInt32(1),
+                AmountCharged = reader.GetDouble(2),
+                DateDue = reader.GetDateTime(3),
+                DateCharged = reader.IsDBNull(4) ? (DateTime?)null : reader.GetDateTime(4),
+                ProcessState = (ProcessState)reader.GetByte(5),
+                ReasonFailed = reader.IsDBNull(6) ? null : reader.GetString(6)
+            };
         }
     }
 }
