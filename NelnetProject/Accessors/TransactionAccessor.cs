@@ -13,14 +13,14 @@ namespace Accessors
         public IEnumerable<Transaction> GetAllTransactionsForUser(int userID)
         {
             string query = "SELECT * FROM [dbo].[Transaction] t WHERE t.UserID = @UserID";
-            var parms = new Dictionary<string, object>
+            var parameters = new Dictionary<string, object>
             {
                 { "@UserID", userID }
             };
 
             var result = new List<Transaction>();
 
-            SqlConnectionFactory.RunSqlQuery(query, parms, reader =>
+            SqlConnectionFactory.RunSqlQuery(query, parameters, reader =>
             {
                 while (reader.Read())
                 {
@@ -69,7 +69,7 @@ namespace Accessors
         {
             string query = "SELECT t.TransactionID, u.FirstName, u.LastName, u.Email, t.AmountCharged, t.DateDue, t.DateCharged, t.ProcessState, t.ReasonFailed " +
                 "FROM [dbo].[Transaction] t JOIN [dbo].[User] u ON t.UserID = u.UserID WHERE t.DateDue >= @StartDate AND t.DateDue <= @EndDate";
-            var parms = new Dictionary<string, object>
+            var parameters = new Dictionary<string, object>
             {
                 { "@StartDate", startDate },
                 { "@EndDate", endDate }
@@ -77,7 +77,7 @@ namespace Accessors
 
             var result = new List<TransactionWithUserInfoDTO>();
 
-            SqlConnectionFactory.RunSqlQuery(query, parms, reader =>
+            SqlConnectionFactory.RunSqlQuery(query, parameters, reader =>
             {
                 while (reader.Read())
                 {
@@ -103,7 +103,7 @@ namespace Accessors
         {
             string query = "INSERT INTO [dbo].[Transaction] (UserID, AmountCharged, DateDue, DateCharged, ProcessState, ReasonFailed) " +
                 "VALUES (@UserID, @AmountCharged, @DateDue, @DateCharged, @ProcessState, @ReasonFailed); SELECT SCOPE_IDENTITY()";
-            var parms = new Dictionary<string, object>
+            var parameters = new Dictionary<string, object>
             {
                 { "@UserID", transaction.UserID },
                 { "@AmountCharged", transaction.AmountCharged },
@@ -113,7 +113,7 @@ namespace Accessors
                 { "@ReasonFailed", transaction.ReasonFailed }
             };
 
-            SqlConnectionFactory.RunSqlQuery(query, parms, reader =>
+            SqlConnectionFactory.RunSqlQuery(query, parameters, reader =>
             {
                 if (reader.Read())
                 {
@@ -126,7 +126,7 @@ namespace Accessors
         {
             string query = "UPDATE [dbo].[Transaction] SET UserID = @UserID, AmountCharged = @AmountCharged, DateDue = @DateDue, DateCharged = @DateCharged, " +
                 "ProcessState = @ProcessState, ReasonFailed = @ReasonFailed WHERE TransactionID = @TransactionID; SELECT SCOPE_IDENTITY()";
-            var parms = new Dictionary<string, object>
+            var parameters = new Dictionary<string, object>
             {
                 { "@TransactionID", transaction.TransactionID },
                 { "@UserID", transaction.UserID },
@@ -137,7 +137,7 @@ namespace Accessors
                 { "@ReasonFailed", transaction.ReasonFailed }
             };
 
-            int rowsAffected = SqlConnectionFactory.RunSqlNonQuery(query, parms);
+            int rowsAffected = SqlConnectionFactory.RunSqlNonQuery(query, parameters);
 
             if (rowsAffected != 1)
             {

@@ -32,14 +32,14 @@ namespace Accessors
         public void InsertReport(Report report)
         {
             string query = "INSERT INTO [dbo].[Report] (DateCreated, StartDate, EndDate) VALUES (@DateCreated, @StartDate, @EndDate)";
-            var parms = new Dictionary<string, object>
+            var parameters = new Dictionary<string, object>
             {
                 { "@DateCreated", DateTime.Today },
                 { "@StartDate", report.StartDate },
                 { "@EndDate", report.EndDate }
             };
 
-            SqlConnectionFactory.RunSqlQuery(query, parms, reader =>
+            SqlConnectionFactory.RunSqlQuery(query, parameters, reader =>
             {
                 if (reader.Read())
                 {

@@ -27,17 +27,17 @@ namespace Accessors
         /// Executes an SQL query by creating a connection, command, and reader, then disposes of them.
         /// </summary>
         /// <param name="query">the SQL query string</param>
-        /// <param name="parms">the parameters to be inserted into the query</param>
+        /// <param name="parameters">the parameters to be inserted into the query</param>
         /// <param name="readFunc">the action to be taken on the reader</param>
-        public static void RunSqlQuery(string query, Dictionary<string, object> parms, Action<SqlDataReader> readFunc)
+        public static void RunSqlQuery(string query, Dictionary<string, object> parameters, Action<SqlDataReader> readFunc)
         {
             using (SqlConnection con = CreateConnection())
             {
                 using (SqlCommand command = new SqlCommand(query, con))
                 {
-                    if (parms != null)
+                    if (parameters != null)
                     {
-                        foreach (KeyValuePair<string, object> entry in parms)
+                        foreach (KeyValuePair<string, object> entry in parameters)
                         {
                             command.Parameters.Add(new SqlParameter(entry.Key, entry.Value));
                         }
@@ -65,17 +65,17 @@ namespace Accessors
         /// Executes a SQL query that does not return any data.
         /// </summary>
         /// <param name="query">the SQL query string</param>
-        /// <param name="parms">the parameters to be inserted into the query; defaults to null</param>
+        /// <param name="parameters">the parameters to be inserted into the query; defaults to null</param>
         /// <returns>the number of rows affected</returns>
-        public static int RunSqlNonQuery(string query, Dictionary<string, object> parms = null)
+        public static int RunSqlNonQuery(string query, Dictionary<string, object> parameters = null)
         {
             using (SqlConnection con = CreateConnection())
             {
                 using (SqlCommand command = new SqlCommand(query, con))
                 {
-                    if (parms != null)
+                    if (parameters != null)
                     {
-                        foreach (KeyValuePair<string, object> entry in parms)
+                        foreach (KeyValuePair<string, object> entry in parameters)
                         {
                             command.Parameters.Add(new SqlParameter(entry.Key, entry.Value));
                         }
