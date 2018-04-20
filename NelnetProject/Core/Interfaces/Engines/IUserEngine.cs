@@ -54,6 +54,6 @@ namespace Core.Interfaces.Engines
         /// </summary>
         /// <param name="userID">The ID of the user in the database to delete</param>
         /// <param name="customerID">The ID of the customer in payment spring</param>
-        void DeletePersonalInfo(int userID, string customerID);
+        void DeletePersonalInfo(int userID);
     }
 }

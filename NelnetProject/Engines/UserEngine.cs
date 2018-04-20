@@ -20,7 +20,6 @@ namespace Engines
         private readonly RNGCryptoServiceProvider _cryptoServiceProvider;
 
         //used for the generation of salt for password hashing
-        private readonly string _alphaNumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
         private readonly int _saltLength = 20;
 
         public UserEngine(IUserAccessor userAccessor, 
@@ -32,9 +31,8 @@ namespace Engines
             _cryptoServiceProvider = cryptoServiceProvider;
         }
 
-        public void DeletePersonalInfo(int userID, string customerID)
+        public void DeletePersonalInfo(int userID)
         {
-            _studentAccessor.DeleteStudentInfoByUserID(userID);
             _userAccessor.DeletePersonalInfo(userID);
         }
 

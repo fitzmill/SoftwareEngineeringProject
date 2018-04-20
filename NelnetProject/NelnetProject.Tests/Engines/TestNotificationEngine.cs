@@ -15,7 +15,7 @@ namespace NelnetProject.Tests.Engines
     {
         private NotificationEngine notificationEngine;
         private MockEmailAccessor mockEmailAccessor;
-        private MockGetUserInfoAccessor mockGetUserInfoAcccessor;
+        private MockUserAccessor mockUserAcccessor;
 
         private List<User> userDB = new List<User>()
         {
@@ -38,8 +38,8 @@ namespace NelnetProject.Tests.Engines
         public TestNotificationEngine()
         {
             mockEmailAccessor = new MockEmailAccessor();
-            mockGetUserInfoAcccessor = new MockGetUserInfoAccessor(new List<Student>(), userDB);
-            notificationEngine = new NotificationEngine(mockEmailAccessor, mockGetUserInfoAcccessor);
+            mockUserAcccessor = new MockUserAccessor(userDB);
+            notificationEngine = new NotificationEngine(mockEmailAccessor, mockUserAcccessor);
         }
 
         [TestMethod]

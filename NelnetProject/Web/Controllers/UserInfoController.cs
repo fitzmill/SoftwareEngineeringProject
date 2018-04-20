@@ -136,7 +136,9 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body");
             }
 
-            _userEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
+            _paymentEngine.DeletePaymentInfo(user.CustomerID);
+            _studentEngine.DeleteStudentInfo(user.Students.Select(x => x.StudentID));
+            _userEngine.DeletePersonalInfo(user.UserID);
             _notificationEngine.SendAccountDeletionNotification(user);
 
             return Ok();
