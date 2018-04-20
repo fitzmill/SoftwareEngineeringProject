@@ -43,14 +43,24 @@ namespace Engines.Utils
         };
 
         //Calculate if payment is due for the current month, given a payment plan.
-        public static bool IsPaymentDue(PaymentPlan plan, DateTime today)
+        public static bool IsPaymentDue(PaymentPlan plan, DateTime today = default(DateTime))
         {
+            if (today == default(DateTime))
+            {
+                today = DateTime.Now;
+            }
+
             return monthsDue[plan].Contains(today.Month);
         }
 
         //Compute the date of the next payment for the given plan.
-        public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today)
+        public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today = default(DateTime))
         {
+            if (today == default(DateTime))
+            {
+                today = DateTime.Now;
+            }
+
             int monthIndex = monthsDue[plan].FindIndex(m => m >= today.Month);
 
             //If after last pay period of the year, it's due next year.
@@ -72,8 +82,7 @@ namespace Engines.Utils
             int year = today.Year;
 
             //If you're on the yearly period and already paid for the year
-            bool isAfterPeriodForYearly = (plan == PaymentPlan.YEARLY && 
-                (today.Month > month || (today.Month == month && today.Day > DUE_DAY)));
+            bool isAfterPeriodForYearly = (plan == PaymentPlan.YEARLY && new DateTime(today.Year, month, DUE_DAY) < today);
             
             //If pay period is next year
             if (month < today.Month || isAfterPeriodForYearly)
@@ -97,19 +106,32 @@ namespace Engines.Utils
             double amountDue = Math.Round(periodAmount, precision);
 
             //add on late fee if the last transaction
-            amountDue = lastTransactionAmountDue == 0 ? amountDue : amountDue + lastTransactionAmountDue + LATE_FEE;
+            if (lastTransactionAmountDue != 0)
+            {
+                amountDue = amountDue + lastTransactionAmountDue + LATE_FEE;
+            }
             return amountDue;
         }
 
         //Returns the number of days the transaction is overdue
-        public static int DaysOverdue(Transaction t, DateTime today)
+        public static int DaysOverdue(Transaction t, DateTime today = default(DateTime))
         {
+            if (today == default(DateTime))
+            {
+                today = DateTime.Now;
+            }
+
             return today.Subtract(t.DateDue).Days;
         }
 
         //Returns if number of days overdue is greater or equal to grace period
-        public static bool IsPastRetryPeriod(Transaction t, DateTime today)
+        public static bool IsPastRetryPeriod(Transaction t, DateTime today = default(DateTime))
         {
+            if (today == default(DateTime))
+            {
+                today = DateTime.Now;
+            }
+
             return DaysOverdue(t, today) >= OVERDUE_RETRY_PERIOD;
         }
     }
