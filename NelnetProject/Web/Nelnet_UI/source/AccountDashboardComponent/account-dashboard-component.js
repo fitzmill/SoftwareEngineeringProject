@@ -13,6 +13,7 @@ require('./PaymentInformationComponent/payment-information-component.js');
 require('./StudentInformationComponent/student-information-component.js');
 require('./BillingInformationComponent/billing-information-component.js');
 require('./TransactionInformationComponent/transaction-information-component.js');
+require('./PaymentStatusComponent/payment-status-component.js');
 
 var user = undefined;
 
@@ -34,6 +35,7 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.billingInfo = ko.observable();
         accountDashboardVM.studentInfo = ko.observable();
         accountDashboardVM.transactionInfo = ko.observable();
+        accountDashboardVM.paymentStatus = ko.observable();
 
         accountDashboardVM.paymentPlan = ko.observable();
 

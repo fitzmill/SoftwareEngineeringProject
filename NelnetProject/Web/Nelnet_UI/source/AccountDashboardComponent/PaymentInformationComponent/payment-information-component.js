@@ -1,6 +1,4 @@
-﻿require('./payment-information-component.scss');
-
-var utility = require('../../utility.js');
+﻿var utility = require('../../utility.js');
 
 const billingControllerRoot = "/api/billing";
 

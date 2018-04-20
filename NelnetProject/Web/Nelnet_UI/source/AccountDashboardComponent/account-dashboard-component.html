@@ -4,6 +4,8 @@
 
     <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
 
+    <payment-status-component params ="paymentPlan: paymentPlan, nextPaymentDate: nextPaymentDate, nextPaymentCost: nextPaymentCost"></payment-status-component>
+
     <payment-information-component params="paymentInfo: paymentInfo, paymentPlan: paymentPlan,
                                    nextPaymentDate: nextPaymentDate, nextPaymentCost: nextPaymentCost,
                                    stopEditing: stopEditing"></payment-information-component>

@@ -1,0 +1,12 @@
+﻿<div class="card card-payment-status-section">
+    <div class="card-header">
+        <h3 class="header-information-section">Payment Status</h3>
+    </div>
+
+    <div class="card-body">
+        <h5 data-bind="text: 'Payment Plan: ' + paymentPlan()"></h5>
+        <label>Next Payment Due: </label>
+        <label class="enMoney" data-bind="text: nextPaymentCost"></label>
+        <label data-bind="text: ' on ' + nextPaymentDate()"></label>
+    </div>
+</div>
