@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.DTOs;
+using Core.Exceptions;
 using Core.Interfaces.Accessors;
 using System;
 using System.Collections.Generic;
@@ -140,7 +141,7 @@ namespace Accessors
 
             if (rowsAffected != 1)
             {
-                throw new ArgumentException($"Given transaction did not affect 1 row. Rows affected: {rowsAffected}");
+                throw new SqlRowNotAffectedException($"Given transaction did not affect 1 row. Rows affected: {rowsAffected}");
             }
         }
 
