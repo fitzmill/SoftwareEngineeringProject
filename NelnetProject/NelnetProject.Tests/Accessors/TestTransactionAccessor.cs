@@ -10,13 +10,11 @@ namespace NelnetProject.Tests.Accessors
     [TestClass]
     public class TestTransactionAccessor
     {
-        private readonly string _connectionString;
         private readonly ITransactionAccessor _transactionAccessor;
 
         public TestTransactionAccessor()
         {
-            _connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
-            _transactionAccessor = new TransactionAccessor(_connectionString);
+            _transactionAccessor = new TransactionAccessor();
         }
 
         [TestMethod]
@@ -51,16 +49,6 @@ namespace NelnetProject.Tests.Accessors
             var result = _transactionAccessor.GetTransactionsForDateRange(startDate, endDate);
 
             Assert.IsNotNull(result);
-        }
-
-        [TestMethod]
-        public void TestConnectionString()
-        {
-            using (SqlConnection con = new SqlConnection(_connectionString))
-            {
-                con.Open();
-                con.Close();
-            }
         }
     }
 }
