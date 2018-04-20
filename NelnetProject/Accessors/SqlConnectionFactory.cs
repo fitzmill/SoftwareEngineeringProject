@@ -19,18 +19,31 @@ namespace Accessors
             return con;
         }
 
-        public static void RunSqlQuery(string query, Action<SqlDataReader> readFunc)
+        public static void RunSqlQuery(string query, Dictionary<string, object> parms, Action<SqlDataReader> readFunc)
         {
             using (SqlConnection con = CreateConnection())
             {
                 using (SqlCommand command = new SqlCommand(query, con))
                 {
+                    if (parms != null)
+                    {
+                        foreach (KeyValuePair<string, object> entry in parms)
+                        {
+                            command.Parameters.Add(new SqlParameter(entry.Key, entry.Value));
+                        }
+                    }
+
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
                         readFunc(reader);
                     }
                 }
             }
+        }
+
+        public static void RunSqlQuery(string query, Action<SqlDataReader> readFunc)
+        {
+            RunSqlQuery(query, null, readFunc);
         }
     }
 }
