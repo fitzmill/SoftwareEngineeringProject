@@ -42,7 +42,7 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.nextPaymentDate = ko.observable();
         accountDashboardVM.nextPaymentCost = ko.observable();
 
-        accountDashboardVM.studentInfo.subscribe(function () {
+        accountDashboardVM.studentInfo().subscribe(function () {
             //gets the next payment details for the user
             getNextTransactionForUser().done(function (data) {
                 accountDashboardVM.nextPaymentDate(data.DateDue.parseDateTimeString());
@@ -64,7 +64,7 @@ ko.components.register('account-dashboard-component', {
                 user = data;
                 accountDashboardVM.personalInfo(data);
                 accountDashboardVM.studentInfo(data.Students);
-                accountDashboardVM.paymentPlan(data.Plan);
+                accountDashboardVM.paymentPlan(data.Plan[0] + data.Plan.substr(1).toLowerCase());
             }).fail(function (jqXHR) {
                 if (jqXHR.status !== 401) {
                     window.alert("Could not get user information, please try refreshing the page");
