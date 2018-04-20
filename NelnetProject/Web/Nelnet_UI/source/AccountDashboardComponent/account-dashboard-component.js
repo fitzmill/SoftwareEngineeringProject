@@ -42,7 +42,7 @@ ko.components.register('account-dashboard-component', {
         accountDashboardVM.nextPaymentDate = ko.observable();
         accountDashboardVM.nextPaymentCost = ko.observable();
 
-        accountDashboardVM.studentInfo().subscribe(function () {
+        accountDashboardVM.studentInfo.subscribe(function () {
             //gets the next payment details for the user
             getNextTransactionForUser().done(function (data) {
                 accountDashboardVM.nextPaymentDate(data.DateDue.parseDateTimeString());
