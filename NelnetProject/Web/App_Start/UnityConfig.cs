@@ -46,10 +46,10 @@ namespace Web
         {
             //database accessors
             var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
-            container.RegisterType<ITransactionAccessor, TransactionAccessor>(connectionStringConstructor);
+            container.RegisterType<ITransactionAccessor, TransactionAccessor>();
             container.RegisterType<IUserAccessor, UserAccessor>(connectionStringConstructor);
             container.RegisterType<IStudentAccessor, StudentAccessor>(connectionStringConstructor);
-            container.RegisterType<IReportAccessor, ReportAccessor>(connectionStringConstructor);
+            container.RegisterType<IReportAccessor, ReportAccessor>();
 
             //http client builder for payment spring accessors
             HttpClientBuilder httpClientBuilder = new HttpClientBuilder(
