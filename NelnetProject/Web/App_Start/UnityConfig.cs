@@ -5,6 +5,7 @@ using Core.Interfaces.Engines;
 using Engines;
 using System;
 using System.Configuration;
+using System.Security.Cryptography;
 using Unity;
 using Unity.Injection;
 using Web.Managers;
@@ -47,6 +48,7 @@ namespace Web
             var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
             container.RegisterType<ITransactionAccessor, TransactionAccessor>(connectionStringConstructor);
             container.RegisterType<IUserAccessor, UserAccessor>(connectionStringConstructor);
+            container.RegisterType<IStudentAccessor, StudentAccessor>(connectionStringConstructor);
             container.RegisterType<IReportAccessor, ReportAccessor>(connectionStringConstructor);
 
             //http client builder for payment spring accessors
@@ -69,11 +71,14 @@ namespace Web
                 int.Parse(ConfigurationManager.AppSettings["Port"])
             ));
 
+            container.RegisterInstance(new RNGCryptoServiceProvider());
+
             //engines
             container.RegisterType<ITransactionEngine, TransactionEngine>();
             container.RegisterType<IReportEngine, ReportEngine>();
             container.RegisterType<INotificationEngine, NotificationEngine>();
             container.RegisterType<IUserEngine, UserEngine>();
+            container.RegisterType<IStudentEngine, StudentEngine>();
             container.RegisterType<IPaymentEngine, PaymentEngine>();
 
             //scheduled event manager
@@ -84,7 +89,8 @@ namespace Web
                 container.Resolve<ITransactionEngine>(),
                 container.Resolve<IPaymentEngine>(),
                 container.Resolve<INotificationEngine>(),
-                container.Resolve<IReportEngine>()
+                container.Resolve<IReportEngine>(),
+                container.Resolve<IUserEngine>()
             ));
             container.Resolve<ScheduledEventManager>();
         }
