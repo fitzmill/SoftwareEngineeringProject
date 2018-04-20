@@ -53,7 +53,6 @@
     <Compile Include="Accessors\TestUserAccessor.cs" />
     <Compile Include="Accessors\TestReportAccessor.cs" />
     <Compile Include="Accessors\TestTransactionAccessor.cs" />
-    <Compile Include="Engines\MockedAccessors\MockChargePaymentAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockEmailAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockReportAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockPaymentAccessor.cs" />
