@@ -2,6 +2,9 @@
 
 namespace Core.Interfaces.Accessors
 {
+    /// <summary>
+    /// Accessor for interacting with PaymentSpring APIs
+    /// </summary>
     public interface IPaymentAccessor
     {
         /// <summary>

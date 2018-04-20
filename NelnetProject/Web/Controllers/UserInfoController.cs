@@ -17,10 +17,10 @@ namespace Web.Controllers
     [SqlRowNotAffectedFilter]
     public class UserInfoController : ApiController
     {
-        IUserEngine _userEngine;
-        IStudentEngine _studentEngine;
-        IPaymentEngine _paymentEngine;
-        INotificationEngine _notificationEngine;
+        private readonly IUserEngine _userEngine;
+        private readonly IStudentEngine _studentEngine;
+        private readonly IPaymentEngine _paymentEngine;
+        private readonly INotificationEngine _notificationEngine;
 
         public UserInfoController(IUserEngine userEngine,
             IStudentEngine studentEngine,

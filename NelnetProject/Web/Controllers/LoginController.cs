@@ -18,7 +18,8 @@ namespace Web.Controllers
     [RoutePrefix("api/login")]
     public class LoginController : ApiController
     {
-        IUserEngine _userEngine;
+        private readonly IUserEngine _userEngine;
+
         public LoginController(IUserEngine userEngine)
         {
             _userEngine = userEngine;
