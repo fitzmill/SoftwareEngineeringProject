@@ -48,7 +48,7 @@ namespace Web
             container.RegisterType<IGetUserInfoAccessor, GetUserInfoAccessor>(connectionStringConstructor);
             container.RegisterType<ITransactionAccessor, TransactionAccessor>(connectionStringConstructor);
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(connectionStringConstructor);
-            container.RegisterType<IReportAccessor, ReportAccessor>(connectionStringConstructor);
+            container.RegisterType<IReportAccessor, ReportAccessor>();
 
             //http client builder for payment spring accessors
             HttpClientBuilder httpClientBuilder = new HttpClientBuilder(

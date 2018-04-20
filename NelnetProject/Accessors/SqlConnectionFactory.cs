@@ -2,16 +2,20 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Accessors
 {
+    /// <summary>
+    /// Helper for making connections to the SQL database more convenient.
+    /// </summary>
     public class SqlConnectionFactory
     {
         private static readonly string _connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
 
+        /// <summary>
+        /// Creates and opens a new connection to the internal connection string.
+        /// </summary>
+        /// <returns>A new, opened connection</returns>
         public static SqlConnection CreateConnection()
         {
             SqlConnection con = new SqlConnection(_connectionString);
@@ -19,6 +23,12 @@ namespace Accessors
             return con;
         }
 
+        /// <summary>
+        /// Executes an SQL query by creating a connection, command, and reader, then disposes of them.
+        /// </summary>
+        /// <param name="query">the SQL query string</param>
+        /// <param name="parms">the parameters to be inserted into the query</param>
+        /// <param name="readFunc">the action to be taken on the reader</param>
         public static void RunSqlQuery(string query, Dictionary<string, object> parms, Action<SqlDataReader> readFunc)
         {
             using (SqlConnection con = CreateConnection())
@@ -41,6 +51,11 @@ namespace Accessors
             }
         }
 
+        /// <summary>
+        /// Executes an SQL query by creating a connection, command, and reader, then disposes of them.
+        /// </summary>
+        /// <param name="query">the SQL query string</param>
+        /// <param name="readFunc">the action to be taken on the reader</param>
         public static void RunSqlQuery(string query, Action<SqlDataReader> readFunc)
         {
             RunSqlQuery(query, null, readFunc);

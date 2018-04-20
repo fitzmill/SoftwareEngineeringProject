@@ -8,13 +8,6 @@ namespace Accessors
 {
     public class ReportAccessor : IReportAccessor
     {
-        private readonly string _connectionString;
-
-        public ReportAccessor(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
         private readonly string _getAllReportsQuery = "SELECT * FROM [dbo].[Report] r ORDER BY r.ReportID DESC";
         private readonly string _insertReportQuery = "INSERT INTO [dbo].[Report] (DateCreated, StartDate, EndDate) VALUES (@DateCreated, @StartDate, @EndDate)";
 
