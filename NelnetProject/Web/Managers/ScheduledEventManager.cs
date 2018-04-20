@@ -25,6 +25,7 @@ namespace Web.Managers
         private readonly IPaymentEngine _paymentEngine;
         private readonly INotificationEngine _notificationEngine;
         private readonly IReportEngine _reportEngine;
+        private readonly IUserEngine _userEngine;
 
         public ScheduledEventManager(
             double timerInterval, 
@@ -33,7 +34,8 @@ namespace Web.Managers
             ITransactionEngine transactionEngine, 
             IPaymentEngine paymentEngine, 
             INotificationEngine notificationEngine, 
-            IReportEngine reportEngine)
+            IReportEngine reportEngine,
+            IUserEngine userEngine)
         {
             _timerInterval = timerInterval;
             _chargingHour = chargingHour;
@@ -43,6 +45,7 @@ namespace Web.Managers
             _paymentEngine = paymentEngine;
             _notificationEngine = notificationEngine;
             _reportEngine = reportEngine;
+            _userEngine = userEngine;
 
             Timer timer = new Timer(timerInterval);
             timer.Elapsed += new ElapsedEventHandler(TimerIntervalElapsed);
@@ -64,7 +67,8 @@ namespace Web.Managers
             //Generating Payments
             if (now.Hour == _chargingHour && now.Day == 1)
             {
-                IList<Transaction> generatedTransactions = _paymentEngine.GeneratePayments(now);
+                var users = _userEngine.GetAllUsers();
+                IEnumerable<Transaction> generatedTransactions = _paymentEngine.GeneratePayments(users, now);
                 _notificationEngine.SendTransactionNotifications(generatedTransactions.ToList());
             }
             else if (now.Hour == _chargingHour && now.Day >= TuitionUtil.DUE_DAY && now.Day <= TuitionUtil.DUE_DAY + TuitionUtil.OVERDUE_RETRY_PERIOD)

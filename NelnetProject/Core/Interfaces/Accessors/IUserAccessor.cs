@@ -1,17 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Interfaces
+namespace Core.Interfaces.Accessors
 {
     /// <summary>
-    /// The accessor to retrieve user information from the database
+    /// Interface for performing CRUD operations with the database
     /// </summary>
-    public interface IGetUserInfoAccessor
+    public interface IUserAccessor
     {
         /// <summary>
         /// Gets all general active users from the database
         /// </summary>
         /// <returns>A list of all general active users</returns>
-        IList<User> GetAllActiveUsers();
+        IEnumerable<User> GetAllActiveUsers();
 
         /// <summary>
         /// Gets a user's info from the database by a User's ID
@@ -40,5 +40,23 @@ namespace Core.Interfaces
         /// <param name="userID">The user id associated with the customer id</param>
         /// <returns>The customer id of the user</returns>
         string GetPaymentSpringCustomerID(int userID);
+
+        /// <summary>
+        /// Inserts a new user record into the database with the information contained in the user model
+        /// </summary>
+        /// <param name="user">The user model to insert</param>
+        void InsertPersonalInfo(User user);
+
+        /// <summary>
+        /// Updates the user record in the database specified by the userID in the user model
+        /// </summary>
+        /// <param name="user">The user model to update</param>
+        void UpdatePersonalInfo(User user);
+
+        /// <summary>
+        /// Delete a user record from the database specified by the userID in the user model
+        /// </summary>
+        /// <param name="userID">The user id associated with the account to be deleted</param>
+        void DeletePersonalInfo(int userID);
     }
 }

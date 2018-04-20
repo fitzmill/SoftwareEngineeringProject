@@ -14,16 +14,17 @@ namespace NelnetProject.Tests.Engines
     public class TestPaymentEngine
     {
         private readonly PaymentEngine _paymentEngine;
-        MockGetUserInfoAccessor _getUserInfoAccessor;
-        MockGetPaymentInfoAccessor _getPaymentInfoAccessor;
-        MockChargePaymentAccessor _chargePaymentAccessor;
-        MockTransactionAccessor _transactionAccessor;
+        private readonly MockUserAccessor _userAccessor;
+        private readonly MockStudentAccessor _studentAccessor;
+        private readonly MockPaymentAccessor _paymentAccessor;
+        private readonly MockTransactionAccessor _transactionAccessor;
 
         public static List<Student> StudentsDB = new List<Student>()
         {
             new Student
             {
                 StudentID = 1,
+                UserID = 1,
                 FirstName = "Joe",
                 LastName = "Sheepman",
                 Grade = 8
@@ -31,6 +32,7 @@ namespace NelnetProject.Tests.Engines
             new Student
             {
                 StudentID = 2,
+                UserID = 1,
                 FirstName = "Bill",
                 LastName = "Billman",
                 Grade = 11
@@ -38,6 +40,7 @@ namespace NelnetProject.Tests.Engines
             new Student
             {
                 StudentID = 3,
+                UserID = 2,
                 FirstName = "Jeff",
                 LastName = "Snaikes",
                 Grade = 2
@@ -95,37 +98,37 @@ namespace NelnetProject.Tests.Engines
 
         public TestPaymentEngine()
         {
-            _getUserInfoAccessor = new MockGetUserInfoAccessor(StudentsDB, MockUsersDB);
-            _getPaymentInfoAccessor = new MockGetPaymentInfoAccessor(MockPaymentSpring);
-            _chargePaymentAccessor = new MockChargePaymentAccessor();
+            _userAccessor = new MockUserAccessor(MockUsersDB);
+            _studentAccessor = new MockStudentAccessor(StudentsDB);
+            _paymentAccessor = new MockPaymentAccessor(new Dictionary<string, ChargeResultDTO>(), MockPaymentSpring);
             _transactionAccessor = new MockTransactionAccessor(new List<Transaction>());
-            _paymentEngine = new PaymentEngine(_getUserInfoAccessor, _getPaymentInfoAccessor, _chargePaymentAccessor, _transactionAccessor);
+            _paymentEngine = new PaymentEngine(_userAccessor, _paymentAccessor, _transactionAccessor);
         }
 
         [TestInitialize]
         public void InitTest()
         {
             _transactionAccessor.Transactions = new List<Transaction>{
-            new Transaction
-            {
-                TransactionID = 2,
-                UserID = 2,
-                AmountCharged = 64.00,
-                DateDue = new DateTime(2018, 2, 9),
-                DateCharged = new DateTime(2018, 2, 9),
-                ProcessState = ProcessState.SUCCESSFUL
-            },
-            new Transaction
-            {
-                TransactionID = 3,
-                UserID = 1,
-                AmountCharged = 55.00,
-                DateDue = new DateTime(2018, 2, 9),
-                DateCharged = null,
-                ProcessState = ProcessState.FAILED,
-                ReasonFailed = "Insufficient funds"
-            }
-        };
+                new Transaction
+                {
+                    TransactionID = 2,
+                    UserID = 2,
+                    AmountCharged = 64.00,
+                    DateDue = new DateTime(2018, 2, 9),
+                    DateCharged = new DateTime(2018, 2, 9),
+                    ProcessState = ProcessState.SUCCESSFUL
+                },
+                new Transaction
+                {
+                    TransactionID = 3,
+                    UserID = 1,
+                    AmountCharged = 55.00,
+                    DateDue = new DateTime(2018, 2, 9),
+                    DateCharged = null,
+                    ProcessState = ProcessState.FAILED,
+                    ReasonFailed = "Insufficient funds"
+                }
+            };
         }
 
         private User BuildTestUser(PaymentPlan paymentPlan)
@@ -195,8 +198,13 @@ namespace NelnetProject.Tests.Engines
                     ReasonFailed = "Insufficient funds"
                 }
             };
+            var users = _userAccessor.GetAllActiveUsers();
+            foreach (User user in users)
+            {
+                user.Students = _studentAccessor.GetAllStudents().Where(x => x.UserID == user.UserID).ToList();
+            }
 
-            List<Transaction> result = _paymentEngine.GeneratePayments(genDate).ToList();
+            List<Transaction> result = _paymentEngine.GeneratePayments(users, genDate).ToList();
 
             CollectionAssert.AreEqual(expectedTransactionsReturned, result);
             CollectionAssert.AreEqual(expectedTransactionsInDB, _transactionAccessor.Transactions.ToList());
@@ -249,11 +257,11 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            _chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
+            _paymentAccessor.MockPaymentSpringCharges.Add("fed123", new ChargeResultDTO()
             {
                 WasSuccessful = true
             });
-            _chargePaymentAccessor.MockPaymentSpring.Add("123nonono", new ChargeResultDTO()
+            _paymentAccessor.MockPaymentSpringCharges.Add("123nonono", new ChargeResultDTO()
             {
                 WasSuccessful = false,
                 ErrorMessage = "Insufficient Funds"
@@ -295,7 +303,7 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            _chargePaymentAccessor.MockPaymentSpring.Add("fed123", new ChargeResultDTO()
+            _paymentAccessor.MockPaymentSpringCharges.Add("fed123", new ChargeResultDTO()
             {
                 WasSuccessful = false,
                 ErrorMessage = "Card Expired"
@@ -340,6 +348,131 @@ namespace NelnetProject.Tests.Engines
             Transaction actual = _paymentEngine.CalculateNextPaymentForUser(userId, today);
 
             Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void TestInsertPaymentInfo()
+        {
+            UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
+            {
+                CustomerID = "",
+                FirstName = "Lucas",
+                LastName = "Hall",
+                StreetAddress1 = "911 NE Emergency Ln",
+                StreetAddress2 = "",
+                City = "Chicago",
+                State = "IL",
+                Zip = "60007",
+                CardNumber = 111111111111,
+                ExpirationYear = 20,
+                ExpirationMonth = 12,
+                CardType = "Visa"
+            };
+
+            _paymentEngine.InsertPaymentInfo(paymentInfo);
+
+            Assert.AreEqual(paymentInfo, _paymentAccessor.MockPaymentSpringCustomers.Where(info => info.CustomerID == paymentInfo.CustomerID).ToList().ElementAt(0));
+        }
+
+        [TestMethod]
+        public void TestUpdatePaymentBillingInfo()
+        {
+            _paymentAccessor.MockPaymentSpringCustomers.Add(new UserPaymentInfoDTO()
+            {
+                CustomerID = "fedder",
+                CardNumber = 4111111111111111,
+                ExpirationMonth = 12,
+                ExpirationYear = 18
+            });
+
+            PaymentAddressDTO paymentAddressInfo = new PaymentAddressDTO
+            {
+                CustomerID = "fedder",
+                FirstName = "Bobby",
+                LastName = "Bobton",
+                StreetAddress1 = "123 NE Eastern Ln",
+                StreetAddress2 = "",
+                City = "Chicago",
+                State = "IL",
+                Zip = "60007"
+            };
+
+            _paymentEngine.UpdatePaymentBillingInfo(paymentAddressInfo);
+            string customerID = "fedder";
+
+            Assert.AreEqual(paymentAddressInfo.FirstName, _paymentAccessor.MockPaymentSpringCustomers.Where(x => x.CustomerID == customerID).FirstOrDefault().FirstName);
+            _paymentAccessor.MockPaymentSpringCustomers.RemoveAll(dto => dto.CustomerID == "fedder");
+        }
+
+        [TestMethod]
+        public void TestUpdatePaymentCardInfo()
+        {
+            _paymentAccessor.MockPaymentSpringCustomers.Add(new UserPaymentInfoDTO()
+            {
+                CustomerID = "fedder",
+                FirstName = "Bobby",
+                LastName = "Bobton",
+                StreetAddress1 = "123 NE Eastern Ln",
+                StreetAddress2 = "",
+                City = "Chicago",
+                State = "IL",
+                Zip = "60007"
+            });
+
+            PaymentCardDTO paymentCardInfo = new PaymentCardDTO
+            {
+                CustomerID = "fedder",
+                CardNumber = 1234567891011111,
+                ExpirationMonth = 12,
+                ExpirationYear = 22
+            };
+
+            _paymentEngine.UpdatePaymentCardInfo(paymentCardInfo);
+            string customerID = "fedder";
+
+            Assert.AreEqual(paymentCardInfo.CardNumber, _paymentAccessor.MockPaymentSpringCustomers.Where(x => x.CustomerID == customerID).FirstOrDefault().CardNumber);
+            _paymentAccessor.MockPaymentSpringCustomers.RemoveAll(dto => dto.CustomerID == "fedder");
+        }
+
+        [TestMethod]
+        public void TestDeletePaymentInfo()
+        {
+            UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
+            {
+                CustomerID = "hello9",
+                FirstName = "Hobo",
+                LastName = "Guy",
+                StreetAddress1 = "567 NW Weastern Rd",
+                StreetAddress2 = "",
+                City = "Kansas City",
+                State = "MO",
+                Zip = "64086",
+                CardNumber = 333333333,
+                ExpirationYear = 22,
+                ExpirationMonth = 5,
+                CardType = "MasterCard"
+            };
+
+            _paymentAccessor.MockPaymentSpringCustomers.Add(paymentInfo);
+
+            _paymentEngine.DeletePaymentInfo(paymentInfo.CustomerID);
+
+            Assert.IsFalse(_paymentAccessor.MockPaymentSpringCustomers.Contains(paymentInfo));
+        }
+
+        [TestMethod]
+        public void TestGetPaymentInfoForUserWithCorrectCustomerID()
+        {
+            int userID = 1;
+            string firstName = "John";
+            Assert.AreEqual(firstName, _paymentEngine.GetPaymentInfoForUser(userID).FirstName);
+        }
+
+        [TestMethod]
+        public void TestGetPaymentInfoForUserWithoutCorrectCustomerID()
+        {
+            int userID = 4;
+            Assert.AreEqual(null, _paymentEngine.GetPaymentInfoForUser(userID));
         }
     }
 }

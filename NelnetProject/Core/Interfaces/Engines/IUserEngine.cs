@@ -1,12 +1,12 @@
 ﻿using Core.DTOs;
 using System.Collections.Generic;
 
-namespace Core.Interfaces
-{   
+namespace Core.Interfaces.Engines
+{
     /// <summary>
-    /// Engine for getting information about a user.
+    /// Business logic around User object
     /// </summary>
-    public interface IGetUserInfoEngine
+    public interface IUserEngine
     {
         /// <summary>
         /// Checks to see if a given email matches with an email in the database.
@@ -19,7 +19,7 @@ namespace Core.Interfaces
         /// Gets all of the active general users in the database.
         /// </summary>
         /// <returns>Returns a list of all general active users in the database.</returns>
-        IList<User> GetAllUsers();
+        IEnumerable<User> GetAllUsers();
 
         /// <summary>
         /// Validates the login of a user given an email and a password.
@@ -37,10 +37,23 @@ namespace Core.Interfaces
         User GetUserInfoByID(int userID);
 
         /// <summary>
-        /// Gets a user's payment info from PaymentSpring with their customer ID.
+        /// Inserts a new user record into the database with the information contained in the user model
         /// </summary>
-        /// <param name="customerID">The customer id associated with the desired payment information</param>
-        /// <returns>A user's payment info provided by PaymentSpring</returns>
-        UserPaymentInfoDTO GetPaymentInfoForUser(int userID);
+        /// <param name="user">The user model to insert</param>
+        /// <param name="password">The password to be hashed and inserted into the database</param>
+        void InsertPersonalInfo(User user, string password);
+
+        /// <summary>
+        /// Updates the user record in the database specified by the userID in the user model
+        /// </summary>
+        /// <param name="user">The user model to update</param>
+        void UpdatePersonalInfo(User user);
+
+        /// <summary>
+        /// Delete a user record from the database specified by the userID in the user model
+        /// </summary>
+        /// <param name="userID">The ID of the user in the database to delete</param>
+        /// <param name="customerID">The ID of the customer in payment spring</param>
+        void DeletePersonalInfo(int userID);
     }
 }
