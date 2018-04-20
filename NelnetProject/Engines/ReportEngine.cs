@@ -1,21 +1,23 @@
-﻿using Core.Exceptions;
-using Core.Interfaces;
+﻿using Core.Interfaces.Accessors;
+using Core.Interfaces.Engines;
 using Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engines
 {
-    public class SetReportEngine : ISetReportEngine
+    public class ReportEngine : IReportEngine
     {
-        ISetReportAccessor setReportAccessor;
+        private readonly IReportAccessor _reportAccessor;
 
-        public SetReportEngine(ISetReportAccessor setReportAccessor)
+        public ReportEngine(IReportAccessor reportAccessor)
         {
-            this.setReportAccessor = setReportAccessor;
+            _reportAccessor = reportAccessor;
+        }
+
+        public IEnumerable<Report> GetAllReports()
+        {
+            return _reportAccessor.GetAllReports();
         }
 
         public Report InsertReport(DateTime startDate, DateTime endDate)
@@ -32,10 +34,9 @@ namespace Engines
                 EndDate = endDate
             };
 
-            setReportAccessor.InsertReport(report);
+            _reportAccessor.InsertReport(report);
 
             return report;
         }
-
     }
 }

@@ -1,18 +1,18 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Core.Interfaces;
-using NelnetProject.Tests.Engines.MockedAccessors;
-using Engines;
-using System.Collections.ObjectModel;
 using Core;
 using Core.DTOs;
-using Core.Exceptions;
 using System.Collections.Generic;
+using Core.Interfaces.Engines;
+using Core.Interfaces.Accessors;
+using NelnetProject.Tests.Engines.MockedAccessors;
+using Engines;
+using System.Linq;
 
 namespace NelnetProject.Tests.Engines
 {
     [TestClass]
-    public class TestGetTransactionEngine
+    public class TestTransactionEngine
     {
         private List<Transaction> MockDB = new List<Transaction>{
             new Transaction()
@@ -55,18 +55,20 @@ namespace NelnetProject.Tests.Engines
             }
         };
 
-        IGetTransactionEngine getTransactionEngine;
-        IGetTransactionAccessor getTransactionAccessor;
-        public TestGetTransactionEngine()
+        private readonly ITransactionEngine _transactionEngine;
+        private readonly ITransactionAccessor _transactionAccessor;
+
+        public TestTransactionEngine()
         {
-            getTransactionAccessor = new MockGetTransactionAccessor(MockDB);
-            getTransactionEngine = new GetTransactionEngine(getTransactionAccessor);
+            _transactionAccessor = new MockTransactionAccessor(MockDB);
+            _transactionEngine = new TransactionEngine(_transactionAccessor);
         }
 
         [TestMethod]
         public void TestGetAllUnsettledTransactions()
         {
-            var result = getTransactionEngine.GetAllUnsettledTransactions();
+            var result = _transactionEngine.GetAllUnsettledTransactions().ToList();
+
             Assert.AreEqual(1, result.Count);
             Assert.IsInstanceOfType(result[0], typeof(Transaction));
             Assert.AreEqual(4, result[0].TransactionID);
@@ -76,7 +78,7 @@ namespace NelnetProject.Tests.Engines
         public void TestGetAllTransactionsForUser()
         {
             var id = 1;
-            var result = getTransactionEngine.GetAllTransactionsForUser(id);
+            var result = _transactionEngine.GetAllTransactionsForUser(id).ToList();
 
             Assert.AreEqual(2, result.Count);
             foreach (Transaction t in result)
@@ -90,7 +92,7 @@ namespace NelnetProject.Tests.Engines
         public void TestGetAllTransactionsForNonexistantUser()
         {
             var id = -1;
-            var result = getTransactionEngine.GetAllTransactionsForUser(id);
+            var result = _transactionEngine.GetAllTransactionsForUser(id).ToList();
 
             Assert.AreEqual(0, result.Count);
         }
@@ -98,7 +100,7 @@ namespace NelnetProject.Tests.Engines
         [TestMethod]
         public void TestGetAllFailedTransactions()
         {
-            var result = getTransactionEngine.GetAllFailedTransactions();
+            var result = _transactionEngine.GetAllFailedTransactions().ToList();
 
             Assert.AreEqual(1, result.Count);
         }
@@ -108,7 +110,7 @@ namespace NelnetProject.Tests.Engines
         {
             var startDate = new DateTime(2018, 2, 1);
             var endDate = new DateTime(2018, 2, 28);
-            var result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
+            var result = _transactionEngine.GetTransactionsForDateRange(startDate, endDate).ToList();
 
             Assert.AreEqual(3, result.Count);
             foreach(TransactionWithUserInfoDTO t in result)
@@ -124,7 +126,7 @@ namespace NelnetProject.Tests.Engines
         {
             var startDate = new DateTime(2018, 3, 1);
             var endDate = new DateTime(2018, 3, 28);
-            var result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
+            var result = _transactionEngine.GetTransactionsForDateRange(startDate, endDate).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.IsInstanceOfType(result[0], typeof(TransactionWithUserInfoDTO));
@@ -140,7 +142,7 @@ namespace NelnetProject.Tests.Engines
         {
             var startDate = new DateTime(2018, 3, 1);
             var endDate = new DateTime(2018, 3, 28);
-            var result = getTransactionEngine.GetTransactionsForDateRange(endDate, startDate);
+            var result = _transactionEngine.GetTransactionsForDateRange(endDate, startDate).ToList();
         }
     }
 }

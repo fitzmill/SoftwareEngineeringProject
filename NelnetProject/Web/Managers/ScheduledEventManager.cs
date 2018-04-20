@@ -10,33 +10,42 @@ using System.Timers;
 
 namespace Web.Managers
 {
+    /// <summary>
+    /// Manager for executing events at scheduled intervals.
+    /// </summary>
     public class ScheduledEventManager
     {
-        public Func<DateTime> dateProvider = () => DateTime.Now;
+        public Func<DateTime> dateProvider = () => DateTime.Now; //todo remove
 
         private readonly double _timerInterval;
         private readonly int _chargingHour;
         private readonly int _reportGenerationHour;
 
-        private readonly IGetTransactionEngine _getTransactionEngine;
+        private readonly ITransactionEngine _transactionEngine;
         private readonly IPaymentEngine _paymentEngine;
         private readonly INotificationEngine _notificationEngine;
-        private readonly ISetReportEngine _setReportEngine;
+        private readonly IReportEngine _reportEngine;
         private readonly IUserEngine _userEngine;
 
-        public ScheduledEventManager(double timerInterval, int chargingHour, int reportGenerationHour, 
-            IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine, 
-            INotificationEngine notificationEngine, ISetReportEngine setReportEngine,
+        public ScheduledEventManager(
+            double timerInterval, 
+            int chargingHour, 
+            int reportGenerationHour, 
+            ITransactionEngine transactionEngine, 
+            IPaymentEngine paymentEngine, 
+            INotificationEngine notificationEngine, 
+            IReportEngine reportEngine,
             IUserEngine userEngine)
         {
             _timerInterval = timerInterval;
             _chargingHour = chargingHour;
             _reportGenerationHour = reportGenerationHour;
-            
-            _getTransactionEngine = getTransactionEngine;
+
+            _transactionEngine = transactionEngine;
             _paymentEngine = paymentEngine;
             _notificationEngine = notificationEngine;
-            _setReportEngine = setReportEngine;
+            _reportEngine = reportEngine;
+            _userEngine = userEngine;
 
             Timer timer = new Timer(timerInterval);
             timer.Elapsed += new ElapsedEventHandler(TimerIntervalElapsed);
@@ -45,6 +54,11 @@ namespace Web.Managers
             TimerIntervalElapsed(null, null); //Initiate the event once on startup
         }
 
+        /// <summary>
+        /// Executed every _timerInterval.
+        /// </summary>
+        /// <param name="sender">The event sender</param>
+        /// <param name="e">Any event arguments</param>
         public void TimerIntervalElapsed(object sender, ElapsedEventArgs e)
         {
             DateTime now = dateProvider();
@@ -59,7 +73,7 @@ namespace Web.Managers
             }
             else if (now.Hour == _chargingHour && now.Day >= TuitionUtil.DUE_DAY && now.Day <= TuitionUtil.DUE_DAY + TuitionUtil.OVERDUE_RETRY_PERIOD)
             {
-                IList<Transaction> unsettledTransactions = _getTransactionEngine.GetAllUnsettledTransactions();
+                IEnumerable<Transaction> unsettledTransactions = _transactionEngine.GetAllUnsettledTransactions();
                 IEnumerable<Transaction> transactionResults = _paymentEngine.ChargePayments(unsettledTransactions.ToList(), now);
                 _notificationEngine.SendTransactionNotifications(transactionResults.ToList());
             }
@@ -67,7 +81,7 @@ namespace Web.Managers
             //Generating Monthly Reports
             if (now.Day == 1 && now.Hour == _reportGenerationHour) {
                 DateTime today = new DateTime(now.Year, now.Month, 1);
-                _setReportEngine.InsertReport(today.AddMonths(-1), today.AddDays(-1));
+                _reportEngine.InsertReport(today.AddMonths(-1), today.AddDays(-1));
             }
         }
  

@@ -1,20 +1,20 @@
-﻿using Core.Interfaces;
+﻿using Core.Interfaces.Accessors;
 using Core.Models;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 
 namespace Accessors
 {
-    public class GetReportAccessor : IGetReportAccessor
+    public class ReportAccessor : IReportAccessor
     {
         private readonly string _connectionString;
 
-        public GetReportAccessor(string connectionString)
+        public ReportAccessor(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public IList<Report> GetAllReports()
+        public IEnumerable<Report> GetAllReports()
         {
             string query = "[dbo].[GetAllReports]";
 
@@ -43,6 +43,30 @@ namespace Accessors
             }
 
             return result;
+        }
+
+        public void InsertReport(Report report)
+        {
+            string query = "[dbo].[InsertReport]";
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                var command = new SqlCommand(query, conn);
+
+                command.Parameters.Add(new SqlParameter("@StartDate", report.StartDate));
+                command.Parameters.Add(new SqlParameter("@EndDate", report.EndDate));
+
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+
+                conn.Open();
+
+                var reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    report.ReportID = (int)reader.GetDecimal(0);
+                }
+            }
         }
     }
 }
