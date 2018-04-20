@@ -46,7 +46,7 @@ namespace Web
             //database accessors
             var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
             container.RegisterType<IGetUserInfoAccessor, GetUserInfoAccessor>(connectionStringConstructor);
-            container.RegisterType<ITransactionAccessor, TransactionAccessor>(connectionStringConstructor);
+            container.RegisterType<ITransactionAccessor, TransactionAccessor>();
             container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(connectionStringConstructor);
             container.RegisterType<IReportAccessor, ReportAccessor>();
 

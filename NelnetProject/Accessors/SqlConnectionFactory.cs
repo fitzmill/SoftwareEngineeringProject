@@ -60,5 +60,30 @@ namespace Accessors
         {
             RunSqlQuery(query, null, readFunc);
         }
+
+        /// <summary>
+        /// Executes a SQL query that does not return any data.
+        /// </summary>
+        /// <param name="query">the SQL query string</param>
+        /// <param name="parms">the parameters to be inserted into the query; defaults to null</param>
+        /// <returns>the number of rows affected</returns>
+        public static int RunSqlNonQuery(string query, Dictionary<string, object> parms = null)
+        {
+            using (SqlConnection con = CreateConnection())
+            {
+                using (SqlCommand command = new SqlCommand(query, con))
+                {
+                    if (parms != null)
+                    {
+                        foreach (KeyValuePair<string, object> entry in parms)
+                        {
+                            command.Parameters.Add(new SqlParameter(entry.Key, entry.Value));
+                        }
+                    }
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }

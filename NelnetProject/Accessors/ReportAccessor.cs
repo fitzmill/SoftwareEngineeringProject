@@ -2,20 +2,18 @@
 using Core.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 
 namespace Accessors
 {
     public class ReportAccessor : IReportAccessor
     {
-        private readonly string _getAllReportsQuery = "SELECT * FROM [dbo].[Report] r ORDER BY r.ReportID DESC";
-        private readonly string _insertReportQuery = "INSERT INTO [dbo].[Report] (DateCreated, StartDate, EndDate) VALUES (@DateCreated, @StartDate, @EndDate)";
-
         public IEnumerable<Report> GetAllReports()
         {
+            string query = "SELECT * FROM [dbo].[Report] r ORDER BY r.ReportID DESC";
+
             var result = new List<Report>();
 
-            SqlConnectionFactory.RunSqlQuery(_getAllReportsQuery, reader => {
+            SqlConnectionFactory.RunSqlQuery(query, reader => {
                 while (reader.Read())
                 {
                     result.Add(new Report
@@ -33,6 +31,7 @@ namespace Accessors
 
         public void InsertReport(Report report)
         {
+            string query = "INSERT INTO [dbo].[Report] (DateCreated, StartDate, EndDate) VALUES (@DateCreated, @StartDate, @EndDate)";
             var parms = new Dictionary<string, object>
             {
                 { "@DateCreated", DateTime.Today },
@@ -40,7 +39,7 @@ namespace Accessors
                 { "@EndDate", report.EndDate }
             };
 
-            SqlConnectionFactory.RunSqlQuery(_insertReportQuery, parms, reader =>
+            SqlConnectionFactory.RunSqlQuery(query, parms, reader =>
             {
                 if (reader.Read())
                 {
