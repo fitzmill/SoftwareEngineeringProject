@@ -199,7 +199,7 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PaymentController.cs" />
-	<Compile Include="Controllers\RoutingController.cs" />
+    <Compile Include="Controllers\RoutingController.cs" />
     <Compile Include="Filters\AddChallengeOnUnauthorizedResult.cs" />
     <Compile Include="Filters\AuthenticationFailureResult.cs" />
     <Compile Include="Filters\HttpAuthenticationChallengeContextExtensions.cs" />
@@ -229,6 +229,16 @@
     <Content Include="Nelnet_UI\build\index.js" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.html" />
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.js" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\PaymentInformationPageComponent\payment-information-page-component.html" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\PaymentInformationPageComponent\payment-information-page-component.js" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\PaymentPlanSelectionPage\payment-plan-selection-page-component.html" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\PaymentPlanSelectionPage\payment-plan-selection-page-component.js" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\PersonalInformationPageComponent\personal-information-page-component.html" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\PersonalInformationPageComponent\personal-information-page-component.js" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\StudentInformationPageComponent\student-information-page-component.html" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\StudentInformationPageComponent\student-information-page-component.js" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\WelcomePageComponent\welcome-page-component.html" />
+    <Content Include="Nelnet_UI\source\AccountCreationComponent\WelcomePageComponent\welcome-page-component.js" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.html" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\account-dashboard-component.js" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\BillingInformationComponent\billing-information-component.html" />

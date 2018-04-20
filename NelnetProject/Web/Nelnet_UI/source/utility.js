@@ -61,6 +61,16 @@ Number.prototype.formatAsMoney = function () {
     return this.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 }
 
+//add the option to bind events to the show and hide events
+//from http://viralpatel.net/blogs/jquery-trigger-custom-event-show-hide-element/
+$.each(['show', 'hide'], function (i, ev) {
+    var el = $.fn[ev];
+    $.fn[ev] = function () {
+        this.trigger(ev);
+        return el.apply(this, arguments);
+    };
+});
+
 $.validator.addMethod("password", function (value) {
     return value.match(/^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-\.])(?!.*?[;'"]).{8,32}$/);
 }, "Password must be between 8 and 32 characters, contain lowercase and uppercase letters, a number, and a special character.");

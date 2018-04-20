@@ -1,0 +1,9 @@
+﻿<form id="form-student-information-page">
+    <div data-bind="foreach: students">
+        <input class="input-account-creation card-small-medium card-left no-code-chars" data-bind="value: studentFirstName, attr: {name: 'student-first-name' + $index()}" placeholder="Student First Name" required />
+        <input class="input-account-creation card-small-medium card-left no-code-chars" data-bind="value: studentLastName, attr: {name: 'student-last-name' + $index()}" placeholder="Student Last Name" required />
+        <select class="input-account-creation card-small card-left" style="height: 28.5px" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: studentGrade, attr: {name: 'grade' + $index()}, optionsCaption: 'Grade'" required />
+        <button style="float: right" class="btn btn-danger btn-remove-student" data-bind="click: $parent.removeStudent">Remove</button>
+    </div>
+    <button id="btn-add-student" class="btn btn-primary" data-bind="click: addStudent">Add Another Student</button>
+</form>

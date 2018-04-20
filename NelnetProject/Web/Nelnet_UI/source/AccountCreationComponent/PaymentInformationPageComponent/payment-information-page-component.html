@@ -1,0 +1,13 @@
+﻿<form id="form-payment-information-page">
+    <input name="cardholder-first-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardFirstName" placeholder="Cardholder First Name" required />
+    <input name="card-holder-last-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardLastName" placeholder="Cardholder Last Name" required />
+    <input name="credit-card-number" class="input-account-creation card-extra-large card-left creditcard" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number" required />
+
+    <select name="expire-month" class="input-account-creation card-tiny card-left" style="height: 28.5px; margin-right: 0.9%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Months, value: month, optionsCaption: 'MM'" required />
+    <select name="expire-year" class="input-account-creation card-smaller card-left" style="height: 28.5px; margin-left: 0%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Years, value: year, optionsCaption: 'YYYY'" required />
+    <input name="address-1" class="input-account-creation card-full-column no-code-chars" data-bind="value: address1" placeholder="Address Line 1" required />
+    <input name="address-2" class="input-account-creation card-full-column no-code-chars" data-bind="value: address2" placeholder="Address Line 2 (Optional)" />
+    <input name="city" class="input-account-creation card-large card-left no-code-chars" data-bind="value: city" placeholder="City" required />
+    <input name="zip" class="input-account-creation card-small card-left zipcodeUS" data-bind="value: zip" placeholder="Zip Code" required />
+    <select name="state" class="input-account-creation card-small card-left" style="height: 27px" data-bind="options: $root.dropdownOptions.States, value: state, optionsCaption: 'State'" required />
+</form>

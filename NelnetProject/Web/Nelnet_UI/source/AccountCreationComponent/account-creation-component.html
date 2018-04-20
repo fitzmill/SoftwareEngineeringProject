@@ -15,73 +15,26 @@
             </div>
 
             <div id="page-0" style="text-align:center">
-                <h1 style="margin-top:50px; margin-bottom:50px">Hi, we're glad you're here!</h1>
-                <h4 style="margin-bottom:20px">Here's what we'll need to get you started:</h4>
-                <ul style="text-align:left; padding-left:210px">
-                    <li>Basic contact information to keep you informed</li>
-                    <li>Payment information to automate your payments</li>
-                    <li>Student information to pay the right bills</li>
-                </ul>
-                <h4 style="margin-top:20px">Then you'll be ready to start making tuition payments.</h4>
+                <welcome-page-component params=""></welcome-page-component>
             </div>
 
             <div id="page-1">
-                <form id="form-page-1">
-                    <input name="first-name" class="input-account-creation card-left card-half-column no-code-chars" data-bind="value: firstName" placeholder="First Name" required/>
-                    <input name="last-name" class="input-account-creation card-right card-half-column no-code-chars" data-bind="value: lastName" placeholder="Last Name" required/>
-                    <input name="accountCreationEmail" class="input-account-creation card-full-column" type="email" data-bind="value: email" placeholder="Email" required/>
-                    <input name="confirm-email" class="input-account-creation card-full-column" type="email" data-bind="value: reenterEmail" placeholder="Confirm Email" equalTo="input[name ~= 'accountCreationEmail']" required/>
-                    <input name="account-creation-password" class="input-account-creation card-full-column" type="password" data-bind="value: password" placeholder="Password: 8-32 characters, number(s), special character(s), lowercase and uppercase letter(s)" required/>
-                    <input name="confirm-password" class="input-account-creation card-full-column" type="password" data-bind="value: reenterPassword" placeholder="Confirm Password" password equalTo="input[name ~= 'account-creation-password']" required/>
-                </form>
+                <personal-information-page-component params="firstName: firstName, lastName: lastName, email: email, reenterEmail: reenterEmail, 
+                                                     password: password, reenterPassword: reenterPassword"></personal-information-page-component>
             </div>
 
             <div id="page-2">
-                <form id="form-page-2">
-                    <input name="cardholder-first-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardFirstName" placeholder="Cardholder First Name" required />
-                    <input name="card-holder-last-name" class="input-account-creation card-half-column card-left no-code-chars" data-bind="value: cardLastName" placeholder="Cardholder Last Name" required />
-                    <input name="credit-card-number" class="input-account-creation card-extra-large card-left creditcard" data-bind="value: cardNumber" placeholder="Credit Card Number" type="number" required />
-
-                    <select name="expire-month" class="input-account-creation card-tiny card-left" style="height: 28.5px; margin-right: 0.9%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Months, value: month, optionsCaption: 'MM'" required/>
-                    <select name="expire-year" class="input-account-creation card-smaller card-left" style="height: 28.5px; margin-left: 0%; padding-left: 0px" data-bind="options: $root.dropdownOptions.Years, value: year, optionsCaption: 'YYYY'" required/>
-                    <input name="address-1" class="input-account-creation card-full-column no-code-chars" data-bind="value: address1" placeholder="Address Line 1" required/>
-                    <input name="address-2" class="input-account-creation card-full-column no-code-chars" data-bind="value: address2" placeholder="Address Line 2 (Optional)" />
-                    <input name="city" class="input-account-creation card-large card-left no-code-chars" data-bind="value: city" placeholder="City" required/>
-                    <input name="zip" class="input-account-creation card-small card-left zipcodeUS" data-bind="value: zip" placeholder="Zip Code" required/>
-                    <select name="state" class="input-account-creation card-small card-left" style="height: 27px" data-bind="options: $parent.dropdownOptions.States, value: state, optionsCaption: 'State'" required/>
-                </form>
+                <payment-information-page-component params="cardNumber: cardNumber, cardFirstName: cardFirstName, cardLastName: cardLastName,
+                                                    month: month, year: year, address1: address1, address2: address2, city: city, state: state,
+                                                    zip: zip"></payment-information-page-component>
             </div>
 
             <div id="page-3">
-                <form id="form-page-3">
-                    <div data-bind="foreach: students">
-                        <input class="input-account-creation card-small-medium card-left no-code-chars" data-bind="value: studentFirstName, attr: {name: 'student-first-name' + $index()}" placeholder="Student First Name" required/>
-                        <input class="input-account-creation card-small-medium card-left no-code-chars" data-bind="value: studentLastName, attr: {name: 'student-last-name' + $index()}" placeholder="Student Last Name" required/>
-                        <select class="input-account-creation card-small card-left" style="height: 28.5px" data-bind="options: $root.dropdownOptions.Grades, optionsText: 'text', optionsValue: 'num', value: studentGrade, attr: {name: 'grade' + $index()}, optionsCaption: 'Grade'" required/>
-                        <button style="float: right" class="btn btn-danger btn-remove-student" data-bind="click: $parent.removeStudent">Remove</button>
-                    </div>
-                    <button id="btn-add-student" class="btn btn-primary" data-bind="click: addStudent">Add Another Student</button>
-                </form>
+                <student-information-page-component params="students: students"></student-information-page-component>
             </div>
 
             <div id="page-4">
-                <div class="output-account-creation">
-                    <h4><b>Please select a payment plan:</b></h4>
-                    <form id="form-page-4">
-                        <div class="radio-button" data-bind="click: function(){ paymentType('MONTHLY') }">
-                            <input id="radio-button-1" type="radio" name="paymentType" value="MONTHLY" data-bind="checked: paymentType, click: () => true, clickBubble: false" required />
-                            <h5 class="radio-button-label" data-bind="text: 'Monthly at $'+monthlyRate()+' (Sept - May)'" />
-                        </div>
-                        <div class="radio-button" data-bind="click: function(){ paymentType('SEMESTERLY') }">
-                            <input id="radio-button-2" type="radio" name="paymentType" value="SEMESTERLY" data-bind="checked: paymentType, click: () => true, clickBubble: false" />
-                            <h5 class="radio-button-label" data-bind="text: 'Semesterly at $'+semesterlyRate()+' (Sept & Feb)'" />
-                        </div>
-                        <div class="radio-button" data-bind="click: function(){ paymentType('YEARLY') }">
-                            <input id="radio-button-3" type="radio" name="paymentType" value="YEARLY" data-bind="checked: paymentType, click: () => true, clickBubble: false" />
-                            <h5 class="radio-button-label" data-bind="text: 'Yearly at $'+yearlyRate()+' (Sept)'" />
-                        </div>
-                    </form>
-                </div>
+                <payment-plan-selection-page-component params="paymentTypeSelection: paymentTypeSelection, user: user, accountCreationInformation: accountCreationInformation, PLAN_TYPE_VALUES: PLAN_TYPE_VALUES"></payment-plan-selection-page-component>
             </div>
 
         </div>
