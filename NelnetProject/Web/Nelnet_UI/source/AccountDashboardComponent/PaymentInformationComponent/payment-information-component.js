@@ -13,11 +13,6 @@ ko.components.register('payment-information-component', {
 
         vm.paymentInfo = params.paymentInfo;
 
-        vm.paymentPlan = params.paymentPlan;
-
-        vm.nextPaymentDate = params.nextPaymentDate;
-        vm.nextPaymentCost = params.nextPaymentCost;
-
         vm.setUIPaymentInfo = function () {
             vm.cardNumber(vm.paymentInfo().CardNumber);
             vm.expirationYear(vm.paymentInfo().ExpirationYear);
