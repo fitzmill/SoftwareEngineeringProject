@@ -4,17 +4,17 @@
 
     <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
 
-    <payment-status-component params="paymentPlan: paymentPlan, nextPaymentDate: nextPaymentDate, nextPaymentCost: nextPaymentCost"></payment-status-component>
+    <payment-status-component params="paymentPlan: paymentPlan, nextPaymentDate: nextPaymentDate, nextPaymentCost: nextPaymentCost" />
 
-    <transaction-information-component params="transactions: transactions"></transaction-information-component>
+    <transaction-information-component params="transactions: transactions" />
 
-    <payment-information-component params="paymentInfo: paymentInfo, stopEditing: stopEditing"></payment-information-component>
+    <payment-information-component params="paymentInfo: paymentInfo, stopEditing: stopEditing" />
 
-    <billing-information-component params="billingInfo: billingInfo, stopEditing: stopEditing"></billing-information-component>
+    <billing-information-component params="billingInfo: billingInfo, stopEditing: stopEditing" />
 
-    <student-information-component params="students: studentInfo, stopEditing: stopEditing, deleteUser: deleteUser"></student-information-component>
+    <student-information-component params="students: studentInfo, stopEditing: stopEditing, deleteUser: deleteUser" />
 
-    <personal-information-component params="personalInfo: personalInfo, stopEditing: stopEditing"></personal-information-component>
+    <personal-information-component params="personalInfo: personalInfo, stopEditing: stopEditing" />
 
     <!--ConfirmModal-->
     <div id="confirmModal" class="modal fade" role="dialog" aria-hidden="true" data-backdrop="static" data-bind="with: confirmModalData">
