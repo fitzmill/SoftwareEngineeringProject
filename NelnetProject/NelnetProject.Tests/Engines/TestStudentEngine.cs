@@ -14,8 +14,8 @@ namespace NelnetProject.Tests.Engines
     [TestClass]
     public class TestStudentEngine
     {
-        MockStudentAccessor studentAccessor;
-        IStudentEngine studentEngine;
+        private readonly MockStudentAccessor _studentAccessor;
+        private readonly IStudentEngine _studentEngine;
 
         public List<Student> StudentsDB = new List<Student>()
         {
@@ -45,11 +45,16 @@ namespace NelnetProject.Tests.Engines
             }
         };
 
+        public TestStudentEngine()
+        {
+            _studentAccessor = new MockStudentAccessor(StudentsDB);
+            _studentEngine = new StudentEngine(_studentAccessor);
+        }
+
         [TestInitialize]
         public void InitializeStudentEngineTests()
         {
-            studentAccessor = new MockStudentAccessor(StudentsDB);
-            studentEngine = new StudentEngine(studentAccessor);
+            _studentAccessor.MockDb = StudentsDB;
         }
 
         [TestMethod]
@@ -57,16 +62,16 @@ namespace NelnetProject.Tests.Engines
         {
             var toDelete = new List<int>();
             toDelete.AddRange(StudentsDB.Select(x => x.StudentID));
-            studentEngine.DeleteStudentInfo(toDelete);
-            Assert.AreEqual(0, studentAccessor.MockDb.Count);
+            _studentEngine.DeleteStudentInfo(toDelete);
+            Assert.AreEqual(0, _studentAccessor.MockDb.Count);
         }
 
         [TestMethod]
         public void TestDeleteNoStudentInfo()
         {
-            var expected = studentAccessor.MockDb.Count;
-            studentEngine.DeleteStudentInfo(new List<int>());
-            Assert.AreEqual(expected, studentAccessor.MockDb.Count);
+            var expected = _studentAccessor.MockDb.Count;
+            _studentEngine.DeleteStudentInfo(new List<int>());
+            Assert.AreEqual(expected, _studentAccessor.MockDb.Count);
         }
 
         [TestMethod]
@@ -80,30 +85,30 @@ namespace NelnetProject.Tests.Engines
                 Grade = 3
             };
 
-            studentAccessor.InsertStudentInfo(1, inserted);
+            _studentAccessor.InsertStudentInfo(1, inserted);
 
-            Assert.AreEqual(inserted, studentEngine.GetStudentInfoByID(inserted.StudentID));
+            Assert.AreEqual(inserted, _studentEngine.GetStudentInfoByID(inserted.StudentID));
         }
 
         [TestMethod]
         public void TestGetNullStudentInfoById()
         {
-            var id = studentAccessor.MockDb.Count > 0 ? studentAccessor.MockDb.Select(x => x.StudentID).Max() + 1 : 1;
-            Assert.IsNull(studentEngine.GetStudentInfoByID(id));
+            var id = _studentAccessor.MockDb.Count > 0 ? _studentAccessor.MockDb.Select(x => x.StudentID).Max() + 1 : 1;
+            Assert.IsNull(_studentEngine.GetStudentInfoByID(id));
         }
 
         [TestMethod]
         public void TestGetStudentInfoByNonexistantUserId()
         {
             var id = -1;
-            Assert.AreEqual(0, studentEngine.GetStudentInfoByUserID(id).ToList().Count);
+            Assert.AreEqual(0, _studentEngine.GetStudentInfoByUserID(id).ToList().Count);
         }
 
         [TestMethod]
         public void TestGetStudentInfoByUserId()
         {
             var userId = 1;
-            CollectionAssert.AreEqual(StudentsDB.Where(x => x.UserID == userId).ToList(), studentEngine.GetStudentInfoByUserID(userId).ToList());
+            CollectionAssert.AreEqual(StudentsDB.Where(x => x.UserID == userId).ToList(), _studentEngine.GetStudentInfoByUserID(userId).ToList());
         }
 
         [TestMethod]
@@ -127,19 +132,19 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            studentEngine.InsertStudentInfo(4, expected);
+            _studentEngine.InsertStudentInfo(4, expected);
 
-            CollectionAssert.IsSubsetOf(expected, studentAccessor.MockDb);
+            CollectionAssert.IsSubsetOf(expected, _studentAccessor.MockDb);
         }
 
         [TestMethod]
         public void TestInsertNoStudentInfo()
         {
-            var expected = studentAccessor.MockDb;
+            var expected = _studentAccessor.MockDb;
 
-            studentEngine.InsertStudentInfo(0, new List<Student>());
+            _studentEngine.InsertStudentInfo(0, new List<Student>());
 
-            CollectionAssert.AreEqual(expected, studentAccessor.MockDb);
+            CollectionAssert.AreEqual(expected, _studentAccessor.MockDb);
         }
 
         [TestMethod]
@@ -156,13 +161,13 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            studentAccessor.InsertStudentInfo(8, students[0]);
+            _studentAccessor.InsertStudentInfo(8, students[0]);
 
             students[0].Grade = 8;
 
-            studentEngine.UpdateStudentInfo(students);
+            _studentEngine.UpdateStudentInfo(students);
 
-            Assert.AreEqual(students[0], studentAccessor.MockDb.FirstOrDefault(x => x.StudentID == students[0].StudentID));
+            Assert.AreEqual(students[0], _studentAccessor.MockDb.FirstOrDefault(x => x.StudentID == students[0].StudentID));
         }
     }
 }

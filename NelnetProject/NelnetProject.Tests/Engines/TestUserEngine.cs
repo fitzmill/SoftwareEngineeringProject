@@ -16,9 +16,9 @@ namespace NelnetProject.Tests.Engines
     [TestClass]
     public class TestUserEngine
     {
-        MockUserAccessor _userAccessor;
-        MockStudentAccessor _studentAccessor;
-        IUserEngine _userEngine;
+        private readonly MockUserAccessor _userAccessor;
+        private readonly MockStudentAccessor _studentAccessor;
+        private readonly IUserEngine _userEngine;
 
         public List<Student> StudentsDB = new List<Student>()
         {
@@ -78,12 +78,18 @@ namespace NelnetProject.Tests.Engines
             }
         };
 
-        [TestInitialize]
-        public void InitializeUserEngineTests()
+        public TestUserEngine()
         {
             _userAccessor = new MockUserAccessor(MockUsersDB);
             _studentAccessor = new MockStudentAccessor(StudentsDB);
             _userEngine = new UserEngine(_userAccessor, _studentAccessor, new RNGCryptoServiceProvider());
+        }
+
+        [TestInitialize]
+        public void InitializeUserEngineTests()
+        {
+            _userAccessor.MockDb = MockUsersDB;
+            _studentAccessor.MockDb = StudentsDB;
         }
 
         [TestMethod]

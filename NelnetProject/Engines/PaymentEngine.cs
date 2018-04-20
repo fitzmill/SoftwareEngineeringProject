@@ -25,7 +25,7 @@ namespace Engines
             _transactionAccessor = transactionAccessor;
         }
 
-        public IEnumerable<Transaction> ChargePayments(List<Transaction> charges, DateTime today)
+        public IEnumerable<Transaction> ChargePayments(IEnumerable<Transaction> charges, DateTime today)
         {
             IList<Transaction> result = new List<Transaction>();
             foreach (Transaction charge in charges)

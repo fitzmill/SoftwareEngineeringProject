@@ -13,11 +13,11 @@ namespace NelnetProject.Tests.Engines
     [TestClass]
     public class TestPaymentEngine
     {
-        PaymentEngine _paymentEngine;
-        MockUserAccessor _userAccessor;
-        MockStudentAccessor _studentAccessor;
-        MockPaymentAccessor _paymentAccessor;
-        MockTransactionAccessor _transactionAccessor;
+        private readonly PaymentEngine _paymentEngine;
+        private readonly MockUserAccessor _userAccessor;
+        private readonly MockStudentAccessor _studentAccessor;
+        private readonly MockPaymentAccessor _paymentAccessor;
+        private readonly MockTransactionAccessor _transactionAccessor;
 
         public static List<Student> StudentsDB = new List<Student>()
         {
@@ -109,26 +109,26 @@ namespace NelnetProject.Tests.Engines
         public void InitTest()
         {
             _transactionAccessor.Transactions = new List<Transaction>{
-            new Transaction
-            {
-                TransactionID = 2,
-                UserID = 2,
-                AmountCharged = 64.00,
-                DateDue = new DateTime(2018, 2, 9),
-                DateCharged = new DateTime(2018, 2, 9),
-                ProcessState = ProcessState.SUCCESSFUL
-            },
-            new Transaction
-            {
-                TransactionID = 3,
-                UserID = 1,
-                AmountCharged = 55.00,
-                DateDue = new DateTime(2018, 2, 9),
-                DateCharged = null,
-                ProcessState = ProcessState.FAILED,
-                ReasonFailed = "Insufficient funds"
-            }
-        };
+                new Transaction
+                {
+                    TransactionID = 2,
+                    UserID = 2,
+                    AmountCharged = 64.00,
+                    DateDue = new DateTime(2018, 2, 9),
+                    DateCharged = new DateTime(2018, 2, 9),
+                    ProcessState = ProcessState.SUCCESSFUL
+                },
+                new Transaction
+                {
+                    TransactionID = 3,
+                    UserID = 1,
+                    AmountCharged = 55.00,
+                    DateDue = new DateTime(2018, 2, 9),
+                    DateCharged = null,
+                    ProcessState = ProcessState.FAILED,
+                    ReasonFailed = "Insufficient funds"
+                }
+            };
         }
 
         private User BuildTestUser(PaymentPlan paymentPlan)

@@ -15,7 +15,7 @@ namespace Core.Interfaces.Engines
         /// <param name="charges">List of unsettled transactions to charge.</param>
         /// <param name="today">Today's date.</param>
         /// <returns>Results of all the charges.</returns>
-        IEnumerable<Transaction> ChargePayments(List<Transaction> charges, DateTime today);
+        IEnumerable<Transaction> ChargePayments(IEnumerable<Transaction> charges, DateTime today);
 
         /// <summary>
         /// Generates all payments due during the next period and sends them to the database.

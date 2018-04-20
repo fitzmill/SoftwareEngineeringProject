@@ -13,9 +13,9 @@ namespace NelnetProject.Tests.Engines
     [TestClass]
     public class TestNotificationEngine
     {
-        private NotificationEngine notificationEngine;
-        private MockEmailAccessor mockEmailAccessor;
-        private MockUserAccessor mockUserAcccessor;
+        private readonly NotificationEngine _notificationEngine;
+        private readonly MockEmailAccessor _mockEmailAccessor;
+        private readonly MockUserAccessor _mockUserAccessor;
 
         private List<User> userDB = new List<User>()
         {
@@ -37,9 +37,9 @@ namespace NelnetProject.Tests.Engines
 
         public TestNotificationEngine()
         {
-            mockEmailAccessor = new MockEmailAccessor();
-            mockUserAcccessor = new MockUserAccessor(userDB);
-            notificationEngine = new NotificationEngine(mockEmailAccessor, mockUserAcccessor);
+            _mockEmailAccessor = new MockEmailAccessor();
+            _mockUserAccessor = new MockUserAccessor(userDB);
+            _notificationEngine = new NotificationEngine(_mockEmailAccessor, _mockUserAccessor);
         }
 
         [TestMethod]
@@ -84,8 +84,8 @@ namespace NelnetProject.Tests.Engines
                 },
             };
 
-            notificationEngine.SendTransactionNotifications(transactions);
-            List<EmailNotification> actualEmails = mockEmailAccessor.emails;
+            _notificationEngine.SendTransactionNotifications(transactions);
+            List<EmailNotification> actualEmails = _mockEmailAccessor.emails;
 
             CollectionAssert.AreEqual(expectedEmails, actualEmails);
         }
@@ -104,8 +104,8 @@ namespace NelnetProject.Tests.Engines
                 "<br><br><br>Powered by Tuition Assistant<br>"
             };
 
-            notificationEngine.SendAccountUpdateNotification(email, firstName, "personal");
-            var result = mockEmailAccessor.emails.Find(x => x.To == email);
+            _notificationEngine.SendAccountUpdateNotification(email, firstName, "personal");
+            var result = _mockEmailAccessor.emails.Find(x => x.To == email);
 
             Assert.AreEqual(expected, result);
         }
@@ -115,7 +115,7 @@ namespace NelnetProject.Tests.Engines
         public void TestSendAccountUpdateNotificationNullTo()
         {
             var firstName = "Sean";
-            notificationEngine.SendAccountUpdateNotification(null, firstName, "personal");
+            _notificationEngine.SendAccountUpdateNotification(null, firstName, "personal");
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace NelnetProject.Tests.Engines
         public void TestSendAccountUpdatedNotificationNullFirstName()
         {
             var email = "hi@me.com";
-            notificationEngine.SendAccountUpdateNotification(email, null, "personal");
+            _notificationEngine.SendAccountUpdateNotification(email, null, "personal");
         }
 
         [TestMethod]
@@ -132,7 +132,7 @@ namespace NelnetProject.Tests.Engines
         {
             var email = "hi@me.com";
             var firstName = "Sean";
-            notificationEngine.SendAccountUpdateNotification(email, firstName, null);
+            _notificationEngine.SendAccountUpdateNotification(email, firstName, null);
         }
 
         [TestMethod]
@@ -170,9 +170,9 @@ namespace NelnetProject.Tests.Engines
                 }
             };
             
-            notificationEngine.SendAccountCreationNotification(user, new DateTime(2018, 7, 14));
+            _notificationEngine.SendAccountCreationNotification(user, new DateTime(2018, 7, 14));
 
-            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+            CollectionAssert.AreEqual(expected, _mockEmailAccessor.emails);
         }
 
         [TestMethod]
@@ -195,9 +195,9 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            notificationEngine.SendAccountDeletionNotification(user);
+            _notificationEngine.SendAccountDeletionNotification(user);
 
-            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+            CollectionAssert.AreEqual(expected, _mockEmailAccessor.emails);
         }
 
     }
