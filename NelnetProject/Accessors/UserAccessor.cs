@@ -48,7 +48,7 @@ namespace Accessors
 
         public IEnumerable<User> GetAllActiveUsers()
         {
-            string query = $"SELECT * FROM [dbo].[User] u WHERE u.UserType = {UserType.GENERAL} AND u.Active = 1";
+            string query = String.Format("SELECT * FROM [dbo].[User] u WHERE u.UserType = {0:D} AND u.Active = 1", UserType.GENERAL);
 
             List<User> result = new List<User>();
 

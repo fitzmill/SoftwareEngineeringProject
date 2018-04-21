@@ -102,7 +102,7 @@ namespace NelnetProject.Tests.Engines
             _studentAccessor = new MockStudentAccessor(StudentsDB);
             _paymentAccessor = new MockPaymentAccessor(new Dictionary<string, ChargeResultDTO>(), MockPaymentSpring);
             _transactionAccessor = new MockTransactionAccessor(new List<Transaction>());
-            _paymentEngine = new PaymentEngine(_userAccessor, _paymentAccessor, _transactionAccessor);
+            _paymentEngine = new PaymentEngine(_userAccessor, _studentAccessor, _paymentAccessor, _transactionAccessor);
         }
 
         [TestInitialize]

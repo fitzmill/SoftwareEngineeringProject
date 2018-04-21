@@ -21,7 +21,7 @@ namespace NelnetProject.Tests.Accessors
         public TestUserAccessor()
         {
             _connectionString = ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString;
-            _userAccessor = new UserAccessor(_connectionString);
+            _userAccessor = new UserAccessor();
         }
 
         [TestMethod]

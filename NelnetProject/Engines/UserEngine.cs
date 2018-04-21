@@ -57,7 +57,10 @@ namespace Engines
         public User GetUserInfoByID(int userID)
         {
             var user = _userAccessor.GetUserInfoByID(userID);
-            user.Students = _studentAccessor.GetStudentInfoByUserID(userID);
+            if (user != null)
+            {
+                user.Students = _studentAccessor.GetStudentInfoByUserID(userID);
+            }
             return user;
         }
 

@@ -33,9 +33,9 @@ namespace Accessors
 
         public IEnumerable<Transaction> GetAllUnsettledTransactions()
         {
-            string query = "SELECT * FROM [dbo].[Transaction] t " +
-                            $"WHERE t.ProcessState = {ProcessState.RETRYING} OR " +
-                            $"t.ProcessState = {ProcessState.FAILED}";
+            string query = String.Format("SELECT * FROM [dbo].[Transaction] t " +
+                            "WHERE t.ProcessState = {0:D} OR " +
+                            "t.ProcessState = {1:D}", ProcessState.RETRYING, ProcessState.FAILED);
                             
             var result = new List<Transaction>();
 
