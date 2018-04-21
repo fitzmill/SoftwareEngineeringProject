@@ -56,7 +56,9 @@ namespace Engines
 
         public User GetUserInfoByID(int userID)
         {
-            return _userAccessor.GetUserInfoByID(userID);
+            var user = _userAccessor.GetUserInfoByID(userID);
+            user.Students = _studentAccessor.GetStudentInfoByUserID(userID);
+            return user;
         }
 
         public void InsertPersonalInfo(User user, string password)

@@ -13,14 +13,17 @@ namespace Engines
     public class PaymentEngine : IPaymentEngine
     {
         private readonly IUserAccessor _userAccessor;
+        private readonly IStudentAccessor _studentAccessor;
         private readonly IPaymentAccessor _paymentAccessor;
         private readonly ITransactionAccessor _transactionAccessor;
 
         public PaymentEngine(IUserAccessor userAccessor, 
+            IStudentAccessor studentAccessor,
             IPaymentAccessor paymentAccessor,
             ITransactionAccessor transactionAccessor)
         {
             _userAccessor = userAccessor;
+            _studentAccessor = studentAccessor;
             _paymentAccessor = paymentAccessor;
             _transactionAccessor = transactionAccessor;
         }
@@ -126,6 +129,7 @@ namespace Engines
             double overdueAmount = (failed == null) ? 0.0 : failed.AmountCharged;
 
             User user = _userAccessor.GetUserInfoByID(userID);
+            user.Students = _studentAccessor.GetStudentInfoByUserID(userID);
             double nextAmount = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION, overdueAmount);
             DateTime dueDate = TuitionUtil.NextPaymentDueDate(user.Plan, today);
 

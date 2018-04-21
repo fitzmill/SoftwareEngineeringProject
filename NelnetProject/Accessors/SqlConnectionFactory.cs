@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Accessors
@@ -28,8 +29,9 @@ namespace Accessors
         /// </summary>
         /// <param name="query">the SQL query string</param>
         /// <param name="parameters">the parameters to be inserted into the query</param>
+        /// <param name="type">the type of query to execute</param>
         /// <param name="readFunc">the action to be taken on the reader</param>
-        public static void RunSqlQuery(string query, Dictionary<string, object> parameters, Action<SqlDataReader> readFunc)
+        public static void RunSqlQuery(string query, Dictionary<string, object> parameters, CommandType type, Action<SqlDataReader> readFunc)
         {
             using (SqlConnection con = CreateConnection())
             {
@@ -42,6 +44,8 @@ namespace Accessors
                             command.Parameters.Add(new SqlParameter(entry.Key, entry.Value));
                         }
                     }
+
+                    command.CommandType = type;
 
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
@@ -55,10 +59,32 @@ namespace Accessors
         /// Executes an SQL query by creating a connection, command, and reader, then disposes of them.
         /// </summary>
         /// <param name="query">the SQL query string</param>
+        /// <param name="parameters">the parameters to be inserted into the query</param>
+        /// <param name="readFunc">the action to be taken on the reader</param>
+        public static void RunSqlQuery(string query, Dictionary<string, object> parameters, Action<SqlDataReader> readFunc)
+        {
+            RunSqlQuery(query, parameters, CommandType.Text, readFunc);
+        }
+
+        /// <summary>
+        /// Executes an SQL query by creating a connection, command, and reader, then disposes of them.
+        /// </summary>
+        /// <param name="query">the SQL query string</param>
+        /// <param name="type">the type of SQL query to execute</param>
+        /// <param name="readFunc">the action to be taken on the reader</param>
+        public static void RunSqlQuery(string query, CommandType type, Action<SqlDataReader> readFunc)
+        {
+            RunSqlQuery(query, null, type,  readFunc);
+        }
+
+        /// <summary>
+        /// Executes an SQL query by creating a connection, command, and reader, then disposes of them.
+        /// </summary>
+        /// <param name="query">the SQL query string</param>
         /// <param name="readFunc">the action to be taken on the reader</param>
         public static void RunSqlQuery(string query, Action<SqlDataReader> readFunc)
         {
-            RunSqlQuery(query, null, readFunc);
+            RunSqlQuery(query, null, CommandType.Text, readFunc);
         }
 
         /// <summary>
@@ -67,7 +93,7 @@ namespace Accessors
         /// <param name="query">the SQL query string</param>
         /// <param name="parameters">the parameters to be inserted into the query; defaults to null</param>
         /// <returns>the number of rows affected</returns>
-        public static int RunSqlNonQuery(string query, Dictionary<string, object> parameters = null)
+        public static int RunSqlNonQuery(string query, Dictionary<string, object> parameters = null, CommandType type = CommandType.Text, SqlParameter returnParameter = null)
         {
             using (SqlConnection con = CreateConnection())
             {
@@ -79,6 +105,14 @@ namespace Accessors
                         {
                             command.Parameters.Add(new SqlParameter(entry.Key, entry.Value));
                         }
+                    }
+
+                    command.CommandType = type;
+
+                    if (returnParameter != null)
+                    {
+                        command.Parameters.Add(returnParameter);
+                        returnParameter.Direction = ParameterDirection.Output;
                     }
 
                     return command.ExecuteNonQuery();

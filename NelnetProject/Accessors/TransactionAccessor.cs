@@ -33,8 +33,10 @@ namespace Accessors
 
         public IEnumerable<Transaction> GetAllUnsettledTransactions()
         {
-            string query = "SELECT * FROM [dbo].[Transaction] t WHERE t.ProcessState <> 2 AND t.ProcessState <> 4"; //Not successful or failed
-
+            string query = "SELECT * FROM [dbo].[Transaction] t " +
+                            $"WHERE t.ProcessState = {ProcessState.RETRYING} OR " +
+                            $"t.ProcessState = {ProcessState.FAILED}";
+                            
             var result = new List<Transaction>();
 
             SqlConnectionFactory.RunSqlQuery(query, reader =>
