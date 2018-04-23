@@ -108,7 +108,7 @@ namespace NelnetProject.Tests.Engines
         [TestInitialize]
         public void InitTest()
         {
-            _transactionAccessor.Transactions = new List<Transaction>{
+            _transactionAccessor._transactions = new List<Transaction>{
                 new Transaction
                 {
                     TransactionID = 2,
@@ -207,7 +207,7 @@ namespace NelnetProject.Tests.Engines
             List<Transaction> result = _paymentEngine.GeneratePayments(users, genDate).ToList();
 
             CollectionAssert.AreEqual(expectedTransactionsReturned, result);
-            CollectionAssert.AreEqual(expectedTransactionsInDB, _transactionAccessor.Transactions.ToList());
+            CollectionAssert.AreEqual(expectedTransactionsInDB, _transactionAccessor._transactions.ToList());
         }
 
         [TestMethod]
