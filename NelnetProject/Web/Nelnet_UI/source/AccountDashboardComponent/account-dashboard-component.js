@@ -96,7 +96,7 @@ ko.components.register('account-dashboard-component', {
                 accountDashboardVM.transactions(data.map(function (transaction) {
                     return {
                         DateDue: transaction.DateDue.parseDateTimeString(),
-                        AmountCharged: Number(transaction.AmountCharged).toLocaleString('en'),
+                        AmountCharged: `\$${Number(transaction.AmountCharged).formatAsMoney()}`,
                         ProcessState: transaction.ProcessState,
                         ReasonFailed: transaction.ReasonFailed
                     };
