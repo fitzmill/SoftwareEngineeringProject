@@ -3,8 +3,16 @@ using System.Diagnostics;
 
 namespace Engines.Utils
 {
+    /// <summary>
+    /// Utility class for validating method arguments at the engine level.
+    /// </summary>
     public static class EngineArgumentValidation
     {
+        /// <summary>
+        /// Verifies that the argument is not null.
+        /// </summary>
+        /// <param name="value">the arg to test</param>
+        /// <param name="argument">the name of the argument</param>
         [DebuggerHidden]
         public static void ArgumentIsNotNull(object value, string argument)
         {
@@ -12,6 +20,11 @@ namespace Engines.Utils
                 throw new ArgumentNullException($"{argument} cannot be null");
         }
 
+        /// <summary>
+        /// Verifies that the argument is not negative.
+        /// </summary>
+        /// <param name="value">the arg to test</param>
+        /// <param name="argument">the name of the argument</param>
         [DebuggerHidden]
         public static void ArgumentIsNonNegative(double value, string argument)
         {
@@ -21,6 +34,11 @@ namespace Engines.Utils
             }
         }
 
+        /// <summary>
+        /// Verifies that the argument is not negative.
+        /// </summary>
+        /// <param name="value">the arg to test</param>
+        /// <param name="argument">the name of the argument</param>
         [DebuggerHidden]
         public static void ArgumentIsNonNegative(int value, string argument)
         {
@@ -30,6 +48,11 @@ namespace Engines.Utils
             }
         }
 
+        /// <summary>
+        /// Verifies that the string is not empty.
+        /// </summary>
+        /// <param name="value">the string to test</param>
+        /// <param name="argument">the name of the argument</param>
         [DebuggerHidden]
         public static void StringIsNotEmpty(string value, string argument)
         {
