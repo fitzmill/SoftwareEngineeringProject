@@ -8,12 +8,12 @@ const userInfoControllerRoot = "/api/userinfo";
 const paymentControllerRoot = "/api/payment";
 const billingControllerRoot = "/api/billing";
 
-require('./PersonalInformationComponent/personal-information-component.js');
-require('./PaymentInformationComponent/payment-information-component.js');
-require('./StudentInformationComponent/student-information-component.js');
-require('./BillingInformationComponent/billing-information-component.js');
-require('./TransactionInformationComponent/transaction-information-component.js');
 require('./PaymentStatusComponent/payment-status-component.js');
+require('./TransactionInformationComponent/transaction-information-component.js');
+require('./PaymentInformationComponent/payment-information-component.js');
+require('./BillingInformationComponent/billing-information-component.js');
+require('./StudentInformationComponent/student-information-component.js');
+require('./PersonalInformationComponent/personal-information-component.js');
 
 var user = undefined;
 
@@ -64,7 +64,7 @@ ko.components.register('account-dashboard-component', {
                 user = data;
                 accountDashboardVM.personalInfo(data);
                 accountDashboardVM.studentInfo(data.Students);
-                accountDashboardVM.paymentPlan(data.Plan[0] + data.Plan.substr(1).toLowerCase());
+                accountDashboardVM.paymentPlan(`${data.Plan[0]}${data.Plan.substr(1).toLowerCase()}`);
             }).fail(function (jqXHR) {
                 if (jqXHR.status !== 401) {
                     window.alert("Could not get user information, please try refreshing the page");
@@ -89,9 +89,7 @@ ko.components.register('account-dashboard-component', {
 
                 containsUnresolvedTransaction = data.find((transaction) => transaction.ProcessState === "RETRYING" || transaction.ProcessState === "FAILED");
                 if (containsUnresolvedTransaction) {
-                    accountDashboardVM.paymentStatus("unresolved");
-                } else {
-                    accountDashboardVM.paymentStatus("resolved");
+                    accountDashboardVM.paymentStatus("You have an unresolved transaction. Please update your information to a valid payment card below.");
                 }
 
                 //make it display friendly

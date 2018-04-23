@@ -11,6 +11,6 @@
             <label data-bind="text: ' on ' + nextPaymentDate()"></label>
         </h4>
         <p id="statusComment">You will be charged automatically on this date.</p>
-        <h5 id="warningComment" data-bind="text: paymentStatus() === 'unresolved' ? 'You have an unresolved transaction. Please update your information to a valid payment card below.' : ''"></h5>
+        <h5 id="warningComment" data-bind="text: paymentStatus"></h5>
     </div>
 </div>
