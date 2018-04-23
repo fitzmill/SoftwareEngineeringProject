@@ -40,6 +40,7 @@ namespace Engines
 
         private Transaction ChargePayment(Transaction charge, DateTime today)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(charge, "charge");
             //Create dto to be sent to Payment Spring
             PaymentDTO payment = new PaymentDTO
             {
@@ -124,6 +125,7 @@ namespace Engines
 
         public Transaction CalculateNextPaymentForUser(int userID, DateTime today)
         {
+            EngineArgumentValidation.ArgumentIsNonNegative(userID, "User Id");
             List<Transaction> userTransactions = _transactionAccessor.GetAllFailedTransactions().ToList();
             Transaction failed = userTransactions.Find(t => t.UserID == userID);
             double overdueAmount = (failed == null) ? 0.0 : failed.AmountCharged;
@@ -144,31 +146,37 @@ namespace Engines
 
         public double CalculatePeriodicPayment(User user)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(user, "user");
             return TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
         }
 
         public string InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
         {
-           return  _paymentAccessor.CreateCustomer(userPaymentInfo);
+            EngineArgumentValidation.ArgumentIsNotNull(userPaymentInfo, "user payment info");
+            return  _paymentAccessor.CreateCustomer(userPaymentInfo);
         }
 
         public void UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressInfo)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(paymentAddressInfo, "payment address info");
             _paymentAccessor.UpdateCustomerBillingInformation(paymentAddressInfo);
         }
 
         public void UpdatePaymentCardInfo(PaymentCardDTO paymentCardInfo)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(paymentCardInfo, "payment card info");
             _paymentAccessor.UpdateCustomerCardInformation(paymentCardInfo);
         }
 
         public void DeletePaymentInfo(string customerID)
         {
+            EngineArgumentValidation.StringIsNotEmpty(customerID, "customer Id");
             _paymentAccessor.DeleteCustomer(customerID);
         }
 
         public UserPaymentInfoDTO GetPaymentInfoForUser(int userID)
         {
+            EngineArgumentValidation.ArgumentIsNonNegative(userID, "user Id");
             string customerID = _userAccessor.GetPaymentSpringCustomerID(userID);
             return _paymentAccessor.GetPaymentInfoForCustomer(customerID);
         }
