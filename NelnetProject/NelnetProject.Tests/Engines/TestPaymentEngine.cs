@@ -556,5 +556,12 @@ namespace NelnetProject.Tests.Engines
         {
             _paymentEngine.GetPaymentInfoForUser(-1);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "users cannot be null")]
+        public void TestGeneratePaymentsUsersNull()
+        {
+            _paymentEngine.GeneratePayments(null, DateTime.Now);
+        }
     }
 }

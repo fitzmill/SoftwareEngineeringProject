@@ -78,6 +78,8 @@ namespace Engines
 
         public IEnumerable<Transaction> GeneratePayments(IEnumerable<User> users, DateTime today) //to be run on the 1st of each month
         {
+            EngineArgumentValidation.ArgumentIsNotNull(users, "users");
+
             IEnumerable<Transaction> failedTransactions = _transactionAccessor.GetAllFailedTransactions();
 
             //Generate all payments that are due this month
@@ -126,6 +128,7 @@ namespace Engines
         public Transaction CalculateNextPaymentForUser(int userID, DateTime today)
         {
             EngineArgumentValidation.ArgumentIsNonNegative(userID, "User Id");
+
             List<Transaction> userTransactions = _transactionAccessor.GetAllFailedTransactions().ToList();
             Transaction failed = userTransactions.Find(t => t.UserID == userID);
             double overdueAmount = (failed == null) ? 0.0 : failed.AmountCharged;
