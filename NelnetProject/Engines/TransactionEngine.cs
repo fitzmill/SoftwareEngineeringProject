@@ -2,6 +2,7 @@
 using Core.DTOs;
 using Core.Interfaces.Accessors;
 using Core.Interfaces.Engines;
+using Engines.Utils;
 using System;
 using System.Collections.Generic;
 
@@ -17,6 +18,7 @@ namespace Engines
         }
         public IEnumerable<Transaction> GetAllTransactionsForUser(int userID)
         {
+            EngineArgumentValidation.ArgumentIsNonNegative(userID, "UserID");
             return _transactionAccessor.GetAllTransactionsForUser(userID);
         }
 
