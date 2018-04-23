@@ -1,0 +1,17 @@
+﻿<div class="output-account-creation">
+    <h4><b>Please select a payment plan:</b></h4>
+    <form id="form-payment-plan-selection-page">
+        <div class="radio-button" data-bind="click: function(){ paymentTypeSelection('MONTHLY') }">
+            <input id="radio-button-1" type="radio" name="paymentType" value="MONTHLY" data-bind="checked: paymentTypeSelection, click: () => true, clickBubble: false" required />
+            <h5 class="radio-button-label" data-bind="text: 'Monthly at $'+monthlyRate()+' (Sept - May)'" />
+        </div>
+        <div class="radio-button" data-bind="click: function(){ paymentTypeSelection('SEMESTERLY') }">
+            <input id="radio-button-2" type="radio" name="paymentType" value="SEMESTERLY" data-bind="checked: paymentTypeSelection, click: () => true, clickBubble: false" />
+            <h5 class="radio-button-label" data-bind="text: 'Semesterly at $'+semesterlyRate()+' (Sept & Feb)'" />
+        </div>
+        <div class="radio-button" data-bind="click: function(){ paymentTypeSelection('YEARLY') }">
+            <input id="radio-button-3" type="radio" name="paymentType" value="YEARLY" data-bind="checked: paymentTypeSelection, click: () => true, clickBubble: false" />
+            <h5 class="radio-button-label" data-bind="text: 'Yearly at $'+yearlyRate()+' (Sept)'" />
+        </div>
+    </form>
+</div>

@@ -1,6 +1,4 @@
-﻿require('./personal-information-component.scss');
-
-const utility = require('../../utility.js');
+﻿const utility = require('../../utility.js');
 
 //api url constants
 const userInfoControllerRoot = "/api/userinfo";
