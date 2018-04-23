@@ -37,7 +37,6 @@ ko.components.register('account-creation-component', {
         vm.students = ko.observable();
 
         //fourth page
-        vm.paymentTypeSelection = ko.observable();
         vm.accountCreationInformation = ko.observable();
 
         //errors

@@ -11,8 +11,6 @@ ko.components.register('payment-plan-selection-page-component', {
         vm.personalInformation = params.personalInformation;
         vm.paymentInformation = params.paymentInformation;
         vm.students = params.students;
-        vm.PLAN_TYPE_VALUES = params.PLAN_TYPE_VALUES;
-        vm.paymentTypeSelection = params.paymentTypeSelection;
 
         //rates calculated to be displayed on radio buttons
         vm.yearlyRate = ko.observable(0);
@@ -26,6 +24,7 @@ ko.components.register('payment-plan-selection-page-component', {
         vm.PLAN_TYPE_VALUES["YEARLY"] = 3;
 
         //computed observables
+        vm.paymentTypeSelection = ko.observable();
         vm.getPaymentPlanType = function () {
             return vm.PLAN_TYPE_VALUES[vm.paymentTypeSelection()];
         };
