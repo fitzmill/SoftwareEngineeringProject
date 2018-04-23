@@ -69,6 +69,7 @@ namespace Web
                 ConfigurationManager.AppSettings["SenderEmail"],
                 ConfigurationManager.AppSettings["SenderUsername"],
                 ConfigurationManager.AppSettings["SenderPassword"],
+                ConfigurationManager.AppSettings["SmtpHost"],
                 int.Parse(ConfigurationManager.AppSettings["Port"])
             ));
 

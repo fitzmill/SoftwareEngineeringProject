@@ -89,5 +89,116 @@ namespace NelnetProject.Tests.Engines
 
             CollectionAssert.AreEqual(expectedEmails, actualEmails);
         }
+
+        [TestMethod]
+        public void TestSendAccountUpdateNotification()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            var expected = new EmailNotification()
+            {
+                To = email,
+                Subject = "Alert from Tuition Assistant: Account Information Updated",
+                Body = "Hi Sean,<br><br>Your personal information was updated on your account. If you did not make this change, " +
+                "please contact your administrator.<br>Please contact us if you have any questions." +
+                "<br><br><br>Powered by Tuition Assistant<br>"
+            };
+
+            notificationEngine.SendAccountUpdateNotification(email, firstName, "personal");
+            var result = mockEmailAccessor.emails.Find(x => x.To == email);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Email cannot be empty")]
+        public void TestSendAccountUpdateNotificationNullTo()
+        {
+            var firstName = "Sean";
+            notificationEngine.SendAccountUpdateNotification(null, firstName, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "First name cannot be empty")]
+        public void TestSendAccountUpdatedNotificationNullFirstName()
+        {
+            var email = "hi@me.com";
+            notificationEngine.SendAccountUpdateNotification(email, null, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Information type cannot be empty")]
+        public void TestSendAccountUpdatedNotificationNullInfoType()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            notificationEngine.SendAccountUpdateNotification(email, firstName, null);
+        }
+
+        [TestMethod]
+        public void TestSendAccountCreationNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant",
+                Plan = PaymentPlan.MONTHLY,
+                Students = new List<Student>()
+                {
+                    new Student()
+                    {
+                        Grade = 8
+                    }
+                }
+            };
+            Transaction nextTransaction = new Transaction()
+            {
+                DateDue = new DateTime(2018, 9, 5),
+                AmountCharged = 3125
+            };
+
+            var expected = new List<EmailNotification>()
+            {
+                new EmailNotification()
+                {
+                    To = user.Email,
+                    Subject = "Welcome to Tuition Assistant!",
+                    Body = "Hi Joe,<br><br>Thank you creating an account with Tuition Assistant. We're glad you're here!<br><br>" +
+                    "Your next automatic payment will be on August 5 2018, for an amount of $386.25.<br>" +
+                    "We'll let you know five days before we charge your account.<br>" +
+                    "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+                }
+            };
+            
+            notificationEngine.SendAccountCreationNotification(user, new DateTime(2018, 7, 14));
+
+            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+        }
+
+        [TestMethod]
+        public void TestAccountDeletedNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+
+            var expected = new List<EmailNotification>()
+            {
+                new EmailNotification()
+                {
+                    To = user.Email,
+                    Subject = "Alert from Tuition Assistant: Account Deleted",
+                    Body = "Hi Joe,<br><br>The account associated with your email address has been deleted.<br>" +
+                    "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+                }
+            };
+
+            notificationEngine.SendAccountDeletionNotification(user);
+
+            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+        }
+
     }
 }

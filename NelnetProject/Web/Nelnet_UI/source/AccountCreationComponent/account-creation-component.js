@@ -2,19 +2,21 @@
 require('../assets/background-image.scss');
 
 //paging constants
-const START_PAGE = 1;
+const START_PAGE = 0;
+const WELCOME_PAGE = 0;
 const PERSONAL_INFORMATION_PAGE = 1;
 const PAYMENT_INFORMATION_PAGE = 2;
 const STUDENT_INFORMATION_PAGE = 3;
 const END_PAGE = 4;
 
-//information validation through regex
-const regexSemicolonCheck = /^(?!.*?[;'"]).{0,}$/;
-const regexZipCheck = /^\d{5}(?:[-\s]\d{4})?$/; //regexNumCheck but also allows for hyphen(-)
-const regexLettersOnlyCheck = /(?!.*[^a-zA-Z]).{0,}/;
+//prefixes for updating the correct pages, and the progress bar
+const PAGE_ID_PREFIX = "#page-";
+const DOT_ID_PREFIX = "#dot-page-";
+const RECTANGLE_ID_PREFIX = "#rectangle-";
 
 //api url constants
-const accountCreationAPIURL = "/api/account";
+const userInfoControllerRoot = "/api/userinfo";
+const paymentControllerRoot = "/api/payment";
 
 //user type
 const GENERAL_USER = 1;
@@ -51,6 +53,7 @@ ko.components.register('account-creation-component', {
             studentLastName: ko.observable(),
             studentGrade: ko.observable()
         }]);
+        $(".btn-remove-student").attr("disabled", true);
 
         vm.addStudent = function () {
             vm.students.push({
@@ -59,6 +62,23 @@ ko.components.register('account-creation-component', {
                 studentLastName: ko.observable(),
                 studentGrade: ko.observable()
             });
+            if (vm.students().length > 1) {
+                $(".btn-remove-student").attr("disabled", false);
+            }
+        };
+
+        vm.removeStudent = function (student) {
+            if (vm.students().length > 1) {
+                let removeIndex = vm.students().findIndex(s => {
+                    return s.studentFirstName === student.studentFirstName &&
+                        s.studentLastName === student.studentLastName &&
+                        s.studentGrade === student.studentGrade;
+                });
+                vm.students.splice(removeIndex, 1);
+            }
+            if (vm.students().length <= 1) {
+                $(".btn-remove-student").attr("disabled", true);
+            }
         };
 
         //fourth page
@@ -128,33 +148,53 @@ ko.components.register('account-creation-component', {
 
         //create function to update progress bar
         vm.updateProgressBar = function () {
-            for (let i = START_PAGE; i < END_PAGE; i++) {
+            for (let i = START_PAGE + 1; i < END_PAGE; i++) {
                 if (i >= vm.currentPage) {
-                    $('#rectangle-' + i)[0].style.backgroundColor = "#afafaf";
+                    $(RECTANGLE_ID_PREFIX + i)[0].style.backgroundColor = "#afafaf";
                 } else {
-                    $('#rectangle-' + i)[0].style.backgroundColor = "#007bff";
+                    $(RECTANGLE_ID_PREFIX + i)[0].style.backgroundColor = "#007bff";
                 }
             }
 
-            for (let i = START_PAGE; i <= END_PAGE; i++) {
+            for (let i = START_PAGE + 1; i <= END_PAGE; i++) {
                 if (i > vm.currentPage) {
-                    $('#dot-page-' + i)[0].style.backgroundColor = "#afafaf";
+                    $(DOT_ID_PREFIX + i)[0].style.backgroundColor = "#afafaf";
                 } else {
-                    $('#dot-page-' + i)[0].style.backgroundColor = "#007bff";
+                    $(DOT_ID_PREFIX + i)[0].style.backgroundColor = "#007bff";
                 }
+            }
+
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#progress-bar").hide();
+            } else {
+                $("#progress-bar").show();
             }
         };
 
         //create function to update buttons
         vm.updateButtons = function () {
-            if (vm.currentPage === START_PAGE) {
+            //let's get started button
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#btn-start").show();
+            } else {
+                $("#btn-start").hide();
+            }
+            //back and cancel buttons
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#btn-cancel").hide();
+                $("#btn-back").hide();
+            } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
                 $("#btn-cancel").show();
                 $("#btn-back").hide();
             } else {
                 $("#btn-cancel").hide();
                 $("#btn-back").show();
             }
-            if (vm.currentPage === END_PAGE) {
+            //next and done buttons
+            if (vm.currentPage === WELCOME_PAGE) {
+                $("#btn-done").hide();
+                $("#btn-next").hide();
+            }else if (vm.currentPage === END_PAGE) {
                 $("#btn-done").show();
                 $("#btn-next").hide();
             } else {
@@ -174,105 +214,83 @@ ko.components.register('account-creation-component', {
 
         //move to the previous page
         vm.back = function () {
-            $("#info-page-" + vm.currentPage).hide();
+            $(PAGE_ID_PREFIX + vm.currentPage).hide();
             vm.currentPage--;
-            $("#info-page-" + vm.currentPage).show();
+            $(PAGE_ID_PREFIX + vm.currentPage).show();
             vm.updateButtons();
             vm.updateProgressBar();
         };
 
         //move to the next page
         vm.next = function () {
-            if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
-                let emailInUse = false;
-                if (!vm.firstName() || !vm.firstName().match(regexSemicolonCheck)) {
-                    vm.personalInputErrorMessage("Invalid first name");
-                    window.alert("Invalid first name");
-                } else if (!vm.lastName() || !vm.lastName().match(regexSemicolonCheck)) {
-                    vm.personalInputErrorMessage("Invalid last name");
-                    window.alert("Invalid last name");
-                } else if (!vm.email() || !vm.email().emailMeetsRequirements()) {
-                    vm.personalInputErrorMessage("Invalid email");
-                    window.alert("Invalid email");
-                } else if (vm.reenterEmail() !== vm.email()) {
-                    vm.personalInputErrorMessage("Emails don't match");
-                    window.alert("Emails don't match")
-                } else if (!vm.password() || !vm.password().passwordMeetsRequirements()) {
-                    vm.personalInputErrorMessage("Password is not valid");
-                    window.alert("Password is not valid");
-                } else if (vm.password() !== vm.reenterPassword()) {
-                    vm.personalInputErrorMessage("Passwords don't match");
-                    window.alert("Passwords don't match");
-                } else {
+            if (vm.currentPage === WELCOME_PAGE){
+                $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                vm.currentPage++;
+                $(PAGE_ID_PREFIX + vm.currentPage).show();
+                vm.updateButtons();
+                vm.updateProgressBar();
+            } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
+                let validator = $("#form-page-1").validate();
+                validator.resetForm();
+                if ($("#form-page-1").valid()) {
                     emailExists(vm.email()).done(function (data) {
-                       emailInUse = data;
-                       if (emailInUse) {
-                           vm.personalInputErrorMessage("Email is already in use");
-                           window.alert("Email is already in use");
-                       } else {
-                           $("#info-page-" + vm.currentPage).hide();
-                           vm.currentPage++;
-                           $("#info-page-" + vm.currentPage).show();
-                           vm.updateButtons();
-                           vm.updateProgressBar();
-                       }
+                        if (data) {
+                            validator.showErrors({
+                                accountCreationEmail: "Email already exists"
+                            });
+                        } else {
+                            $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                            vm.currentPage++;
+                            $(PAGE_ID_PREFIX + vm.currentPage).show();
+                            vm.updateButtons();
+                            vm.updateProgressBar();
+                        }
                     }).fail(function (jqXHR) {
-                       let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                       window.alert("Couldn't check if email has been used: ".concat(errorMessage));
+                        if (jqXHR.status !== 401) {
+                            let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                            window.alert("Could not save information: ".concat(errorMessage));
+                        }
                     });
                 }
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
-                if (!vm.cardNumber() || vm.cardNumber().toString().length < 15 || vm.cardNumber().toString().length > 19) {
-                    vm.paymentInputErrorMessage("Invalid Card Number");
-                    window.alert("Invalid Card Number");
-                } else if (!vm.cardFirstName() || !vm.cardFirstName().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Card First Name");
-                    window.alert("Invalid Card First Name");
-                } else if (!vm.cardLastName() || !vm.cardLastName().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Card Last Name");
-                    window.alert("Invalid Card Last Name");
-                } else if (!vm.month() || vm.month() < 1 || vm.month() > 12) {
-                    vm.paymentInputErrorMessage("Invalid Month");
-                    window.alert("Invalid Month");
-                } else if (!vm.year() || vm.year() < 2018) {
-                    vm.paymentInputErrorMessage("Invalid Year");
-                    window.alert("Invalid Year");
-                } else if (!vm.address1() || !vm.address1().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Street Address 1");
-                    window.alert("Invalid Street Address 1");
-                } else if (vm.address2() && !vm.address2().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Street Address 2");
-                    window.alert("Invalide Street Address 2");
-                } else if (!vm.city() || !vm.city().match(regexSemicolonCheck)) {
-                    vm.paymentInputErrorMessage("Invalid City");
-                    window.alert("Invalid City");
-                } else if (!vm.state() || !vm.state().match(regexLettersOnlyCheck) || !vm.state().length === 2) {
-                    vm.paymentInputErrorMessage("Invalid State");
-                    window.alert("Invalid State");
-                } else if (!vm.zip() || !vm.zip().match(regexZipCheck)) {
-                    vm.paymentInputErrorMessage("Invalid Zip Code");
-                    window.alert("Invalid Zip Code");
-                } else {
-                    $("#info-page-" + vm.currentPage).hide();
+                if ($("#form-page-2").valid()) {
+                    $(PAGE_ID_PREFIX + vm.currentPage).hide();
                     vm.currentPage++;
-                    $("#info-page-" + vm.currentPage).show();
+                    $(PAGE_ID_PREFIX + vm.currentPage).show();
                     vm.updateButtons();
                     vm.updateProgressBar();
                 }
-            } else if (vm.currentPage === STUDENT_INFORMATION_PAGE && !checkValidStudents(vm.students())) {
-                vm.studentInputErrorMessage("Invalid Student Information");
-                console.alert("Invalid Student Information");
             } else if (vm.currentPage === STUDENT_INFORMATION_PAGE) {
-                $("#info-page-" + vm.currentPage).hide();
-                vm.currentPage++;
-                $("#info-page-" + vm.currentPage).show();
-                vm.updateButtons();
-                vm.updateProgressBar();
+                if ($("#form-page-3").valid()) {
+                    $(PAGE_ID_PREFIX + vm.currentPage).hide();
+                    vm.currentPage++;
+                    $(PAGE_ID_PREFIX + vm.currentPage).show();
+                    vm.updateButtons();
+                    vm.updateProgressBar();
+                }
             }
         };
 
+        $("account-creation-component").keypress(function (e) {
+            //If the user presses enter, it will click the login button
+            if (e.which === 13) {
+                if ($("#btn-start").is(":visible")) {
+                    vm.next();
+                } else if ($("#btn-next").is(":visible")) {
+                    vm.next();
+                } else if ($("#btn-done").is(":visible")) {
+                    vm.done();
+                }
+            }
+        });
+
         //finish and create account
         vm.done = function () {
+            if (!$("#form-page-4").valid()) {
+                window.alert("Please select a payment plan");
+                return;
+            }
+
             let students = vm.students().map(s => {
                 return {
                     StudentID: 0, //should be set when the student is inserted into the database
@@ -281,8 +299,6 @@ ko.components.register('account-creation-component', {
                     Grade: s.studentGrade()
                 };
             });
-
-            console.log(students);
 
             let accountCreationInformation = {
                 FirstName: vm.firstName(),
@@ -304,22 +320,29 @@ ko.components.register('account-creation-component', {
                 ExpirationMonth: vm.month()
             };
 
-            console.log(accountCreationInformation);
+            $("#btn-done").attr("disabled", "disabled");
+            $("#btn-back").attr("disabled", "disabled");
 
             createUser(accountCreationInformation).done(function (data) {
-                window.localStorage.setItem("user", JSON.stringify(data));
+                window.sessionStorage.setItem("Jwt", data);
                 window.location = "#account-dashboard";
             }).fail(function (jqXHR) {
-                window.alert("Could not create account, please try again later.");
+                if (jqXHR.status !== 401) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert("Could not create account: ".concat(errorMessage));
+                }
+            }).always(function () {
+                $("#btn-done").removeAttr("disabled");
+                $("#btn-back").removeAttr("disabled");
             });
         };
 
         //show current page and correct buttons
         for (let i = START_PAGE; i <= END_PAGE; i++) {
             if (i === vm.currentPage) {
-                $("#info-page-" + i).show();
+                $(PAGE_ID_PREFIX + i).show();
             } else {
-                $("#info-page-" + i).hide();
+                $(PAGE_ID_PREFIX + i).hide();
             }
         }
         vm.updateButtons();
@@ -331,10 +354,10 @@ ko.components.register('account-creation-component', {
     template: require('./account-creation-component.html')
 });
 
-//calculate the user's payment info
+//calculate the user's periodic payment
 function calculatePeriodicPayment(user) {
     let userData = JSON.stringify(user);
-    return $.ajax(accountCreationAPIURL + "/CalculatePeriodicPayment", {
+    return $.ajax(`${paymentControllerRoot}/CalculatePeriodicPayment`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: userData
@@ -344,33 +367,18 @@ function calculatePeriodicPayment(user) {
 //create the user in the database
 function createUser(accountCreationInformation) {
     let accountCreationInformationData = JSON.stringify(accountCreationInformation);
-    return $.ajax(accountCreationAPIURL + "/InsertUser", {
+    return $.ajax(`${userInfoControllerRoot}/InsertUser`, {
         method: "POST",
         contentType: "application/json; charset=utf-8",
         data: accountCreationInformationData
     });
 }
 
-//Checks that student entries are valid
-function checkValidStudents(students) {
-    let result = true;
-    students.forEach(function (student) {
-        if (!student.studentFirstName() || !student.studentFirstName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.studentLastName() || !student.studentLastName().match(regexSemicolonCheck)) {
-            result = false;
-        } else if (!student.studentGrade() || student.studentGrade() < 0 || student.studentGrade() > 12) {
-            result = false;
-        }
-    });
-    return result;
-}
-
-//Checks to see if an entered email has already been used
+//POSTs to see if an email is used in the database
 function emailExists(email) {
-    return $.ajax(accountCreationAPIURL + "/EmailExists", {
+    return $.ajax(`${userInfoControllerRoot}/EmailExists`, {
         method: "POST",
-        contentType: "application/JSON; charset=utf-8",
+        contentType: "application/json; charset=utf-8",
         data: JSON.stringify(email)
     });
 }

@@ -27,13 +27,6 @@ namespace Core.Interfaces
         User GetUserInfoByEmail(string email);
 
         /// <summary>
-        /// Gets a user's password information for logging in
-        /// </summary>
-        /// <param name="email"></param>
-        /// <returns>A user's password hashed plus the salt data</returns>
-        PasswordDTO GetUserPasswordInfo(string email);
-
-        /// <summary>
         /// Checks if an email already exists in the database.
         /// </summary>
         /// <param name="email"></param>

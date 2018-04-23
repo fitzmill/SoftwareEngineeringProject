@@ -2,7 +2,6 @@
 require('../assets/background-image.scss');
 
 const loginAPIURL = "/api/login";
-const accountAPIURL = "/api/account";
 
 ko.components.register('login-component', {
     viewModel: function (params) {
@@ -12,37 +11,28 @@ ko.components.register('login-component', {
         vm.password = ko.observable();
 
         vm.login = function () {
-            if (!vm.email().emailMeetsRequirements()) {
-                $("#label-invalid-info").show();
-                return;
-            } else if (!vm.password().passwordMeetsRequirements()) {
-                $("#label-invalid-info").show();
-                return;
+            if ($("#form-login").valid()) {
+                validateLoginInfo(vm.email(), vm.password()).done(function (loginInfo) {
+                    if (!loginInfo) {
+                        $("#label-invalid-info").show();
+                        return;
+                    }
+                    vm.email("");
+                    vm.password("");
+                    window.sessionStorage.setItem('Jwt', loginInfo.JwtToken);
+                    if (loginInfo.UserType === "GENERAL") {
+                        window.location = "#account-dashboard";
+                    } else if (loginInfo.UserType === "ADMIN") {
+                        window.location = "#admin";
+                    }
+                }).fail(function (jqXHR) {
+                    let errorMessage = JSON.parse(jqXHR.responseText).Message;
+                    window.alert(errorMessage);
+                }).always(function () {
+                    //re-enable button
+                    $("#btn-login").removeAttr("disabled");
+                });
             }
-
-            validateLoginInfo(vm.email(), vm.password()).done(function (validLogin) {
-                if (validLogin) {
-                    getUserInfoByEmail(vm.email()).done(function (user) {
-                        vm.email("");
-                        vm.password("");
-                        if (user.UserType === "GENERAL") {
-                            window.localStorage.setItem("user", JSON.stringify(user));
-                            window.location = "#account-dashboard";
-                        } else if (user.UserType === "ADMIN") {
-                            window.localStorage.setItem("user", JSON.stringify(user));
-                            window.location = "#admin";
-                        }
-                    }).fail(function (jqXHR) {
-                        let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                        window.alert(errorMessage);
-                    });
-                } else {
-                    $("#label-invalid-info").show();
-                }
-            }).fail(function (jqXHR) {
-                let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert(errorMessage);
-            });
         }
 
         $("#card-login").keypress(function (e) {
@@ -59,19 +49,10 @@ ko.components.register('login-component', {
 });
 
 function validateLoginInfo(email, password) {
-    return $.ajax(loginAPIURL + "/ValidateLoginInfo", {
-        method: "POST",
-        data: {
-            Email: email,
-            Password: password
+    return $.ajax(`${loginAPIURL}/ValidateLoginInfo`, {
+        method: "GET",
+        beforeSend: function (jqXHR) {
+            jqXHR.setRequestHeader("Authorization", "Basic " + btoa(email + ':' + password));
         }
-    });
-}
-
-function getUserInfoByEmail(email) {
-    return $.ajax(accountAPIURL + "/GetUserInfoByEmail", {
-        method: "POST",
-        contentType: "application/JSON; charset=utf-8",
-        data: JSON.stringify(email)
     });
 }

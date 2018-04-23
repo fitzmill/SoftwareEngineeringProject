@@ -3,19 +3,39 @@
 </head>
 
 <div class="container" style="padding-top: 30px">
-    <div data-bind="page: {id: 'start'}">
+    <div data-bind="page: {id: 'start', beforeHide: window.location.reload.bind(window.location)}">
         <login-component></login-component>
     </div>
 
-    <div data-bind="page: {id: 'admin', beforeShow: adminComponent.adminDashboardBeforeShow}">
+    <div data-bind="page: {id: 'admin', beforeShow: adminComponent.adminDashboardBeforeShow, beforeHide: function() { $('.modal').modal('hide'); window.location.reload.bind(window.location); }}">
         <admin-component></admin-component>
     </div>
 
-    <div data-bind="page: {id: 'account-creation'}">
+    <div data-bind="page: {id: 'account-creation', beforeHide: window.location.reload.bind(window.location)}">
         <account-creation-component></account-creation-component>
     </div>
 
-    <div data-bind="page: {id: 'account-dashboard', beforeShow: accountDashboardComponent.accountDashboardBeforeShow}">
+    <div data-bind="page: {id: 'account-dashboard', beforeShow: accountDashboardComponent.accountDashboardBeforeShow, beforeHide: window.location.reload.bind(window.location)}">
         <account-dashboard-component></account-dashboard-component>
     </div>
 </div>
+
+<!--Modal-->
+<div id="modalSessionExpired" class="modal fade" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog" style="max-width: none; margin: 20px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Logged out</h4>
+            </div>
+
+            <div class="modal-body">
+                <h5>Your session has expired, please login again</h5>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success" data-bind="click: logout" style="float: right;">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--/Modal-->

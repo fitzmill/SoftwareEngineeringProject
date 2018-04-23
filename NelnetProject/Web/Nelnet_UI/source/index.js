@@ -1,5 +1,27 @@
 ﻿require('pagerjs');
 
+$.validator.setDefaults({
+    highlight: function (element) {
+        $(element).addClass('input-error');
+    },
+    unhighlight: function (element) {
+        $(element).removeClass('input-error');
+        $(element).tooltip('dispose');
+    },
+    errorPlacement: function (error, element) {
+        $(element[0]).tooltip('dispose');
+        let text = error.text();
+        $(element[0]).tooltip({ title: text });
+    }
+});
+
+$(document).ajaxError(function (event, jqXHR) {
+    if (jqXHR.status === 401) {
+        //unauthorized
+        $("#modalSessionExpired").modal("show");
+    }
+});
+
 var index = (function () {
     require('./index.scss');
     document.getElementById("app").insertAdjacentHTML('beforeend', require('./index.html'));
@@ -13,7 +35,8 @@ var index = (function () {
         accountCreationComponent: require('./AccountCreationComponent/account-creation-component.js'),
         accountDashboardComponent: require('./AccountDashboardComponent/account-dashboard-component.js'),
         logout: function () {
-            window.localStorage.removeItem("user");
+            $("#modalSessionExpired").modal("hide");
+            window.sessionStorage.removeItem("Jwt");
             window.location = "#";
         }
     };

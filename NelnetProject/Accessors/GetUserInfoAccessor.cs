@@ -147,27 +147,6 @@ namespace Accessors
             return result;
         }
 
-        // Gets a user's password information for logging in
-        public PasswordDTO GetUserPasswordInfo(string email)
-        {
-            string query = "[dbo].[GetPasswordInfo]";
-            PasswordDTO result = new PasswordDTO();
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, conn);
-                command.Parameters.Add(new SqlParameter("@Email", email));
-                command.CommandType = System.Data.CommandType.StoredProcedure;
-                conn.Open();
-                var reader = command.ExecuteReader();
-                if (reader.Read())
-                {
-                    result.Hashed = reader.GetString(0);
-                    result.Salt = reader.GetString(1);
-                }
-            }
-            return result;
-        }
-
         // Checks if an email already exists in the database.
         public bool EmailExists(string email)
         {

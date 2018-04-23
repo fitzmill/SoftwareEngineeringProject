@@ -127,5 +127,132 @@ namespace NelnetProject.Tests.Engines.Utils
             Assert.AreEqual(expectedBody, email.Body);
         }
 
+        [TestMethod]
+        public void TestAccountUpdatedNotification()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            var expected = new EmailNotification()
+            {
+                To = email,
+                Subject = "Alert from Tuition Assistant: Account Information Updated",
+                Body = "Hi Sean,<br><br>Your personal information was updated on your account. If you did not make this change, " +
+                "please contact your administrator.<br>Please contact us if you have any questions." +
+                "<br><br><br>Powered by Tuition Assistant<br>"
+            };
+            
+            var result = EmailUtil.AccountUpdatedNotification(email, firstName, "personal");
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Email cannot be empty")]
+        public void TestAccountUpdatedNotificationNullTo()
+        {
+            var firstName = "Sean";
+            EmailUtil.AccountUpdatedNotification(null, firstName, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "First name cannot be empty")]
+        public void TestAccountUpdatedNotificationNullFirstName()
+        {
+            var email = "hi@me.com";
+            EmailUtil.AccountUpdatedNotification(email, null, "personal");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Information type cannot be empty")]
+        public void TestAccountUpdatedNotificationNullInfoType()
+        {
+            var email = "hi@me.com";
+            var firstName = "Sean";
+            EmailUtil.AccountUpdatedNotification(email, firstName, null);
+        }
+
+        [TestMethod]
+        public void TestAccountCreatedNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+            Transaction nextTransaction = new Transaction()
+            {
+                DateDue = new DateTime(2018, 9, 5),
+                AmountCharged = 3125
+            };
+
+            var expected = new EmailNotification()
+            {
+                To = user.Email,
+                Subject = "Welcome to Tuition Assistant!",
+                Body = "Hi Joe,<br><br>Thank you creating an account with Tuition Assistant. We're glad you're here!<br><br>" +
+                "Your next automatic payment will be on September 5 2018, for an amount of $3125.00.<br>" +
+                "We'll let you know five days before we charge your account.<br>" +
+                "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+            };
+
+            var result = EmailUtil.AccountCreatedNotification(user, nextTransaction);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "User cannot be null")]
+        public void TestAccountCreatedNotificationNullUser()
+        {
+            Transaction nextTransaction = new Transaction()
+            {
+                DateDue = new DateTime(2018, 9, 5),
+                AmountCharged = 3125
+            };
+
+            EmailUtil.AccountCreatedNotification(null, nextTransaction);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Transaction cannot be null")]
+        public void TestAccountCreatedNotificationNullTransaction()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+            EmailUtil.AccountCreatedNotification(user, null);
+        }
+
+        [TestMethod]
+        public void TestAccountDeletedNotification()
+        {
+            User user = new User()
+            {
+                FirstName = "Joe",
+                Email = "joe@joe.r.accountant"
+            };
+
+            var expected = new EmailNotification()
+            {
+                To = user.Email,
+                Subject = "Alert from Tuition Assistant: Account Deleted",
+                Body = "Hi Joe,<br><br>The account associated with your email address has been deleted.<br>" +
+                "Please contact us if you have any questions.<br><br><br>Powered by Tuition Assistant<br>"
+            };
+
+            var result = EmailUtil.AccountDeletedNotification(user);
+
+            Assert.AreEqual(expected, result);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "User cannot be null")]
+        public void TestAccountDeletedNotificationNullUser()
+        {
+            EmailUtil.AccountDeletedNotification(null);
+        }
+
     }
 }

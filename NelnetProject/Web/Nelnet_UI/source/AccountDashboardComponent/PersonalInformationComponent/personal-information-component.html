@@ -1,0 +1,22 @@
+﻿<div class="card card-account-information-section">
+    <div class="card-header">
+        <h3 class="header-information-section">Personal Information</h3>
+        <button id="btn-edit-personal" class="btn btn-primary btn-edit edit-personal-inactive" data-bind="click: $parent.startEditing">Edit</button>
+        <button id="btn-save-edit-personal" class="btn btn-success btn-edit edit-personal-active" data-bind="click: updatePersonalInfo">Save</button>
+        <button id="btn-cancel-edit-personal" class="btn btn-default btn-edit edit-personal-active" data-bind="click: function(data, event) { $parent.stopEditing(data, event); setUIPersonalInformation(); }">Cancel</button>
+    </div>
+
+    <div class="card-body">
+        <h4 class="edit-personal-inactive" data-bind="text: UserFirstName() + ' ' + UserLastName()"></h4>
+        <h4 class="edit-personal-inactive" data-bind="text: Email"></h4>
+
+        <div class="edit-personal-active">
+            <form id="edit-personal-form">
+                <input name="dashboard-first-name" class="input-information no-code-chars" placeholder="First Name" data-bind="value: UserFirstName" required />
+                <input name="dashboard-last-name" class="input-information no-code-chars" placeholder="Last Name" data-bind="value: UserLastName" required /> <br />
+                <input name="dashboardEmail" class="input-information email" type="email" placeholder="Email" data-bind="value: Email" required />
+            </form>
+        </div>
+
+    </div>
+</div>

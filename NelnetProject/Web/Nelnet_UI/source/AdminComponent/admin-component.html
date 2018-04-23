@@ -5,10 +5,12 @@
     <div class="card">
         <h3 class="card-header">Custom Report</h3>
         <div class="card-body" style="position: relative">
-            <label class="text-inline-input">Period from </label>
-            <input type="date" style="float: left" data-bind="value: generateStartDate"/>
-            <label class="text-inline-input"> to </label>
-            <input type="date" style="float: left" data-bind="value: generateEndDate"/>
+            <form id="form-custom-report">
+                <label class="text-inline-input">Period from </label>
+                <input name="dateFrom" type="date" style="float: left" data-bind="value: generateStartDate" required />
+                <label class="text-inline-input"> to </label>
+                <input name="dateTo" type="date" style="float: left" data-bind="value: generateEndDate" required />
+            </form>
             <button class="btn btn-success btn-panel" data-bind="click: generateReport">Generate</button>
         </div>
     </div>

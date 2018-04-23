@@ -1,36 +1,22 @@
--- ================================================
--- Template generated from Template Explorer using:
--- Create Procedure (New Menu).SQL
---
--- Use the Specify Values for Template Parameters 
--- command (Ctrl-Shift-M) to fill in the parameter 
--- values below.
---
--- This block of comments will not be included in
--- the definition of the procedure.
--- ================================================
+USE [NelnetPaymentProcessing]
+GO
+
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		<Author,,Name>
--- Create date: <Create Date,,>
--- Description:	<Description,,>
+-- Description:	<Update the information of the associated student>
 -- =============================================
 CREATE PROCEDURE UpdateStudentInfo
 	@ID int,
 	@FirstName varchar(255),
 	@LastName varchar(255),
 	@Grade tinyint
-
 AS
 BEGIN
-
-    -- Insert statements for procedure here
 	UPDATE [dbo].[Student]
 	SET FirstName=@FirstName, LastName=@LastName, Grade=@Grade
 	WHERE StudentID=@ID
-
 END
 GO
