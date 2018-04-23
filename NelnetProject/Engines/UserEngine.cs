@@ -83,6 +83,12 @@ namespace Engines
         public User ValidateLoginInfo(string email, string password)
         {
             var user = _userAccessor.GetUserInfoByEmail(email);
+            if (user == null)
+            {
+                //if no user with that email is found
+                return null;
+            }
+
             string hashedGivenPassword = PasswordUtils.HashPasswords(password, user.Salt);
             if (hashedGivenPassword.Equals(user.Hashed))
             {

@@ -58,7 +58,7 @@
     <Compile Include="Enums\UserType.cs" />
     <Compile Include="Exceptions\SqlRowNotAffectedException.cs" />
     <Compile Include="Interfaces\Accessors\IEmailAccessor.cs" />
-	  <Compile Include="Interfaces\Accessors\IPaymentAccessor.cs" />
+    <Compile Include="Interfaces\Accessors\IPaymentAccessor.cs" />
     <Compile Include="Interfaces\Accessors\IReportAccessor.cs" />
     <Compile Include="Interfaces\Accessors\ITransactionAccessor.cs" />
     <Compile Include="Interfaces\Engines\INotificationEngine.cs" />

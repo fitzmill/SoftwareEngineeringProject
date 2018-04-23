@@ -133,7 +133,7 @@ namespace Accessors
         public void InsertStudentInfo(int userID, Student student)
         {
             string query = "INSERT INTO [dbo].[Student] (FirstName, LastName, Grade, UserID) " +
-                            "VALUES(@FirstName, @LastName, @Grade, @UserID)";
+                            "VALUES(@FirstName, @LastName, @Grade, @UserID); SELECT SCOPE_IDENTITY()";
 
             var parameters = new Dictionary<string, object>()
             {

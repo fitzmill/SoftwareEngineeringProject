@@ -97,7 +97,7 @@ namespace Accessors
 
         public User GetUserInfoByEmail(string email)
         {
-            string query = "SELECT * FROM [dbo].[User] WHERE Email = @Email";
+            string query = "SELECT * FROM [dbo].[User] WHERE Email = @Email AND Active = 1";
             User result = null;
 
             var parameters = new Dictionary<string, object>()
@@ -129,7 +129,7 @@ namespace Accessors
 
         public User GetUserInfoByID(int userID)
         {
-            string query = "SELECT * FROM [dbo].[User] WHERE UserID = @UserID";
+            string query = "SELECT * FROM [dbo].[User] WHERE UserID = @UserID AND Active = 1";
             User result = null;
 
             var parameters = new Dictionary<string, object>()
@@ -162,7 +162,7 @@ namespace Accessors
         public void InsertPersonalInfo(User user)
         {
             string query = "INSERT INTO [dbo].[User] (FirstName, LastName, Email, Hashed, Salt, PaymentPlan, UserType, CustomerID) " +
-                           "VALUES(@FirstName, @LastName, @Email, @Hashed, @Salt, @PaymentPlan, @UserType, @CustomerID)";
+                           "VALUES(@FirstName, @LastName, @Email, @Hashed, @Salt, @PaymentPlan, @UserType, @CustomerID); SELECT SCOPE_IDENTITY()";
 
             var parameters = new Dictionary<string, object>()
             {
@@ -187,16 +187,8 @@ namespace Accessors
 
         public void UpdatePersonalInfo(User user)
         {
-            string query = "UPDATE [dbo].[User] " +
-                "SET FirstName = @FirstName, " +
-                "LastName = @LastName, " +
-                "Email = @Email, " +
-                "Hashed = @Hashed, " +
-                "Salt = @Salt, " +
-                "PaymentPlan = @PaymentPlan, " +
-                "UserType = @UserType, " +
-                "CustomerID = @CustomerID " +
-                "WHERE UserID = @ID";
+            string query = "UPDATE [dbo].[User] SET FirstName = @FirstName, LastName = @LastName, Email = @Email, Hashed = @Hashed, " +
+                "Salt = @Salt, PaymentPlan = @PaymentPlan, UserType = @UserType, CustomerID = @CustomerID WHERE UserID = @ID";
 
             var parameters = new Dictionary<string, object>()
             {
