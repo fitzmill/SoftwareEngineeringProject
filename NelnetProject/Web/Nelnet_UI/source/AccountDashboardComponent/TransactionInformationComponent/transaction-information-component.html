@@ -3,7 +3,8 @@
         <h3 class="header-information-section">Transaction History</h3>
     </div>
     <div class="card-body">
-        <table class="table table-striped">
+        <ko-table params="list: persons, options: VMoptions"> </ko-table> 
+        <table id="transaction-table" class="table table-striped">
             <thead>
                 <tr>
                     <th>Date Due</th>

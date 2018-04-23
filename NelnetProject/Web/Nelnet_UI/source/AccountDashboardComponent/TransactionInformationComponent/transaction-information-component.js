@@ -5,6 +5,7 @@
         vm.transactions = params.transactions;
 
         $("#processStateInformation").tooltip();
+        //$("#transaction-table").DataTable();
 
         return vm;
     },

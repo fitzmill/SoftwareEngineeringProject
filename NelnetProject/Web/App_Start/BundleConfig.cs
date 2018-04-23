@@ -21,7 +21,8 @@ namespace Web
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ko").Include(
-                "~/Scripts/knockout-{version}.js"));
+                "~/Scripts/knockout-{version}.js").Include(
+                "~/Scripts/knockout.table.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css"));
