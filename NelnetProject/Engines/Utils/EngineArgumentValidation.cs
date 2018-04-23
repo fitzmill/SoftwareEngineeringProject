@@ -17,7 +17,9 @@ namespace Engines.Utils
         public static void ArgumentIsNotNull(object value, string argument)
         {
             if (value == null)
+            {
                 throw new ArgumentNullException($"{argument} cannot be null");
+            } 
         }
 
         /// <summary>
