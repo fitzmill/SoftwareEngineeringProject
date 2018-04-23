@@ -9,6 +9,7 @@ ko.components.register('payment-status-component', {
         vm.paymentPlan = params.paymentPlan;
         vm.nextPaymentDate = params.nextPaymentDate;
         vm.nextPaymentCost = params.nextPaymentCost;
+        vm.paymentStatus = params.paymentStatus;
 
         return vm;
     },

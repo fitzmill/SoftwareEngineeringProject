@@ -89,7 +89,10 @@ ko.components.register('account-dashboard-component', {
 
                 containsUnresolvedTransaction = data.find((transaction) => transaction.ProcessState === "RETRYING" || transaction.ProcessState === "FAILED");
                 if (containsUnresolvedTransaction) {
+                    accountDashboardVM.paymentStatus("There was an issue with your account. Please update your information below.")
                     $("#retryingTransactionError").show();
+                } else {
+                    accountDashboardVM.paymentStatus("You will be charged automatically on this date.")
                 }
 
                 //make it display friendly
