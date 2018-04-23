@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Interfaces;
+using Core.Interfaces.Engines;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -15,12 +16,12 @@ namespace Web.Controllers
     [SqlRowNotAffectedFilter]
     public class PaymentController : ApiController
     {
-        IGetTransactionEngine _getTransactionEngine;
-        IPaymentEngine _paymentEngine;
+        private readonly ITransactionEngine _transactionEngine;
+        private readonly IPaymentEngine _paymentEngine;
 
-        public PaymentController(IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine)
+        public PaymentController(ITransactionEngine transactionEngine, IPaymentEngine paymentEngine)
         {
-            _getTransactionEngine = getTransactionEngine;
+            _transactionEngine = transactionEngine;
             _paymentEngine = paymentEngine;
         }
 
@@ -34,14 +35,14 @@ namespace Web.Controllers
         public IHttpActionResult GetAllTransactionsForUser()
         {
             var user = (ClaimsIdentity) User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
 
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
             }
 
-            return Ok(_getTransactionEngine.GetAllTransactionsForUser(parsedUserID));
+            return Ok(_transactionEngine.GetAllTransactionsForUser(parsedUserID));
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace Web.Controllers
         public IHttpActionResult GetNextPaymentForUser()
         {
             var user = (ClaimsIdentity)User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
 
             if (!int.TryParse(userID, out int parsedUserID))
             {

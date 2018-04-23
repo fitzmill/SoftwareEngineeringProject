@@ -4,32 +4,31 @@ using System.Linq;
 using Core;
 using Core.DTOs;
 using Core.Interfaces;
+using Core.Interfaces.Accessors;
+using Core.Interfaces.Engines;
 using Engines.Utils;
 
 namespace Engines
 {
-    /// <summary>
-    /// Charges payments for users.
-    /// </summary>
     public class PaymentEngine : IPaymentEngine
     {
-        private IGetUserInfoAccessor getUserInfoAccessor;
-        private IGetPaymentInfoAccessor getPaymentInfoAccessor;
-        private IChargePaymentAccessor chargePaymentAccessor;
-        private ISetTransactionAccessor setTransactionAccessor;
-        private IGetTransactionAccessor getTransactionAccessor;
+        private readonly IUserAccessor _userAccessor;
+        private readonly IStudentAccessor _studentAccessor;
+        private readonly IPaymentAccessor _paymentAccessor;
+        private readonly ITransactionAccessor _transactionAccessor;
 
-        public PaymentEngine(IGetUserInfoAccessor getUserInfoAccessor, IGetPaymentInfoAccessor getPaymentInfoAccessor, 
-            IChargePaymentAccessor chargePaymentAccessor, ISetTransactionAccessor setTransactionAccessor, IGetTransactionAccessor getTransactionAccessor)
+        public PaymentEngine(IUserAccessor userAccessor, 
+            IStudentAccessor studentAccessor,
+            IPaymentAccessor paymentAccessor,
+            ITransactionAccessor transactionAccessor)
         {
-            this.getUserInfoAccessor = getUserInfoAccessor;
-            this.getPaymentInfoAccessor = getPaymentInfoAccessor;
-            this.chargePaymentAccessor = chargePaymentAccessor;
-            this.setTransactionAccessor = setTransactionAccessor;
-            this.getTransactionAccessor = getTransactionAccessor;
+            _userAccessor = userAccessor;
+            _studentAccessor = studentAccessor;
+            _paymentAccessor = paymentAccessor;
+            _transactionAccessor = transactionAccessor;
         }
 
-        public IList<Transaction> ChargePayments(List<Transaction> charges, DateTime today)
+        public IEnumerable<Transaction> ChargePayments(IEnumerable<Transaction> charges, DateTime today)
         {
             IList<Transaction> result = new List<Transaction>();
             foreach (Transaction charge in charges)
@@ -44,12 +43,12 @@ namespace Engines
             //Create dto to be sent to Payment Spring
             PaymentDTO payment = new PaymentDTO
             {
-                CustomerID = getUserInfoAccessor.GetPaymentSpringCustomerID(charge.UserID),
+                CustomerID = _userAccessor.GetPaymentSpringCustomerID(charge.UserID),
                 Amount = (int) charge.AmountCharged * 100 //Charge is in cents
             };
 
             //Charge Payment Spring
-            ChargeResultDTO result = chargePaymentAccessor.ChargeCustomer(payment);
+            ChargeResultDTO result = _paymentAccessor.ChargeCustomer(payment);
 
             //If charge fails, retry for seven days. After that, the charge is marked as failed.
             ProcessState processState = ProcessState.SUCCESSFUL;
@@ -71,17 +70,14 @@ namespace Engines
             };
 
             //Update transaction entry in DB
-            setTransactionAccessor.UpdateTransaction(resultTransaction);
+            _transactionAccessor.UpdateTransaction(resultTransaction);
 
             return resultTransaction;
         }
 
-        public IList<Transaction> GeneratePayments(DateTime today) //to be run on the 1st of each month
+        public IEnumerable<Transaction> GeneratePayments(IEnumerable<User> users, DateTime today) //to be run on the 1st of each month
         {
-            //Get all users
-            IList<User> users = getUserInfoAccessor.GetAllActiveUsers();
-
-            IList<Transaction> failedTransactions = getTransactionAccessor.GetAllFailedTransactions();
+            IEnumerable<Transaction> failedTransactions = _transactionAccessor.GetAllFailedTransactions();
 
             //Generate all payments that are due this month
             List<Transaction> newTransactions = new List<Transaction>();
@@ -118,21 +114,22 @@ namespace Engines
             }
 
             //Store them in the database
-            newTransactions.ForEach(t => setTransactionAccessor.AddTransaction(t));
+            newTransactions.ForEach(t => _transactionAccessor.AddTransaction(t));
 
             //update newly deferred transactionss
-            transactionsToUpdate.ForEach(t => setTransactionAccessor.UpdateTransaction(t));
+            transactionsToUpdate.ForEach(t => _transactionAccessor.UpdateTransaction(t));
 
             return newTransactions;
         }
 
         public Transaction CalculateNextPaymentForUser(int userID, DateTime today)
         {
-            List<Transaction> userTransactions = getTransactionAccessor.GetAllFailedTransactions().ToList();
+            List<Transaction> userTransactions = _transactionAccessor.GetAllFailedTransactions().ToList();
             Transaction failed = userTransactions.Find(t => t.UserID == userID);
             double overdueAmount = (failed == null) ? 0.0 : failed.AmountCharged;
 
-            User user = getUserInfoAccessor.GetUserInfoByID(userID);
+            User user = _userAccessor.GetUserInfoByID(userID);
+            user.Students = _studentAccessor.GetStudentInfoByUserID(userID);
             double nextAmount = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION, overdueAmount);
             DateTime dueDate = TuitionUtil.NextPaymentDueDate(user.Plan, today);
 
@@ -148,6 +145,32 @@ namespace Engines
         public double CalculatePeriodicPayment(User user)
         {
             return TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION);
+        }
+
+        public string InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo)
+        {
+           return  _paymentAccessor.CreateCustomer(userPaymentInfo);
+        }
+
+        public void UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressInfo)
+        {
+            _paymentAccessor.UpdateCustomerBillingInformation(paymentAddressInfo);
+        }
+
+        public void UpdatePaymentCardInfo(PaymentCardDTO paymentCardInfo)
+        {
+            _paymentAccessor.UpdateCustomerCardInformation(paymentCardInfo);
+        }
+
+        public void DeletePaymentInfo(string customerID)
+        {
+            _paymentAccessor.DeleteCustomer(customerID);
+        }
+
+        public UserPaymentInfoDTO GetPaymentInfoForUser(int userID)
+        {
+            string customerID = _userAccessor.GetPaymentSpringCustomerID(userID);
+            return _paymentAccessor.GetPaymentInfoForCustomer(customerID);
         }
     }
 }

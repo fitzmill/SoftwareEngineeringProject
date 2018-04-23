@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.DTOs;
 using Core.Interfaces;
+using Core.Interfaces.Engines;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,10 +18,11 @@ namespace Web.Controllers
     [RoutePrefix("api/login")]
     public class LoginController : ApiController
     {
-        IGetUserInfoEngine getUserInfoEngine;
-        public LoginController(IGetUserInfoEngine getUserInfoEngine)
+        private readonly IUserEngine _userEngine;
+
+        public LoginController(IUserEngine userEngine)
         {
-            this.getUserInfoEngine = getUserInfoEngine;
+            _userEngine = userEngine;
         }
 
         [HttpGet]
@@ -44,7 +46,7 @@ namespace Web.Controllers
             string email = emailPassword.Substring(0, seperatorIndex);
             string password = emailPassword.Substring(seperatorIndex + 1);
 
-            var user = getUserInfoEngine.ValidateLoginInfo(email, password);
+            var user = _userEngine.ValidateLoginInfo(email, password);
             if (user != null)
             {
                 return Ok(new LoginDTO()

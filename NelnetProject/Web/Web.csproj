@@ -195,6 +195,7 @@
     <Compile Include="App_Start\UnityWebApiActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\BillingController.cs" />
+    <Compile Include="Controllers\ControllerUtils.cs" />
     <Compile Include="Controllers\UserInfoController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\LoginController.cs" />

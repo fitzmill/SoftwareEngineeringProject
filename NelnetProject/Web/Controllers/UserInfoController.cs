@@ -1,6 +1,7 @@
 ﻿using Core;
 using Core.DTOs;
 using Core.Interfaces;
+using Core.Interfaces.Engines;
 using System;
 using System.Linq;
 using System.Security.Claims;
@@ -16,14 +17,19 @@ namespace Web.Controllers
     [SqlRowNotAffectedFilter]
     public class UserInfoController : ApiController
     {
-        IGetUserInfoEngine _getUserInfoEngine;
-        ISetUserInfoEngine _setUserInfoEngine;
-        INotificationEngine _notificationEngine;
+        private readonly IUserEngine _userEngine;
+        private readonly IStudentEngine _studentEngine;
+        private readonly IPaymentEngine _paymentEngine;
+        private readonly INotificationEngine _notificationEngine;
 
-        public UserInfoController(IGetUserInfoEngine getUserInfoEngine, ISetUserInfoEngine setUserInfoEngine, INotificationEngine notificationEngine)
+        public UserInfoController(IUserEngine userEngine,
+            IStudentEngine studentEngine,
+            IPaymentEngine paymentEngine,
+            INotificationEngine notificationEngine)
         {
-            _getUserInfoEngine = getUserInfoEngine;
-            _setUserInfoEngine = setUserInfoEngine;
+            _userEngine = userEngine;
+            _studentEngine = studentEngine;
+            _paymentEngine = paymentEngine;
             _notificationEngine = notificationEngine;
         }
 
@@ -37,13 +43,13 @@ namespace Web.Controllers
         public IHttpActionResult GetUserInfo()
         {
             var user = (ClaimsIdentity) User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
             if (userID == null || !int.TryParse(userID, out int parsedUserID))
             {
                 return Unauthorized();
             }
 
-            return Ok(_getUserInfoEngine.GetUserInfoByID(parsedUserID));
+            return Ok(_userEngine.GetUserInfoByID(parsedUserID));
         }
 
         /// <summary>
@@ -61,7 +67,7 @@ namespace Web.Controllers
                 return BadRequest("Email was not supplied");
             }
 
-            return Ok(_getUserInfoEngine.EmailExists(email));
+            return Ok(_userEngine.EmailExists(email));
         }
 
         /// <summary>
@@ -79,7 +85,7 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
-            _setUserInfoEngine.UpdatePersonalInfo(user);
+            _userEngine.UpdatePersonalInfo(user);
 
             var newToken = JwtManager.GenerateToken(user);
 
@@ -100,18 +106,17 @@ namespace Web.Controllers
         public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
         {
             var user = (ClaimsIdentity)User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
             if (updatedInfo == null || !ModelState.IsValid || userID == null || !int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
-            _setUserInfoEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
-            _setUserInfoEngine.InsertStudentInfo(parsedUserID, updatedInfo.AddedStudents);
-            _setUserInfoEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
+            _studentEngine.UpdateStudentInfo(updatedInfo.UpdatedStudents);
+            _studentEngine.InsertStudentInfo(parsedUserID, updatedInfo.AddedStudents);
+            _studentEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
 
-            _notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
-                user.Name, "student");
+            _notificationEngine.SendAccountUpdateNotification(ControllerUtils.httpGetEmail(user), user.Name, "student");
             return Ok();
         }
 
@@ -130,7 +135,9 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body");
             }
 
-            _setUserInfoEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
+            _paymentEngine.DeletePaymentInfo(user.CustomerID);
+            _studentEngine.DeleteStudentInfo(user.Students.Select(x => x.StudentID));
+            _userEngine.DeletePersonalInfo(user.UserID);
             _notificationEngine.SendAccountDeletionNotification(user);
 
             return Ok();
@@ -152,7 +159,7 @@ namespace Web.Controllers
             }
 
             UserPaymentInfoDTO paymentInfo = CreatePaymentInfo(accountCreationInfo);
-            string customerID = _setUserInfoEngine.InsertPaymentInfo(paymentInfo);
+            string customerID = _paymentEngine.InsertPaymentInfo(paymentInfo);
 
             //check if payment info is valid, if not return bad request
             if (customerID == null)
@@ -162,8 +169,8 @@ namespace Web.Controllers
 
             User user = CreateUser(accountCreationInfo, customerID);
 
-            _setUserInfoEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
-            _setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
+            _userEngine.InsertPersonalInfo(user, accountCreationInfo.Password);
+            _studentEngine.InsertStudentInfo(user.UserID, user.Students);
             _notificationEngine.SendAccountCreationNotification(user, DateTime.Today);
 
             var token = JwtManager.GenerateToken(user);
