@@ -42,7 +42,9 @@ namespace Engines.Utils
             { PaymentPlan.YEARLY, new List<int>() { 9 } }
         };
 
-        //Calculate if payment is due for the current month, given a payment plan.
+        /// <summary>
+        /// Calculate if payment is due for the current month, given a payment plan
+        /// </summary>
         public static bool IsPaymentDue(PaymentPlan plan, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
@@ -53,7 +55,9 @@ namespace Engines.Utils
             return monthsDue[plan].Contains(today.Month);
         }
 
-        //Compute the date of the next payment for the given plan.
+        /// <summary>
+        /// Compute the date of the next payment for the given plan
+        /// </summary>
         public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
@@ -93,8 +97,10 @@ namespace Engines.Utils
             return new DateTime(year, month, DUE_DAY);
         }
 
-        //Generate the aggregate amount due for the month by summing the yearly cost for each of
-        //the user's students and dividing by the number of pay periods in the payment plan.
+        /// <summary>
+        /// Generate the aggregate amount due for the month by summing the yearly cost for each of
+        /// the user's students and dividing by the number of pay periods in the payment plan
+        /// </summary>
         public static double GenerateAmountDue(User user, int precision, double lastTransactionAmountDue = 0.0)
         {
             double yearlyAmount = 0;
@@ -113,7 +119,9 @@ namespace Engines.Utils
             return amountDue;
         }
 
-        //Returns the number of days the transaction is overdue
+        /// <summary>
+        /// Returns the number of days the transcation is overdue
+        /// </summary>
         public static int DaysOverdue(Transaction t, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
@@ -124,7 +132,9 @@ namespace Engines.Utils
             return today.Subtract(t.DateDue).Days;
         }
 
-        //Returns if number of days overdue is greater or equal to grace period
+        /// <summary>
+        /// Returns if number of days overdue is greater or equal to grace period
+        /// </summary>
         public static bool IsPastRetryPeriod(Transaction t, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
