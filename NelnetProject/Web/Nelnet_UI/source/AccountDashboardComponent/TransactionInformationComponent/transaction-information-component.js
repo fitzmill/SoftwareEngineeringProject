@@ -6,6 +6,19 @@
 
         $("#processStateInformation").tooltip();
 
+        var transactionTable = $("#transaction-table").DataTable({
+            columns: [
+                { data: "DateDue" },
+                { data: "AmountCharged" },
+                { data: "ProcessState" },
+                { data: "ReasonFailed" }
+            ]
+        });
+
+        vm.transactions.subscribe(function () {
+            transactionTable.rows.add(vm.transactions()).draw();
+        });
+
         return vm;
     },
 
