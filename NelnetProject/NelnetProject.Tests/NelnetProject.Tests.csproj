@@ -56,20 +56,29 @@
     <Compile Include="Accessors\TestSetTransactionAccessor.cs" />
     <Compile Include="Accessors\TestGetReportAccessor.cs" />
     <Compile Include="Accessors\TestSetReportAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockChargePaymentAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockEmailAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockGetPaymentInfoAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockGetReportAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockGetUserInfoAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockSetPaymentInfoAccessor.cs" />
     <Compile Include="Engines\MockedAccessors\MockSetReportAccessor.cs" />
-    <Compile Include="Engines\MockedAccessors\MockTransactionAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockGetTransactionAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockSetTransactionAccessor.cs" />
+    <Compile Include="Engines\MockedAccessors\MockSetUserInfoAccessor.cs" />
     <Compile Include="Engines\TestGetTransactionEngine.cs" />
     <Compile Include="Engines\TestGetReportEngine.cs" />
     <Compile Include="Engines\TestGetUserInfoEngine.cs" />
     <Compile Include="Engines\TestSetReportEngine.cs" />
+    <Compile Include="Engines\TestPaymentEngine.cs" />
+    <Compile Include="Engines\TestNotificationEngine.cs" />
     <Compile Include="Engines\Utils\TestPasswordUtils.cs" />
+    <Compile Include="Engines\Utils\TestTuitionUtil.cs" />
+    <Compile Include="Engines\TestSetUserInfoEngine.cs" />
+    <Compile Include="Engines\Utils\TestEmailUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App-sample.config" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>

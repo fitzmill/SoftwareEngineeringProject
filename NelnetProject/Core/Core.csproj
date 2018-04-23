@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,23 +42,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTOs\AccountCreationDTO.cs" />
     <Compile Include="DTOs\ChargeResultDTO.cs" />
-    <Compile Include="DTOs\CreateTokenDTO.cs" />
     <Compile Include="DTOs\DateDTO.cs" />
     <Compile Include="DTOs\DateRangeDTO.cs" />
     <Compile Include="DTOs\LoginDTO.cs" />
     <Compile Include="DTOs\PasswordDTO.cs" />
+    <Compile Include="DTOs\PaymentAddressDTO.cs" />
+    <Compile Include="DTOs\PaymentCardDTO.cs" />
     <Compile Include="DTOs\PaymentDTO.cs" />
-    <Compile Include="DTOs\ReportDTO.cs" />
     <Compile Include="DTOs\TransactionWithUserInfoDTO.cs" />
+    <Compile Include="DTOs\UpdateStudentInfoDTO.cs" />
     <Compile Include="DTOs\UserPaymentInfoDTO.cs" />
     <Compile Include="Enums\PaymentPlan.cs" />
     <Compile Include="Enums\ProcessState.cs" />
-    <Compile Include="Enums\ReasonFailed.cs" />
-    <Compile Include="Enums\State.cs" />
     <Compile Include="Enums\UserType.cs" />
     <Compile Include="Exceptions\EmailException.cs" />
     <Compile Include="Exceptions\ReportException.cs" />
+    <Compile Include="Exceptions\SqlRowNotAffectedException.cs" />
     <Compile Include="Interfaces\IChargePaymentAccessor.cs" />
     <Compile Include="Interfaces\IEmailAccessor.cs" />
     <Compile Include="Interfaces\IGetPaymentInfoAccessor.cs" />

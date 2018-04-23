@@ -1,0 +1,81 @@
+﻿#btn-delete-student {
+    float: right;
+    margin-right: 10%;
+    margin-top: 10px;
+}
+
+.card-account-information-section {
+    margin-bottom: 40px;
+}
+
+.header-information-section {
+    float: left;
+}
+
+.header-input-error {
+    color: white;
+    background-color: red;
+    text-align: center;
+    padding: 1px;
+}
+
+.input-street-address {
+    display: block;
+    width: 329px;
+}
+
+.input-information {
+    margin-top: 7px;
+    margin-right: 5px;
+}
+
+.info-account-dashboard {
+    width: -webkit-fill-available;
+    text-align: center;
+    margin: 10px;
+    background-color: #F5F5F5;
+    border: none;
+}
+
+.student-info {
+    display: block;
+    margin-left: 60px;
+}
+
+.select-inline-info {
+    margin-top: 5px;
+    margin-right: 7px;
+    height: 30px;
+}
+
+.btn-logout {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+}
+
+.btn-edit {
+    width: 15%;
+    float: right;
+    margin-right: 6%;
+}
+
+.enMoney::before {
+    content: "$";
+}
+
+.edit-personal-active {
+    display: none;
+}
+
+.edit-payment-active {
+    display: none;
+}
+
+.edit-billing-active {
+    display: none;
+}
+
+.edit-student-active {
+    display: none;
+}

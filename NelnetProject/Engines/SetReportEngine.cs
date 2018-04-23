@@ -18,13 +18,24 @@ namespace Engines
             this.setReportAccessor = setReportAccessor;
         }
 
-        public void InsertReport(Report report)
+        public Report InsertReport(DateTime startDate, DateTime endDate)
         {
-            if (report.StartDate > report.EndDate)
+            if (startDate > endDate)
             {
                 throw new ReportException("Start date is later than the end date.");
             }
+
+            var report = new Report()
+            {
+                DateCreated = DateTime.Now,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
             setReportAccessor.InsertReport(report);
+
+            return report;
         }
+
     }
 }

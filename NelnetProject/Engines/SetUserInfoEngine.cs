@@ -1,8 +1,11 @@
 ﻿using Core;
 using Core.DTOs;
 using Core.Interfaces;
+using Engines.Utils;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web.ModelBinding;
 
 namespace Engines
 {
@@ -10,6 +13,10 @@ namespace Engines
     {
         ISetUserInfoAccessor setUserInfoAccessor;
         ISetPaymentInfoAccessor setPaymentInfoAccessor;
+
+        //used for the generation of salt for password hashing
+        private readonly string alphaNumeric = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private readonly int saltLength = 20;
 
         public SetUserInfoEngine(ISetUserInfoAccessor setUserInfoAccessor, ISetPaymentInfoAccessor setPaymentInfoAccessor)
         {
@@ -23,12 +30,17 @@ namespace Engines
             return setPaymentInfoAccessor.CreateCustomer(userPaymentInfo);
         }
 
-        //make a call to the SetPaymentInfoAccessor to update the payment info associated with the customerID
-        public void UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo)
+        //make a call to the SetPaymentInfoAccessor to update the payment name and address info associated with the customerID
+        public void UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressInfo)
         {
-            setPaymentInfoAccessor.UpdateCustomer(userPaymentInfo);
+            setPaymentInfoAccessor.UpdateCustomerBillingInformation(paymentAddressInfo);
         }
 
+        //make a call to the SetPaymentInfoAccessor to update the payment card info associated with the customerID
+        public void UpdatePaymentCardInfo(PaymentCardDTO paymentCardInfo)
+        {
+            setPaymentInfoAccessor.UpdateCustomerCardInformation(paymentCardInfo);
+        }
         //make a call to the SetPaymentInfoAccessor to delete the payment info associated with the customerID
         public void DeletePaymentInfo(string customerID)
         {
@@ -36,17 +48,20 @@ namespace Engines
         }
 
         //make a call to the SetUserInfoAccessor to add a new record to the database
-        public void InsertPersonalInfo(User user)
+        public void InsertPersonalInfo(User user, string password)
         {
+            Random random = new Random();
+            
+            user.Salt = new string(Enumerable.Repeat(alphaNumeric, saltLength).Select(s => s[random.Next(s.Length)]).ToArray());
+            user.Hashed = PasswordUtils.HashPasswords(password, user.Salt);
+
             setUserInfoAccessor.InsertPersonalInfo(user);
-            InsertStudentInfo(user.UserID, user.Students);
         }
 
         //make a call to the SetUserInfoAccessor that will update the database record associated with the user
         public void UpdatePersonalInfo(User user)
         {
             setUserInfoAccessor.UpdatePersonalInfo(user);
-            this.UpdateStudentInfo(user.Students);
         }
 
         //make a call to the SetUserInfoAccessor to delete the personal information associated with the userID including students

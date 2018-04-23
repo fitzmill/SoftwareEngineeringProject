@@ -14,7 +14,8 @@ namespace Core.Interfaces
         /// Inserts a new user record into the database with the information contained in the user model
         /// </summary>
         /// <param name="user">The user model to insert</param>
-        void InsertPersonalInfo(User user);
+        /// <param name="password">The password to be hashed and inserted into the database</param>
+        void InsertPersonalInfo(User user, string password);
 
         /// <summary>
         /// Updates the user record in the database specified by the userID in the user model
@@ -56,10 +57,16 @@ namespace Core.Interfaces
         string InsertPaymentInfo(UserPaymentInfoDTO userPaymentInfo);
 
         /// <summary>
-        /// Update the payment info associated with the customerID in paymentSpring
+        /// Updates a user's name and address information on paymentSpring
         /// </summary>
-        /// <param name="userPaymentInfo">The information to update in paymentSpring</param>
-        void UpdatePaymentInfo(UserPaymentInfoDTO userPaymentInfo);
+        /// <param name="paymentAddressInfo">The information to update in paymentSpring</param>
+        void UpdatePaymentBillingInfo(PaymentAddressDTO paymentAddressInfo);
+
+        /// <summary>
+        /// Updates a user's card information on paymentSpring
+        /// </summary>
+        /// <param name="paymentCardInfo">The information to update in paymentSpring</param>
+        void UpdatePaymentCardInfo(PaymentCardDTO paymentCardInfo);
 
         /// <summary>
         /// Delete the payment information from paymentSpring

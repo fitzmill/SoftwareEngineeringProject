@@ -3,6 +3,7 @@ using Core;
 using Core.DTOs;
 using Core.Exceptions;
 using Core.Interfaces;
+using Core.Models;
 using Engines;
 using System;
 using System.Collections.Generic;
@@ -17,66 +18,55 @@ namespace Web.Controllers
     public class AdminController : ApiController
     {
         IGetTransactionEngine getTransactionEngine;
+        IGetReportEngine getReportEngine;
+        ISetReportEngine setReportEngine;
+
         //this object gets injected as a dependency by Unity
-        public AdminController(IGetTransactionEngine getTransactionEngine)
+        public AdminController(IGetTransactionEngine getTransactionEngine, IGetReportEngine getReportEngine, ISetReportEngine setReportEngine)
         {
             this.getTransactionEngine = getTransactionEngine;
-        }
-
-        // GET api/admin/GetAllTransactionsForUser/5
-        //This is a get request with the above route. The 5 at the end of the example is an example userID
-        [HttpGet]
-        [Route("GetAllTransactionsForUser/{userID}")]
-        public IHttpActionResult GetAllTransactionsForUser(string userID)
-        {
-            //Tries to convert the parameter to an int
-            if (!int.TryParse(userID, out int parsedUserID))
-            {
-                return BadRequest("Could not parse userID into an integer");
-            }
-            return Ok(getTransactionEngine.GetAllTransactionsForUser(parsedUserID));
-        }
-
-        [HttpGet]
-        [Route("GetMostRecentTransactionForUser/{userID}")]
-        public IHttpActionResult GetMostRecentTransactionForUser(string userID)
-        {
-            if (!int.TryParse(userID, out int parsedUserID))
-            {
-                return BadRequest("Could not parse userID into an integer");
-            }
-            return Ok(getTransactionEngine.GetMostRecentTransactionForUser(parsedUserID));
-        }
-
-        [HttpGet]
-        [Route("GetAllUnsettledTransactions")]
-        public IHttpActionResult GetAllUnsettledTransactions()
-        {
-            return Ok(getTransactionEngine.GetAllUnsettledTransactions());
+            this.getReportEngine = getReportEngine;
+            this.setReportEngine = setReportEngine;
         }
 
         [HttpPost]
         [Route("GetTransactionsForDateRange")]
         public IHttpActionResult GetAllTransactionsForDateRange(DateRangeDTO dateRangeDTO)
         {
-            if (dateRangeDTO == null || dateRangeDTO.StartDate == null || dateRangeDTO.EndDate == null)
+            if (dateRangeDTO == null || !ModelState.IsValid)
             {
                 return BadRequest("One or more required objects was not included in the request body.");
             }
             var startDate = new DateTime(dateRangeDTO.StartDate.Year, dateRangeDTO.StartDate.Month, dateRangeDTO.StartDate.Day);
             var endDate = new DateTime(dateRangeDTO.EndDate.Year, dateRangeDTO.EndDate.Month, dateRangeDTO.EndDate.Day);
 
-            IList<TransactionWithUserInfoDTO> result = new List<TransactionWithUserInfoDTO>();
-            try
-            {
-                result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
-            }
-            catch (ReportException re)
-            {
-                return BadRequest(re.Message);
-            }
+            var result = getTransactionEngine.GetTransactionsForDateRange(startDate, endDate);
 
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("GetAllReports")]
+        public IHttpActionResult GetAllReports()
+        {
+            return Ok(getReportEngine.GetAllReports());
+        }
+
+        [HttpPost]
+        [Route("InsertReport")]
+        public IHttpActionResult InsertReport(DateRangeDTO dateRange)
+        {
+            if (dateRange == null || !ModelState.IsValid)
+            {
+                return BadRequest("Report object was null in request");
+            }
+
+            var startDate = new DateTime(dateRange.StartDate.Year, dateRange.StartDate.Month, dateRange.StartDate.Day);
+            var endDate = new DateTime(dateRange.EndDate.Year, dateRange.EndDate.Month, dateRange.EndDate.Day);
+
+            var report = setReportEngine.InsertReport(startDate, endDate);
+
+            return Ok(report);
         }
     }
 }

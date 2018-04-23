@@ -32,10 +32,9 @@ namespace Core.Interfaces
         IList<Transaction> GetAllUnsettledTransactions();
 
         /// <summary>
-        /// Gets the most recent transaction for a user from the database based on their userID
+        /// Gets all transactions marked as FAILED from the database
         /// </summary>
-        /// <param name="userID"></param>
-        /// <returns>Most recent transaction for user</returns>
-        Transaction GetMostRecentTransactionForUser(int userID);
+        /// <returns></returns>
+        IList<Transaction> GetAllFailedTransactions();
     }
 }

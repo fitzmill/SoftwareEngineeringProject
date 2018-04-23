@@ -27,10 +27,12 @@ namespace NelnetProject.Tests.Engines
                 StartDate = new DateTime(2018, 2, 1),
                 EndDate = new DateTime(2018, 3, 1)
             };
-            setReportEngine.InsertReport(report);
+            var result = setReportEngine.InsertReport(report.StartDate, report.EndDate);
 
-            Assert.IsTrue(report.ReportID > 0);
-            Assert.IsNotNull(report.DateCreated);
+            Assert.IsTrue(result.ReportID > 0);
+            Assert.IsNotNull(result.DateCreated);
+            Assert.AreEqual(report.StartDate, result.StartDate);
+            Assert.AreEqual(report.EndDate, result.EndDate);
         }
     }
 }

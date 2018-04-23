@@ -6,6 +6,7 @@ using System;
 using System.Configuration;
 using Unity;
 using Unity.Injection;
+using Web.Managers;
 
 namespace Web
 {
@@ -79,7 +80,18 @@ namespace Web
             container.RegisterType<IGetUserInfoEngine, GetUserInfoEngine>();
             container.RegisterType<IPaymentEngine, PaymentEngine>();
             container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
-            
+
+            //scheduled event manager
+            container.RegisterType<ScheduledEventManager>(new InjectionConstructor(
+                double.Parse(ConfigurationManager.AppSettings["TimerInterval"]),
+                int.Parse(ConfigurationManager.AppSettings["ChargingHour"]),
+                int.Parse(ConfigurationManager.AppSettings["ReportGenerationHour"]),
+                container.Resolve<IGetTransactionEngine>(),
+                container.Resolve<IPaymentEngine>(),
+                container.Resolve<INotificationEngine>(),
+                container.Resolve<ISetReportEngine>()
+            ));
+            container.Resolve<ScheduledEventManager>();
         }
     }
 }
