@@ -36,7 +36,7 @@ namespace Web.Controllers
         public IHttpActionResult GetPaymentInfoForUser()
         {
             var user = (ClaimsIdentity) User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
 
             if (!int.TryParse(userID, out int parsedUserID))
             {
@@ -64,8 +64,7 @@ namespace Web.Controllers
             _paymentEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
 
             var user = (ClaimsIdentity)User.Identity;
-            _notificationEngine.SendAccountUpdateNotification
-                (user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value, user.Name, "billing");
+            _notificationEngine.SendAccountUpdateNotification(ControllerUtils.httpGetEmail(user), user.Name, "billing");
 
             return Ok();
         }
@@ -88,8 +87,7 @@ namespace Web.Controllers
             _paymentEngine.UpdatePaymentCardInfo(paymentCardDTO);
 
             var user = (ClaimsIdentity)User.Identity;
-            _notificationEngine.SendAccountUpdateNotification
-                (user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value, user.Name, "payment");
+            _notificationEngine.SendAccountUpdateNotification(ControllerUtils.httpGetEmail(user), user.Name, "payment");
 
             return Ok();
         }

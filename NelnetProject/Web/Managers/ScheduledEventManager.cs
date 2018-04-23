@@ -15,8 +15,6 @@ namespace Web.Managers
     /// </summary>
     public class ScheduledEventManager
     {
-        public Func<DateTime> dateProvider = () => DateTime.Now; //todo remove
-
         private readonly double _timerInterval;
         private readonly int _chargingHour;
         private readonly int _reportGenerationHour;
@@ -61,7 +59,7 @@ namespace Web.Managers
         /// <param name="e">Any event arguments</param>
         public void TimerIntervalElapsed(object sender, ElapsedEventArgs e)
         {
-            DateTime now = dateProvider();
+            DateTime now = DateTime.Now;
             Debug.WriteLine(String.Format("Time Elapsed at {0:yyyy MM dd HH mm ss}", now));
             
             //Generating Payments

@@ -43,7 +43,7 @@ namespace Web.Controllers
         public IHttpActionResult GetUserInfo()
         {
             var user = (ClaimsIdentity) User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
             if (userID == null || !int.TryParse(userID, out int parsedUserID))
             {
                 return Unauthorized();
@@ -106,7 +106,7 @@ namespace Web.Controllers
         public IHttpActionResult UpdateStudentInfo(UpdateStudentInfoDTO updatedInfo)
         {
             var user = (ClaimsIdentity)User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
             if (updatedInfo == null || !ModelState.IsValid || userID == null || !int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("One or more required objects was not included in the request body.");
@@ -116,8 +116,7 @@ namespace Web.Controllers
             _studentEngine.InsertStudentInfo(parsedUserID, updatedInfo.AddedStudents);
             _studentEngine.DeleteStudentInfo(updatedInfo.DeletedStudentIDs);
 
-            _notificationEngine.SendAccountUpdateNotification(user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value,
-                user.Name, "student");
+            _notificationEngine.SendAccountUpdateNotification(ControllerUtils.httpGetEmail(user), user.Name, "student");
             return Ok();
         }
 

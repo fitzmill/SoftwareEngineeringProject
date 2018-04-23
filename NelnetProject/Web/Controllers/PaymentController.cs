@@ -35,7 +35,7 @@ namespace Web.Controllers
         public IHttpActionResult GetAllTransactionsForUser()
         {
             var user = (ClaimsIdentity) User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
 
             if (!int.TryParse(userID, out int parsedUserID))
             {
@@ -55,7 +55,7 @@ namespace Web.Controllers
         public IHttpActionResult GetNextPaymentForUser()
         {
             var user = (ClaimsIdentity)User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
 
             if (!int.TryParse(userID, out int parsedUserID))
             {
