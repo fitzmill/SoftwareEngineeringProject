@@ -1,13 +1,8 @@
-﻿using Core;
-using Core.Interfaces;
+using Core;
 using Core.Interfaces.Accessors;
 using Core.Interfaces.Engines;
 using Engines.Utils;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engines
 {

@@ -1,8 +1,5 @@
 ﻿using Core.DTOs;
-using Core.Interfaces;
-using Core.Interfaces.Accessors;
 using Core.Interfaces.Engines;
-using System.Linq;
 using System.Security.Claims;
 using System.Web.Http;
 using Web.Filters;

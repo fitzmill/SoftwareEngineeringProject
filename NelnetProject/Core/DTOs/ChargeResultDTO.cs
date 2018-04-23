@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Core.DTOs
+﻿namespace Core.DTOs
 {
     /// <summary>
     /// Data payload returned from PaymentSpring after charging a user.
