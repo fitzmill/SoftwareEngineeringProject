@@ -15,7 +15,7 @@ module.exports.advancePageIfValid = function (advancePage, email) {
         }).fail(function (jqXHR) {
             if (jqXHR.status !== 401) {
                 let errorMessage = JSON.parse(jqXHR.responseText).Message;
-                window.alert("Could not save information: ".concat(errorMessage));
+                window.alert("Could not verify information: ".concat(errorMessage));
             }
         });
     }
@@ -25,12 +25,19 @@ ko.components.register('personal-information-page-component', {
     viewModel: function (params) {
         let vm = this;
 
-        vm.firstName = params.firstName;
-        vm.lastName = params.lastName;
-        vm.email = params.email;
-        vm.reenterEmail = params.reenterEmail;
-        vm.password = params.password;
-        vm.reenterPassword = params.reenterPassword;
+        vm.firstName = ko.observable();
+        vm.lastName = ko.observable();
+        vm.email = ko.observable();
+        vm.reenterEmail = ko.observable();
+        vm.password = ko.observable();
+        vm.reenterPassword = ko.observable();
+
+        params.personalInformation({
+            firstName: vm.firstName,
+            lastName: vm.lastName,
+            email: vm.email,
+            password: vm.password
+        });
 
         return vm;
     },

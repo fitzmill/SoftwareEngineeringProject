@@ -2,7 +2,25 @@
     viewModel: function (params) {
         let vm = this;
         
-        vm.students = params.students;
+        vm.students = ko.observableArray([{
+            studentID: 0,
+            studentFirstName: ko.observable(),
+            studentLastName: ko.observable(),
+            studentGrade: ko.observable()
+        }]);
+
+        vm.compiledStudents = ko.computed(function () {
+            let students = vm.students().map(s => {
+                return {
+                    StudentID: 0,
+                    FirstName: s.studentFirstName(),
+                    LastName: s.studentLastName(),
+                    Grade: s.studentGrade()
+                };
+            });
+            params.students(students);
+            return students;
+        });
 
         vm.addStudent = function () {
             vm.students.push({

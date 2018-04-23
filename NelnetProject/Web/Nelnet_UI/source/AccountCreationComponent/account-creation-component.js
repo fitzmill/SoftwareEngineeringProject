@@ -23,96 +23,22 @@ const RECTANGLE_ID_PREFIX = "#rectangle-";
 //api url constants
 const userInfoControllerRoot = "/api/userinfo";
 
-//user type
-const GENERAL_USER = 1;
-
 ko.components.register('account-creation-component', {
     viewModel: function (params) {
         let vm = this;
 
         //first page
-        vm.firstName = ko.observable();
-        vm.lastName = ko.observable();
-        vm.email = ko.observable();
-        vm.reenterEmail = ko.observable();
-        vm.password = ko.observable();
-        vm.reenterPassword = ko.observable();
+        vm.personalInformation = ko.observable();
 
         //second page
-        vm.cardNumber = ko.observable();
-        vm.cardFirstName = ko.observable();
-        vm.cardLastName = ko.observable();
-        vm.month = ko.observable();
-        vm.year = ko.observable();
-        vm.address1 = ko.observable();
-        vm.address2 = ko.observable();
-        vm.city = ko.observable();
-        vm.state = ko.observable();
-        vm.zip = ko.observable();
+        vm.paymentInformation = ko.observable();
 
         //third page
-        vm.students = ko.observableArray([{
-            studentID: 0,
-            studentFirstName: ko.observable(),
-            studentLastName: ko.observable(),
-            studentGrade: ko.observable()
-        }]);
+        vm.students = ko.observable();
 
         //fourth page
         vm.paymentTypeSelection = ko.observable();
-
-        //payment plan types
-        vm.PLAN_TYPE_VALUES = {};
-        vm.PLAN_TYPE_VALUES["MONTHLY"] = 1;
-        vm.PLAN_TYPE_VALUES["SEMESTERLY"] = 2;
-        vm.PLAN_TYPE_VALUES["YEARLY"] = 3;
-
-        //computed observables
-        vm.getPaymentPlanType = ko.computed(function () {
-            return vm.PLAN_TYPE_VALUES[vm.paymentTypeSelection()];
-        });
-        vm.compiledStudents = ko.computed(function () {
-            return vm.students().map(s => {
-                return {
-                    StudentID: 0,
-                    FirstName: s.studentFirstName(),
-                    LastName: s.studentLastName(),
-                    Grade: s.studentGrade()
-                };
-            });
-        });
-        vm.user = ko.computed(function () {
-            return {
-                UserID: 0,
-                FirstName: vm.firstName(),
-                LastName: vm.lastName(),
-                Email: vm.email(),
-                Plan: 0,
-                UserType: GENERAL_USER,
-                Students: vm.compiledStudents()
-            };
-        });
-        vm.accountCreationInformation = ko.computed(function(){
-            return {
-                FirstName: vm.firstName(),
-                LastName: vm.lastName(),
-                Email: vm.email(),
-                Password: vm.password(),
-                Plan: vm.getPaymentPlanType(),
-                UserType: GENERAL_USER,
-                Students: vm.compiledStudents(),
-                CardholderFirstName: vm.cardFirstName(),
-                CardholderLastName: vm.cardLastName(),
-                StreetAddress1: vm.address1(),
-                StreetAddress2: vm.address2(),
-                City: vm.city(),
-                State: vm.state(),
-                Zip: vm.zip(),
-                CardNumber: vm.cardNumber(),
-                ExpirationYear: vm.year(),
-                ExpirationMonth: vm.month()
-            };
-        });
+        vm.accountCreationInformation = ko.observable();
 
         //errors
         vm.personalInputErrorMessage = ko.observable();
@@ -207,7 +133,7 @@ ko.components.register('account-creation-component', {
             if (vm.currentPage === WELCOME_PAGE){
                 vm.advancePage();
             } else if (vm.currentPage === PERSONAL_INFORMATION_PAGE) {
-                personalInformationPage.advancePageIfValid(vm.advancePage, vm.email());
+                personalInformationPage.advancePageIfValid(vm.advancePage, vm.personalInformation().email());
             } else if (vm.currentPage === PAYMENT_INFORMATION_PAGE) {
                 paymentInformationPage.advancePageIfValid(vm.advancePage);
             } else if (vm.currentPage === STUDENT_INFORMATION_PAGE) {

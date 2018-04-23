@@ -19,14 +19,11 @@
             </div>
 
             <div id="page-1">
-                <personal-information-page-component params="firstName: firstName, lastName: lastName, email: email, reenterEmail: reenterEmail, 
-                                                     password: password, reenterPassword: reenterPassword"></personal-information-page-component>
+                <personal-information-page-component params="personalInformation: personalInformation"></personal-information-page-component>
             </div>
 
             <div id="page-2">
-                <payment-information-page-component params="cardNumber: cardNumber, cardFirstName: cardFirstName, cardLastName: cardLastName,
-                                                    month: month, year: year, address1: address1, address2: address2, city: city, state: state,
-                                                    zip: zip"></payment-information-page-component>
+                <payment-information-page-component params="paymentInformation: paymentInformation"></payment-information-page-component>
             </div>
 
             <div id="page-3">
@@ -34,7 +31,7 @@
             </div>
 
             <div id="page-4">
-                <payment-plan-selection-page-component params="paymentTypeSelection: paymentTypeSelection, user: user, accountCreationInformation: accountCreationInformation, PLAN_TYPE_VALUES: PLAN_TYPE_VALUES"></payment-plan-selection-page-component>
+                <payment-plan-selection-page-component params="personalInformation: personalInformation, paymentInformation: paymentInformation, paymentTypeSelection: paymentTypeSelection, students: students, accountCreationInformation: accountCreationInformation"></payment-plan-selection-page-component>
             </div>
 
         </div>
