@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Data.SqlClient;
-using Accessors;
+﻿using Accessors;
 using Core.Interfaces.Accessors;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

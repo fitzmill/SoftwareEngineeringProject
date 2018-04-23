@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Core;
-using Core.Interfaces;
+﻿using Core;
 using Core.Interfaces.Accessors;
 using Core.Interfaces.Engines;
 using Core.Models;
 using Engines.Utils;
+using System;
+using System.Collections.Generic;
 
 namespace Engines
 {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
-using Core.Interfaces;
+﻿using Core.Interfaces.Accessors;
 using Core.Models;
-using Core.Exceptions;
+using System;
 using System.Diagnostics;
-using Core.Interfaces.Accessors;
+using System.Net.Mail;
 
 namespace Accessors
 {

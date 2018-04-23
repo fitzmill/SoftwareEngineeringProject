@@ -1,14 +1,7 @@
 ﻿using Core;
 using Core.Exceptions;
-using Core.Interfaces;
 using Core.Interfaces.Accessors;
-using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Accessors
 {
