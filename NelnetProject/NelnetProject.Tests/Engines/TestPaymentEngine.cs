@@ -315,6 +315,13 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "charge cannot be null")]
+        public void TestChargePaymentsNullTransactions()
+        {
+            _paymentEngine.ChargePayments(new List<Transaction>() { null }, default(DateTime));
+        }
+
+        [TestMethod]
         public void TestCalculatePaymentForNextUserWithOverdue()
         {
             int userId = 1;
@@ -351,6 +358,46 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "User Id cannot be negative")]
+        public void TestCalculateNextPaymentForUser()
+        {
+            int userId = -1;
+
+            _paymentEngine.CalculateNextPaymentForUser(userId, default(DateTime));
+        }
+
+        [TestMethod]
+        public void TestCalculatePeriodicPaymentMonthly()
+        {
+            User user = BuildTestUser(PaymentPlan.MONTHLY);
+            double amountDue = _paymentEngine.CalculatePeriodicPayment(user);
+            Assert.AreEqual(Math.Round(1375 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION), amountDue);
+        }
+
+        [TestMethod]
+        public void TestCalculatePeriodicPaymentSemesterly()
+        {
+            User user = BuildTestUser(PaymentPlan.SEMESTERLY);
+            double amountDue = _paymentEngine.CalculatePeriodicPayment(user);
+            Assert.AreEqual(Math.Round(6875 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION), amountDue);
+        }
+
+        [TestMethod]
+        public void TestCalculatePeriodicPaymentYearly()
+        {
+            User user = BuildTestUser(PaymentPlan.YEARLY);
+            double amountDue = _paymentEngine.CalculatePeriodicPayment(user);
+            Assert.AreEqual(Math.Round(13750 * TuitionUtil.PROCESSING_FEE, TuitionUtil.DEFAULT_PRECISION), amountDue);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "user cannot be null")]
+        public void TestCalculatePeriodicPaymentNullUser()
+        {
+            _paymentEngine.CalculatePeriodicPayment(null);
+        }
+
+        [TestMethod]
         public void TestInsertPaymentInfo()
         {
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
@@ -372,6 +419,13 @@ namespace NelnetProject.Tests.Engines
             _paymentEngine.InsertPaymentInfo(paymentInfo);
 
             Assert.AreEqual(paymentInfo, _paymentAccessor.MockPaymentSpringCustomers.Where(info => info.CustomerID == paymentInfo.CustomerID).ToList().ElementAt(0));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "user payment info cannot be null")]
+        public void TestInsertPaymentInfoNull()
+        {
+            _paymentEngine.InsertPaymentInfo(null);
         }
 
         [TestMethod]
@@ -405,6 +459,13 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "payment address info cannot be null")]
+        public void TestUpdatePaymentBillingInfoNull()
+        {
+            _paymentEngine.UpdatePaymentBillingInfo(null);
+        }
+
+        [TestMethod]
         public void TestUpdatePaymentCardInfo()
         {
             _paymentAccessor.MockPaymentSpringCustomers.Add(new UserPaymentInfoDTO()
@@ -435,6 +496,13 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "payment card info cannot be null")]
+        public void TestUpdatePaymentCardInfoNull()
+        {
+            _paymentEngine.UpdatePaymentCardInfo(null);
+        }
+
+        [TestMethod]
         public void TestDeletePaymentInfo()
         {
             UserPaymentInfoDTO paymentInfo = new UserPaymentInfoDTO
@@ -461,6 +529,13 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "customer Id cannot be empty")]
+        public void TestDeletePaymentInfoNull()
+        {
+            _paymentEngine.DeletePaymentInfo(null);
+        }
+
+        [TestMethod]
         public void TestGetPaymentInfoForUserWithCorrectCustomerID()
         {
             int userID = 1;
@@ -473,6 +548,20 @@ namespace NelnetProject.Tests.Engines
         {
             int userID = 4;
             Assert.AreEqual(null, _paymentEngine.GetPaymentInfoForUser(userID));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "user id cannot be negative")]
+        public void TestGetPaymentInfoForNegativeUserId()
+        {
+            _paymentEngine.GetPaymentInfoForUser(-1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "users cannot be null")]
+        public void TestGeneratePaymentsUsersNull()
+        {
+            _paymentEngine.GeneratePayments(null, DateTime.Now);
         }
     }
 }

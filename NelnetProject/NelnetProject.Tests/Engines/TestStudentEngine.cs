@@ -100,7 +100,7 @@ namespace NelnetProject.Tests.Engines
         [TestMethod]
         public void TestGetStudentInfoByNonexistantUserId()
         {
-            var id = -1;
+            var id = 0;
             Assert.AreEqual(0, _studentEngine.GetStudentInfoByUserID(id).ToList().Count);
         }
 
@@ -168,6 +168,69 @@ namespace NelnetProject.Tests.Engines
             _studentEngine.UpdateStudentInfo(students);
 
             Assert.AreEqual(students[0], _studentAccessor.MockDb.FirstOrDefault(x => x.StudentID == students[0].StudentID));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Students cannot be null")]
+        public void TestDeleteStudentInfoNullStudents()
+        {
+            _studentEngine.DeleteStudentInfo(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "StudentID cannot be negative")]
+        public void TestDeleteStudentInfoNegativeID()
+        {
+            _studentEngine.DeleteStudentInfo(new List<int> { -1 } );
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "StudentID cannot be negative")]
+        public void TestGetStudentInfoByIdNegativeID()
+        {
+            _studentEngine.GetStudentInfoByID(-1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "UserID cannot be negative")]
+        public void TestGetStudentInfoByUserIdNegativeID()
+        {
+            _studentEngine.GetStudentInfoByUserID(-1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "UserID cannot be negative")]
+        public void TestInsertStudentInfoNegativeID()
+        {
+            _studentEngine.InsertStudentInfo(-1, StudentsDB);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Students cannot be null")]
+        public void TestInsertStudentInfoNullStudents()
+        {
+            _studentEngine.InsertStudentInfo(10, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Student cannot be null")]
+        public void TestInsertStudentInfoNullStudent()
+        {
+            _studentEngine.InsertStudentInfo(10, new List<Student> { null });
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Students cannot be null")]
+        public void TestUpdateStudentInfoNullStudents()
+        {
+            _studentEngine.UpdateStudentInfo(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "Student cannot be null")]
+        public void TestUpdateStudentInfoNullStudent()
+        {
+            _studentEngine.UpdateStudentInfo(new List<Student> { null });
         }
     }
 }

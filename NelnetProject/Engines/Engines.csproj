@@ -46,9 +46,10 @@
     <Compile Include="PaymentEngine.cs" />
     <Compile Include="ReportEngine.cs" />
     <Compile Include="StudentEngine.cs" />
-	  <Compile Include="TransactionEngine.cs" />
+    <Compile Include="TransactionEngine.cs" />
     <Compile Include="UserEngine.cs" />
     <Compile Include="Utils\EmailUtil.cs" />
+    <Compile Include="Utils\EngineArgumentValidation.cs" />
     <Compile Include="Utils\PasswordUtils.cs" />
     <Compile Include="Utils\TuitionUtil.cs" />
   </ItemGroup>

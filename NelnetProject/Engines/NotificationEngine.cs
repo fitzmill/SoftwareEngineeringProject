@@ -52,12 +52,16 @@ namespace Engines
 
         public void SendAccountUpdateNotification(string email, string firstName, string informationType)
         {
+            EngineArgumentValidation.StringIsNotEmpty(email, "email");
+            EngineArgumentValidation.StringIsNotEmpty(firstName, "first name");
+            EngineArgumentValidation.StringIsNotEmpty(informationType, "information type");
             var emailNotification = EmailUtil.AccountUpdatedNotification(email, firstName, informationType);
             _emailAccessor.SendEmail(emailNotification);
         }
 
         public void SendAccountCreationNotification(User user, DateTime today)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(user, "user");
             Transaction nextTransaction = new Transaction()
             {
                 AmountCharged = TuitionUtil.GenerateAmountDue(user, TuitionUtil.DEFAULT_PRECISION),
@@ -69,6 +73,7 @@ namespace Engines
 
         public void SendAccountDeletionNotification(User user)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(user, "user");
             EmailNotification email = EmailUtil.AccountDeletedNotification(user);
             _emailAccessor.SendEmail(email);
         }

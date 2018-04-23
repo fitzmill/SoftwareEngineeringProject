@@ -109,7 +109,7 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Email cannot be empty")]
+        [ExpectedException(typeof(ArgumentException), "Email cannot be empty")]
         public void TestSendAccountUpdateNotificationNullTo()
         {
             var firstName = "Sean";
@@ -117,7 +117,7 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "First name cannot be empty")]
+        [ExpectedException(typeof(ArgumentException), "first name cannot be empty")]
         public void TestSendAccountUpdatedNotificationNullFirstName()
         {
             var email = "hi@me.com";
@@ -125,7 +125,7 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Information type cannot be empty")]
+        [ExpectedException(typeof(ArgumentException), "information type cannot be empty")]
         public void TestSendAccountUpdatedNotificationNullInfoType()
         {
             var email = "hi@me.com";
@@ -174,6 +174,13 @@ namespace NelnetProject.Tests.Engines
         }
 
         [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "user cannot be null")]
+        public void TestSendAccountCreationNotificationNullUser()
+        {
+            _notificationEngine.SendAccountCreationNotification(null, default(DateTime));
+        }
+
+        [TestMethod]
         public void TestAccountDeletedNotification()
         {
             User user = new User()
@@ -196,6 +203,13 @@ namespace NelnetProject.Tests.Engines
             _notificationEngine.SendAccountDeletionNotification(user);
 
             CollectionAssert.AreEqual(expected, _mockEmailAccessor.emails);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "user cannot be null")]
+        public void TestAccountDeletedNotificationNullUser()
+        {
+            _notificationEngine.SendAccountDeletionNotification(null);
         }
 
     }

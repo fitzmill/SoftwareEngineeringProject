@@ -29,11 +29,13 @@ namespace Engines
 
         public void DeletePersonalInfo(int userID)
         {
+            EngineArgumentValidation.ArgumentIsNonNegative(userID, "UserID");
             _userAccessor.DeletePersonalInfo(userID);
         }
 
         public bool EmailExists(string email)
         {
+            EngineArgumentValidation.StringIsNotEmpty(email, "Email");
             return _userAccessor.EmailExists(email);
         }
 
@@ -52,6 +54,8 @@ namespace Engines
 
         public User GetUserInfoByID(int userID)
         {
+            EngineArgumentValidation.ArgumentIsNonNegative(userID, "UserID");
+
             var user = _userAccessor.GetUserInfoByID(userID);
             if (user != null)
             {
@@ -62,6 +66,9 @@ namespace Engines
 
         public void InsertPersonalInfo(User user, string password)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(user, "User");
+            EngineArgumentValidation.StringIsNotEmpty(password, "Password");
+
             var randomBytes = new byte[_saltLength];
             _cryptoServiceProvider.GetBytes(randomBytes);
             user.Salt = Convert.ToBase64String(randomBytes);
@@ -73,11 +80,15 @@ namespace Engines
 
         public void UpdatePersonalInfo(User user)
         {
+            EngineArgumentValidation.ArgumentIsNotNull(user, "User");
             _userAccessor.UpdatePersonalInfo(user);
         }
 
         public User ValidateLoginInfo(string email, string password)
         {
+            EngineArgumentValidation.StringIsNotEmpty(email, "Email");
+            EngineArgumentValidation.StringIsNotEmpty(password, "Password");
+
             var user = _userAccessor.GetUserInfoByEmail(email);
             if (user == null)
             {

@@ -3,6 +3,7 @@ using Core.Interfaces.Engines;
 using Engines;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NelnetProject.Tests.Engines.MockedAccessors;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -227,6 +228,62 @@ namespace NelnetProject.Tests.Engines
         {
             int userID = 23;
             Assert.AreEqual(null, _userEngine.GetUserInfoByID(userID));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "UserID cannot be negative")]
+        public void TestDeletePersonalInfoNegativeID()
+        {
+            _userEngine.DeletePersonalInfo(-1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Email cannot be empty or null")]
+        public void TestEmailExistsEmpty()
+        {
+            _userEngine.EmailExists("");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "UserID cannot be negative")]
+        public void TestGetUserInfoByIDNegativeID()
+        {
+            _userEngine.GetUserInfoByID(-1);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "User cannot be null")]
+        public void TestInsertPersonalInfoNullUser()
+        {
+            _userEngine.InsertPersonalInfo(null, "password");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Password cannot be empty or null")]
+        public void TestInsertPersonalInfoEmptyPassword()
+        {
+            _userEngine.InsertPersonalInfo(MockUsersDB[0], "");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "User cannot be null")]
+        public void TestUpdatePersonalInfoNullUser()
+        {
+            _userEngine.UpdatePersonalInfo(null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Email cannot be empty or null")]
+        public void TestValidateLoginInfoEmptyEmail()
+        {
+            _userEngine.ValidateLoginInfo("", "password");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentException), "Password cannot be empty or null")]
+        public void TestValidateLoginInfoEmptyPassword()
+        {
+            _userEngine.ValidateLoginInfo("email", "");
         }
     }
 }

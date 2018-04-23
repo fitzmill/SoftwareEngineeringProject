@@ -91,7 +91,7 @@ namespace NelnetProject.Tests.Engines
         [TestMethod]
         public void TestGetAllTransactionsForNonexistantUser()
         {
-            var id = -1;
+            var id = 0;
             var result = _transactionEngine.GetAllTransactionsForUser(id).ToList();
 
             Assert.AreEqual(0, result.Count);
@@ -143,6 +143,13 @@ namespace NelnetProject.Tests.Engines
             var startDate = new DateTime(2018, 3, 1);
             var endDate = new DateTime(2018, 3, 28);
             var result = _transactionEngine.GetTransactionsForDateRange(endDate, startDate).ToList();
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException), "UserID cannot be negative")]
+        public void TestGetAllTransactionsForUserNegativeID()
+        {
+            _transactionEngine.GetAllTransactionsForUser(-1);
         }
     }
 }
