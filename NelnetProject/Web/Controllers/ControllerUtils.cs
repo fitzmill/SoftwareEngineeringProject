@@ -15,6 +15,8 @@ namespace Web.Controllers
         /// <summary>
         /// Gets an user ID from an http result.
         /// </summary>
+        /// <param name="user">the ClaimsIdentity user</param>
+        /// <returns>The userID of the given user</returns>
         public static string httpGetUserID(ClaimsIdentity user)
         {
             string userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
@@ -24,6 +26,8 @@ namespace Web.Controllers
         /// <summary>
         /// Gets an email from an http result
         /// </summary>
+        /// <param name="user">the ClaimsIdentity user</param>
+        /// <returns>The email of the given user</returns>
         public static string httpGetEmail(ClaimsIdentity user)
         {
             string email = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;

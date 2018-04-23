@@ -17,6 +17,9 @@ namespace Engines.Utils
         /// <summary>
         /// Hashes passwords with given password, salt, and pepper.
         /// </summary>
+        /// <param name="password">The password to be hashed</param>
+        /// <param name="salt">The salt used for hashing</param>
+        /// <returns>The hashed password</returns>
         public static string HashPasswords(string password, string salt)
         {
             SHA256 sha256 = SHA256Managed.Create();

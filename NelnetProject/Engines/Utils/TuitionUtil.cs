@@ -45,6 +45,9 @@ namespace Engines.Utils
         /// <summary>
         /// Calculate if payment is due for the current month, given a payment plan
         /// </summary>
+        /// <param name="plan">The payment plan of the user</param>
+        /// <param name="today">The date for today</param>
+        /// <returns>If a payment is due</returns>
         public static bool IsPaymentDue(PaymentPlan plan, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
@@ -58,6 +61,9 @@ namespace Engines.Utils
         /// <summary>
         /// Compute the date of the next payment for the given plan
         /// </summary>
+        /// <param name="plan">The payment plan of the user</param>
+        /// <param name="today">The date for today</param>
+        /// <returns>When a new payment is due</returns>
         public static DateTime NextPaymentDueDate(PaymentPlan plan, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
@@ -101,6 +107,10 @@ namespace Engines.Utils
         /// Generate the aggregate amount due for the month by summing the yearly cost for each of
         /// the user's students and dividing by the number of pay periods in the payment plan
         /// </summary>
+        /// <param name="user">The user for the transaction</param>
+        /// <param name="precision">The precision wanted</param>
+        /// <param name="lastTransactionAmountDue">The last transaction amount due</param>
+        /// <returns>The amount due</returns>
         public static double GenerateAmountDue(User user, int precision, double lastTransactionAmountDue = 0.0)
         {
             double yearlyAmount = 0;
@@ -122,6 +132,9 @@ namespace Engines.Utils
         /// <summary>
         /// Returns the number of days the transcation is overdue
         /// </summary>
+        /// <param name="t">the given transaction</param>
+        /// <param name="today">The date for today</param>
+        /// <returns>How many days the transaction is overdue</returns>
         public static int DaysOverdue(Transaction t, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
@@ -135,6 +148,9 @@ namespace Engines.Utils
         /// <summary>
         /// Returns if number of days overdue is greater or equal to grace period
         /// </summary>
+        /// <param name="t">the given transaction</param>
+        /// <param name="today">The date for today</param>
+        /// <returns>If it is past the retry period</returns>
         public static bool IsPastRetryPeriod(Transaction t, DateTime today = default(DateTime))
         {
             if (today == default(DateTime))
