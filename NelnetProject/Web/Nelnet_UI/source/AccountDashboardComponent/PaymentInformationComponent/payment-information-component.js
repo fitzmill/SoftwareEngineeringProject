@@ -1,6 +1,4 @@
-﻿require('./payment-information-component.scss');
-
-var utility = require('../../utility.js');
+﻿var utility = require('../../utility.js');
 
 const billingControllerRoot = "/api/billing";
 
@@ -14,11 +12,6 @@ ko.components.register('payment-information-component', {
         vm.cardType = ko.observable();
 
         vm.paymentInfo = params.paymentInfo;
-
-        vm.paymentPlan = params.paymentPlan;
-
-        vm.nextPaymentDate = params.nextPaymentDate;
-        vm.nextPaymentCost = params.nextPaymentCost;
 
         vm.setUIPaymentInfo = function () {
             vm.cardNumber(vm.paymentInfo().CardNumber);

@@ -1,6 +1,4 @@
-﻿require('./transaction-information-component.scss');
-
-ko.components.register('transaction-information-component', {
+﻿ko.components.register('transaction-information-component', {
     viewModel: function (params) {
         var vm = this;
 

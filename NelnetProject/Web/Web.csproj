@@ -236,7 +236,8 @@
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\BillingInformationComponent\billing-information-component.js" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\PaymentInformationComponent\payment-information-component.html" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\PaymentInformationComponent\payment-information-component.js" />
-    <None Include="Nelnet_UI\source\AccountDashboardComponent\PersonalInformationComponent\personal-information-component.scss" />
+    <Content Include="Nelnet_UI\source\AccountDashboardComponent\PaymentStatusComponent\payment-status-component.html" />
+    <Content Include="Nelnet_UI\source\AccountDashboardComponent\PaymentStatusComponent\payment-status-component.js" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\PersonalInformationComponent\personal-information-component.html" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\PersonalInformationComponent\personal-information-component.js" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\StudentInformationComponent\student-information-component.html" />
@@ -254,9 +255,8 @@
     <Content Include="Nelnet_UI\source\AccountCreationComponent\account-creation-component.scss" />
     <Content Include="Nelnet_UI\source\assets\background-image.scss" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\BillingInformationComponent\billing-information-component.scss" />
-    <Content Include="Nelnet_UI\source\AccountDashboardComponent\PaymentInformationComponent\payment-information-component.scss" />
     <Content Include="Nelnet_UI\source\AccountDashboardComponent\StudentInformationComponent\student-information-component.scss" />
-    <Content Include="Nelnet_UI\source\AccountDashboardComponent\TransactionInformationComponent\transaction-information-component.scss" />
+    <Content Include="Nelnet_UI\source\AccountDashboardComponent\PaymentStatusComponent\payment-status-component.scss" />
     <None Include="Nelnet_UI\source\AdminComponent\admin-component.scss" />
     <Content Include="Nelnet_UI\source\AdminComponent\admin-component.html" />
     <Content Include="Nelnet_UI\source\AdminComponent\admin-component.js" />
