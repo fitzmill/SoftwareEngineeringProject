@@ -105,14 +105,14 @@ namespace NelnetProject.Tests.Engines
 
             setUserInfoEngine.InsertPaymentInfo(paymentInfo);
 
-            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Contains(paymentInfo));
-            Assert.AreEqual(paymentInfo, setPaymentInfoAccessor.mockPaymentSpring.Where(info => info.CustomerID == paymentInfo.CustomerID).ToList().ElementAt(0));
+            Assert.IsTrue(setPaymentInfoAccessor._mockPaymentSpring.Contains(paymentInfo));
+            Assert.AreEqual(paymentInfo, setPaymentInfoAccessor._mockPaymentSpring.Where(info => info.CustomerID == paymentInfo.CustomerID).ToList().ElementAt(0));
         }
 
         [TestMethod]
         public void TestUpdatePaymentBillingInfo()
         {
-            setPaymentInfoAccessor.mockPaymentSpring.Add(new UserPaymentInfoDTO()
+            setPaymentInfoAccessor._mockPaymentSpring.Add(new UserPaymentInfoDTO()
             {
                 CustomerID = "fedder",
                 CardNumber = 4111111111111111,
@@ -135,15 +135,15 @@ namespace NelnetProject.Tests.Engines
             setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressInfo);
             string customerID = "fedder";
 
-            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
-            Assert.AreEqual(paymentAddressInfo.FirstName, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().FirstName);
-            setPaymentInfoAccessor.mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
+            Assert.IsTrue(setPaymentInfoAccessor._mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
+            Assert.AreEqual(paymentAddressInfo.FirstName, setPaymentInfoAccessor._mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().FirstName);
+            setPaymentInfoAccessor._mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
         }
 
         [TestMethod]
         public void TestUpdatePaymentCardInfo()
         {
-            setPaymentInfoAccessor.mockPaymentSpring.Add(new UserPaymentInfoDTO()
+            setPaymentInfoAccessor._mockPaymentSpring.Add(new UserPaymentInfoDTO()
             {
                 CustomerID = "fedder",
                 FirstName = "Bobby",
@@ -166,9 +166,9 @@ namespace NelnetProject.Tests.Engines
             setUserInfoEngine.UpdatePaymentCardInfo(paymentCardInfo);
             string customerID = "fedder";
 
-            Assert.IsTrue(setPaymentInfoAccessor.mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
-            Assert.AreEqual(paymentCardInfo.CardNumber, setPaymentInfoAccessor.mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().CardNumber);
-            setPaymentInfoAccessor.mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
+            Assert.IsTrue(setPaymentInfoAccessor._mockPaymentSpring.Select(x => x.CustomerID).Contains(customerID));
+            Assert.AreEqual(paymentCardInfo.CardNumber, setPaymentInfoAccessor._mockPaymentSpring.Where(x => x.CustomerID == customerID).FirstOrDefault().CardNumber);
+            setPaymentInfoAccessor._mockPaymentSpring.RemoveAll(dto => dto.CustomerID == "fedder");
         }
 
         [TestMethod]
@@ -190,11 +190,11 @@ namespace NelnetProject.Tests.Engines
                 CardType = "MasterCard"
             };
 
-            setPaymentInfoAccessor.mockPaymentSpring.Add(paymentInfo);
+            setPaymentInfoAccessor._mockPaymentSpring.Add(paymentInfo);
 
             setUserInfoEngine.DeletePaymentInfo(paymentInfo.CustomerID);
 
-            Assert.IsFalse(setPaymentInfoAccessor.mockPaymentSpring.Contains(paymentInfo));
+            Assert.IsFalse(setPaymentInfoAccessor._mockPaymentSpring.Contains(paymentInfo));
         }
 
         [TestMethod]
@@ -225,13 +225,13 @@ namespace NelnetProject.Tests.Engines
             setUserInfoEngine.InsertPersonalInfo(user, "Cornflakes*7");
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
-            Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
-            Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
+            Assert.IsTrue(setUserInfoAccessor._mockUserTable.Contains(user));
+            Assert.AreEqual(user, setUserInfoAccessor._mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
             Assert.IsTrue(user.UserID > 0);
             foreach(Student s in user.Students)
             {
-                Assert.IsTrue(setUserInfoAccessor.mockStudentTable.Contains(s));
-                Assert.AreEqual(s, setUserInfoAccessor.mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
+                Assert.IsTrue(setUserInfoAccessor._mockStudentTable.Contains(s));
+                Assert.AreEqual(s, setUserInfoAccessor._mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
                 Assert.IsTrue(s.StudentID > 0);
             }
         }
@@ -280,13 +280,13 @@ namespace NelnetProject.Tests.Engines
             setUserInfoEngine.InsertPersonalInfo(user, "Software6!");
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
-            Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
-            Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
+            Assert.IsTrue(setUserInfoAccessor._mockUserTable.Contains(user));
+            Assert.AreEqual(user, setUserInfoAccessor._mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
             Assert.IsTrue(user.UserID > 0);
             foreach (Student s in user.Students)
             {
-                Assert.IsTrue(setUserInfoAccessor.mockStudentTable.Contains(s));
-                Assert.AreEqual(s, setUserInfoAccessor.mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
+                Assert.IsTrue(setUserInfoAccessor._mockStudentTable.Contains(s));
+                Assert.AreEqual(s, setUserInfoAccessor._mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
                 Assert.IsTrue(s.StudentID > 0);
             }
         }
@@ -326,13 +326,13 @@ namespace NelnetProject.Tests.Engines
 
             setUserInfoEngine.UpdatePersonalInfo(user);
 
-            Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
-            Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
+            Assert.IsTrue(setUserInfoAccessor._mockUserTable.Contains(user));
+            Assert.AreEqual(user, setUserInfoAccessor._mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
             Assert.IsTrue(user.UserID > 0);
             foreach (Student s in user.Students)
             {
-                Assert.IsTrue(setUserInfoAccessor.mockStudentTable.Contains(s));
-                Assert.AreEqual(s, setUserInfoAccessor.mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
+                Assert.IsTrue(setUserInfoAccessor._mockStudentTable.Contains(s));
+                Assert.AreEqual(s, setUserInfoAccessor._mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
                 Assert.IsTrue(s.StudentID > 0);
             }
         }
@@ -384,13 +384,13 @@ namespace NelnetProject.Tests.Engines
 
             setUserInfoEngine.UpdatePersonalInfo(user);
 
-            Assert.IsTrue(setUserInfoAccessor.mockUserTable.Contains(user));
-            Assert.AreEqual(user, setUserInfoAccessor.mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
+            Assert.IsTrue(setUserInfoAccessor._mockUserTable.Contains(user));
+            Assert.AreEqual(user, setUserInfoAccessor._mockUserTable.Where(u => u.UserID == user.UserID).ToList().ElementAt(0));
             Assert.IsTrue(user.UserID > 0);
             foreach (Student s in user.Students)
             {
-                Assert.IsTrue(setUserInfoAccessor.mockStudentTable.Contains(s));
-                Assert.AreEqual(s, setUserInfoAccessor.mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
+                Assert.IsTrue(setUserInfoAccessor._mockStudentTable.Contains(s));
+                Assert.AreEqual(s, setUserInfoAccessor._mockStudentTable.Where(o => o.StudentID == s.StudentID).ToList().ElementAt(0));
                 Assert.IsTrue(s.StudentID > 0);
             }
         }
@@ -435,15 +435,15 @@ namespace NelnetProject.Tests.Engines
                 CardType = "Mastercard"
             };
 
-            setPaymentInfoAccessor.mockPaymentSpring.Add(paymentInfo);
+            setPaymentInfoAccessor._mockPaymentSpring.Add(paymentInfo);
             setUserInfoAccessor.InsertPersonalInfo(user);
             setUserInfoAccessor.InsertStudentInfo(user.UserID, student);
 
             setUserInfoEngine.DeletePersonalInfo(user.UserID, user.CustomerID);
 
-            Assert.IsFalse(setPaymentInfoAccessor.mockPaymentSpring.Contains(paymentInfo));
-            Assert.IsFalse(setUserInfoAccessor.mockStudentTable.Contains(student));
-            Assert.IsFalse(setUserInfoAccessor.mockUserTable.Contains(user));
+            Assert.IsFalse(setPaymentInfoAccessor._mockPaymentSpring.Contains(paymentInfo));
+            Assert.IsFalse(setUserInfoAccessor._mockStudentTable.Contains(student));
+            Assert.IsFalse(setUserInfoAccessor._mockUserTable.Contains(user));
         }
 
         [TestMethod]
@@ -471,12 +471,12 @@ namespace NelnetProject.Tests.Engines
             };
             user.Students.Add(student);
 
-            setUserInfoAccessor.mockUserTable.Add(user);
+            setUserInfoAccessor._mockUserTable.Add(user);
 
             setUserInfoEngine.InsertStudentInfo(user.UserID, user.Students);
 
-            Assert.IsTrue(setUserInfoAccessor.mockStudentTable.Contains(student));
-            Assert.AreEqual(student, setUserInfoAccessor.mockStudentTable.Where(s => s.StudentID == student.StudentID).ToList().ElementAt(0));
+            Assert.IsTrue(setUserInfoAccessor._mockStudentTable.Contains(student));
+            Assert.AreEqual(student, setUserInfoAccessor._mockStudentTable.Where(s => s.StudentID == student.StudentID).ToList().ElementAt(0));
         }
 
         [TestMethod]
@@ -504,16 +504,16 @@ namespace NelnetProject.Tests.Engines
             };
             user.Students.Add(student);
 
-            setUserInfoAccessor.mockUserTable.Add(user);
-            setUserInfoAccessor.mockStudentTable.Add(student);
+            setUserInfoAccessor._mockUserTable.Add(user);
+            setUserInfoAccessor._mockStudentTable.Add(student);
 
             student.FirstName = "Kent";
             student.Grade = 9;
 
             setUserInfoEngine.UpdateStudentInfo(user.Students);
 
-            Assert.IsTrue(setUserInfoAccessor.mockStudentTable.Contains(student));
-            Assert.AreEqual(student, setUserInfoAccessor.mockStudentTable.Where(s => s.StudentID == student.StudentID).ToList().ElementAt(0));
+            Assert.IsTrue(setUserInfoAccessor._mockStudentTable.Contains(student));
+            Assert.AreEqual(student, setUserInfoAccessor._mockStudentTable.Where(s => s.StudentID == student.StudentID).ToList().ElementAt(0));
         }
 
         [TestMethod]
@@ -541,12 +541,12 @@ namespace NelnetProject.Tests.Engines
             };
             user.Students.Add(student);
 
-            setUserInfoAccessor.mockUserTable.Add(user);
-            setUserInfoAccessor.mockStudentTable.Add(student);
+            setUserInfoAccessor._mockUserTable.Add(user);
+            setUserInfoAccessor._mockStudentTable.Add(student);
 
             setUserInfoEngine.DeleteStudentInfo(user.Students.Select(s => s.StudentID).ToList());
 
-            Assert.IsFalse(setUserInfoAccessor.mockStudentTable.Contains(student));
+            Assert.IsFalse(setUserInfoAccessor._mockStudentTable.Contains(student));
         }
     }
 }

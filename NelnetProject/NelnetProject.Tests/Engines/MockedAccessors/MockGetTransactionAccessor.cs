@@ -11,32 +11,32 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 {
     public class MockGetTransactionAccessor : IGetTransactionAccessor
     {
-        private IList<Transaction> MockDB;
+        private IList<Transaction> _mockDB;
 
         public MockGetTransactionAccessor(IList<Transaction> MockDB)
         {
-            this.MockDB = MockDB;
+            _mockDB = MockDB;
         }
 
         public IList<Transaction> GetAllTransactionsForUser(int userID)
         {
-            return MockDB.Where(x => x.UserID == userID).ToList();
+            return _mockDB.Where(x => x.UserID == userID).ToList();
         }
 
         public IList<Transaction> GetAllUnsettledTransactions()
         {
-            return MockDB.Where(x => x.ProcessState != ProcessState.SUCCESSFUL && x.ProcessState != ProcessState.FAILED).ToList();
+            return _mockDB.Where(x => x.ProcessState != ProcessState.SUCCESSFUL && x.ProcessState != ProcessState.FAILED).ToList();
         }
 
         public IList<Transaction> GetAllFailedTransactions()
         {
-            return MockDB.Where(x => x.ProcessState == ProcessState.FAILED).ToList();
+            return _mockDB.Where(x => x.ProcessState == ProcessState.FAILED).ToList();
         }
 
         public IList<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
             var result = new List<TransactionWithUserInfoDTO>();
-            foreach(Transaction t in MockDB.Where(x => x.DateDue >= startTime && x.DateDue <= endTime).ToList())
+            foreach(Transaction t in _mockDB.Where(x => x.DateDue >= startTime && x.DateDue <= endTime).ToList())
             {
                 result.Add(new TransactionWithUserInfoDTO()
                 {

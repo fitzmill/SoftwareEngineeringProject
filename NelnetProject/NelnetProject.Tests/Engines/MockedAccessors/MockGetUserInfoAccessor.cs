@@ -8,37 +8,37 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 {
     public class MockGetUserInfoAccessor : IGetUserInfoAccessor
     {
-        public List<Student> studentsDB;
-        public List<User> userDB;
+        public List<Student> _studentsDB;
+        public List<User> _userDB;
         public MockGetUserInfoAccessor(List<Student> studentsDB, List<User> userDB)
         {
-            this.studentsDB = studentsDB;
-            this.userDB = userDB;
+            _studentsDB = studentsDB;
+            _userDB = userDB;
         }
 
         public bool EmailExists(string email)
         {
-            return userDB.Select(x => x.Email).Contains(email);
+            return _userDB.Select(x => x.Email).Contains(email);
         }
 
         public IList<User> GetAllActiveUsers()
         {
-            return userDB;
+            return _userDB;
         }
 
         public User GetUserInfoByID(int userID)
         {
-            return userDB.FirstOrDefault(x => x.UserID == userID);
+            return _userDB.FirstOrDefault(x => x.UserID == userID);
         }
 
         public User GetUserInfoByEmail(string email)
         {
-            return userDB.FirstOrDefault(x => x.Email == email);
+            return _userDB.FirstOrDefault(x => x.Email == email);
         }
 
         public string GetPaymentSpringCustomerID(int userID)
         {
-            return userDB.FirstOrDefault(u => u.UserID == userID)?.CustomerID;
+            return _userDB.FirstOrDefault(u => u.UserID == userID)?.CustomerID;
         }
     }
 }
