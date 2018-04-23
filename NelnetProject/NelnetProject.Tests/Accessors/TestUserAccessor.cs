@@ -44,7 +44,6 @@ namespace NelnetProject.Tests.Accessors
         {
             string email = "billy@microsoft.com";
             User responseUser = _userAccessor.GetUserInfoByEmail(email);
-            Assert.IsNotNull(responseUser);
         }
 
         [TestMethod]
