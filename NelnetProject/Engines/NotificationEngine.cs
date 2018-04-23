@@ -31,21 +31,20 @@ namespace Engines
                 User user = _userAccessor.GetUserInfoByID(t.UserID);
 
                 EmailNotification email;
-                if (state == ProcessState.NOT_YET_CHARGED)
+                switch(state)
                 {
-                    email = EmailUtil.UpcomingPaymentNotification(t, user);
-                }
-                else if (state == ProcessState.SUCCESSFUL)
-                {
-                    email = EmailUtil.PaymentChargedSuccessfullyNotification(t, user);
-                }
-                else if (state == ProcessState.RETRYING)
-                {
-                    email = EmailUtil.PaymentUnsuccessfulRetryingNotification(t, user, t.DateCharged.GetValueOrDefault(DateTime.Today));
-                }
-                else
-                {
-                    email = EmailUtil.PaymentFailedNotification(t, user);
+                    case (ProcessState.NOT_YET_CHARGED):
+                        email = EmailUtil.UpcomingPaymentNotification(t, user);
+                        break;
+                    case (ProcessState.SUCCESSFUL):
+                        email = EmailUtil.PaymentChargedSuccessfullyNotification(t, user);
+                        break;
+                    case (ProcessState.RETRYING):
+                        email = EmailUtil.PaymentUnsuccessfulRetryingNotification(t, user, t.DateCharged.GetValueOrDefault(DateTime.Today));
+                        break;
+                    default:
+                        email = EmailUtil.PaymentFailedNotification(t, user);
+                        break;
                 }
 
                 _emailAccessor.SendEmail(email);
