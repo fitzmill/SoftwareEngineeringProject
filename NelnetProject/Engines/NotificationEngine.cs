@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Core;
 using Core.Interfaces;
+using Core.Interfaces.Accessors;
+using Core.Interfaces.Engines;
 using Core.Models;
 using Engines.Utils;
 
@@ -17,21 +14,21 @@ namespace Engines
     /// </summary>
     public class NotificationEngine : INotificationEngine
     {
-        private IEmailAccessor emailAccessor;
-        private IGetUserInfoAccessor getUserInfoAccessor;
+        private readonly IEmailAccessor _emailAccessor;
+        private readonly IUserAccessor _userAccessor;
 
-        public NotificationEngine(IEmailAccessor emailAccessor, IGetUserInfoAccessor getUserInfoAccessor)
+        public NotificationEngine(IEmailAccessor emailAccessor, IUserAccessor getUserInfoAccessor)
         {
-            this.emailAccessor = emailAccessor;
-            this.getUserInfoAccessor = getUserInfoAccessor;
+            _emailAccessor = emailAccessor;
+            _userAccessor = getUserInfoAccessor;
         }
 
-        public void SendTransactionNotifications(List<Transaction> transactions)
+        public void SendTransactionNotifications(IList<Transaction> transactions)
         {
             foreach (Transaction t in transactions)
             {
                 ProcessState state = t.ProcessState;
-                User user = getUserInfoAccessor.GetUserInfoByID(t.UserID);
+                User user = _userAccessor.GetUserInfoByID(t.UserID);
 
                 EmailNotification email;
                 if (state == ProcessState.NOT_YET_CHARGED)
@@ -51,14 +48,14 @@ namespace Engines
                     email = EmailUtil.PaymentFailedNotification(t, user);
                 }
 
-                emailAccessor.SendEmail(email);
+                _emailAccessor.SendEmail(email);
             }
         }
 
         public void SendAccountUpdateNotification(string email, string firstName, string informationType)
         {
             var emailNotification = EmailUtil.AccountUpdatedNotification(email, firstName, informationType);
-            emailAccessor.SendEmail(emailNotification);
+            _emailAccessor.SendEmail(emailNotification);
         }
 
         public void SendAccountCreationNotification(User user, DateTime today)
@@ -69,13 +66,13 @@ namespace Engines
                 DateDue = TuitionUtil.NextPaymentDueDate(user.Plan, today)
             };
             EmailNotification email = EmailUtil.AccountCreatedNotification(user, nextTransaction);
-            emailAccessor.SendEmail(email);
+            _emailAccessor.SendEmail(email);
         }
 
         public void SendAccountDeletionNotification(User user)
         {
             EmailNotification email = EmailUtil.AccountDeletedNotification(user);
-            emailAccessor.SendEmail(email);
+            _emailAccessor.SendEmail(email);
         }
 
     }

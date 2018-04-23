@@ -68,6 +68,6 @@ namespace Core
         /// List Of User's Students
         /// </summary>
         [Required]
-        public List<Student> Students { get; set; }
+        public IEnumerable<Student> Students { get; set; }
     }
 }

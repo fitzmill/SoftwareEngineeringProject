@@ -17,6 +17,12 @@ namespace Core
         public int StudentID { get; set; }
 
         /// <summary>
+        /// UserID associated with a student
+        /// </summary>
+        [Range(0, int.MaxValue)]
+        public int UserID { get; set; }
+
+        /// <summary>
         /// Student's First Name
         /// </summary>
         [Required]
