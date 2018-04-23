@@ -9,32 +9,32 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 {
     public class MockTransactionAccessor : ITransactionAccessor
     {
-        public IList<Transaction> Transactions { get; set; } = new List<Transaction>();
+        public IList<Transaction> _transactions { get; set; } = new List<Transaction>();
 
         public MockTransactionAccessor(IList<Transaction> MockDB)
         {
-            this.Transactions = MockDB;
+            _transactions = MockDB;
         }
 
         public IEnumerable<Transaction> GetAllTransactionsForUser(int userID)
         {
-            return Transactions.Where(x => x.UserID == userID).ToList();
+            return _transactions.Where(x => x.UserID == userID).ToList();
         }
 
         public IEnumerable<Transaction> GetAllUnsettledTransactions()
         {
-            return Transactions.Where(x => x.ProcessState != ProcessState.SUCCESSFUL && x.ProcessState != ProcessState.FAILED).ToList();
+            return _transactions.Where(x => x.ProcessState != ProcessState.SUCCESSFUL && x.ProcessState != ProcessState.FAILED).ToList();
         }
 
         public IEnumerable<Transaction> GetAllFailedTransactions()
         {
-            return Transactions.Where(x => x.ProcessState == ProcessState.FAILED).ToList();
+            return _transactions.Where(x => x.ProcessState == ProcessState.FAILED).ToList();
         }
 
         public IEnumerable<TransactionWithUserInfoDTO> GetTransactionsForDateRange(DateTime startTime, DateTime endTime)
         {
             var result = new List<TransactionWithUserInfoDTO>();
-            foreach(Transaction t in Transactions.Where(x => x.DateDue >= startTime && x.DateDue <= endTime).ToList())
+            foreach(Transaction t in _transactions.Where(x => x.DateDue >= startTime && x.DateDue <= endTime).ToList())
             {
                 result.Add(new TransactionWithUserInfoDTO()
                 {
@@ -53,13 +53,13 @@ namespace NelnetProject.Tests.Engines.MockedAccessors
 
         public void AddTransaction(Transaction transaction)
         {
-            Transactions.Add(transaction);
+            _transactions.Add(transaction);
         }
 
         public void UpdateTransaction(Transaction transaction)
         {
-            Transactions.Remove(Transactions.ToList().Find(t => t.TransactionID == transaction.TransactionID));
-            Transactions.Add(transaction);
+            _transactions.Remove(_transactions.ToList().Find(t => t.TransactionID == transaction.TransactionID));
+            _transactions.Add(transaction);
         }
     }
 }

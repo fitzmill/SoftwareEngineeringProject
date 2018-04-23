@@ -9,10 +9,17 @@ using System.Threading.Tasks;
 
 namespace Engines.Utils
 {
-    //Util class for generating email notifications
+    /// <summary>
+    /// Utility class for generating email notifications
+    /// </summary>
     public class EmailUtil
     {
-        //Generates email notification for an upcoming payment
+        /// <summary>
+        /// Generates email notification for an upcoming payment
+        /// </summary>
+        /// <param name="t">The transaction associated with the notification</param>
+        /// <param name="user">The user associated with the notification</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification UpcomingPaymentNotification(Transaction t, User user)
         {
             if (t == null)
@@ -29,7 +36,12 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
-        //Generates email notification for a successfully charged payment
+        /// <summary>
+        /// Generates email notification for a successfully charged payment
+        /// </summary>
+        /// <param name="t">The transaction associated with the notification</param>
+        /// <param name="user">The user associated with the notification</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification PaymentChargedSuccessfullyNotification(Transaction t, User user)
         {
             if (t == null)
@@ -46,7 +58,13 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
-        //Generates email notification for an unsuccessful payment that is being retried
+        /// <summary>
+        /// Generates email notification for an unsuccessful payment that is being retried
+        /// </summary>
+        /// <param name="t">The transaction associated with the notification</param>
+        /// <param name="user">The user associated with the notification</param>
+        /// <param name="today">The date of today</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification PaymentUnsuccessfulRetryingNotification(Transaction t, User user, DateTime today)
         {
             if (t == null)
@@ -66,7 +84,12 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
-        //Generates email notification for an unsuccessful payment that has been deferred
+        /// <summary>
+        /// Generates email notification for an unsuccessful payment that has been deferred
+        /// </summary>
+        /// <param name="t">The transaction associated with the notification</param>
+        /// <param name="user">The user associated with the notification</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification PaymentFailedNotification(Transaction t, User user)
         {
             if (t == null)
@@ -84,7 +107,13 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawBody, user.FirstName);
         }
 
-        //Generates email notification for updated account information
+        /// <summary>
+        /// Generates email notification for updated account information
+        /// </summary>
+        /// <param name="email">The email associated with the notification</param>
+        /// <param name="firstName">The first name of the user associated with the notification</param>
+        /// <param name="informationType">The type of information that was updated</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification AccountUpdatedNotification(string email, string firstName, string informationType)
         {
             if (String.IsNullOrEmpty(email))
@@ -105,7 +134,12 @@ namespace Engines.Utils
             return GenerateEmail(email, subject, rawbody, firstName);
         }
 
-        //Generates email notification for account creation
+        /// <summary>
+        /// Generates email notification for account creation
+        /// </summary>
+        /// <param name="user">The user associated with the notification</param>
+        /// <param name="nextTransaction">The next transaction for the notification</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification AccountCreatedNotification(User user, Transaction nextTransaction)
         {
             if (user == null)
@@ -124,7 +158,11 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawbody, user.FirstName);
         }
 
-        //Generates email notification for account deletion
+        /// <summary>
+        /// Generates email notification for account deletion
+        /// </summary>
+        /// <param name="user">The user associated with the notification</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification AccountDeletedNotification(User user)
         {
             if (user == null)
@@ -137,7 +175,14 @@ namespace Engines.Utils
             return GenerateEmail(user.Email, subject, rawbody, user.FirstName);
         }
 
-        //Generates email notification with the default Tuition Assistant body template
+        /// <summary>
+        /// Generates email notification with the default Tuition Assistant body template
+        /// </summary>
+        /// <param name="to">The recipient of the email</param>
+        /// <param name="subject">The subject of the email</param>
+        /// <param name="rawBody">The body of the email</param>
+        /// <param name="userFirstName">The first name for the email</param>
+        /// <returns>The generated email</returns>
         public static EmailNotification GenerateEmail(string to, string subject, string rawBody, string userFirstName)
         {
             if (String.IsNullOrEmpty(to))
