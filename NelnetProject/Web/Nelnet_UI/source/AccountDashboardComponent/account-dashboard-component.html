@@ -2,8 +2,6 @@
     <h1>Account Dashboard</h1>
     <button class="btn btn-primary btn-logout" data-bind="click: $parent.logout">Logout</button>
 
-    <h5 id="retryingTransactionError" class="header-input-error" style="display: none;">You have an unresolved transaction, if you haven't already, try updating your payment information below </h5>
-
     <payment-status-component params="paymentStatus: paymentStatus, paymentPlan: paymentPlan, nextPaymentDate: nextPaymentDate, nextPaymentCost: nextPaymentCost" />
 
     <transaction-information-component params="transactions: transactions" />
