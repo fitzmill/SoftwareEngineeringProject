@@ -1,6 +1,5 @@
 ﻿using Core.DTOs;
-using Core.Interfaces;
-using System.Linq;
+using Core.Interfaces.Engines;
 using System.Security.Claims;
 using System.Web.Http;
 using Web.Filters;
@@ -14,15 +13,14 @@ namespace Web.Controllers
     [SqlRowNotAffectedFilter]
     public class BillingController : ApiController
     {
-        IGetUserInfoEngine _getUserInfoEngine;
-        ISetUserInfoEngine _setUserInfoEngine;
-        INotificationEngine _notificationEngine;
+        private readonly INotificationEngine _notificationEngine;
+        private readonly IPaymentEngine _paymentEngine;
 
-        public BillingController(IGetUserInfoEngine getUserInfoEngine, ISetUserInfoEngine setUserInfoEngine, INotificationEngine notificationEngine)
+        public BillingController(INotificationEngine notificationEngine,
+            IPaymentEngine paymentEngine)
         {
-            _getUserInfoEngine = getUserInfoEngine;
-            _setUserInfoEngine = setUserInfoEngine;
             _notificationEngine = notificationEngine;
+            _paymentEngine = paymentEngine;
         }
 
         /// <summary>
@@ -35,14 +33,14 @@ namespace Web.Controllers
         public IHttpActionResult GetPaymentInfoForUser()
         {
             var user = (ClaimsIdentity) User.Identity;
-            var userID = user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+            string userID = ControllerUtils.httpGetUserID(user);
 
             if (!int.TryParse(userID, out int parsedUserID))
             {
                 return BadRequest("Could not parse userID into an integer");
             }
 
-            return Ok(_getUserInfoEngine.GetPaymentInfoForUser(parsedUserID));
+            return Ok(_paymentEngine.GetPaymentInfoForUser(parsedUserID));
         }
 
         /// <summary>
@@ -60,11 +58,10 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
-            _setUserInfoEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
+            _paymentEngine.UpdatePaymentBillingInfo(paymentAddressDTO);
 
             var user = (ClaimsIdentity)User.Identity;
-            _notificationEngine.SendAccountUpdateNotification
-                (user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value, user.Name, "billing");
+            _notificationEngine.SendAccountUpdateNotification(ControllerUtils.httpGetEmail(user), user.Name, "billing");
 
             return Ok();
         }
@@ -84,11 +81,10 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
-            _setUserInfoEngine.UpdatePaymentCardInfo(paymentCardDTO);
+            _paymentEngine.UpdatePaymentCardInfo(paymentCardDTO);
 
             var user = (ClaimsIdentity)User.Identity;
-            _notificationEngine.SendAccountUpdateNotification
-                (user.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value, user.Name, "payment");
+            _notificationEngine.SendAccountUpdateNotification(ControllerUtils.httpGetEmail(user), user.Name, "payment");
 
             return Ok();
         }
@@ -108,7 +104,7 @@ namespace Web.Controllers
                 return BadRequest("One or more required objects was not included in the request body.");
             }
 
-            _setUserInfoEngine.InsertPaymentInfo(userPaymentInfo);
+            _paymentEngine.InsertPaymentInfo(userPaymentInfo);
 
             return Ok();
         }

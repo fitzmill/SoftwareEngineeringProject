@@ -1,11 +1,7 @@
-﻿require('./personal-information-component.scss');
-
-const utility = require('../../utility.js');
+﻿const utility = require('../../utility.js');
 
 //api url constants
 const userInfoControllerRoot = "/api/userinfo";
-
-var personalInfo = undefined;
 
 ko.components.register('personal-information-component', {
     viewModel: function (params) {
@@ -15,20 +11,20 @@ ko.components.register('personal-information-component', {
         vm.UserLastName = ko.observable();
         vm.Email = ko.observable();
 
-        personalInfo = params.personalInfo;
+        vm.personalInfo = params.personalInfo;
 
         vm.setUIPersonalInformation = function () {
-            vm.UserFirstName(personalInfo().FirstName);
-            vm.UserLastName(personalInfo().LastName);
-            vm.Email(personalInfo().Email);
+            vm.UserFirstName(vm.personalInfo().FirstName);
+            vm.UserLastName(vm.personalInfo().LastName);
+            vm.Email(vm.personalInfo().Email);
         }
 
-        personalInfo.subscribe(vm.setUIPersonalInformation);
+        vm.personalInfo.subscribe(vm.setUIPersonalInformation);
 
         //Changes the user info in database and ui to what the user entered.
         vm.updatePersonalInfo = function (data, event) {
             let validator = $("#edit-personal-form").validate();
-            if (vm.Email() == personalInfo().Email) {
+            if (vm.Email() == vm.personalInfo().Email) {
                 if ($("#edit-personal-form").valid()) {
                     vm.updateUserValidated(data, event);
                 }
@@ -56,7 +52,7 @@ ko.components.register('personal-information-component', {
             //disable save and cancel buttons
             $("#btn-save-edit-personal").attr("disabled", "disabled");
             $("#btn-cancel-edit-personal").attr("disabled", "disabled");
-            let changedUserInfo = personalInfo();
+            let changedUserInfo = vm.personalInfo();
             changedUserInfo.FirstName = vm.UserFirstName();
             changedUserInfo.LastName = vm.UserLastName();
             changedUserInfo.Email = vm.Email();
@@ -64,7 +60,7 @@ ko.components.register('personal-information-component', {
             updatePersonalInfo(changedUserInfo).done(function (newToken) {
                 //update user in local storage in the case of page reload
                 window.sessionStorage.setItem("Jwt", newToken);
-                user = changedUserInfo;
+                vm.personalInfo(changedUserInfo);
                 params.stopEditing(data, event);
             }).fail(function (jqXHR) {
                 if (jqXHR.status !== 401) {

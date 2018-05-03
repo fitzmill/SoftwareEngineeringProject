@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Core.DTOs
 {
@@ -56,35 +53,5 @@ namespace Core.DTOs
         /// </summary>
         [Required]
         public string Zip { get; set; }
-
-        /// <summary>
-        /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            return obj is PaymentAddressDTO dTO &&
-                   CustomerID == dTO.CustomerID &&
-                   FirstName == dTO.FirstName &&
-                   LastName == dTO.LastName &&
-                   StreetAddress1 == dTO.StreetAddress1 &&
-                   StreetAddress2 == dTO.StreetAddress2 &&
-                   City == dTO.City &&
-                   State == dTO.State &&
-                   Zip == dTO.Zip;
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = -23318427;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(CustomerID);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FirstName);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LastName);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(StreetAddress1);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(StreetAddress2);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(City);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(State);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Zip);
-            return hashCode;
-        }
     }
 }

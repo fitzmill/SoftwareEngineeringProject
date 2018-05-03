@@ -1,9 +1,10 @@
 using Accessors;
-using Core.Interfaces;
+using Core.Interfaces.Accessors;
+using Core.Interfaces.Engines;
 using Engines;
-using Microsoft.Practices.Unity.Configuration;
 using System;
 using System.Configuration;
+using System.Security.Cryptography;
 using Unity;
 using Unity.Injection;
 using Web.Managers;
@@ -44,25 +45,21 @@ namespace Web
         {
             //database accessors
             var connectionStringConstructor = new InjectionConstructor(ConfigurationManager.ConnectionStrings["NelnetPaymentProcessing"].ConnectionString);
-            container.RegisterType<IGetTransactionAccessor, GetTransactionAccessor>(connectionStringConstructor);
-            container.RegisterType<IGetUserInfoAccessor, GetUserInfoAccessor>(connectionStringConstructor);
-            container.RegisterType<ISetTransactionAccessor, SetTransactionAccessor>(connectionStringConstructor);
-            container.RegisterType<ISetUserInfoAccessor, SetUserInfoAccessor>(connectionStringConstructor);
-            container.RegisterType<IGetReportAccessor, GetReportAccessor>(connectionStringConstructor);
-            container.RegisterType<ISetReportAccessor, SetReportAccessor>(connectionStringConstructor);
+            container.RegisterType<ITransactionAccessor, TransactionAccessor>();
+            container.RegisterType<IUserAccessor, UserAccessor>();
+            container.RegisterType<IStudentAccessor, StudentAccessor>();
+            container.RegisterType<IReportAccessor, ReportAccessor>();
 
             //http client builder for payment spring accessors
             HttpClientBuilder httpClientBuilder = new HttpClientBuilder(
                 ConfigurationManager.AppSettings["PaymentSpringPublicKey"],
                 ConfigurationManager.AppSettings["PaymentSpringPrivateKey"]
             );
-            container.RegisterInstance<HttpClientBuilder>(httpClientBuilder);
+            container.RegisterInstance(httpClientBuilder);
 
             //payment spring accessors
             var paymentSpringConstructor = new InjectionConstructor(httpClientBuilder, ConfigurationManager.AppSettings["PaymentSpringApiUrl"]);
-            container.RegisterType<IGetPaymentInfoAccessor, GetPaymentInfoAccessor>(paymentSpringConstructor);
-            container.RegisterType<ISetPaymentInfoAccessor, SetPaymentInfoAccessor>(paymentSpringConstructor);
-            container.RegisterType<IChargePaymentAccessor, ChargePaymentAccessor>(paymentSpringConstructor);
+            container.RegisterType<IPaymentAccessor, PaymentAccessor>(paymentSpringConstructor);
 
             //email accessor
             container.RegisterType<IEmailAccessor, EmailAccessor>(new InjectionConstructor(
@@ -73,24 +70,26 @@ namespace Web
                 int.Parse(ConfigurationManager.AppSettings["Port"])
             ));
 
+            container.RegisterInstance(new RNGCryptoServiceProvider());
+
             //engines
-            container.RegisterType<IGetTransactionEngine, GetTransactionEngine>();
-            container.RegisterType<IGetReportEngine, GetReportEngine>();
-            container.RegisterType<ISetReportEngine, SetReportEngine>();
+            container.RegisterType<ITransactionEngine, TransactionEngine>();
+            container.RegisterType<IReportEngine, ReportEngine>();
             container.RegisterType<INotificationEngine, NotificationEngine>();
-            container.RegisterType<IGetUserInfoEngine, GetUserInfoEngine>();
+            container.RegisterType<IUserEngine, UserEngine>();
+            container.RegisterType<IStudentEngine, StudentEngine>();
             container.RegisterType<IPaymentEngine, PaymentEngine>();
-            container.RegisterType<ISetUserInfoEngine, SetUserInfoEngine>();
 
             //scheduled event manager
             container.RegisterType<ScheduledEventManager>(new InjectionConstructor(
                 double.Parse(ConfigurationManager.AppSettings["TimerInterval"]),
                 int.Parse(ConfigurationManager.AppSettings["ChargingHour"]),
                 int.Parse(ConfigurationManager.AppSettings["ReportGenerationHour"]),
-                container.Resolve<IGetTransactionEngine>(),
+                container.Resolve<ITransactionEngine>(),
                 container.Resolve<IPaymentEngine>(),
                 container.Resolve<INotificationEngine>(),
-                container.Resolve<ISetReportEngine>()
+                container.Resolve<IReportEngine>(),
+                container.Resolve<IUserEngine>()
             ));
             container.Resolve<ScheduledEventManager>();
         }

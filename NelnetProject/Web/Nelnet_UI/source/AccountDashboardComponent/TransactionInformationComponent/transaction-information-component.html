@@ -1,9 +1,9 @@
-﻿<div class="card card-account-information-section">
+﻿<div class="card account-dashboard-card">
     <div class="card-header">
         <h3 class="header-information-section">Transaction History</h3>
     </div>
     <div class="card-body">
-        <table class="table table-striped">
+        <table id="transaction-table" class="table table-striped dataTable">
             <thead>
                 <tr>
                     <th>Date Due</th>
@@ -12,19 +12,13 @@
                         Process State
                         <img id="processStateInformation" src="../../assets/images/information_icon.png" height="20" width="20" data-toggle="tooltip" data-html="true"
                              title="RETRYING: The system is attempting to charge this transaction again <br>
-                        FAILED: The system has retried the maximum amount of times, <br>
+                        FAILED: The system has retried the maximum amount of times <br>
                         DEFERRED: This transaction has been added to a new transaction with a late fee"/>
                     </th>
                     <th>Reason Failed</th>
                 </tr>
             </thead>
-            <tbody data-bind="foreach: transactions">
-                <tr>
-                    <td data-bind="text: DateDue"></td>
-                    <td data-bind="text: AmountCharged"></td>
-                    <td data-bind="text: ProcessState"></td>
-                    <td data-bind="text: ReasonFailed"></td>
-                </tr>
+            <tbody>
             </tbody>
         </table>
     </div>

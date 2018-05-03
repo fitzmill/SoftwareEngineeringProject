@@ -1,5 +1,5 @@
 ﻿using Core;
-using Core.Interfaces;
+using Core.Interfaces.Engines;
 using Engines.Utils;
 using System;
 using System.Collections.Generic;
@@ -9,31 +9,40 @@ using System.Timers;
 
 namespace Web.Managers
 {
+    /// <summary>
+    /// Manager for executing events at scheduled intervals.
+    /// </summary>
     public class ScheduledEventManager
     {
-        public Func<DateTime> dateProvider = () => DateTime.Now;
+        private readonly double _timerInterval;
+        private readonly int _chargingHour;
+        private readonly int _reportGenerationHour;
 
-        private double timerInterval;
-        private int chargingHour;
-        private int reportGenerationHour;
+        private readonly ITransactionEngine _transactionEngine;
+        private readonly IPaymentEngine _paymentEngine;
+        private readonly INotificationEngine _notificationEngine;
+        private readonly IReportEngine _reportEngine;
+        private readonly IUserEngine _userEngine;
 
-        private IGetTransactionEngine getTransactionEngine;
-        private IPaymentEngine paymentEngine;
-        private INotificationEngine notificationEngine;
-        private ISetReportEngine setReportEngine;
-
-        public ScheduledEventManager(double timerInterval, int chargingHour, int reportGenerationHour, 
-            IGetTransactionEngine getTransactionEngine, IPaymentEngine paymentEngine, 
-            INotificationEngine notificationEngine, ISetReportEngine setReportEngine)
+        public ScheduledEventManager(
+            double timerInterval, 
+            int chargingHour, 
+            int reportGenerationHour, 
+            ITransactionEngine transactionEngine, 
+            IPaymentEngine paymentEngine, 
+            INotificationEngine notificationEngine, 
+            IReportEngine reportEngine,
+            IUserEngine userEngine)
         {
-            this.timerInterval = timerInterval;
-            this.chargingHour = chargingHour;
-            this.reportGenerationHour = reportGenerationHour;
+            _timerInterval = timerInterval;
+            _chargingHour = chargingHour;
+            _reportGenerationHour = reportGenerationHour;
 
-            this.getTransactionEngine = getTransactionEngine;
-            this.paymentEngine = paymentEngine;
-            this.notificationEngine = notificationEngine;
-            this.setReportEngine = setReportEngine;
+            _transactionEngine = transactionEngine;
+            _paymentEngine = paymentEngine;
+            _notificationEngine = notificationEngine;
+            _reportEngine = reportEngine;
+            _userEngine = userEngine;
 
             Timer timer = new Timer(timerInterval);
             timer.Elapsed += new ElapsedEventHandler(TimerIntervalElapsed);
@@ -42,28 +51,34 @@ namespace Web.Managers
             TimerIntervalElapsed(null, null); //Initiate the event once on startup
         }
 
+        /// <summary>
+        /// Executed every _timerInterval.
+        /// </summary>
+        /// <param name="sender">The event sender</param>
+        /// <param name="e">Any event arguments</param>
         public void TimerIntervalElapsed(object sender, ElapsedEventArgs e)
         {
-            DateTime now = dateProvider();
+            DateTime now = DateTime.Now;
             Debug.WriteLine(String.Format("Time Elapsed at {0:yyyy MM dd HH mm ss}", now));
             
             //Generating Payments
-            if (now.Hour == chargingHour && now.Day == 1)
+            if (now.Hour == _chargingHour && now.Day == 1)
             {
-                IList<Transaction> generatedTransactions = paymentEngine.GeneratePayments(now);
-                notificationEngine.SendTransactionNotifications(generatedTransactions.ToList());
+                var users = _userEngine.GetAllUsers();
+                IEnumerable<Transaction> generatedTransactions = _paymentEngine.GeneratePayments(users, now);
+                _notificationEngine.SendTransactionNotifications(generatedTransactions.ToList());
             }
-            else if (now.Hour == chargingHour && now.Day >= TuitionUtil.DUE_DAY && now.Day <= TuitionUtil.DUE_DAY + TuitionUtil.OVERDUE_RETRY_PERIOD)
+            else if (now.Hour == _chargingHour && now.Day >= TuitionUtil.DUE_DAY && now.Day <= TuitionUtil.DUE_DAY + TuitionUtil.OVERDUE_RETRY_PERIOD)
             {
-                IList<Transaction> unsettledTransactions = getTransactionEngine.GetAllUnsettledTransactions();
-                IList<Transaction> transactionResults = paymentEngine.ChargePayments(unsettledTransactions.ToList(), now);
-                notificationEngine.SendTransactionNotifications(transactionResults.ToList());
+                IEnumerable<Transaction> unsettledTransactions = _transactionEngine.GetAllUnsettledTransactions();
+                IEnumerable<Transaction> transactionResults = _paymentEngine.ChargePayments(unsettledTransactions.ToList(), now);
+                _notificationEngine.SendTransactionNotifications(transactionResults.ToList());
             }
 
             //Generating Monthly Reports
-            if (now.Day == 1 && now.Hour == reportGenerationHour) {
+            if (now.Day == 1 && now.Hour == _reportGenerationHour) {
                 DateTime today = new DateTime(now.Year, now.Month, 1);
-                setReportEngine.InsertReport(today.AddMonths(-1), today.AddDays(-1));
+                _reportEngine.InsertReport(today.AddMonths(-1), today.AddDays(-1));
             }
         }
  

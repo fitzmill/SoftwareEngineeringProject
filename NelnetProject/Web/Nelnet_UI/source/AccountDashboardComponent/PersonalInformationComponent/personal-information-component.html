@@ -1,9 +1,11 @@
-﻿<div class="card card-account-information-section">
+﻿<div class="card account-dashboard-card">
     <div class="card-header">
         <h3 class="header-information-section">Personal Information</h3>
+        <!-- ko if: personalInfo() !== undefined -->
         <button id="btn-edit-personal" class="btn btn-primary btn-edit edit-personal-inactive" data-bind="click: $parent.startEditing">Edit</button>
         <button id="btn-save-edit-personal" class="btn btn-success btn-edit edit-personal-active" data-bind="click: updatePersonalInfo">Save</button>
         <button id="btn-cancel-edit-personal" class="btn btn-default btn-edit edit-personal-active" data-bind="click: function(data, event) { $parent.stopEditing(data, event); setUIPersonalInformation(); }">Cancel</button>
+        <!-- /ko -->
     </div>
 
     <div class="card-body">

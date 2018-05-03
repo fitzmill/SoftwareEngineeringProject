@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.DTOs
 {
@@ -64,38 +60,5 @@ namespace Core.DTOs
         /// States That A Transaction Failed Given By PaymentSpring
         /// </summary>
         public string ReasonFailed { get; set; }
-
-        /// <summary>
-        /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            var dTO = obj as TransactionWithUserInfoDTO;
-            return dTO != null &&
-                   TransactionID == dTO.TransactionID &&
-                   FirstName == dTO.FirstName &&
-                   LastName == dTO.LastName &&
-                   Email == dTO.Email &&
-                   AmountCharged == dTO.AmountCharged &&
-                   DateDue == dTO.DateDue &&
-                   EqualityComparer<DateTime?>.Default.Equals(DateCharged, dTO.DateCharged) &&
-                   ProcessState == dTO.ProcessState &&
-                   ReasonFailed == dTO.ReasonFailed;
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = 1531269167;
-            hashCode = hashCode * -1521134295 + TransactionID.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(FirstName);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(LastName);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Email);
-            hashCode = hashCode * -1521134295 + AmountCharged.GetHashCode();
-            hashCode = hashCode * -1521134295 + DateDue.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(DateCharged);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ProcessState);
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ReasonFailed);
-            return hashCode;
-        }
     }
 }

@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Core;
+﻿using Core;
 using Core.Models;
 using Engines;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using NelnetProject.Tests.Engines.MockedAccessors;
+using System;
+using System.Collections.Generic;
 
 namespace NelnetProject.Tests.Engines
 {
     [TestClass]
     public class TestNotificationEngine
     {
-        private NotificationEngine notificationEngine;
-        private MockEmailAccessor mockEmailAccessor;
-        private MockGetUserInfoAccessor mockGetUserInfoAcccessor;
+        private readonly NotificationEngine _notificationEngine;
+        private readonly MockEmailAccessor _mockEmailAccessor;
+        private readonly MockUserAccessor _mockUserAccessor;
 
         private List<User> userDB = new List<User>()
         {
@@ -37,9 +35,9 @@ namespace NelnetProject.Tests.Engines
 
         public TestNotificationEngine()
         {
-            mockEmailAccessor = new MockEmailAccessor();
-            mockGetUserInfoAcccessor = new MockGetUserInfoAccessor(new List<Student>(), userDB);
-            notificationEngine = new NotificationEngine(mockEmailAccessor, mockGetUserInfoAcccessor);
+            _mockEmailAccessor = new MockEmailAccessor();
+            _mockUserAccessor = new MockUserAccessor(userDB);
+            _notificationEngine = new NotificationEngine(_mockEmailAccessor, _mockUserAccessor);
         }
 
         [TestMethod]
@@ -84,8 +82,8 @@ namespace NelnetProject.Tests.Engines
                 },
             };
 
-            notificationEngine.SendTransactionNotifications(transactions);
-            List<EmailNotification> actualEmails = mockEmailAccessor.emails;
+            _notificationEngine.SendTransactionNotifications(transactions);
+            List<EmailNotification> actualEmails = _mockEmailAccessor.emails;
 
             CollectionAssert.AreEqual(expectedEmails, actualEmails);
         }
@@ -104,35 +102,35 @@ namespace NelnetProject.Tests.Engines
                 "<br><br><br>Powered by Tuition Assistant<br>"
             };
 
-            notificationEngine.SendAccountUpdateNotification(email, firstName, "personal");
-            var result = mockEmailAccessor.emails.Find(x => x.To == email);
+            _notificationEngine.SendAccountUpdateNotification(email, firstName, "personal");
+            var result = _mockEmailAccessor.emails.Find(x => x.To == email);
 
             Assert.AreEqual(expected, result);
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Email cannot be empty")]
+        [ExpectedException(typeof(ArgumentException), "Email cannot be empty")]
         public void TestSendAccountUpdateNotificationNullTo()
         {
             var firstName = "Sean";
-            notificationEngine.SendAccountUpdateNotification(null, firstName, "personal");
+            _notificationEngine.SendAccountUpdateNotification(null, firstName, "personal");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "First name cannot be empty")]
+        [ExpectedException(typeof(ArgumentException), "first name cannot be empty")]
         public void TestSendAccountUpdatedNotificationNullFirstName()
         {
             var email = "hi@me.com";
-            notificationEngine.SendAccountUpdateNotification(email, null, "personal");
+            _notificationEngine.SendAccountUpdateNotification(email, null, "personal");
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Information type cannot be empty")]
+        [ExpectedException(typeof(ArgumentException), "information type cannot be empty")]
         public void TestSendAccountUpdatedNotificationNullInfoType()
         {
             var email = "hi@me.com";
             var firstName = "Sean";
-            notificationEngine.SendAccountUpdateNotification(email, firstName, null);
+            _notificationEngine.SendAccountUpdateNotification(email, firstName, null);
         }
 
         [TestMethod]
@@ -170,9 +168,16 @@ namespace NelnetProject.Tests.Engines
                 }
             };
             
-            notificationEngine.SendAccountCreationNotification(user, new DateTime(2018, 7, 14));
+            _notificationEngine.SendAccountCreationNotification(user, new DateTime(2018, 7, 14));
 
-            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+            CollectionAssert.AreEqual(expected, _mockEmailAccessor.emails);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "user cannot be null")]
+        public void TestSendAccountCreationNotificationNullUser()
+        {
+            _notificationEngine.SendAccountCreationNotification(null, default(DateTime));
         }
 
         [TestMethod]
@@ -195,9 +200,16 @@ namespace NelnetProject.Tests.Engines
                 }
             };
 
-            notificationEngine.SendAccountDeletionNotification(user);
+            _notificationEngine.SendAccountDeletionNotification(user);
 
-            CollectionAssert.AreEqual(expected, mockEmailAccessor.emails);
+            CollectionAssert.AreEqual(expected, _mockEmailAccessor.emails);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException), "user cannot be null")]
+        public void TestAccountDeletedNotificationNullUser()
+        {
+            _notificationEngine.SendAccountDeletionNotification(null);
         }
 
     }

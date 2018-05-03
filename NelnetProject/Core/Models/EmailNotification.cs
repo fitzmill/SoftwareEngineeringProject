@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Core.Models
 {
@@ -31,8 +29,6 @@ namespace Core.Models
         /// <summary>
         /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
         /// </summary>
-        /// <param name="obj"></param>
-        /// <returns></returns>
         public override bool Equals(object obj)
         {
             var notification = obj as EmailNotification;

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Core.DTOs
 {
@@ -28,26 +23,5 @@ namespace Core.DTOs
         /// </summary>
         [Range(1, 31)]
         public int Day { get; set; }
-
-        /// <summary>
-        /// auto-generated overide to the .Equals and .GetHashCode() method to compare these objects
-        /// </summary>
-        public override bool Equals(object obj)
-        {
-            var dTO = obj as DateDTO;
-            return dTO != null &&
-                   Year == dTO.Year &&
-                   Month == dTO.Month &&
-                   Day == dTO.Day;
-        }
-
-        public override int GetHashCode()
-        {
-            var hashCode = 592158470;
-            hashCode = hashCode * -1521134295 + Year.GetHashCode();
-            hashCode = hashCode * -1521134295 + Month.GetHashCode();
-            hashCode = hashCode * -1521134295 + Day.GetHashCode();
-            return hashCode;
-        }
     }
 }

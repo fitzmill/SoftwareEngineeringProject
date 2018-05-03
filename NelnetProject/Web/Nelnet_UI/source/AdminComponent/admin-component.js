@@ -48,8 +48,6 @@ ko.components.register('admin-component', {
                     }
                 });
             }
-
-
         };
 
         vm.viewReport = function (report) {
@@ -69,16 +67,16 @@ ko.components.register('admin-component', {
                 let amountOutstanding = amountCharged - amountPaid;
 
                 //convert to currency
-                amountCharged = Number(amountCharged).toLocaleString('en');
-                amountPaid = Number(amountPaid).toLocaleString('en');
-                amountOutstanding = Number(amountOutstanding).toLocaleString('en');
+                amountCharged = Number(amountCharged).formatAsMoney();
+                amountPaid = Number(amountPaid).formatAsMoney();
+                amountOutstanding = Number(amountOutstanding).formatAsMoney();
 
                 //filter all transactions to just get unsettled ones
                 //makes a deep copy of the array
                 let unsettledTransactions = JSON.parse(JSON.stringify(charged.filter(t => t.ProcessState !== "SUCCESSFUL" && t.ProcessState !== "DEFERRED")));
                 unsettledTransactions.forEach((t, index, array) => {
                     array[index].DateDue = t.DateDue.parseDateTimeString();
-                    array[index].AmountCharged = Number(t.AmountCharged).toLocaleString("en");
+                    array[index].AmountCharged = Number(t.AmountCharged).formatAsMoney();
                 });
 
                 //assign data to components

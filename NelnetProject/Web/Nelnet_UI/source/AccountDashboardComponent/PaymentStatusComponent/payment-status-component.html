@@ -1,0 +1,16 @@
+﻿<div class="card account-dashboard-card">
+    <div class="card-header">
+        <h3 class="header-information-section">Payment Status</h3>
+    </div>
+
+    <div class="card-body">
+        <h5 data-bind="text: 'Payment Plan: ' + paymentPlan()"></h5>
+        <h4>
+            Next Payment Due:
+            <label class="enMoney" data-bind="text: nextPaymentCost"></label>
+            <label data-bind="text: ' on ' + nextPaymentDate()"></label>
+        </h4>
+        <p id="statusComment">You will be charged automatically on this date.</p>
+        <h5 id="warningComment" data-bind="text: paymentStatus"></h5>
+    </div>
+</div>
